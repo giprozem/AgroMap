@@ -8,8 +8,31 @@ class PlotSerializer(serializers.ModelSerializer):
         model = Plot
         fields = '__all__'
 
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['cultures'] = CultureSerializerInline(instance.cultures.all(), many=True).data
+    #     return representation
 
-class CultureSerializer(serializers.ModelSerializer):
+
+class PlotCultureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plot
+        fields = '__all__'
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['cultures'] = CultureSerializerInline(instance.cultures.all(), many=True).data
+    #     return representation
+
+
+class CultureSerializerInline(serializers.ModelSerializer):
     class Meta:
         model = Culture
+        # exclude = ('plot', )
         fields = '__all__'
+
+
+class CultureSerializerInlinePost(serializers.ModelSerializer):
+    class Meta:
+        model = Culture
+        exclude = ('id', )
