@@ -5,8 +5,9 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from plot.models import Plot, CultureField
-from plot.serializers import PlotSerializer, CultureFieldSerializerInlinePost, CultureFieldSerializerInline
+from plot.models import Plot, CultureField, Crop
+from plot.serializers import PlotSerializer, CultureFieldSerializerInlinePost, CultureFieldSerializerInline, \
+    CropSerializer
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -44,3 +45,6 @@ class CultureFieldView(APIView):
         return Response(serializer.data)
 
 
+class CropViewSet(viewsets.ModelViewSet):
+    queryset = Crop.objects.all()
+    serializer_class = CropSerializer
