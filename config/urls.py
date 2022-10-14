@@ -4,7 +4,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from config import settings
-from plot.views import PlotViewSet, UserPlotView, CultureView
+from plot.views import PlotViewSet, UserPlotView, CultureFieldView
 
 router = DefaultRouter()
 
@@ -15,7 +15,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('plot/<int:user_id>/', UserPlotView.as_view()),
-    path('cultures/<int:user_id>/<int:plot_id>', CultureView.as_view()),
+    path('cultures_fields/<int:user_id>/', CultureFieldView.as_view()),
 
 ]
 

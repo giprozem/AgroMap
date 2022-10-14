@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from plot.models import Plot, Culture
+from plot.models import Plot, CultureField, Crop
 
 
 class PlotSerializer(serializers.ModelSerializer):
@@ -14,7 +14,7 @@ class PlotSerializer(serializers.ModelSerializer):
     #     return representation
 
 
-class PlotCultureSerializer(serializers.ModelSerializer):
+class PlotCultureFieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plot
         fields = '__all__'
@@ -25,14 +25,25 @@ class PlotCultureSerializer(serializers.ModelSerializer):
     #     return representation
 
 
-class CultureSerializerInline(serializers.ModelSerializer):
+class CultureFieldSerializerInline(serializers.ModelSerializer):
     class Meta:
-        model = Culture
+        model = CultureField
         # exclude = ('plot', )
         fields = '__all__'
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['crops'] = CropSerializer(instance.crops.all(), many=True).data
+        return representation
 
-class CultureSerializerInlinePost(serializers.ModelSerializer):
+
+class CultureFieldSerializerInlinePost(serializers.ModelSerializer):
     class Meta:
-        model = Culture
+        model = CultureField
         exclude = ('id', )
+
+
+class CropSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Crop
+        fields = '__all__'
