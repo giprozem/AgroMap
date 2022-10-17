@@ -1,9 +1,10 @@
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth.models import User
 
 from plot.models import Plot, CultureField, Crop
 from plot.serializers import PlotSerializer, CultureFieldSerializerInlinePost, CultureFieldSerializerInline, \
@@ -48,3 +49,13 @@ class CultureFieldView(APIView):
 class CropViewSet(viewsets.ModelViewSet):
     queryset = Crop.objects.all()
     serializer_class = CropSerializer
+
+
+class CurrentUserCropsAPIView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        """required user id. return all crops belong to current user"""
+        user_id = kwargs["user_id"]
+        crops = Crop.objects.filter(culture__plot__user=user_id)
+        serializer = CropSerializer(crops, many=True)
+        return Response(serializer.data, status=200)

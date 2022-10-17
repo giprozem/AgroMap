@@ -16,7 +16,7 @@ class CultureField(models.Model):
     geometry = models.GeometryField(null=True)
 
     class Meta:
-        ordering = ('-start')
+        ordering = ('-start',)
 
 
 class Crop(models.Model):
@@ -28,4 +28,4 @@ class Crop(models.Model):
     end = models.DateField(blank=True, null=True)
 
     class Meta:
-        ordering = ('-start')
+        ordering = ('-start',)

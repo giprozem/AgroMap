@@ -1,5 +1,5 @@
 from config import settings
-from plot.views import PlotViewSet, UserPlotView, CultureFieldView, CropViewSet
+from plot.views import PlotViewSet, UserPlotView, CultureFieldView, CropViewSet, CurrentUserCropsAPIView
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
@@ -29,6 +29,7 @@ urlpatterns = [
     path('docs/', schema_view.with_ui()),
     path('plot/<int:user_id>/', UserPlotView.as_view()),
     path('cultures_fields/<int:user_id>/', CultureFieldView.as_view()),
+    path('current_user/<int:user_id>/', CurrentUserCropsAPIView.as_view()),
 
 ]
 
