@@ -1,5 +1,5 @@
 # За базу используем официальный image питона
-FROM python:3.8
+FROM python:3.10.6
 
 # Отключаем буферизацию логов
 ENV PYTHONUNBUFFERED 1

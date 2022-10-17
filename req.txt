@@ -9,7 +9,7 @@ colorama==0.4.5
 coreapi==2.3.3
 coreschema==0.0.4
 cors==1.0.1
-Django==3.2
+Django==4.1.2
 django-cors-headers==3.13.0
 djangorestframework==3.12.4
 drf-yasg==1.20.0
