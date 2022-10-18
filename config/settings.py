@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'rest_framework',
     'corsheaders',
-
+    # 'django_nose',
     'drf_yasg',
 
     'plot',
@@ -118,3 +118,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'

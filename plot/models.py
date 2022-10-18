@@ -29,3 +29,4 @@ class Crop(models.Model):
 
     class Meta:
         ordering = ('-start',)
+
