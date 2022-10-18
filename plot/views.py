@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets, status, serializers
 from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 
@@ -43,7 +44,7 @@ class CultureFieldView(APIView):
         serializer = CultureFieldSerializerInlinePost(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, HTTP_201_CREATED)
 
 
 class CropViewSet(viewsets.ModelViewSet):

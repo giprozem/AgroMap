@@ -1,80 +1,11 @@
-# from rest_framework import status_code
-# import json
-#
-# from rest_framework.test import APIRequestFactory, APIClient
-# import os
-# import sys
-# import django
-#
-# django.setup()
-#
-#
-# # Using the standard RequestFactory API to create a form POST request
-# # factory = APIRequestFactory()
-# # request = factory.post('http://127.0.0.1:8111/plots',
-# #                        json.dumps({'user': 1, 'name': 'test_name', 'region': 'test_region'}),
-# #                        content_type='application/json')
-#
-# client = APIClient()
-# request = client.post('/plots/',
-#                        json.dumps({'user': 1, 'name': 'test_name', 'region': 'test_region'}),
-#                        content_type='application/json')
-#
-# print(client.get('/plots/3/').json())
-
-
-
-
-
-
-from rest_framework import status
-from rest_framework.test import APITestCase, URLPatternsTestCase, APIRequestFactory, RequestsClient
-
-# from django.urls import include, path, reverse
-
-
-# class PlotTest(APITestCase, URLPatternsTestCase):
-#     urlpatterns = [
-#         path('', include('config.urls')),
-#     ]
-#
-#     def test_create_plot(self):
-#         url = reverse('plots')
-#         response = self.client.get(url, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-
-# factory = APIRequestFactory()
-# request = factory.post('plots', {'user': 1,'name': 'test_name', 'region': 'test_region'}, format='json')
-
-
-
-
-
-# client = RequestsClient()
-#
-#
-# # Obtain a CSRF token.
-# response = client.get('http://127.0.0.1:8111/')
-# assert response.status_code == 200
-# csrftoken = response.cookies['csrftoken']
-#
-# response = client.post('http://127.0.0.1:8111/plots', json={
-#     'user': 1,
-#     'name': 'test_name',
-#     'region': 'test_region'
-# }, headers={'X-CSRFToken': csrftoken})
-# assert response.status_code == 200
-
-
 from rest_framework.test import APITestCase
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from django.contrib.auth import get_user_model
-from plot.models import Plot, CultureField
-from .factories import CultureFieldFactory
-
+from plot.models import Plot, CultureField, Crop
+from .factories import CultureFieldFactory, CropFactory
 
 User = get_user_model()
+
 
 class CultureTests(APITestCase):
     def setUp(self):
@@ -88,6 +19,7 @@ class CultureTests(APITestCase):
         self.user = new_user
         self.plot = plot
         self.culture_fields = culture_fields
+
     def test_get_culture_fields_by_user_success_200(self):
         c1 = self.culture_fields[0]
         c2 = self.culture_fields[1]
@@ -115,6 +47,18 @@ class CultureTests(APITestCase):
         response = self.client.get(f"/cultures_fields/{self.user.id}/")
         self.assertEqual(response.data, expected_data, f"Данные не совпадают")
         self.assertEqual(response.status_code, HTTP_200_OK)
+
+    def test_create_culture_fields_success_201(self):
+        c1 = self.culture_fields[0]
+        expected_data = {
+                "what": c1.what,
+                "start": c1.start,
+                "end": c1.end,
+                "geometry": '',
+                "plot": self.plot.id
+            }
+        response = self.client.post(f"/cultures_fields/{self.user.id}/", expected_data)
+        self.assertEqual(response.status_code, HTTP_201_CREATED)
 
     def test_get_plots_by_user_success_200(self):
         expected_data = [
@@ -150,8 +94,117 @@ class CultureFactoryTests(APITestCase):
         self.assertEqual(response.data, expected_data, f"Данные не совпадают")
         self.assertEqual(response.status_code, HTTP_200_OK)
 
+
 class PlotTest(APITestCase):
+    def setUp(self):
+        new_user = User.objects.create(username="test_user_1")
+        plot = Plot.objects.bulk_create([
+            Plot(name='plot_1', region='Chui'),
+            Plot(name='plot_2', region='Naryn')
+        ])
+
+        self.user = new_user
+        self.plot = plot
+
     def test_get_plots_by_not_exist_user_should_be_empty(self):
         response = self.client.get(f"/plot/2/")
         self.assertEqual(len(response.data), 0)
+
+    def test_create_plot_success_201(self):
+        p1 = self.plot[0]
+        expected_data = {
+            "user": self.user.id,
+            "name": p1.name,
+            "region": p1.region
+        }
+
+        response = self.client.post(f"/plots/", expected_data)
+        self.assertEqual(response.status_code, HTTP_201_CREATED)
+
+    def test_update_plot_success_200(self):
+        p1 = self.plot[0]
+        expected_data = {
+            "user": self.user.id,
+            "name": "test_name",
+            "region": "test_region",
+        }
+        response = self.client.put(f"/plots/{p1.id}/", expected_data)
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+    def test_delete_plot_200(self):
+        p1 = self.plot[0]
+        response = self.client.delete(f"/plots/{p1.id}/")
+        self.assertEqual(response.status_code, HTTP_204_NO_CONTENT)
+
+
+class CropTest(APITestCase):
+    def setUp(self):
+        new_user = User.objects.create(username="test_user_1")
+        plot = Plot.objects.create(user=new_user)
+        culture_fields = CultureField.objects.create(plot=plot, what="cucumber", start="2020-05-15", end="2024-09-21")
+        crops = Crop.objects.bulk_create([
+            Crop(culture=culture_fields, what='crops_what_1', quantity=1234, unit='kg', start='2021-01-23'),
+            Crop(culture=culture_fields, what='crops_what_2', quantity=6543, unit='l', start='2022-01-23', end='2026-01-01')
+        ])
+
+        self.user = new_user
+        self.plot = plot
+        self.culture_fields = culture_fields
+        self.crops = crops
+
+    def test_get_crop_success_200(self):
+        c1 = self.crops[0]
+        c2 = self.crops[1]
+        expected_data = [
+            {
+                "id": c1.id,
+                "what": c1.what,
+                "quantity": c1.quantity,
+                "unit": c1.unit,
+                "start": c1.start,
+                "end": None,
+                "culture": c1.culture
+            },
+            {
+                "id": c2.id,
+                "what": c2.what,
+                "quantity": c2.quantity,
+                "unit": c2.unit,
+                "start": c2.start,
+                "end": c2.end,
+                "culture": c2.culture
+            }
+        ]
+
+        response = self.client.get(f"/crop/")
+        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_create_crop_success_201(self):
+        c1 = CropFactory()
+        expected_data = {
+            "what": c1.what,
+            "quantity": 322,
+            "unit": c1.unit,
+            "start": "2021-01-07",
+            "end": "",
+            "culture": c1.culture.id
+        }
+
+        response = self.client.post(f"/crop/", expected_data)
+        self.assertEqual(response.status_code, HTTP_201_CREATED)
+
+    def test_update_crop_success_200(self):
+        c1 = CropFactory()
+        print(c1)
+        expected_data = {
+            "culture": c1.culture.id,
+            "what": "test_what_crop",
+            "quantity": 342,
+            "unit": 'LL',
+            "start": '2021-09-09',
+            "end": ""
+        }
+        response = self.client.put(f"/crop/{c1.id}/", expected_data)
+        self.assertEqual(response.status_code, HTTP_200_OK)
 
