@@ -15,7 +15,7 @@ class MaterialImage(models.Model):
 
 
 class MaterialBlock(models.Model):
-    material = models.ForeignKey(Material, on_delete=models.CASCADE, related_name='material_blogs')
+    material = models.ForeignKey(Material, on_delete=models.CASCADE, related_name='material_blocks')
     title = models.CharField(max_length=255, blank=True, null=True)
     text = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='material_block_images', blank=True, null=True)

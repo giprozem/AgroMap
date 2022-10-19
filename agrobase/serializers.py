@@ -6,13 +6,13 @@ from agrobase.models import Material, MaterialImage, MaterialBlock
 class InlineMaterialImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MaterialImage
-        exclude = ('material_id', )
+        exclude = ('material', )
 
 
 class InlineMaterialBlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = MaterialBlock
-        exclude = ('material_id', )
+        exclude = ('material', )
 
 
 class MaterialSerializer(serializers.ModelSerializer):
@@ -27,5 +27,5 @@ class MaterialSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['category'] = {'id': instance.category, 'title': instance.get_category_display()}
         representation['images'] = InlineMaterialImageSerializer(instance.material_images.all(), many=True, context=self.context).data
-        representation['blogs'] = InlineMaterialBlogSerializer(instance.material_blogs.all(), many=True, context=self.context).data
+        representation['blocks'] = InlineMaterialBlogSerializer(instance.material_blocks.all(), many=True, context=self.context).data
         return representation
