@@ -1,4 +1,4 @@
-from agrobase.views import MaterialViewSet
+from agrobase.views import MaterialViewSet, MaterialBlockViewSet, MaterialImageViewSet
 from config import settings
 from plot.views import PlotViewSet, UserPlotView, CultureFieldView, CropViewSet, CurrentUserCropsAPIView
 from django.conf.urls.static import static
@@ -6,8 +6,6 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-from rest_framework import permissions
-from rest_framework.authentication import BasicAuthentication
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -16,6 +14,8 @@ router.register('plots', PlotViewSet)
 # router.register('culture', CultureViewSet)
 router.register('crop', CropViewSet)
 router.register('agro_base/material', MaterialViewSet)
+router.register('agro_base/block', MaterialBlockViewSet)
+router.register('agro_base/image', MaterialImageViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
