@@ -1,3 +1,4 @@
+from agrobase.views import MaterialViewSet
 from config import settings
 from plot.views import PlotViewSet, UserPlotView, CultureFieldView, CropViewSet, CurrentUserCropsAPIView
 from django.conf.urls.static import static
@@ -14,6 +15,7 @@ router = DefaultRouter()
 router.register('plots', PlotViewSet)
 # router.register('culture', CultureViewSet)
 router.register('crop', CropViewSet)
+router.register('agro_base/material', MaterialViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
