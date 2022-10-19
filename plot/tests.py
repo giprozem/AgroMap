@@ -206,4 +206,3 @@ class CropTest(APITestCase):
         }
         response = self.client.put(f"/crop/{c1.id}/", expected_data)
         self.assertEqual(response.status_code, HTTP_200_OK)
-

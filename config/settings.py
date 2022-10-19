@@ -22,10 +22,10 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'rest_framework',
     'corsheaders',
-    # 'django_nose',
     'drf_yasg',
 
     'plot',
+    'agrobase',
 ]
 
 
