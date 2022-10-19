@@ -13,7 +13,7 @@ class CultureTests(APITestCase):
         plot = Plot.objects.create(user=new_user)
         culture_fields = CultureField.objects.bulk_create([
             CultureField(plot=plot, what="cucumber", start="2022-05-15", end="2022-09-21"),
-            CultureField(plot=plot, what="malina", start="2022-06-29")
+            CultureField(plot=plot, what="cucumber", start="2022-05-15", end="2022-09-21")
         ])
 
         self.user = new_user
@@ -37,7 +37,7 @@ class CultureTests(APITestCase):
                 "id": c2.id,
                 "what": c2.what,
                 "start": c2.start,
-                "end": None,
+                "end": c2.end,
                 "geometry": None,
                 "plot": self.plot.id,
                 "crops": []
@@ -46,6 +46,7 @@ class CultureTests(APITestCase):
 
         response = self.client.get(f"/cultures_fields/{self.user.id}/")
         self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.data, expected_data, 'Dannye ne sovpadaut')
 
     def test_create_culture_fields_success_201(self):
         c1 = self.culture_fields[0]
@@ -195,7 +196,6 @@ class CropTest(APITestCase):
 
     def test_update_crop_success_200(self):
         c1 = CropFactory()
-        print(c1)
         expected_data = {
             "culture": c1.culture.id,
             "what": "test_what_crop",
