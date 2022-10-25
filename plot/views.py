@@ -55,7 +55,6 @@ class CropViewSet(viewsets.ModelViewSet):
 class CurrentUserCropsAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
-        """required user id. return all crops belong to current user"""
         user_id = kwargs["user_id"]
         crops = Crop.objects.filter(culture__plot__user=user_id)
         serializer = CropSerializer(crops, many=True)

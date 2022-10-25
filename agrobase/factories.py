@@ -28,11 +28,3 @@ class MaterialImageFactory(factory.django.DjangoModelFactory):
 
     material = factory.SubFactory(MaterialFactory)
     image = factory.django.ImageField(color='blue')
-
-
-
-
-
-
-
-
