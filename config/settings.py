@@ -25,7 +25,6 @@ INSTALLED_APPS = [
     'drf_yasg',
 
     'plot',
-    'agrobase',
 ]
 
 
@@ -69,15 +68,7 @@ DATABASES = {
         'PASSWORD': config('POSTGRES_PASSWORD'),
         'HOST': config('POSTGRES_HOST'),
         'PORT': config('POSTGRES_PORT', cast=int),
-    },
-    # 'auth': {
-    #     'ENGINE': 'django.contrib.gis.db.backends.postgis',
-    #     'NAME': config('POSTGRES_AUTH_DB'),
-    #     'USER': config('POSTGRES_AUTH_USER'),
-    #     'PASSWORD': config('POSTGRES_AUTH_PASSWORD'),
-    #     'HOST': config('POSTGRES_AUTH_HOST'),
-    #     'PORT': config('POSTGRES_AUTH_PORT', cast=int),
-    # }
+    }
 }
 
 
