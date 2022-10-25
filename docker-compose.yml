@@ -9,14 +9,6 @@ services:
       - ./pgdata:/var/lib/postgresql/data/
     env_file: .env
 
-#  postgis_auth:
-#    image: postgis/postgis:14-3.2
-#    ports:
-#      - "5434:5432"
-#    volumes:
-#      - ./pgdata_auth:/var/lib/postgresql/data/
-#    env_file: .env
-
   web:
     build: .
     ports:
