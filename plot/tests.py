@@ -43,7 +43,6 @@ class CultureTests(APITestCase):
                 "crops": []
             }
         ]
-
         response = self.client.get(f"/cultures_fields/{self.user.id}/")
         self.assertEqual(response.status_code, HTTP_200_OK)
         self.assertEqual(response.data, expected_data, 'Dannye ne sovpadaut')
@@ -190,12 +189,12 @@ class CropTest(APITestCase):
             "end": "",
             "culture": c1.culture.id
         }
-
         response = self.client.post(f"/crop/", expected_data)
         self.assertEqual(response.status_code, HTTP_201_CREATED)
 
     def test_update_crop_success_200(self):
         c1 = CropFactory()
+
         expected_data = {
             "culture": c1.culture.id,
             "what": "test_what_crop",
@@ -204,5 +203,12 @@ class CropTest(APITestCase):
             "start": '2021-09-09',
             "end": ""
         }
+
         response = self.client.put(f"/crop/{c1.id}/", expected_data)
         self.assertEqual(response.status_code, HTTP_200_OK)
+
+    def test_delete_crop_success_200(self):
+        c1 = CropFactory()
+
+        response = self.client.delete(f"/crop/{c1.id}/")
+        self.assertEqual(response.status_code, HTTP_204_NO_CONTENT)
