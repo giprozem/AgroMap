@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from plot.models import Plot, CultureField, Crop, SoilAnalysis
+from plot.models import Plot, CultureField, Crop, SoilAnalysis, Fertilizer
 
 
 class PlotSerializer(serializers.ModelSerializer):
@@ -60,4 +60,11 @@ class CropSerializer(serializers.ModelSerializer):
 class SoilAnalysisSerializer(serializers.ModelSerializer):
     class Meta:
         model = SoilAnalysis
+        fields = '__all__'
+
+
+class FertilizerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Fertilizer
         fields = '__all__'

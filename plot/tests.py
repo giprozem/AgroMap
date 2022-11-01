@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from django.contrib.auth import get_user_model
 from plot.models import Plot, CultureField, Crop
-from .factories import CultureFieldFactory, CropFactory, SoilAnalysisFactory
+from .factories import CultureFieldFactory, CropFactory, SoilAnalysisFactory, PlotFactory
 from django.test import override_settings
 
 
@@ -14,14 +14,14 @@ TEST_DIR = 'test_data'
 class CultureTests(APITestCase):
     def setUp(self):
         new_user = User.objects.create(username="test_user_1")
-        plot = Plot.objects.create(user=new_user)
+        owner = User.objects.create(username="test_user_2")
         culture_fields = CultureField.objects.bulk_create([
-            CultureField(plot=plot, what="cucumber", start="2022-05-15", end="2022-09-21"),
-            CultureField(plot=plot, what="cucumber", start="2022-05-15", end="2022-09-21")
+            CultureField(owner=owner, what="cucumber", start="2022-05-15", end="2022-09-21"),
+            CultureField(owner=owner, what="cucumber", start="2022-05-15", end="2022-09-21")
         ])
 
         self.user = new_user
-        self.plot = plot
+        self.owner = owner
         self.culture_fields = culture_fields
 
     def test_get_culture_fields_by_user_success_200(self):
@@ -34,8 +34,9 @@ class CultureTests(APITestCase):
                 "start": c1.start,
                 "end": c1.end,
                 "geometry": None,
-                "plot": self.plot.id,
-                "crops": []
+                "owner": self.owner.id,
+                "crops": [],
+                "soil-analysis": []
             },
             {
                 "id": c2.id,
@@ -43,11 +44,12 @@ class CultureTests(APITestCase):
                 "start": c2.start,
                 "end": c2.end,
                 "geometry": None,
-                "plot": self.plot.id,
-                "crops": []
+                "owner": self.owner.id,
+                "crops": [],
+                "soil-analysis": []
             }
         ]
-        response = self.client.get(f"/cultures_fields/{self.user.id}/")
+        response = self.client.get(f"/cultures_fields/{self.owner.id}/")
         self.assertEqual(response.status_code, HTTP_200_OK)
         self.assertEqual(response.data, expected_data, 'Dannye ne sovpadaut')
 
@@ -58,24 +60,10 @@ class CultureTests(APITestCase):
                 "start": c1.start,
                 "end": c1.end,
                 "geometry": '',
-                "plot": self.plot.id
+                "owner": self.owner.id
             }
-        response = self.client.post(f"/cultures_fields/{self.user.id}/", expected_data)
+        response = self.client.post(f"/cultures_fields/{self.owner.id}/", expected_data)
         self.assertEqual(response.status_code, HTTP_201_CREATED)
-
-    def test_get_plots_by_user_success_200(self):
-        expected_data = [
-            {
-                "id": self.plot.id,
-                "name": None,
-                "region": None,
-                "user": self.user.id
-            }
-        ]
-
-        response = self.client.get(f"/plot/{self.user.id}/")
-        self.assertEqual(response.data, expected_data, f"Данные не совпадают")
-        self.assertEqual(response.status_code, HTTP_200_OK)
 
 
 class CultureFactoryTests(APITestCase):
@@ -88,12 +76,13 @@ class CultureFactoryTests(APITestCase):
                 "start": c1.start,
                 "end": c1.end,
                 "geometry": None,
-                "plot": c1.plot.id,
-                "crops": []
+                "owner": c1.owner.id,
+                "crops": [],
+                "soil-analysis": []
             }
         ]
 
-        response = self.client.get(f"/cultures_fields/{c1.plot.user.id}/")
+        response = self.client.get(f"/cultures_fields/{c1.owner.id}/")
         self.assertEqual(response.data, expected_data, f"Данные не совпадают")
         self.assertEqual(response.status_code, HTTP_200_OK)
 
@@ -108,6 +97,20 @@ class PlotTest(APITestCase):
 
         self.user = new_user
         self.plot = plot
+
+    def test_get_plots_by_user_success_200(self):
+        u1 = PlotFactory()
+        expected_data = [
+            {
+                "id": u1.id,
+                "name": u1.name,
+                "region": u1.region,
+                "user": u1.user.id
+            }
+        ]
+        response = self.client.get(f"/plot/{u1.user.id}/")
+        self.assertEqual(response.data, expected_data, f"Данные не совпадают")
+        self.assertEqual(response.status_code, HTTP_200_OK)
 
     def test_get_plots_by_not_exist_user_should_be_empty(self):
         response = self.client.get(f"/plot/2/")
@@ -143,15 +146,15 @@ class PlotTest(APITestCase):
 class CropTest(APITestCase):
     def setUp(self):
         new_user = User.objects.create(username="test_user_1")
-        plot = Plot.objects.create(user=new_user)
-        culture_fields = CultureField.objects.create(plot=plot, what="cucumber", start="2020-05-15", end="2024-09-21")
+        owner = User.objects.create(username="test_user_2")
+        culture_fields = CultureField.objects.create(owner=owner, what="cucumber", start="2020-05-15", end="2024-09-21")
         crops = Crop.objects.bulk_create([
             Crop(culture=culture_fields, what='crops_what_1', quantity=1234, unit='kg', start='2021-01-23'),
             Crop(culture=culture_fields, what='crops_what_2', quantity=6543, unit='l', start='2022-01-23', end='2026-01-01')
         ])
 
         self.user = new_user
-        self.plot = plot
+        self.owner = owner
         self.culture_fields = culture_fields
         self.crops = crops
 
@@ -257,3 +260,36 @@ class SoilAnalysisTest(APITestCase):
         s1 = SoilAnalysisFactory()
         response = self.client.delete(f"/soil-analysis/{s1.id}/")
         self.assertEqual(response.status_code, HTTP_204_NO_CONTENT)
+
+
+class CurrentUserCropsAPIViewTest(APITestCase):
+
+    def setUp(self):
+        owner = User.objects.create(username="test_user_2")
+        culture_fields = CultureField.objects.create(owner=owner, what="cucumber", start="2020-05-15", end="2024-09-21")
+        crops = Crop.objects.bulk_create([
+            Crop(culture=culture_fields, what='crops_what_1', quantity=1234, unit='kg', start='2021-01-23'),
+            Crop(culture=culture_fields, what='crops_what_2', quantity=6543, unit='l', start='2022-01-23',
+                 end='2026-01-01')
+        ])
+
+        self.owner = owner
+        self.culture_fields = culture_fields
+        self.crops = crops
+
+    def test_get_crrentusercrops_success_200(self):
+        c1 = self.crops[0]
+        expected_data = [
+            {
+                "id": c1.id,
+                "what": c1.what,
+                "quantity": c1.quantity,
+                "unit": c1.unit,
+                "start": c1.start,
+                "end": None,
+                "culture": c1.culture
+            }
+        ]
+
+        response = self.client.get(f"/current_user/{c1.culture.owner.id}/")
+        self.assertEqual(response.status_code, HTTP_200_OK)

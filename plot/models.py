@@ -9,7 +9,7 @@ class Plot(models.Model):
 
 
 class CultureField(models.Model):
-    plot = models.ForeignKey(Plot, on_delete=models.CASCADE, related_name='cultures')
+    owner = models.ForeignKey(to=get_user_model(), on_delete=models.CASCADE)
     what = models.CharField(max_length=255)
     start = models.DateField()
     end = models.DateField(blank=True, null=True)
@@ -36,3 +36,10 @@ class SoilAnalysis(models.Model):
     photo = models.FileField(upload_to='soil_analysis')
     date = models.DateField()
     description = models.TextField(blank=True, null=True)
+
+
+class Fertilizer(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    culture_field = models.ManyToManyField(CultureField)
+    day_of_fertilizer = models.DateField()

@@ -7,9 +7,9 @@ from rest_framework.status import HTTP_201_CREATED
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 
-from plot.models import Plot, CultureField, Crop, SoilAnalysis
+from plot.models import Plot, CultureField, Crop, SoilAnalysis, Fertilizer
 from plot.serializers import PlotSerializer, CultureFieldSerializerInlinePost, CultureFieldSerializerInline, \
-    CropSerializer, SoilAnalysisSerializer
+    CropSerializer, SoilAnalysisSerializer, FertilizerSerializer
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -36,7 +36,7 @@ class UserPlotView(APIView):
 class CultureFieldView(APIView):
     def get(self, request, *args, **kwargs):
         user_id = kwargs["user_id"]
-        culture = CultureField.objects.filter(plot__user=user_id)
+        culture = CultureField.objects.filter(owner=user_id)
         serializer = CultureFieldSerializerInline(culture, many=True)
         return Response(serializer.data)
 
@@ -56,7 +56,7 @@ class CurrentUserCropsAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
         user_id = kwargs["user_id"]
-        crops = Crop.objects.filter(culture__plot__user=user_id)
+        crops = Crop.objects.filter(culture__owner=user_id)
         serializer = CropSerializer(crops, many=True)
         return Response(serializer.data, status=200)
 
@@ -64,3 +64,8 @@ class CurrentUserCropsAPIView(APIView):
 class SoilAnalysisViewSet(viewsets.ModelViewSet):
     queryset = SoilAnalysis.objects.all()
     serializer_class = SoilAnalysisSerializer
+
+
+class CurrentUserFertilizerViewSet(viewsets.ModelViewSet):
+    queryset = Fertilizer.objects.all()
+    serializer_class = FertilizerSerializer
