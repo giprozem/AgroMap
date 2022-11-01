@@ -7,9 +7,9 @@ from rest_framework.status import HTTP_201_CREATED
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 
-from plot.models import Plot, CultureField, Crop
+from plot.models import Plot, CultureField, Crop, SoilAnalysis
 from plot.serializers import PlotSerializer, CultureFieldSerializerInlinePost, CultureFieldSerializerInline, \
-    CropSerializer
+    CropSerializer, SoilAnalysisSerializer
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -59,3 +59,8 @@ class CurrentUserCropsAPIView(APIView):
         crops = Crop.objects.filter(culture__plot__user=user_id)
         serializer = CropSerializer(crops, many=True)
         return Response(serializer.data, status=200)
+
+
+class SoilAnalysisViewSet(viewsets.ModelViewSet):
+    queryset = SoilAnalysis.objects.all()
+    serializer_class = SoilAnalysisSerializer
