@@ -2,9 +2,13 @@ from rest_framework.test import APITestCase
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from django.contrib.auth import get_user_model
 from plot.models import Plot, CultureField, Crop
-from .factories import CultureFieldFactory, CropFactory
+from .factories import CultureFieldFactory, CropFactory, SoilAnalysisFactory
+from django.test import override_settings
+
 
 User = get_user_model()
+
+TEST_DIR = 'test_data'
 
 
 class CultureTests(APITestCase):
@@ -211,4 +215,45 @@ class CropTest(APITestCase):
         c1 = CropFactory()
 
         response = self.client.delete(f"/crop/{c1.id}/")
+        self.assertEqual(response.status_code, HTTP_204_NO_CONTENT)
+
+
+class SoilAnalysisTest(APITestCase):
+
+    @override_settings(MEDIA_ROOT=(TEST_DIR + '/media'))
+    def test_get_soil_analysis_success_200(self):
+        s1 = SoilAnalysisFactory()
+        response = self.client.get(f"/soil-analysis/{s1.id}/")
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+    @override_settings(MEDIA_ROOT=(TEST_DIR + '/media'))
+    def test_create_soil_analysis_success_201(self):
+        s1 = SoilAnalysisFactory()
+        expected_data = {
+            "photo": s1.photo,
+            "date": s1.date,
+            "description": s1.description,
+            "culture_field": s1.culture_field.id
+
+        }
+        response = self.client.post(f"/soil-analysis/", expected_data)
+        self.assertEqual(response.status_code, HTTP_201_CREATED)
+
+    @override_settings(MEDIA_ROOT=(TEST_DIR + '/media'))
+    def test_updated_soil_analysis_success_201(self):
+        s1 = SoilAnalysisFactory()
+        expected_data = {
+            "photo": s1.photo,
+            "date": s1.date,
+            "description": s1.description,
+            "culture_field": s1.culture_field.id
+
+        }
+        response = self.client.put(f"/soil-analysis/{s1.id}/", expected_data)
+        self.assertEqual(response.status_code, HTTP_200_OK)
+
+    @override_settings(MEDIA_ROOT=(TEST_DIR + '/media'))
+    def test_deleted_soil_analysis_success_204(self):
+        s1 = SoilAnalysisFactory()
+        response = self.client.delete(f"/soil-analysis/{s1.id}/")
         self.assertEqual(response.status_code, HTTP_204_NO_CONTENT)

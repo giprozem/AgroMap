@@ -30,3 +30,9 @@ class Crop(models.Model):
     class Meta:
         ordering = ('-start',)
 
+
+class SoilAnalysis(models.Model):
+    culture_field = models.ForeignKey(CultureField, on_delete=models.CASCADE, related_name='soil_analysis')
+    photo = models.FileField(upload_to='soil_analysis')
+    date = models.DateField()
+    description = models.TextField(blank=True, null=True)
