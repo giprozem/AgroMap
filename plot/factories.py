@@ -1,7 +1,7 @@
 import factory
 from faker import Faker
 from django.contrib.auth import get_user_model
-from .models import CultureField, Plot, Crop
+from .models import CultureField, Plot, Crop, SoilAnalysis
 
 User = get_user_model()
 
@@ -37,3 +37,13 @@ class CropFactory(factory.django.DjangoModelFactory):
     unit = 'kg'
     start = Faker().date()
     culture = factory.SubFactory(CultureFieldFactory)
+
+
+class SoilAnalysisFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = SoilAnalysis
+
+    photo = factory.django.ImageField()
+    date = Faker().date()
+    description = Faker().name()
+    culture_field = factory.SubFactory(CultureFieldFactory)
