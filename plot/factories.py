@@ -17,14 +17,13 @@ class PlotFactory(factory.django.DjangoModelFactory):
     class Meta:
          model = Plot
     user = factory.SubFactory(UserFactory)
-    name = Faker().name()
 
 
 class CultureFieldFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CultureField
 
-    owner = factory.SubFactory(UserFactory)
+    plot = factory.SubFactory(PlotFactory)
     what = 'test culture'
     start = Faker().date()
 

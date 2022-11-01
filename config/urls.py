@@ -1,6 +1,5 @@
 from config import settings
-from plot.views import PlotViewSet, UserPlotView, CultureFieldView, CropViewSet, CurrentUserCropsAPIView, \
-    CurrentUserFertilizerViewSet
+from plot.views import PlotViewSet, UserPlotView, CultureFieldView, CropViewSet, CurrentUserCropsAPIView
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
@@ -13,7 +12,6 @@ router = DefaultRouter()
 router.register('plots', PlotViewSet)
 # router.register('culture', CultureViewSet)
 router.register('crop', CropViewSet)
-router.register('fertilizer', CurrentUserFertilizerViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(

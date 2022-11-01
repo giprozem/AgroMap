@@ -9,7 +9,7 @@ class Plot(models.Model):
 
 
 class CultureField(models.Model):
-    owner = models.ForeignKey(to=get_user_model(), on_delete=models.CASCADE)
+    plot = models.ForeignKey(Plot, on_delete=models.CASCADE, related_name='cultures')
     what = models.CharField(max_length=255)
     start = models.DateField()
     end = models.DateField(blank=True, null=True)
@@ -30,9 +30,3 @@ class Crop(models.Model):
     class Meta:
         ordering = ('-start',)
 
-
-class Fertilizer(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, null=True)
-    culture_field = models.ManyToManyField(CultureField)
-    day_of_fertilizer = models.DateField()
