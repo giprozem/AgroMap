@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'drf_yasg',
 
     'plot',
+    'schema_graph',
 ]
 
 

@@ -1,3 +1,4 @@
+from schema_graph.views import Schema
 from config import settings
 from plot.views import PlotViewSet, UserPlotView, CultureFieldView, CropViewSet, CurrentUserCropsAPIView, \
     SoilAnalysisViewSet, CurrentUserFertilizerViewSet
@@ -31,6 +32,7 @@ urlpatterns = [
     path('plot/<int:user_id>/', UserPlotView.as_view()),
     path('cultures_fields/<int:user_id>/', CultureFieldView.as_view()),
     path('current_user/<int:user_id>/', CurrentUserCropsAPIView.as_view()),
+    path("schema/", Schema.as_view()),
 ]
 
 if settings.DEBUG:
