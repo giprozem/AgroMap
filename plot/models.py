@@ -25,13 +25,6 @@ class Crop(models.Model):
         ordering = ('-start',)
 
 
-class SoilAnalysis(models.Model):
-    field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name='soil_analysis')
-    photo = models.FileField(upload_to='soil_analysis')
-    date = models.DateField()
-    description = models.TextField(blank=True, null=True)
-
-
 class Fertilizer(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
@@ -45,6 +38,13 @@ class FieldPolygon(models.Model):
     is_actual = models.BooleanField()
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
+
+
+class SoilAnalysis(models.Model):
+    field_polygon = models.ForeignKey(FieldPolygon, on_delete=models.CASCADE, related_name='soil_analysis')
+    photo = models.FileField(upload_to='soil_analysis')
+    date = models.DateField()
+    description = models.TextField(blank=True, null=True)
 
 
 class Season(models.Model):
