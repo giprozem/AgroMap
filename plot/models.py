@@ -14,15 +14,9 @@ class Field(models.Model):
 
 
 class Crop(models.Model):
-    field = models.ForeignKey(Field, on_delete=models.CASCADE, null=True, related_name='crops')
-    what = models.CharField(max_length=255)
     quantity = models.IntegerField()
     unit = models.CharField(max_length=55)
-    start = models.DateField()
-    end = models.DateField(blank=True, null=True)
-
-    class Meta:
-        ordering = ('-start',)
+    field_in_season = models.ForeignKey('plot.FieldInSeason', on_delete=models.CASCADE)
 
 
 class Fertilizer(models.Model):
@@ -57,3 +51,8 @@ class FieldInSeason(models.Model):
     field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name='field_in_season')
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name='field_in_season')
     culture_name = models.CharField(max_length=255)
+
+
+class Culture(models.Model):
+    name = models.CharField(max_length=255)
+    variety = models.CharField(max_length=255)
