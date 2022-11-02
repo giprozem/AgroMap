@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from django.contrib.auth import get_user_model
-from plot.models import Plot, CultureField, Crop
+from plot.models import Plot, CultureField, Crop, Fertilizer
 from .factories import CultureFieldFactory, CropFactory, SoilAnalysisFactory, PlotFactory
 from django.test import override_settings
 
@@ -293,3 +293,34 @@ class CurrentUserCropsAPIViewTest(APITestCase):
 
         response = self.client.get(f"/current_user/{c1.culture.owner.id}/")
         self.assertEqual(response.status_code, HTTP_200_OK)
+
+
+class FertilizerTest(APITestCase):
+    def setUp(self):
+        new_user = User.objects.create(username="test_user_1")
+        owner = User.objects.create(username="test_user_2")
+        culture_fields = CultureField.objects.create(owner=owner, what="cucumber", start="2020-05-15", end="2024-09-21")
+        fertilizer = Fertilizer.objects.create(name='hello', day_of_fertilizer='2020-05-15')
+        fertilizer.save()
+        fertilizer.culture_field.add(culture_fields)
+
+        self.user = new_user
+        self.owner = owner
+        self.culture_fields = culture_fields
+        self.fertilizer = fertilizer
+
+    def test_get_fertilizer_success_200(self):
+        u1 = self.fertilizer
+        expected_data = [
+            {
+                'id': u1.id,
+                'name': u1.name,
+                'description': u1.description,
+                'day_of_fertilizer': u1.day_of_fertilizer,
+                'culture_field': [u1.culture_field.values_list('id', flat=True).first()]
+            }
+        ]
+
+        response = self.client.get('/fertilizer/')
+        self.assertEqual(response.status_code, HTTP_200_OK)
+        self.assertEqual(response.data, expected_data, 'do not match')
