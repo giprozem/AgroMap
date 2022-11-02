@@ -45,3 +45,15 @@ class FieldPolygon(models.Model):
     is_actual = models.BooleanField()
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
+
+
+class Season(models.Model):
+    owner = models.ForeignKey(to=get_user_model(), on_delete=models.CASCADE, related_name='seasons')
+    start = models.DateField()
+    end = models.DateField(blank=True, null=True)
+
+
+class FieldInSeason(models.Model):
+    field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name='field_in_season')
+    season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name='field_in_season')
+    culture_name = models.CharField(max_length=255)
