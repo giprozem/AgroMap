@@ -8,19 +8,13 @@ class Plot(models.Model):
     region = models.CharField(max_length=125, blank=True, null=True)
 
 
-class CultureField(models.Model):
+class Field(models.Model):
     owner = models.ForeignKey(to=get_user_model(), on_delete=models.CASCADE)
-    what = models.CharField(max_length=255)
-    start = models.DateField()
-    end = models.DateField(blank=True, null=True)
-    geometry = models.GeometryField(null=True)
-
-    class Meta:
-        ordering = ('-start',)
+    name = models.CharField(max_length=255)
 
 
 class Crop(models.Model):
-    culture = models.ForeignKey(CultureField, on_delete=models.CASCADE, null=True, related_name='crops')
+    field = models.ForeignKey(Field, on_delete=models.CASCADE, null=True, related_name='crops')
     what = models.CharField(max_length=255)
     quantity = models.IntegerField()
     unit = models.CharField(max_length=55)
@@ -32,7 +26,7 @@ class Crop(models.Model):
 
 
 class SoilAnalysis(models.Model):
-    culture_field = models.ForeignKey(CultureField, on_delete=models.CASCADE, related_name='soil_analysis')
+    field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name='soil_analysis')
     photo = models.FileField(upload_to='soil_analysis')
     date = models.DateField()
     description = models.TextField(blank=True, null=True)
@@ -41,5 +35,13 @@ class SoilAnalysis(models.Model):
 class Fertilizer(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    culture_field = models.ManyToManyField(CultureField)
+    field = models.ManyToManyField(Field)
     day_of_fertilizer = models.DateField()
+
+
+class FieldPolygon(models.Model):
+    field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name='polygon_field')
+    polygon = models.GeometryField()
+    is_actual = models.BooleanField()
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)

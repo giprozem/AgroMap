@@ -7,8 +7,8 @@ from rest_framework.status import HTTP_201_CREATED
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 
-from plot.models import Plot, CultureField, Crop, SoilAnalysis, Fertilizer
-from plot.serializers import PlotSerializer, CultureFieldSerializerInlinePost, CultureFieldSerializerInline, \
+from plot.models import Plot, Field, Crop, SoilAnalysis, Fertilizer
+from plot.serializers import PlotSerializer, FieldSerializerInline, FieldSerializerInlinePost, \
     CropSerializer, SoilAnalysisSerializer, FertilizerSerializer
 
 
@@ -36,12 +36,12 @@ class UserPlotView(APIView):
 class CultureFieldView(APIView):
     def get(self, request, *args, **kwargs):
         user_id = kwargs["user_id"]
-        culture = CultureField.objects.filter(owner=user_id)
-        serializer = CultureFieldSerializerInline(culture, many=True)
+        culture = Field.objects.filter(owner=user_id)
+        serializer = FieldSerializerInline(culture, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
-        serializer = CultureFieldSerializerInlinePost(data=request.data)
+        serializer = FieldSerializerInlinePost(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, HTTP_201_CREATED)

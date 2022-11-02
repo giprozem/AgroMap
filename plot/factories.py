@@ -1,7 +1,7 @@
 import factory
 from faker import Faker
 from django.contrib.auth import get_user_model
-from .models import CultureField, Plot, Crop, SoilAnalysis
+from .models import Field, Plot, Crop, SoilAnalysis
 
 User = get_user_model()
 
@@ -22,7 +22,7 @@ class PlotFactory(factory.django.DjangoModelFactory):
 
 class CultureFieldFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = CultureField
+        model = Field
 
     owner = factory.SubFactory(UserFactory)
     what = 'test culture'

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from plot.models import Plot, CultureField, Crop, SoilAnalysis, Fertilizer
+from plot.models import Plot, Field, Crop, SoilAnalysis, Fertilizer
 
 
 class PlotSerializer(serializers.ModelSerializer):
@@ -29,12 +29,12 @@ class SoilAnalysisInlineSerializer(serializers.ModelSerializer):
     class Meta:
         model = SoilAnalysis
         # fields = '__all__'
-        exclude = ('culture_field', )
+        exclude = ('field', )
 
 
-class CultureFieldSerializerInline(serializers.ModelSerializer):
+class FieldSerializerInline(serializers.ModelSerializer):
     class Meta:
-        model = CultureField
+        model = Field
         # exclude = ('plot', )
         fields = '__all__'
 
@@ -45,9 +45,9 @@ class CultureFieldSerializerInline(serializers.ModelSerializer):
         return representation
 
 
-class CultureFieldSerializerInlinePost(serializers.ModelSerializer):
+class FieldSerializerInlinePost(serializers.ModelSerializer):
     class Meta:
-        model = CultureField
+        model = Field
         exclude = ('id', )
 
 

@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from django.contrib.auth import get_user_model
-from plot.models import Plot, CultureField, Crop, Fertilizer
+from plot.models import Plot, Field, Crop, Fertilizer
 from .factories import CultureFieldFactory, CropFactory, SoilAnalysisFactory, PlotFactory
 from django.test import override_settings
 
@@ -15,9 +15,9 @@ class CultureTests(APITestCase):
     def setUp(self):
         new_user = User.objects.create(username="test_user_1")
         owner = User.objects.create(username="test_user_2")
-        culture_fields = CultureField.objects.bulk_create([
-            CultureField(owner=owner, what="cucumber", start="2022-05-15", end="2022-09-21"),
-            CultureField(owner=owner, what="cucumber", start="2022-05-15", end="2022-09-21")
+        culture_fields = Field.objects.bulk_create([
+            Field(owner=owner, what="cucumber", start="2022-05-15", end="2022-09-21"),
+            Field(owner=owner, what="cucumber", start="2022-05-15", end="2022-09-21")
         ])
 
         self.user = new_user
@@ -147,7 +147,7 @@ class CropTest(APITestCase):
     def setUp(self):
         new_user = User.objects.create(username="test_user_1")
         owner = User.objects.create(username="test_user_2")
-        culture_fields = CultureField.objects.create(owner=owner, what="cucumber", start="2020-05-15", end="2024-09-21")
+        culture_fields = Field.objects.create(owner=owner, what="cucumber", start="2020-05-15", end="2024-09-21")
         crops = Crop.objects.bulk_create([
             Crop(culture=culture_fields, what='crops_what_1', quantity=1234, unit='kg', start='2021-01-23'),
             Crop(culture=culture_fields, what='crops_what_2', quantity=6543, unit='l', start='2022-01-23', end='2026-01-01')
@@ -266,7 +266,7 @@ class CurrentUserCropsAPIViewTest(APITestCase):
 
     def setUp(self):
         owner = User.objects.create(username="test_user_2")
-        culture_fields = CultureField.objects.create(owner=owner, what="cucumber", start="2020-05-15", end="2024-09-21")
+        culture_fields = Field.objects.create(owner=owner, what="cucumber", start="2020-05-15", end="2024-09-21")
         crops = Crop.objects.bulk_create([
             Crop(culture=culture_fields, what='crops_what_1', quantity=1234, unit='kg', start='2021-01-23'),
             Crop(culture=culture_fields, what='crops_what_2', quantity=6543, unit='l', start='2022-01-23',
@@ -299,7 +299,7 @@ class FertilizerTest(APITestCase):
     def setUp(self):
         new_user = User.objects.create(username="test_user_1")
         owner = User.objects.create(username="test_user_2")
-        culture_fields = CultureField.objects.create(owner=owner, what="cucumber", start="2020-05-15", end="2024-09-21")
+        culture_fields = Field.objects.create(owner=owner, what="cucumber", start="2020-05-15", end="2024-09-21")
         fertilizer = Fertilizer.objects.create(name='hello', day_of_fertilizer='2020-05-15')
         fertilizer.save()
         fertilizer.culture_field.add(culture_fields)
