@@ -26,6 +26,7 @@ INSTALLED_APPS = [
 
     'plot',
     'schema_graph',
+    'gip',
 ]
 
 
