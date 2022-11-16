@@ -1,6 +1,8 @@
 from django.contrib.gis.db import models
 
+from gip.models.base import BaseModel
 
-class Culture(models.Model):
+
+class Culture(BaseModel):
     name = models.CharField(max_length=55)
     coefficient_crop = models.FloatField()
