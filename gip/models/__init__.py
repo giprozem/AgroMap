@@ -10,3 +10,4 @@ from gip.models.orthophoto import *
 from gip.models.region import *
 from gip.models.soil import *
 from gip.models.village import *
+from gip.models.base import *
