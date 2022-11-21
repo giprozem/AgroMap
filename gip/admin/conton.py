@@ -5,4 +5,4 @@ from gip.models import Conton
 
 @admin.register(Conton)
 class ContonAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')

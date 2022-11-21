@@ -5,4 +5,4 @@ from gip.models import Farmer
 
 @admin.register(Farmer)
 class FarmerAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')

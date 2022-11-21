@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
 
-    'plot',
     'schema_graph',
     'gip',
 ]

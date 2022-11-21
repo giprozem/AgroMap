@@ -5,4 +5,4 @@ from gip.models import LandUse
 
 @admin.register(LandUse)
 class LandUseAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')

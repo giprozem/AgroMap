@@ -5,4 +5,4 @@ from gip.models import Culture
 
 @admin.register(Culture)
 class CultureAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')

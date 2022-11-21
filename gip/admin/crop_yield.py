@@ -5,4 +5,4 @@ from gip.models import CropYield
 
 @admin.register(CropYield)
 class CropYieldAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')
