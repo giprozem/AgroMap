@@ -5,19 +5,19 @@ from gip.models.soil import SoilClass, SoilClassMap, SoilProductivity, SoilFerti
 
 @admin.register(SoilClass)
 class SoilClassAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')
 
 
 @admin.register(SoilClassMap)
 class SoilClassMapAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')
 
 
 @admin.register(SoilProductivity)
 class SoilProductivityAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')
 
 
 @admin.register(SoilFertility)
 class SoilFertilityAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')

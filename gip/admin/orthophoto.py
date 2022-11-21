@@ -5,4 +5,4 @@ from gip.models import OrthoPhoto
 
 @admin.register(OrthoPhoto)
 class OrthoPhotoAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')

@@ -5,4 +5,4 @@ from gip.models import Village
 
 @admin.register(Village)
 class VillageAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')

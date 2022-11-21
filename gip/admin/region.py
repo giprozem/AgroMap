@@ -5,4 +5,4 @@ from gip.models import Region
 
 @admin.register(Region)
 class RegionAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')
