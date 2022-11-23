@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'drf_yasg',
+    'leaflet',
 
     'schema_graph',
     'gip',
@@ -112,3 +113,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
 
 # TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+LEAFLET_CONFIG = {
+    "DEFAULT_CENTER": (42.87, 74.59),
+
+    "DEFAULT_ZOOM": 10,
+
+    "MAX_ZOOM": 20,
+
+    "MIN_ZOOM": 3,
+
+    "SCALE": 'both',
+
+    "ATTRIBUTION_PREFIX": "АгроМап"
+}

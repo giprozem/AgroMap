@@ -18,4 +18,4 @@ RUN apt-get update &&\
 # Копируем все файлы приложения в рабочую директорию в контейнере
 WORKDIR /usr/src/app
 ADD . /usr/src/app
-RUN pip install -r req.txt
+RUN pip install -r requirements.txt
