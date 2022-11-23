@@ -1,4 +1,5 @@
 from django.contrib.gis import admin
+from leaflet.admin import LeafletGeoAdmin
 
 from gip.models.soil import SoilClass, SoilClassMap, SoilProductivity, SoilFertility
 
@@ -9,7 +10,7 @@ class SoilClassAdmin(admin.ModelAdmin):
 
 
 @admin.register(SoilClassMap)
-class SoilClassMapAdmin(admin.ModelAdmin):
+class SoilClassMapAdmin(LeafletGeoAdmin):
     readonly_fields = ('created_at', 'updated_at')
 
 
@@ -19,5 +20,5 @@ class SoilProductivityAdmin(admin.ModelAdmin):
 
 
 @admin.register(SoilFertility)
-class SoilFertilityAdmin(admin.ModelAdmin):
+class SoilFertilityAdmin(LeafletGeoAdmin):
     readonly_fields = ('created_at', 'updated_at')

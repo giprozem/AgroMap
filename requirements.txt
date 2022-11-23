@@ -9,8 +9,11 @@ colorama==0.4.5
 coreapi==2.3.3
 coreschema==0.0.4
 cors==1.0.1
+coverage==6.5.0
 Django==4.1.2
 django-cors-headers==3.13.0
+django-leaflet==0.28.3
+django-schema-graph==2.2.1
 djangorestframework==3.12.4
 drf-yasg==1.20.0
 factory-boy==3.2.1
@@ -27,7 +30,8 @@ Jinja2==3.1.2
 MarkupSafe==2.1.1
 multidict==6.0.2
 packaging==21.3
-psycopg2-binary==2.9
+Pillow==9.2.0
+psycopg2-binary==2.9.5
 pyparsing==3.0.9
 PySocks==1.7.1
 python-dateutil==2.8.2
@@ -47,7 +51,3 @@ urllib3==1.26.12
 yarl==1.8.1
 zope.event==4.5.0
 zope.interface==5.5.0
-#django-nose==1.4.7
-coverage==6.5.0
-Pillow==9.2.0
-django-schema-graph
