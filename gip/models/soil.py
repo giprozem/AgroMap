@@ -13,7 +13,7 @@ class SoilClass(BaseModel):
 
 class SoilClassMap(BaseModel):
     soil_class = models.ForeignKey(SoilClass, on_delete=models.CASCADE, related_name='soil_class_maps')
-    polygon = models.MultiPolygonField()
+    polygon = models.MultiPolygonField(geography='Kyrgyzstan')
 
 
 class SoilProductivity(BaseModel):
@@ -22,4 +22,4 @@ class SoilProductivity(BaseModel):
 
 class SoilFertility(BaseModel):
     soil_productivity = models.ForeignKey(SoilProductivity, on_delete=models.CASCADE, related_name='soil_fertility')
-    polygon = models.MultiPolygonField()
+    polygon = models.MultiPolygonField(geography='Kyrgyzstan')
