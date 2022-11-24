@@ -11,3 +11,6 @@ class CropYield(BaseModel):
     weight = models.FloatField(help_text='Indicated in centners')
     year = models.IntegerField()
     season = models.IntegerField(blank=True, null=True)
+
+    # def __str__(self):
+    #     return self

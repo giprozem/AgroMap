@@ -8,3 +8,6 @@ class Region(BaseModel):
     population = models.IntegerField()
     area = models.IntegerField()
     density = models.FloatField()
+
+    def __str__(self):
+        return self.name
