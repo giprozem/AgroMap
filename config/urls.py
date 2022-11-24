@@ -7,7 +7,10 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
 
+from gip.views.contour import ContourViewSet, PointAPIView
+
 router = DefaultRouter()
+router.register('contour', ContourViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -22,6 +25,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('docs/', schema_view.with_ui()),
     path("schema/", Schema.as_view()),
+    path("get_contour", PointAPIView.as_view())
 ]
 
 if settings.DEBUG:

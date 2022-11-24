@@ -8,3 +8,6 @@ class OrthoPhoto(BaseModel):
     url = models.URLField(max_length=1024)
     use_y_n = models.BooleanField()
     file = models.FileField(upload_to='ortho_photo')
+
+    def __str__(self):
+        return self.layer_name

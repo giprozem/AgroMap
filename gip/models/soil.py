@@ -8,6 +8,8 @@ class SoilClass(BaseModel):
     name = models.CharField(max_length=55)
     fertility = models.ForeignKey(Fertility, on_delete=models.CASCADE, related_name='soil_classes')
 
+    def __str__(self):
+        return self.name
 
 class SoilClassMap(BaseModel):
     soil_class = models.ForeignKey(SoilClass, on_delete=models.CASCADE, related_name='soil_class_maps')

@@ -8,3 +8,6 @@ class Village(BaseModel):
     conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='villages')
     name = models.CharField(max_length=55)
     polygon = models.MultiPolygonField()
+
+    def __str__(self):
+        return self.conton.name
