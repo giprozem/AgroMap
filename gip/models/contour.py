@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from gip.models.base import BaseModel
 from gip.models.conton import Conton
 from gip.models.farmer import Farmer
+from simple_history.models import HistoricalRecords
 
 
 class Contour(BaseModel):
@@ -13,6 +14,7 @@ class Contour(BaseModel):
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='contours')
     polygon = models.MultiPolygonField(geography='Kyrgyzstan')
     sum_ha = models.FloatField(blank=True, null=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.conton.name

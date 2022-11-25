@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
     'leaflet',
+    'simple_history',
 
     'schema_graph',
     'gip',
@@ -39,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
