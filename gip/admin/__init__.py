@@ -10,3 +10,4 @@ from gip.admin.orthophoto import *
 from gip.admin.region import *
 from gip.admin.soil import *
 from gip.admin.village import *
+from gip.admin.base import *
