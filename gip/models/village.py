@@ -7,7 +7,7 @@ from gip.models.conton import Conton
 class Village(BaseModel):
     conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='villages')
     name = models.CharField(max_length=55)
-    polygon = models.MultiPolygonField()
+    polygon = models.MultiPolygonField(geography='Kyrgyzstan')
 
     def __str__(self):
         return self.conton.name

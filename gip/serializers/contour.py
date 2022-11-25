@@ -20,3 +20,9 @@ class ContourAutocompleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contour
         fields = ('polygon', )
+
+
+class CalculatePolygonContourSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contour
+        fields = '__all__'
