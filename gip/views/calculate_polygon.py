@@ -6,6 +6,7 @@ from rest_framework.response import Response
 class StatisticsAPIView(APIView):
 
     def get(self, request):
+        culture = request.GET.get('culture')
         conton = request.GET.get('conton')
         district = request.GET.get('district')
         region = request.GET.get('region')
@@ -21,7 +22,7 @@ class StatisticsAPIView(APIView):
                                on cntr.id = cy.contour_id
                                join gip_culture as cl
                                on cl.id = cy.culture_id join gip_conton as cntn on cntn.id = cntr.conton_id  
-                               where cntn.name='{conton}' group by cy.year order by cy.year""")
+                               where cntn.id={conton} and cl.name='{culture}' group by cy.year order by cy.year""")
                 rows = cursor.fetchall()
             return Response([col_lst] + rows)
         elif district:
@@ -36,7 +37,7 @@ class StatisticsAPIView(APIView):
                                join gip_culture as cl
                                on cl.id = cy.culture_id join gip_conton as cntn on cntn.id = cntr.conton_id 
                                join gip_district as dst on dst.id = cntn.district_id  
-                               where dst.name='{district}' group by cy.year order by cy.year""")
+                               where dst.id='{district}' and cl.name='{culture}' group by cy.year order by cy.year""")
                 rows = cursor.fetchall()
             return Response([col_lst] + rows)
         elif region:
@@ -52,7 +53,7 @@ class StatisticsAPIView(APIView):
                                on cl.id = cy.culture_id join gip_conton as cntn on cntn.id = cntr.conton_id 
                                join gip_district as dst on dst.id = cntn.district_id 
                                join gip_region as rgn on rgn.id = dst.region_id  
-                               where rgn.name='{region}' group by cy.year order by cy.year""")
+                               where rgn.id='{region}' and cl.name='{culture}' group by cy.year order by cy.year""")
                 rows = cursor.fetchall()
             return Response([col_lst] + rows)
 
