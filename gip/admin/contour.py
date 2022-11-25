@@ -6,4 +6,5 @@ from gip.models import Contour
 
 @admin.register(Contour)
 class ContourAdmin(LeafletGeoAdmin):
-    readonly_fields = ('created_at', 'updated_at')
+    readonly_fields = ('created_at', 'updated_at', 'sum_ha')
+
