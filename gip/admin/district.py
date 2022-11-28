@@ -6,7 +6,7 @@ from leaflet.admin import LeafletGeoAdmin
 
 @admin.register(District)
 class DistrictAdmin(LeafletGeoAdmin):
-    list_display = ['id', 'name', 'region', 'created_by', 'updated_by']
+    list_display = ['id', 'name', 'region']
     readonly_fields = ('id', 'created_at', 'updated_at')
     list_filter = ('region', 'name', )
     ordering = ('name', 'created_at')

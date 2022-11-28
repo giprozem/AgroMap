@@ -8,7 +8,7 @@ from gip.models import Contour
 @admin.register(Contour)
 class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     readonly_fields = ('id', 'created_at', 'updated_at', 'sum_ha')
-    list_display = ('id', 'conton', 'farmer', 'created_by', 'updated_by', )
+    list_display = ('id', 'conton', 'farmer', )
     list_filter = ('conton', 'farmer', 'sum_ha', )
     ordering = ('conton', 'created_at')
     list_per_page = 20

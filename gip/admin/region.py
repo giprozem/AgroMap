@@ -5,7 +5,7 @@ from gip.models import Region
 
 @admin.register(Region)
 class RegionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'population', 'area', 'density',  'created_by', 'updated_by', )
+    list_display = ('id', 'name', 'population', 'area', 'density', )
     readonly_fields = ('id', 'created_at', 'updated_at', )
     list_filter = ('name', 'population', 'area', 'density', )
     ordering = ('name', 'created_at', )

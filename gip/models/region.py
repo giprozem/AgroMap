@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models
 
 from gip.models.base import BaseModel
+from simple_history.models import HistoricalRecords
 
 
 class Region(BaseModel):
@@ -8,6 +9,7 @@ class Region(BaseModel):
     population = models.IntegerField(verbose_name="Население")
     area = models.IntegerField(verbose_name="Площадь")
     density = models.FloatField(verbose_name="Плотность")
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.name

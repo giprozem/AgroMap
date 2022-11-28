@@ -5,7 +5,7 @@ from gip.models import Farmer
 
 @admin.register(Farmer)
 class FarmerAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'pin_inn', 'mobile', 'created_by', 'updated_by']
+    list_display = ['id', 'user', 'pin_inn', 'mobile']
     readonly_fields = ('id', 'created_at', 'updated_at', )
     list_filter = ('user', 'pin_inn', 'mobile', )
     ordering = ('user', 'created_at')
