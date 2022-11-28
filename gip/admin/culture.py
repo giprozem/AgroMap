@@ -1,10 +1,11 @@
 from django.contrib.gis import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from gip.models import Culture
 
 
 @admin.register(Culture)
-class CultureAdmin(admin.ModelAdmin):
+class CultureAdmin(SimpleHistoryAdmin):
     list_display = ['id', 'name', 'coefficient_crop', ]
     readonly_fields = ('id', 'created_at', 'updated_at', )
     list_filter = ('name', 'coefficient_crop', )

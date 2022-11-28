@@ -1,10 +1,11 @@
 from django.contrib.gis import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from gip.models import Fertility
 
 
 # @admin.register(Fertility)
-# class FertilityAdmin(admin.ModelAdmin):
+# class FertilityAdmin(SimpleHistoryAdmin):
 #     list_display = ('id', 'name', )
 #     readonly_fields = ('id', 'created_at', 'updated_at', )
 #     list_filter = ('name', )

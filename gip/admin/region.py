@@ -1,10 +1,11 @@
 from django.contrib.gis import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from gip.models import Region
 
 
 @admin.register(Region)
-class RegionAdmin(admin.ModelAdmin):
+class RegionAdmin(SimpleHistoryAdmin):
     list_display = ('id', 'name', 'population', 'area', 'density', )
     readonly_fields = ('id', 'created_at', 'updated_at', )
     list_filter = ('name', 'population', 'area', 'density', )
