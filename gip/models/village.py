@@ -5,9 +5,13 @@ from gip.models.conton import Conton
 
 
 class Village(BaseModel):
-    conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='villages')
-    name = models.CharField(max_length=55)
-    polygon = models.MultiPolygonField(geography='Kyrgyzstan')
+    conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='villages', verbose_name="Район")
+    name = models.CharField(max_length=55, verbose_name="Село")
+    polygon = models.MultiPolygonField(geography='Kyrgyzstan', verbose_name="Контур")
 
     def __str__(self):
         return self.conton.name
+
+    class Meta:
+        verbose_name = 'Село'
+        verbose_name_plural = "Сёла"

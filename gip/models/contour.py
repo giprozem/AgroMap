@@ -10,14 +10,18 @@ from simple_history.models import HistoricalRecords
 
 
 class Contour(BaseModel):
-    conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='contours')
-    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='contours')
-    polygon = models.MultiPolygonField(geography='Kyrgyzstan')
-    sum_ha = models.FloatField(blank=True, null=True)
-    history = HistoricalRecords()
+    conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='contours', verbose_name="Айылный аймак")
+    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='contours', verbose_name="Фермер")
+    polygon = models.MultiPolygonField(geography='Kyrgyzstan', verbose_name="Контур")
+    sum_ha = models.FloatField(blank=True, null=True, verbose_name="Площадь га")
+    history = HistoricalRecords(verbose_name="История")
 
     def __str__(self):
         return self.conton.name
+
+    class Meta:
+        verbose_name = 'Поле'
+        verbose_name_plural = "Поля"
 
 
 @receiver(post_save, sender=Contour)
