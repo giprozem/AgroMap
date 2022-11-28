@@ -1,5 +1,6 @@
 from django.contrib.admin import TabularInline
 from django.contrib.gis import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from gip.models import LandUse, LandUsePhotos
 
@@ -10,7 +11,7 @@ from gip.models import LandUse, LandUsePhotos
 #
 #
 # @admin.register(LandUse)
-# class LandUseAdmin(admin.ModelAdmin):
+# class LandUseAdmin(SimpleHistoryAdmin):
 #     list_display = ('id', 'contour', 'farmer', 'culture', 'year', )
 #     readonly_fields = ('id', 'created_at', 'updated_at', )
 #     list_filter = ('contour', 'farmer', 'culture', 'year', )

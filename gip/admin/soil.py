@@ -1,11 +1,12 @@
 from django.contrib.gis import admin
 from leaflet.admin import LeafletGeoAdmin
+from simple_history.admin import SimpleHistoryAdmin
 
 from gip.models.soil import SoilClass, SoilClassMap, SoilProductivity, SoilFertility
 
 
 # @admin.register(SoilClass)
-# class SoilClassAdmin(admin.ModelAdmin):
+# class SoilClassAdmin(SimpleHistoryAdmin):
 #     list_display = ('id', 'name', 'fertility', )
 #     readonly_fields = ('id', 'created_at', 'updated_at', )
 #     list_filter = ('name', 'fertility', )
@@ -17,7 +18,7 @@ from gip.models.soil import SoilClass, SoilClassMap, SoilProductivity, SoilFerti
 #
 #
 # @admin.register(SoilClassMap)
-# class SoilClassMapAdmin(LeafletGeoAdmin):
+# class SoilClassMapAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 #     list_display = ('id', 'soil_class', )
 #     readonly_fields = ('id', 'created_at', 'updated_at', )
 #     list_filter = ('soil_class', )
@@ -29,7 +30,7 @@ from gip.models.soil import SoilClass, SoilClassMap, SoilProductivity, SoilFerti
 #
 #
 # @admin.register(SoilProductivity)
-# class SoilProductivityAdmin(admin.ModelAdmin):
+# class SoilProductivityAdmin(SimpleHistoryAdmin):
 #     list_display = ('id', 'name', )
 #     readonly_fields = ('id', 'created_at', 'updated_at', )
 #     list_filter = ('name', )
@@ -41,7 +42,7 @@ from gip.models.soil import SoilClass, SoilClassMap, SoilProductivity, SoilFerti
 #
 #
 # @admin.register(SoilFertility)
-# class SoilFertilityAdmin(LeafletGeoAdmin):
+# class SoilFertilityAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 #     list_display = ('id', 'soil_productivity', )
 #     readonly_fields = ('id', 'created_at', 'updated_at', )
 #     list_filter = ('soil_productivity', )

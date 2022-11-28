@@ -1,11 +1,12 @@
 from django.contrib.gis import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from gip.models import District
 from leaflet.admin import LeafletGeoAdmin
 
 
 @admin.register(District)
-class DistrictAdmin(LeafletGeoAdmin):
+class DistrictAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     list_display = ['id', 'name', 'region']
     readonly_fields = ('id', 'created_at', 'updated_at')
     list_filter = ('region', 'name', )
