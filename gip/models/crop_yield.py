@@ -7,12 +7,16 @@ from simple_history.models import HistoricalRecords
 
 
 class CropYield(BaseModel):
-    culture = models.ForeignKey(Culture, on_delete=models.CASCADE, related_name='crop_yields')
-    contour = models.ForeignKey(Contour, on_delete=models.CASCADE, related_name='crop_yields')
-    weight = models.FloatField(help_text='Indicated in centners')
-    year = models.IntegerField()
-    season = models.IntegerField(blank=True, null=True)
+    culture = models.ForeignKey(Culture, on_delete=models.CASCADE, related_name='crop_yields', verbose_name="Культура")
+    contour = models.ForeignKey(Contour, on_delete=models.CASCADE, related_name='crop_yields', verbose_name="Поле")
+    weight = models.FloatField(help_text='Указыается в центнерах', verbose_name="урожайность")
+    year = models.IntegerField(verbose_name="год")
+    season = models.IntegerField(blank=True, null=True, verbose_name="сезон")
     history = HistoricalRecords()
 
-    # def __str__(self):
-    #     return self
+    def __str__(self):
+        return self.culture.name
+
+    class Meta:
+        verbose_name = 'Урожайность'
+        verbose_name_plural = "Урожайность"
