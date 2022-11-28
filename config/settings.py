@@ -127,5 +127,11 @@ LEAFLET_CONFIG = {
 
     "SCALE": 'both',
 
-    "ATTRIBUTION_PREFIX": "Leaflet"
+    # "ATTRIBUTION_PREFIX": "Leaflet"
+
+    'TILES': [('OSM', 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+               {'attribution': '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}),
+              ('Google', 'http://{s}.google.com/vt/lyrs=s,m,p&x={x}&y={y}&z={z}',
+               {'maxZoom': 20,'subdomains':['mt0','mt1','mt2','mt3']})]
+
 }
