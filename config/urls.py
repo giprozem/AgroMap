@@ -10,6 +10,8 @@ from rest_framework.routers import DefaultRouter
 from gip.views.calculate_polygon import StatisticsAPIView
 from gip.views.conton import ContonViewSet
 from gip.views.contour import ContourViewSet, PointAPIView
+from gip.views.crop_yield import CropYieldViewSet
+from gip.views.culture import CultureViewSet
 from gip.views.district import DistrictViewSet
 from gip.views.region import RegionViewSet
 
@@ -18,6 +20,8 @@ router.register('contour', ContourViewSet)
 router.register('region', RegionViewSet)
 router.register('district', DistrictViewSet)
 router.register('conton', ContonViewSet)
+router.register('culture', CultureViewSet)
+router.register('crop_yield', CropYieldViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
