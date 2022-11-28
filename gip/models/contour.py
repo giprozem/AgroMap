@@ -20,8 +20,8 @@ class Contour(BaseModel):
         return self.conton.name
 
     class Meta:
-        verbose_name = 'Поле'
-        verbose_name_plural = "Поля"
+        verbose_name = 'Контуры Поля'
+        verbose_name_plural = "Контуры полей"
 
 
 @receiver(post_save, sender=Contour)

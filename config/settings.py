@@ -127,5 +127,5 @@ LEAFLET_CONFIG = {
 
     "SCALE": 'both',
 
-    "ATTRIBUTION_PREFIX": "АгроМап"
+    "ATTRIBUTION_PREFIX": "Leaflet"
 }

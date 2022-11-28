@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models
 
 from gip.models.base import BaseModel
+from simple_history.models import HistoricalRecords
 
 
 class OrthoPhoto(BaseModel):
@@ -8,6 +9,7 @@ class OrthoPhoto(BaseModel):
     url = models.URLField(max_length=1024, verbose_name="Ссылка")
     use_y_n = models.BooleanField(verbose_name="Использовать")
     file = models.FileField(upload_to='ortho_photo', verbose_name="Спутниковый снимок")
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.layer_name
