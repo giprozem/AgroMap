@@ -18,7 +18,7 @@ class Contour(BaseModel):
     history = HistoricalRecords(verbose_name="История")
 
     def __str__(self):
-        return self.conton.name
+        return self.ink
 
     class Meta:
         verbose_name = 'Контуры Поля'
