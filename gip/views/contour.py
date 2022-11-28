@@ -12,8 +12,8 @@ class ContourViewSet(viewsets.ModelViewSet):
     queryset = Contour.objects.all()
     serializer_class = ContourSerializer
 
-    def get_queryset(self):
-        return self.queryset.filter(created_by=self.request.user)
+    # def get_queryset(self):
+    #     return self.queryset.filter(created_by=self.request.user)
 
 
 class PointAPIView(APIView):

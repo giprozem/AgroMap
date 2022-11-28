@@ -7,6 +7,19 @@ from rest_framework.response import Response
 class StatisticsAPIView(APIView):
 
     def get(self, request):
+        """
+
+        ?region=id&culture=id
+
+        Обязательные поля:
+        ?culture=id
+
+        Необязательные поля:
+        region=id
+        district=id
+        conton=id
+
+        """
         culture = request.GET.get('culture')
         conton = request.GET.get('conton')
         district = request.GET.get('district')
