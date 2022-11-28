@@ -5,7 +5,7 @@ from gip.models import OrthoPhoto
 
 # @admin.register(OrthoPhoto)
 # class OrthoPhotoAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'layer_name', 'use_y_n', 'url',  'created_by', 'updated_by', )
+#     list_display = ('id', 'layer_name', 'use_y_n', 'url', )
 #     readonly_fields = ('id', 'created_at', 'updated_at', )
 #     list_filter = ('layer_name', 'use_y_n', )
 #     ordering = ('layer_name', 'created_at', )

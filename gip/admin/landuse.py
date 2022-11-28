@@ -11,7 +11,7 @@ from gip.models import LandUse, LandUsePhotos
 #
 # @admin.register(LandUse)
 # class LandUseAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'contour', 'farmer', 'culture', 'year',  'created_by', 'updated_by', )
+#     list_display = ('id', 'contour', 'farmer', 'culture', 'year', )
 #     readonly_fields = ('id', 'created_at', 'updated_at', )
 #     list_filter = ('contour', 'farmer', 'culture', 'year', )
 #     ordering = ('contour', 'created_at', )

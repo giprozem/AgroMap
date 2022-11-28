@@ -6,7 +6,7 @@ from gip.models import Village
 
 # @admin.register(Village)
 # class VillageAdmin(LeafletGeoAdmin):
-#     list_display = ('id', 'name', 'conton', 'created_by', 'updated_by', )
+#     list_display = ('id', 'name', 'conton', )
 #     readonly_fields = ('id', 'created_at', 'updated_at', )
 #     list_filter = ('name', 'conton', )
 #     ordering = ('name', 'created_at', )
