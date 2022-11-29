@@ -12,6 +12,7 @@ cors==1.0.1
 coverage==6.5.0
 Django==4.1.2
 django-cors-headers==3.13.0
+django-filter==22.1
 django-leaflet==0.28.3
 django-schema-graph==2.2.1
 django-simple-history==3.2.0

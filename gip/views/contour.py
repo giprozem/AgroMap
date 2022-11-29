@@ -1,4 +1,5 @@
 from django.contrib.gis.geos import Point
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,10 +12,7 @@ from gip.serializers.contour import ContourSerializer
 class ContourViewSet(viewsets.ModelViewSet):
     queryset = Contour.objects.all()
     serializer_class = ContourSerializer
-
-    # def list(self, request, *args, **kwargs):
-
-
+    filter_backends = [DjangoFilterBackend]
 
 
 class PointAPIView(APIView):
