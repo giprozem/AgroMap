@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'rest_framework',
+    'django_filters',
     'rest_framework_gis',
     'corsheaders',
     'drf_yasg',
@@ -134,4 +135,8 @@ LEAFLET_CONFIG = {
                {'attribution': '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}),
               ]
 
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
