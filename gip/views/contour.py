@@ -13,6 +13,7 @@ class ContourViewSet(viewsets.ModelViewSet):
     queryset = Contour.objects.all()
     serializer_class = ContourSerializer
     filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['ink', 'conton']
 
 
 class PointAPIView(APIView):
