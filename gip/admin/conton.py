@@ -12,6 +12,6 @@ class ContonAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     list_filter = ('name', 'district', )
     ordering = ('name', 'created_at')
     list_per_page = 20
-    search_fields = ('name', 'district', )
+    search_fields = ('name', 'district__name', )
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'name', )

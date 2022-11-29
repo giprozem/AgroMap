@@ -11,6 +11,6 @@ class FarmerAdmin(SimpleHistoryAdmin):
     list_filter = ('user', 'pin_inn', 'mobile', )
     ordering = ('user', 'created_at')
     list_per_page = 20
-    search_fields = ('user', 'pin_inn', 'mobile')
+    search_fields = ('user__username', 'pin_inn', 'mobile')
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'user', )
