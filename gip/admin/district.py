@@ -12,7 +12,7 @@ class DistrictAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     list_filter = ('region', 'name', )
     ordering = ('name', 'created_at')
     list_per_page = 20
-    search_fields = ('name', 'region')
+    search_fields = ('name', 'region__name')
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'name', )
 

@@ -17,7 +17,7 @@ from gip.models import LandUse, LandUsePhotos
 #     list_filter = ('contour', 'farmer', 'culture', 'year', )
 #     ordering = ('contour', 'created_at', )
 #     list_per_page = 20
-#     search_fields = ('contour', 'farmer', 'culture', 'year', )
+#     search_fields = ('contour__ink', 'farmer__pin_inn', 'culture__name', 'year', )
 #     date_hierarchy = 'created_at'
 #     list_display_links = ('id', 'contour', )
 #     inlines = [LandUsePhotosAdmin]

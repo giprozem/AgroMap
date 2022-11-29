@@ -12,6 +12,6 @@ class CropYieldAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     list_filter = ('culture', 'contour', 'year', 'season', )
     ordering = ('culture', 'created_at')
     list_per_page = 20
-    search_fields = ('culture', 'contour', 'year', 'season',)
+    search_fields = ('culture__name', 'contour__ink', 'year', 'season',)
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'culture', )
