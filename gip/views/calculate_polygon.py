@@ -134,7 +134,7 @@ class ContourCultureAPIView(APIView):
     def get(self, request):
         conton = request.GET.get('conton')
         ink = request.GET.get('ink')
-        if conton or ink:
+        if conton:
             with connection.cursor() as cursor:
                 cursor.execute(f"""select cntn.name, cntr.ink, cl.name, cntr.sum_ha, cy.year
                                    from gip_contour as cntr
@@ -144,7 +144,22 @@ class ContourCultureAPIView(APIView):
                                    on cl.id = cy.culture_id
                                    join gip_conton as cntn 
                                    on cntn.id = cntr.conton_id 
-                                   where cntn.id={conton} or cntr.ink='{ink}' 
+                                   where cntn.id={conton}
+                                   order by -cy.year limit 1""")
+                rows = cursor.fetchall()
+            return Response(rows)
+
+        elif ink:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""select cntn.name, cntr.ink, cl.name, cntr.sum_ha, cy.year
+                                   from gip_contour as cntr
+                                   join gip_cropyield as cy 
+                                   on cntr.id = cy.contour_id
+                                   join gip_culture as cl
+                                   on cl.id = cy.culture_id
+                                   join gip_conton as cntn 
+                                   on cntn.id = cntr.conton_id 
+                                   where cntr.ink='{ink}' 
                                    order by -cy.year limit 1""")
                 rows = cursor.fetchall()
             return Response(rows)
