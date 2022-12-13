@@ -33,7 +33,7 @@ class StatisticsAPIView(APIView):
                     cols = "year, culture_name, region_name, cy_sum, previous_year, difference"
                     col_lst = cols.split(", ")
                     cursor.execute(f"""with cte as (select cy.year, cl.name as culture_name, rgn.name as region_name, 
-                                   sum(cntr.sum_ha * cl.coefficient_crop) as cy_sum
+                                   round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
                                    from gip_contour as cntr
                                    join gip_cropyield as cy 
                                    on cntr.id = cy.contour_id
@@ -46,7 +46,7 @@ class StatisticsAPIView(APIView):
                                    join gip_region as rgn 
                                    on rgn.id = dst.region_id  
                                    group by cy.year, cl.id, rgn.id 
-                                   having rgn.id='{region}' and cl.id='{culture}'), 
+                                   having rgn.id='1' and cl.id='1'), 
                                    cte2 as (select year, culture_name, region_name, cy_sum, lag(cy_sum,1) 
                                    over(order by year) previous_year from cte) 
                                    select *, (previous_year - cy_sum) difference from cte2;""")
@@ -63,7 +63,7 @@ class StatisticsAPIView(APIView):
                     cols = "year, culture_name, district_name, cy_sum, previous_year, difference"
                     col_lst = cols.split(", ")
                     cursor.execute(f"""with cte as (select cy.year, cl.name as culture_name, dst.name as district_name, 
-                                   sum(cntr.sum_ha * cl.coefficient_crop) as cy_sum
+                                   round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
                                    from gip_contour as cntr
                                    join gip_cropyield as cy 
                                    on cntr.id = cy.contour_id
@@ -91,7 +91,7 @@ class StatisticsAPIView(APIView):
                     cols = "year, culture_name, conton_name, cy_sum, previous_year, difference"
                     col_lst = cols.split(", ")
                     cursor.execute(f"""with cte as (select cy.year, cl.name as culture_name, cntn.name as conton_name, 
-                                   sum(cntr.sum_ha * cl.coefficient_crop) as cy_sum
+                                   round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
                                    from gip_contour as cntr
                                    join gip_cropyield as cy 
                                    on cntr.id = cy.contour_id
@@ -118,7 +118,7 @@ class StatisticsAPIView(APIView):
             else:
                 with connection.cursor() as cursor:
                     cursor.execute(f"""with cte as (select cy.year, cl.name as culture_name, 
-                                   sum(cntr.sum_ha * cl.coefficient_crop) as cy_sum
+                                   round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
                                    from gip_contour as cntr
                                    join gip_cropyield as cy 
                                    on cntr.id = cy.contour_id
@@ -129,7 +129,9 @@ class StatisticsAPIView(APIView):
                                    join gip_district as dst 
                                    on dst.id = cntn.district_id  
                                    group by cy.year, cl.id 
-                                   having cl.id='{culture}'), 
+                                   having cl.id='{culture}'),
+                                   cte2 as (select year, culture_name,  cy_sum, lag(cy_sum,1) 
+                                   over(order by year) previous_year from cte) 
                                    select *, (previous_year - cy_sum) difference from cte2;""")
                     rows = cursor.fetchall()
                     formated_data = {
