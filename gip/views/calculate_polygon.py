@@ -46,7 +46,7 @@ class StatisticsAPIView(APIView):
                                    join gip_region as rgn 
                                    on rgn.id = dst.region_id  
                                    group by cy.year, cl.id, rgn.id 
-                                   having rgn.id='1' and cl.id='1'), 
+                                   having rgn.id='{region}' and cl.id='{culture}'), 
                                    cte2 as (select year, culture_name, region_name, cy_sum, lag(cy_sum,1) 
                                    over(order by year) previous_year from cte) 
                                    select *, (previous_year - cy_sum) difference from cte2;""")
