@@ -180,3 +180,45 @@ class ContourCultureAPIView(APIView):
             return Response(rows)
 
 
+class GraphicTablesAPIView(APIView):
+
+    def get(self, request):
+        """
+        ?culture=id
+
+        Обязательные поля:
+        ?culture=id
+        """
+        culture = request.GET.get('culture')
+
+        if not culture:
+            return Response(data={"message": "parameter 'culture' is required"}, status=400)
+        else:
+            with connection.cursor() as cursor:
+                cols = "year, culture_name, region_name, cy_sum, previous_year, difference"
+                col_lst = cols.split(", ")
+                cursor.execute(f"""with cte as (select rgn.name as region_name, cy.year as year, cl.name as culture_name,
+                               round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
+                               from gip_contour as cntr
+                               join gip_cropyield as cy
+                               on cntr.id = cy.contour_id
+                               join gip_culture as cl
+                               on cl.id = cy.culture_id
+                               join gip_conton as cntn
+                               on cntn.id = cntr.conton_id
+                               join gip_district as dst
+                               on dst.id = cntn.district_id
+                               join gip_region as rgn
+                               on rgn.id = dst.region_id
+                               group by cy.year, cl.id, rgn.id
+                               having cl.id='{culture}'),
+                               cte2 as (select region_name, year, culture_name, cy_sum, lag(cy_sum)
+                               over(partition by region_name order by region_name, year) previous_year from cte)
+                               select *, (previous_year - cy_sum) difference from cte2;""")
+                rows = cursor.fetchall()
+                formated_data = {
+                    "years": [row[0] for row in rows],
+                    "crop": [row[-1] for row in rows],
+                    "source": [col_lst] + rows
+                }
+                return Response(formated_data)
