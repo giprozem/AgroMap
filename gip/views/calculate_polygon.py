@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from rest_framework import status
 from rest_framework.views import APIView
 from django.db import connection
 from rest_framework.response import Response
@@ -211,14 +212,22 @@ class GraphicTablesAPIView(APIView):
                                join gip_region as rgn
                                on rgn.id = dst.region_id
                                group by cy.year, cl.id, rgn.id
-                               having cl.id='{culture}'),
+                               having cl.id='1'),
                                cte2 as (select region_name, year, culture_name, cy_sum, lag(cy_sum)
                                over(partition by region_name order by region_name, year) previous_year from cte)
                                select *, (previous_year - cy_sum) difference from cte2;""")
                 rows = cursor.fetchall()
-                formated_data = {
-                    "years": [row[0] for row in rows],
-                    "crop": [row[-1] for row in rows],
-                    "source": [col_lst] + rows
-                }
+                datas = []
+                for i in rows:
+                    name = i[0]
+                    data = list(i)[1:-1]
+                    datas.append({"region_name": name, "source": data})
+
+
+                formated_data = [{
+                    "years": [row[1] for row in rows],
+                    "sources": [col_lst],
+                    "data": datas
+
+                }, ]
                 return Response(formated_data)
