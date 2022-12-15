@@ -212,7 +212,7 @@ class GraphicTablesAPIView(APIView):
                                join gip_region as rgn
                                on rgn.id = dst.region_id
                                group by cy.year, cl.id, rgn.id
-                               having cl.id='1'),
+                               having cl.id='{culture}'),
                                cte2 as (select region_name, year, culture_name, cy_sum, lag(cy_sum)
                                over(partition by region_name order by region_name, year) previous_year from cte)
                                select *, (previous_year - cy_sum) difference from cte2;""")
@@ -225,7 +225,7 @@ class GraphicTablesAPIView(APIView):
 
 
                 formated_data = [{
-                    "years": [row[1] for row in rows],
+                    "years": list(dict.fromkeys([row[1] for row in rows])),
                     "sources": [col_lst],
                     "data": datas
 
