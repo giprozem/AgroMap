@@ -220,7 +220,7 @@ class GraphicTablesAPIView(APIView):
                 datas = []
                 for i in rows:
                     name = i[0]
-                    data = list(i)[3:-1]
+                    data = list(i)[3:]
                     datas.append({"region_name": name, "source": data})
 
 
