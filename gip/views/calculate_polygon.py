@@ -215,7 +215,7 @@ class GraphicTablesAPIView(APIView):
                                having cl.id='{culture}'),
                                cte2 as (select region_name, year, culture_name, cy_sum, lag(cy_sum)
                                over(partition by region_name order by region_name, year) previous_year from cte)
-                               select region_name, year, cy_sum, (previous_year - cy_sum) difference from cte2;""")
+                               select region_name, year, cy_sum, (cy_sum - previous_year) difference from cte2;""")
                 rows = cursor.fetchall()
                 datas = []
                 for i in rows:
