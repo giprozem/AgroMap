@@ -13,6 +13,7 @@ from gip.views.contour import ContourViewSet, PointAPIView
 from gip.views.crop_yield import CropYieldViewSet
 from gip.views.culture import CultureViewSet
 from gip.views.district import DistrictViewSet
+from gip.views.owner_details import OwnerDetailsAPIView
 from gip.views.region import RegionViewSet
 
 router = DefaultRouter()
@@ -39,7 +40,8 @@ urlpatterns = [
     path("get_point", PointAPIView.as_view()),
     path("statistics", StatisticsAPIView.as_view()),
     path("contour-culture", ContourCultureAPIView.as_view()),
-    path("graphic-tables", GraphicTablesAPIView.as_view())
+    path("graphic-tables", GraphicTablesAPIView.as_view()),
+    path("owner-details", OwnerDetailsAPIView.as_view())
 ]
 
 if settings.DEBUG:
