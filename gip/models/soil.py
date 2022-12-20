@@ -20,7 +20,7 @@ class SoilClass(BaseModel):
 
 class SoilClassMap(BaseModel):
     soil_class = models.ForeignKey(SoilClass, on_delete=models.CASCADE, related_name='soil_class_maps', verbose_name="Вид почвы")
-    polygon = models.MultiPolygonField(geography='Kyrgyzstan', verbose_name="Контур")
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Контур")
     history = HistoricalRecords()
 
     class Meta:
@@ -39,7 +39,7 @@ class SoilProductivity(BaseModel):
 
 class SoilFertility(BaseModel):
     soil_productivity = models.ForeignKey(SoilProductivity, on_delete=models.CASCADE, related_name='soil_fertility', verbose_name="Продуктивность почвы")
-    polygon = models.MultiPolygonField(geography='Kyrgyzstan', verbose_name="Контур")
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Контур")
     history = HistoricalRecords()
 
     class Meta:

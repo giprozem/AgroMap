@@ -13,7 +13,7 @@ class Contour(BaseModel):
     ink = models.CharField(unique=True, max_length=100, verbose_name='ИНК', help_text='Идентификационный Номер Контура', null=True, blank=False)
     conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='contours', verbose_name="Айылный аймак")
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='contours', verbose_name="Фермер")
-    polygon = models.MultiPolygonField(geography='Kyrgyzstan', verbose_name="Контур")
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Контур")
     sum_ha = models.FloatField(blank=True, null=True, verbose_name="Площадь га")
     history = HistoricalRecords(verbose_name="История")
 
