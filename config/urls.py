@@ -9,7 +9,7 @@ from rest_framework.routers import DefaultRouter
 
 from gip.views.calculate_polygon import StatisticsAPIView, ContourCultureAPIView, GraphicTablesAPIView
 from gip.views.conton import ContonViewSet
-from gip.views.contour import ContourViewSet, PointAPIView
+from gip.views.contour import ContourViewSet, OccurrenceCheckAPIView
 from gip.views.crop_yield import CropYieldViewSet
 from gip.views.culture import CultureViewSet
 from gip.views.district import DistrictViewSet
@@ -37,7 +37,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('docs/', schema_view.with_ui()),
     path("schema/", Schema.as_view()),
-    path("get_point", PointAPIView.as_view()),
+    path("occurrence_check", OccurrenceCheckAPIView.as_view()),
     path("statistics", StatisticsAPIView.as_view()),
     path("contour-culture", ContourCultureAPIView.as_view()),
     path("graphic-tables", GraphicTablesAPIView.as_view()),
