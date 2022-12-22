@@ -37,12 +37,12 @@ urlpatterns = [
     path('', include(router.urls)),
     path('docs/', schema_view.with_ui()),
     path("schema/", Schema.as_view()),
-    path("occurrence_check", OccurrenceCheckAPIView.as_view()),
-    path("statistics", StatisticsAPIView.as_view()),
-    path("contour-culture", ContourCultureAPIView.as_view()),
-    path("graphic-tables", GraphicTablesAPIView.as_view()),
-    path("owner-details", OwnerDetailsAPIView.as_view()),
-    path("culture-percent", CulturePercentAPIView.as_view())
+    path("occurrence_check/", OccurrenceCheckAPIView.as_view()),
+    path("statistics/", StatisticsAPIView.as_view()),
+    path("contour-culture/", ContourCultureAPIView.as_view()),
+    path("graphic-tables/", GraphicTablesAPIView.as_view()),
+    path("owner-details/", OwnerDetailsAPIView.as_view()),
+    path("culture-percent/", CulturePercentAPIView.as_view())
 ]
 
 if settings.DEBUG:
