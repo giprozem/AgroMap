@@ -250,8 +250,6 @@ class CulturePercentAPIView(APIView):
         else:
             if region:
                 with connection.cursor() as cursor:
-                    cols = "year, culture_name, region_name, sum"
-                    col_lst = cols.split(", ")
                     cursor.execute(f"""select cy.year, cl.name as culture_name, rgn.name as region_name, 
                                        round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as sum
                                        from gip_contour as cntr
@@ -269,7 +267,6 @@ class CulturePercentAPIView(APIView):
                                        having cy.year='{year}' and rgn.id='{region}'""")
                     rows = cursor.fetchall()
                     formated_data = {
-                        "sources": [col_lst],
                         "cultures": [row[1] for row in rows],
                         "values": [row[-1] for row in rows]
                     }
@@ -277,8 +274,6 @@ class CulturePercentAPIView(APIView):
 
             elif district:
                 with connection.cursor() as cursor:
-                    cols = "year, culture_name, district_name, sum"
-                    col_lst = cols.split(", ")
                     cursor.execute(f"""select cy.year, cl.name as culture_name, dst.name as district_name, 
                                        round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as sum
                                        from gip_contour as cntr
@@ -294,7 +289,27 @@ class CulturePercentAPIView(APIView):
                                        having cy.year='{year}' and dst.id='{district}'""")
                     rows = cursor.fetchall()
                     formated_data = {
-                        "sources": [col_lst],
+                        "cultures": [row[1] for row in rows],
+                        "values": [row[-1] for row in rows]
+                    }
+                return Response(formated_data)
+            else:
+                with connection.cursor() as cursor:
+                    cursor.execute(f"""select cy.year, cl.name as culture_name, 
+                                       round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as sum
+                                       from gip_contour as cntr
+                                       join gip_cropyield as cy 
+                                       on cntr.id = cy.contour_id
+                                       join gip_culture as cl
+                                       on cl.id = cy.culture_id 
+                                       join gip_conton as cntn 
+                                       on cntn.id = cntr.conton_id 
+                                       join gip_district as dst 
+                                       on dst.id = cntn.district_id 
+                                       group by cy.year, cl.id
+                                       having cy.year='{}'""")
+                    rows = cursor.fetchall()
+                    formated_data = {
                         "cultures": [row[1] for row in rows],
                         "values": [row[-1] for row in rows]
                     }
