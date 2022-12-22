@@ -307,7 +307,7 @@ class CulturePercentAPIView(APIView):
                                        join gip_district as dst 
                                        on dst.id = cntn.district_id 
                                        group by cy.year, cl.id
-                                       having cy.year='{}'""")
+                                       having cy.year='{year}'""")
                     rows = cursor.fetchall()
                     formated_data = {
                         "cultures": [row[1] for row in rows],
