@@ -7,7 +7,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
 
-from gip.views.calculate_polygon import StatisticsAPIView, ContourCultureAPIView, GraphicTablesAPIView
+from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, GraphicTablesAPIView, CulturePercentAPIView
 from gip.views.conton import ContonViewSet
 from gip.views.contour import ContourViewSet, OccurrenceCheckAPIView
 from gip.views.crop_yield import CropYieldViewSet
@@ -41,7 +41,8 @@ urlpatterns = [
     path("statistics", StatisticsAPIView.as_view()),
     path("contour-culture", ContourCultureAPIView.as_view()),
     path("graphic-tables", GraphicTablesAPIView.as_view()),
-    path("owner-details", OwnerDetailsAPIView.as_view())
+    path("owner-details", OwnerDetailsAPIView.as_view()),
+    path("culture-percent", CulturePercentAPIView.as_view())
 ]
 
 if settings.DEBUG:

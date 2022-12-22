@@ -1,5 +1,3 @@
-from django.http import HttpResponse
-from rest_framework import status
 from rest_framework.views import APIView
 from django.db import connection
 from rest_framework.response import Response
@@ -122,7 +120,7 @@ class StatisticsAPIView(APIView):
                                    join gip_conton as cntn 
                                    on cntn.id = cntr.conton_id
                                    group by cy.year, cl.id
-                                   having cl.id=1
+                                   having cl.id={culture}
                                    order by cy.year""")
                     rows = cursor.fetchall()
                     formated_data = {
@@ -231,4 +229,73 @@ class GraphicTablesAPIView(APIView):
                     "data": datas
 
                 }, ]
+                return Response(formated_data)
+
+
+class CulturePercentAPIView(APIView):
+    def get(self, request):
+        """
+        Обязательные поля:
+        ?year=int
+        опциональные поля:
+        ?region=id
+        ?district=d
+        """
+        year = request.GET.get('year')
+        region = request.GET.get('region')
+        district = request.GET.get('district')
+
+        if not year:
+            return Response(data={"message": "parameter 'year' is required"}, status=400)
+        else:
+            if region:
+                with connection.cursor() as cursor:
+                    cols = "year, culture_name, region_name, sum"
+                    col_lst = cols.split(", ")
+                    cursor.execute(f"""select cy.year, cl.name as culture_name, rgn.name as region_name, 
+                                       round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as sum
+                                       from gip_contour as cntr
+                                       join gip_cropyield as cy 
+                                       on cntr.id = cy.contour_id
+                                       join gip_culture as cl
+                                       on cl.id = cy.culture_id 
+                                       join gip_conton as cntn 
+                                       on cntn.id = cntr.conton_id 
+                                       join gip_district as dst 
+                                       on dst.id = cntn.district_id 
+                                       join gip_region as rgn 
+                                       on rgn.id = dst.region_id  
+                                       group by cy.year, rgn.id, cl.id
+                                       having cy.year='{year}' and rgn.id='{region}'""")
+                    rows = cursor.fetchall()
+                    formated_data = {
+                        "sources": [col_lst],
+                        "cultures": [row[1] for row in rows],
+                        "values": [row[-1] for row in rows]
+                    }
+                    return Response(formated_data)
+
+            elif district:
+                with connection.cursor() as cursor:
+                    cols = "year, culture_name, district_name, sum"
+                    col_lst = cols.split(", ")
+                    cursor.execute(f"""select cy.year, cl.name as culture_name, dst.name as district_name, 
+                                       round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as sum
+                                       from gip_contour as cntr
+                                       join gip_cropyield as cy 
+                                       on cntr.id = cy.contour_id
+                                       join gip_culture as cl
+                                       on cl.id = cy.culture_id 
+                                       join gip_conton as cntn 
+                                       on cntn.id = cntr.conton_id 
+                                       join gip_district as dst 
+                                       on dst.id = cntn.district_id 
+                                       group by cy.year, dst.id, cl.id
+                                       having cy.year='{year}' and dst.id='{district}'""")
+                    rows = cursor.fetchall()
+                    formated_data = {
+                        "sources": [col_lst],
+                        "cultures": [row[1] for row in rows],
+                        "values": [row[-1] for row in rows]
+                    }
                 return Response(formated_data)
