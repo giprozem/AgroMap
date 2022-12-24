@@ -45,7 +45,7 @@ urlpatterns = [
     path("graphic-tables/", GraphicTablesAPIView.as_view()),
     path("owner-details/", OwnerDetailsAPIView.as_view()),
     path("culture-percent/", CulturePercentAPIView.as_view()),
-    path("parse/", AllParseAPIView.as_view())
+    # path("parse/", AllParseAPIView.as_view())
 ]
 
 if settings.DEBUG:
