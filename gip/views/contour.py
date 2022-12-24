@@ -7,7 +7,14 @@ from rest_framework.views import APIView
 
 from gip.models import Conton, District
 from gip.models.contour import Contour
-from gip.serializers.contour import ContourSerializer
+from gip.serializers.contour import ContoursSerializer, ContourSerializer
+
+
+class ContoursViewSet(viewsets.ModelViewSet):
+    queryset = Contour.objects.all()
+    serializer_class = ContoursSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['ink', 'conton']
 
 
 class ContourViewSet(viewsets.ModelViewSet):
