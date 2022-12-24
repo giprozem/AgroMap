@@ -5,8 +5,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from gip.models import Conton, District
 from gip.models.contour import Contour
+from gip.pagination.contour_pagination import ContourPagination
 from gip.serializers.contour import ContoursSerializer, ContourSerializer
 
 
@@ -22,6 +22,7 @@ class ContourViewSet(viewsets.ModelViewSet):
     serializer_class = ContourSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['ink', 'conton']
+    pagination_class = ContourPagination
 
 
 class OccurrenceCheckAPIView(APIView):
