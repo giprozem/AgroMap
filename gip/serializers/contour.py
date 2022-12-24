@@ -53,6 +53,8 @@ class ContourSerializer(GeoFeatureModelSerializer):
         representation['properties'] = {'created_at': instance.created_at, 'updated_at': instance.updated_at,
                                         'ink': instance.ink, 'sum_ha': instance.sum_ha, 'conton': instance.conton.name,
                                         'farmer': instance.farmer.pin_inn,
-                                        'cultures': CropYieldInlineSerializer(instance.crop_yields.all(), many=True).data}
+                                        'culture': instance.crop_yields.order_by("-year").first().culture.name,
+                                        'crop_yield': instance.sum_ha * instance.crop_yields.order_by("-year").first().culture.coefficient_crop,
+                                        }
 
         return representation
