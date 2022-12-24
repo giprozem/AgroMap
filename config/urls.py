@@ -7,6 +7,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
 
+from gip.views.land_use import LandUseViewSet
 # from gip.views.parse import AllParseAPIView
 from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, GraphicTablesAPIView, CulturePercentAPIView
 from gip.views.conton import ContonViewSet
@@ -20,6 +21,7 @@ from gip.views.region import RegionViewSet
 router = DefaultRouter()
 router.register('contours', ContoursViewSet)
 router.register('contour', ContourViewSet)
+router.register('land-use', LandUseViewSet)
 router.register('region', RegionViewSet)
 router.register('district', DistrictViewSet)
 router.register('conton', ContonViewSet)
