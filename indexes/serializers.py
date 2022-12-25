@@ -9,17 +9,17 @@ class NDVISerializer(ModelSerializer):
         model = NDVIIndex
         fields = '__all__'
 
-    def ndvi_calculator(self):
+    def ndvi_calculator(self, B04, B8A):
         import matplotlib.pyplot as plt
         import numpy
         from io import BytesIO
         import rasterio
         from django.core.files.base import ContentFile
 
-        with rasterio.open('./media/B04_cropped.tiff') as src:
+        with rasterio.open(f'./media/{B04}') as src:
             band_red = src.read(1)
 
-        with rasterio.open('./media/B8A_cropped.tiff') as f:
+        with rasterio.open(f'./media/{B8A}') as f:
             band_nir = f.read(1)
 
         # Allow division by zero
@@ -51,11 +51,17 @@ class NDVISerializer(ModelSerializer):
             coordinates=validated_data['coordinates']
         )
         geo = NDVIIndex.objects.last()
+        my_file = geo.coordinates.name
+        B04 = my_file.replace('coordinates_geojson/', 'B04')
+        B04 = B04.replace('geojson', 'tiff')
+        B8A = my_file.replace('coordinates_geojson/', 'B8A')
+        B8A = B8A.replace('geojson', 'tiff')
+
         with open(f'./media/{geo.coordinates}', 'r') as file:
             my_coordinates = file.read()
 
         inputpath_B8A = "./B8A.tiff"
-        outputpath_B8A = f"./media/B8A_cropped.tiff"
+        outputpath_B8A = f"./media/{B8A}"
 
         cropped_file_B8A = gdal.Warp(destNameOrDestDS=f'{outputpath_B8A}',  # TODO fix the saving place
                                  srcDSOrSrcDSTab=inputpath_B8A,  # TODO fix the input file place
@@ -64,7 +70,7 @@ class NDVISerializer(ModelSerializer):
                                  copyMetadata=True,
                                  dstNodata=0)
         inputpath_B04 = "./B04.tiff"
-        outputpath_B04 = f"./media/B04_cropped.tiff"
+        outputpath_B04 = f"./media/{B04}"
 
         cropped_file = gdal.Warp(destNameOrDestDS=f'{outputpath_B04}',  # TODO fix the saving place
                                  srcDSOrSrcDSTab=inputpath_B04,  # TODO fix the input file place
@@ -72,5 +78,6 @@ class NDVISerializer(ModelSerializer):
                                  cropToCutline=True,
                                  copyMetadata=True,
                                  dstNodata=0)
-        obj.ndvi_image.save('ndvi.png', self.ndvi_calculator())
+        obj.ndvi_image.save('ndvi.png', self.ndvi_calculator(B04=B04, B8A=B8A))
+
         return obj
