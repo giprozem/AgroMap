@@ -46,11 +46,16 @@ class NDVISerializer(ModelSerializer):
         content_file = ContentFile(f.getvalue())
         return content_file
 
+    def remove_file(self, deleting_path):
+        import os
+        if os.path.isfile(deleting_path):
+            os.remove(deleting_path)
+
     def create(self, validated_data):
         obj = NDVIIndex.objects.create(
             coordinates=validated_data['coordinates']
         )
-        geo = NDVIIndex.objects.last()
+        geo = NDVIIndex.objects.get(id=obj.id)
         my_file = geo.coordinates.name
         B04 = my_file.replace('coordinates_geojson/', 'B04')
         B04 = B04.replace('geojson', 'tiff')
@@ -64,11 +69,11 @@ class NDVISerializer(ModelSerializer):
         outputpath_B8A = f"./media/{B8A}"
 
         cropped_file_B8A = gdal.Warp(destNameOrDestDS=f'{outputpath_B8A}',  # TODO fix the saving place
-                                 srcDSOrSrcDSTab=inputpath_B8A,  # TODO fix the input file place
-                                 cutlineDSName=f'{my_coordinates}',  # TODO input have to be json
-                                 cropToCutline=True,
-                                 copyMetadata=True,
-                                 dstNodata=0)
+                                     srcDSOrSrcDSTab=inputpath_B8A,  # TODO fix the input file place
+                                     cutlineDSName=f'{my_coordinates}',  # TODO input have to be json
+                                     cropToCutline=True,
+                                     copyMetadata=True,
+                                     dstNodata=0)
         inputpath_B04 = "./B04.tiff"
         outputpath_B04 = f"./media/{B04}"
 
@@ -79,5 +84,8 @@ class NDVISerializer(ModelSerializer):
                                  copyMetadata=True,
                                  dstNodata=0)
         obj.ndvi_image.save('ndvi.png', self.ndvi_calculator(B04=B04, B8A=B8A))
+
+        self.remove_file(outputpath_B04)
+        self.remove_file(outputpath_B8A)
 
         return obj
