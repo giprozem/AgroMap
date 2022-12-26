@@ -16,6 +16,7 @@ from gip.views.culture import CultureViewSet
 from gip.views.district import DistrictViewSet
 from gip.views.owner_details import OwnerDetailsAPIView
 from gip.views.region import RegionViewSet
+from indexes.views import NDVIViewSet
 
 router = DefaultRouter()
 router.register('contours', ContoursViewSet)
@@ -26,6 +27,7 @@ router.register('district', DistrictViewSet)
 router.register('conton', ContonViewSet)
 router.register('culture', CultureViewSet)
 router.register('crop_yield', CropYieldViewSet)
+router.register('ndvi', NDVIViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
