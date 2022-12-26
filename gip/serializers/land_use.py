@@ -1,8 +1,6 @@
-from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from gip.models import Contour
-from gip.serializers.contour import ContourSerializer
 
 
 class LandUseSerializer(GeoFeatureModelSerializer):
@@ -23,6 +21,8 @@ class LandUseSerializer(GeoFeatureModelSerializer):
             representation['properties']["culture"] = culture.name
             representation['properties']['crop_yield'] = round(culture.coefficient_crop * instance.sum_ha, 2)
             representation['properties']['group'] = culture.name
+            representation['properties']['fill_color'] = culture.fill_color
+            representation['properties']['stroke_color'] = culture.stroke_color
         else:
             representation['properties']['group'] = "Неиспользуемые земли"
 

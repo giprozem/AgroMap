@@ -8,7 +8,6 @@ from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
 
 from gip.views.land_use import LandUseViewSet
-# from gip.views.parse import AllParseAPIView
 from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, GraphicTablesAPIView, CulturePercentAPIView
 from gip.views.conton import ContonViewSet
 from gip.views.contour import ContoursViewSet, OccurrenceCheckAPIView, ContourViewSet
@@ -47,7 +46,6 @@ urlpatterns = [
     path("graphic-tables/", GraphicTablesAPIView.as_view()),
     path("owner-details/", OwnerDetailsAPIView.as_view()),
     path("culture-percent/", CulturePercentAPIView.as_view()),
-    # path("parse/", AllParseAPIView.as_view())
 ]
 
 if settings.DEBUG:
