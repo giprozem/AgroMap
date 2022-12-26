@@ -1,3 +1,4 @@
+from django.contrib.gis.geos import GEOSGeometry
 from osgeo import gdal
 from rest_framework.serializers import ModelSerializer
 
@@ -5,9 +6,15 @@ from indexes.models import NDVIIndex
 
 
 class NDVISerializer(ModelSerializer):
+
     class Meta:
         model = NDVIIndex
         fields = '__all__'
+
+    def remove_file(self, deleting_path):
+        import os
+        if os.path.isfile(deleting_path):
+            os.remove(deleting_path)
 
     def ndvi_calculator(self, B04, B8A):
         import matplotlib.pyplot as plt
@@ -46,44 +53,49 @@ class NDVISerializer(ModelSerializer):
         content_file = ContentFile(f.getvalue())
         return content_file
 
-    def remove_file(self, deleting_path):
-        import os
-        if os.path.isfile(deleting_path):
-            os.remove(deleting_path)
-
     def create(self, validated_data):
+        my_polygon = validated_data['contour'].polygon
+        converted_polygon = GEOSGeometry(validated_data['contour'].polygon).geojson
+
+        writing_file = f'{validated_data["contour"].ink}'
         obj = NDVIIndex.objects.create(
-            coordinates=validated_data['coordinates']
+            contour=validated_data['contour'],
+            date_of_satellite_image=validated_data['date_of_satellite_image']
         )
-        geo = NDVIIndex.objects.get(id=obj.id)
-        my_file = geo.coordinates.name
-        B04 = my_file.replace('coordinates_geojson/', 'B04')
-        B04 = B04.replace('geojson', 'tiff')
-        B8A = my_file.replace('coordinates_geojson/', 'B8A')
-        B8A = B8A.replace('geojson', 'tiff')
+        B8A = f'B8A{writing_file}.tiff'
+        B04 = f'B04{writing_file}.tiff'
+        if validated_data['date_of_satellite_image'] == 'Весна':
+            inputpath_B8A = './satellite_images/B8A_spring.tiff'
+        elif validated_data['date_of_satellite_image'] == 'Лето':
+            inputpath_B8A = "./satellite_images/B8A.tiff"
+        else:
+            inputpath_B8A = "./satellite_images/B8A_autum.tiff"
 
-        with open(f'./media/{geo.coordinates}', 'r') as file:
-            my_coordinates = file.read()
-
-        inputpath_B8A = "./B8A.tiff"
         outputpath_B8A = f"./media/{B8A}"
 
         cropped_file_B8A = gdal.Warp(destNameOrDestDS=f'{outputpath_B8A}',  # TODO fix the saving place
                                      srcDSOrSrcDSTab=inputpath_B8A,  # TODO fix the input file place
-                                     cutlineDSName=f'{my_coordinates}',  # TODO input have to be json
+                                     cutlineDSName=f'{converted_polygon}',  # TODO input have to be json
                                      cropToCutline=True,
                                      copyMetadata=True,
                                      dstNodata=0)
-        inputpath_B04 = "./B04.tiff"
+        if validated_data['date_of_satellite_image'] == 'Весна':
+            inputpath_B04 = './satellite_images/B04_spring.tiff'
+        elif validated_data['date_of_satellite_image'] == 'Лето':
+            inputpath_B04 = "./satellite_images/B04.tiff"
+        else:
+            inputpath_B04 = "./satellite_images/B04_autum.tiff"
+
         outputpath_B04 = f"./media/{B04}"
 
         cropped_file = gdal.Warp(destNameOrDestDS=f'{outputpath_B04}',  # TODO fix the saving place
                                  srcDSOrSrcDSTab=inputpath_B04,  # TODO fix the input file place
-                                 cutlineDSName=f'{my_coordinates}',  # TODO input have to be json
+                                 cutlineDSName=f'{converted_polygon}',  # TODO input have to be json
                                  cropToCutline=True,
                                  copyMetadata=True,
                                  dstNodata=0)
-        obj.ndvi_image.save('ndvi.png', self.ndvi_calculator(B04=B04, B8A=B8A))
+
+        obj.ndvi_image.save(f'ndvi{writing_file}.png', self.ndvi_calculator(B04=B04, B8A=B8A))
 
         self.remove_file(outputpath_B04)
         self.remove_file(outputpath_B8A)
