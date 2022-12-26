@@ -25,5 +25,7 @@ class LandUseSerializer(GeoFeatureModelSerializer):
             representation['properties']['stroke_color'] = culture.stroke_color
         else:
             representation['properties']['group'] = "Неиспользуемые земли"
+            representation['properties']['fill_color'] = "#3388FF"
+            representation['properties']['stroke_color'] = "#3388FF"
 
         return representation
