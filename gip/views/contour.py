@@ -22,7 +22,7 @@ class ContourViewSet(viewsets.ModelViewSet):
     serializer_class = ContourSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['ink', 'conton']
-    pagination_class = ContourPagination
+    # pagination_class = ContourPagination
 
 
 class OccurrenceCheckAPIView(APIView):
