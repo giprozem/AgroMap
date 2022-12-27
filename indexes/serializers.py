@@ -3,9 +3,11 @@ from osgeo import gdal
 from rest_framework.serializers import ModelSerializer
 
 from indexes.models import NDVIIndex
+from gip.serializers.contour import ContourSerializer
 
 
 class NDVISerializer(ModelSerializer):
+    contour = ContourSerializer()
 
     class Meta:
         model = NDVIIndex
@@ -54,7 +56,6 @@ class NDVISerializer(ModelSerializer):
         return content_file
 
     def create(self, validated_data):
-        my_polygon = validated_data['contour'].polygon
         converted_polygon = GEOSGeometry(validated_data['contour'].polygon).geojson
 
         writing_file = f'{validated_data["contour"].ink}'
