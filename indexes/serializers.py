@@ -7,7 +7,6 @@ from gip.serializers.contour import ContourSerializer
 
 
 class NDVISerializer(ModelSerializer):
-    contour = ContourSerializer()
 
     class Meta:
         model = NDVIIndex
@@ -102,3 +101,11 @@ class NDVISerializer(ModelSerializer):
         self.remove_file(outputpath_B8A)
 
         return obj
+
+
+class NDVIListSerializer(ModelSerializer):
+    contour = ContourSerializer()
+
+    class Meta:
+        model = NDVIIndex
+        fields = '__all__'
