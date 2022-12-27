@@ -10,7 +10,7 @@ SECRET_KEY = 'django-insecure-hghtv^f8j-nnp!vnkor4qzr9bawf3xe7bq6oc6ozc6wx!ej5kn
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
 INSTALLED_APPS = [
     'jazzmin',
