@@ -36,7 +36,7 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     list_filter = ('conton', 'farmer', 'sum_ha', )
     ordering = ('conton', 'created_at')
     list_per_page = 20
-    search_fields = ('conton__name', 'farmer__pin_inn', )
+    search_fields = ('conton__name', 'farmer__pin_inn', 'ink', )
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'ink', )
     inlines = [NDVITabularInline]
