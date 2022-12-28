@@ -40,7 +40,7 @@ class NDVISerializer(ModelSerializer):
         max_value = numpy.nanmax(ndvi)
         mid = 0.1
 
-        fig = plt.figure(figsize=(20, 10))
+        fig = plt.figure(figsize=(200, 100))
         ax = fig.add_subplot(111)
 
         cmap = plt.cm.YlGn
@@ -54,6 +54,14 @@ class NDVISerializer(ModelSerializer):
         content_file = ContentFile(f.getvalue())
         return content_file
 
+    def cutting_tiff(self, outputpath, inputpath, converted_polygon):
+        gdal.Warp(destNameOrDestDS=f'{outputpath}',
+                  srcDSOrSrcDSTab=inputpath,
+                  cutlineDSName=f'{converted_polygon}',
+                  cropToCutline=True,
+                  copyMetadata=True,
+                  dstNodata=0)
+
     def create(self, validated_data):
         converted_polygon = GEOSGeometry(validated_data['contour'].polygon).geojson
 
@@ -64,6 +72,7 @@ class NDVISerializer(ModelSerializer):
         )
         B8A = f'B8A{writing_file}.tiff'
         B04 = f'B04{writing_file}.tiff'
+        # TODO after uploading satellite images refactor
         if validated_data['date_of_satellite_image'] == 'Весна':
             inputpath_B8A = './satellite_images/B8A_spring.tiff'
         elif validated_data['date_of_satellite_image'] == 'Лето':
@@ -73,12 +82,8 @@ class NDVISerializer(ModelSerializer):
 
         outputpath_B8A = f"./media/{B8A}"
 
-        cropped_file_B8A = gdal.Warp(destNameOrDestDS=f'{outputpath_B8A}',  # TODO fix the saving place
-                                     srcDSOrSrcDSTab=inputpath_B8A,  # TODO fix the input file place
-                                     cutlineDSName=f'{converted_polygon}',  # TODO input have to be json
-                                     cropToCutline=True,
-                                     copyMetadata=True,
-                                     dstNodata=0)
+        self.cutting_tiff(outputpath=outputpath_B8A, inputpath=inputpath_B8A, converted_polygon=converted_polygon)
+        # TODO after uploading satellite images refactor
         if validated_data['date_of_satellite_image'] == 'Весна':
             inputpath_B04 = './satellite_images/B04_spring.tiff'
         elif validated_data['date_of_satellite_image'] == 'Лето':
@@ -87,13 +92,7 @@ class NDVISerializer(ModelSerializer):
             inputpath_B04 = "./satellite_images/B04_autum.tiff"
 
         outputpath_B04 = f"./media/{B04}"
-
-        cropped_file = gdal.Warp(destNameOrDestDS=f'{outputpath_B04}',  # TODO fix the saving place
-                                 srcDSOrSrcDSTab=inputpath_B04,  # TODO fix the input file place
-                                 cutlineDSName=f'{converted_polygon}',  # TODO input have to be json
-                                 cropToCutline=True,
-                                 copyMetadata=True,
-                                 dstNodata=0)
+        self.cutting_tiff(outputpath=outputpath_B04, inputpath=inputpath_B04, converted_polygon=converted_polygon)
 
         obj.ndvi_image.save(f'ndvi{writing_file}.png', self.ndvi_calculator(B04=B04, B8A=B8A))
 
