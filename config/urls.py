@@ -19,9 +19,9 @@ from gip.views.region import RegionViewSet
 from indexes.views import NDVIViewSet
 
 router = DefaultRouter()
-router.register('contours', ContoursViewSet)
-router.register('contour', ContourViewSet)
-router.register('land-use', LandUseViewSet)
+router.register('contours', ContoursViewSet, basename='contours')
+router.register('contour', ContourViewSet, basename='contour')
+router.register('land-use', LandUseViewSet, basename='land-use')
 router.register('region', RegionViewSet)
 router.register('district', DistrictViewSet)
 router.register('conton', ContonViewSet)
