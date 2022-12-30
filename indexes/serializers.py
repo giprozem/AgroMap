@@ -50,7 +50,7 @@ class NDVISerializer(ModelSerializer):
 
         f = BytesIO()
 
-        plt.savefig(f, format='png', transparent=True)
+        plt.savefig(f, format='png', transparent=True, bbox_inches='tight')
         content_file = ContentFile(f.getvalue())
         return content_file
 
