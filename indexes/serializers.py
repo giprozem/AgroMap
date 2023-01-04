@@ -40,7 +40,7 @@ class NDVISerializer(ModelSerializer):
         max_value = numpy.nanmax(ndvi)
         mid = 0.1
 
-        fig = plt.figure(figsize=(100, 50))
+        fig = plt.figure(figsize=(75, 25))
         ax = fig.add_subplot(111)
 
         cmap = plt.cm.YlGn
