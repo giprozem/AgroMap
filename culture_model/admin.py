@@ -16,7 +16,8 @@ class IndexAdmin(SimpleHistoryAdmin):
 
 @admin.register(IndexPlan)
 class IndexPlanAdmin(SimpleHistoryAdmin):
-    pass
+    list_display = ['id', 'value', 'culture', 'region']
+    list_display_links = ['id', 'value']
 
 
 @admin.register(Phase)
