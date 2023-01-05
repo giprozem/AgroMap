@@ -8,7 +8,7 @@ from indexes.models import NDVIIndex
 @admin.register(NDVIIndex)
 class NDVIAdmin(SimpleHistoryAdmin):
     readonly_fields = ('id', 'get_html_photo', )
-    fields = ('id', 'contour', 'date_of_satellite_image', 'ndvi_image', 'get_html_photo', )
+    fields = ('id', 'contour', 'date_of_satellite_image', 'ndvi_image', 'get_html_photo', 'average_NDVI', )
     list_display = ('id', 'contour', 'get_html_photo_to_main', )
     list_display_links = ('id', 'contour', 'get_html_photo_to_main', )
 

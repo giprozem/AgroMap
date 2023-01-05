@@ -10,8 +10,8 @@ from indexes.models import NDVIIndex
 
 class NDVITabularInline(TabularInline):
     model = NDVIIndex
-    readonly_fields = ('id', 'get_html_photo', 'contour', 'date_of_satellite_image', 'get_static_png')
-    fields = ('contour', 'date_of_satellite_image', 'ndvi_image', 'get_html_photo', 'get_static_png', )
+    readonly_fields = ('id', 'get_html_photo', 'contour', 'date_of_satellite_image', 'get_static_png', 'average_NDVI', 'ndvi_image', )
+    fields = ('contour', 'date_of_satellite_image', 'ndvi_image', 'get_html_photo', 'average_NDVI', 'get_static_png', )
 
     def get_html_photo(self, object):
         if object.ndvi_image:
