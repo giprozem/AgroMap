@@ -31,7 +31,8 @@ INSTALLED_APPS = [
 
     'schema_graph',
     'gip',
-    'indexes'
+    'indexes',
+    'culture_model'
 ]
 
 
@@ -152,7 +153,7 @@ JAZZMIN_SETTINGS = {
     "changeform_format": "horizontal_tabs",
     "topmenu_links": [
         {"name": "Эталонная база данных Гипрозем", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"model": "auth.User"},
+        {"models": "auth.User"},
     ],
 }
 
