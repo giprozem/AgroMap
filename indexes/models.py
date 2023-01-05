@@ -16,6 +16,7 @@ class NDVIIndex(models.Model):
     history = HistoricalRecords(verbose_name="История")
     contour = models.ForeignKey(Contour, on_delete=models.SET_NULL, null=True, verbose_name='Контуры Поля')
     date_of_satellite_image = models.CharField(choices=DATE_OF_SATELLITE_IMAGES, verbose_name='Дата космоснимка', max_length=5)
+    average_NDVI = models.DecimalField(max_digits=5, decimal_places=3, verbose_name='Средий показатель NDVI', default=0)
 
     class Meta:
         verbose_name = 'Индекс NDVI'
