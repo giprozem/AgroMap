@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from simple_history.admin import SimpleHistoryAdmin
 
-from indexes.models import NDVIIndex
+from indexes.models import NDVIIndex, IndexFact, SatelliteImages
 
 
 @admin.register(NDVIIndex)
@@ -22,3 +22,19 @@ class NDVIAdmin(SimpleHistoryAdmin):
 
     get_html_photo.short_description = 'Фото NDVI'
     get_html_photo_to_main.short_description = 'Фото NDVI'
+
+
+@admin.register(IndexFact)
+class IndexFactAdmin(admin.ModelAdmin):
+    list_display = ('id', 'index_image', 'average_value', 'decade', 'index', 'contour', 'source', 'get_html_photo', )
+    readonly_fields = ('id', 'index_image', 'average_value', 'get_html_photo', )
+    list_display_links = ('id',)
+
+    def get_html_photo(self, object):
+        if object.index_image:
+            return mark_safe(f"<img src='{object.index_image.url}' width=100>")
+
+
+@admin.register(SatelliteImages)
+class SatelliteImagesAdmin(admin.ModelAdmin):
+    pass
