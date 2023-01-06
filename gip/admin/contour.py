@@ -5,17 +5,19 @@ from leaflet.admin import LeafletGeoAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
 from gip.models import Contour
-from indexes.models import NDVIIndex
+from indexes.models import IndexFact
 
 
 class NDVITabularInline(TabularInline):
-    model = NDVIIndex
-    readonly_fields = ('id', 'get_html_photo', 'contour', 'date_of_satellite_image', 'get_static_png', 'average_NDVI', 'ndvi_image', )
-    fields = ('contour', 'date_of_satellite_image', 'ndvi_image', 'get_html_photo', 'average_NDVI', 'get_static_png', )
+    model = IndexFact
+    readonly_fields = ('id', 'get_html_photo', 'index_image', 'average_value', 'get_static_png')
+    fields = ('average_value', 'get_html_photo', 'decade', 'index', 'contour', 'source', 'get_static_png', )
+    show_change_link = ('index', )
+    extra = 0
 
     def get_html_photo(self, object):
-        if object.ndvi_image:
-            return mark_safe(f"<img src='{object.ndvi_image.url}' width=500>")
+        if object.index_image:
+            return mark_safe(f"<img src='{object.index_image.url}' width=100>")
 
     def get_static_png(self, obj):
         return mark_safe('''
@@ -41,9 +43,6 @@ class NDVITabularInline(TabularInline):
         ''')
 
     def has_change_permission(self, request, obj=None):
-        return False
-
-    def has_add_permission(self, request, obj):
         return False
 
     def has_delete_permission(self, request, obj=None):
