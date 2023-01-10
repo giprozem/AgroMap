@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'schema_graph',
     'gip',
     'indexes',
-    'culture_model'
+    'culture_model',
+    'hub'
 ]
 
 
