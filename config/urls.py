@@ -9,9 +9,10 @@ from rest_framework.routers import DefaultRouter
 
 from culture_model.views import IndexPlanWithAPIView
 from gip.views.land_use import LandUseViewSet
+from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox
 from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, GraphicTablesAPIView, CulturePercentAPIView
 from gip.views.conton import ContonViewSet
-from gip.views.contour import ContoursViewSet, OccurrenceCheckAPIView, ContourViewSet
+from gip.views.contour import ContoursViewSet, ContourViewSet
 from gip.views.crop_yield import CropYieldViewSet
 from gip.views.culture import CultureViewSet
 from gip.views.district import DistrictViewSet
@@ -43,13 +44,14 @@ urlpatterns = [
     path('', include(router.urls)),
     path('docs/', schema_view.with_ui()),
     path("schema/", Schema.as_view()),
-    path("occurrence_check/", OccurrenceCheckAPIView.as_view()),
+    path("occurrence-check/", OccurrenceCheckAPIView.as_view()),
     path("statistics/", StatisticsAPIView.as_view()),
     path("contour-culture/", ContourCultureAPIView.as_view()),
     path("graphic-tables/", GraphicTablesAPIView.as_view()),
     path("owner-details/", OwnerDetailsAPIView.as_view()),
     path("culture-percent/", CulturePercentAPIView.as_view()),
     path("index-plan/", IndexPlanWithAPIView.as_view()),
+    path("polygons-in-bbox/", PolygonsInBbox.as_view()),
 ]
 
 if settings.DEBUG:
