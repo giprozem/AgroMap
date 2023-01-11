@@ -10,10 +10,15 @@ from indexes.models import IndexFact
 
 class NDVITabularInline(TabularInline):
     model = IndexFact
-    readonly_fields = ('id', 'get_html_photo', 'index_image', 'average_value', 'get_static_png')
-    fields = ('average_value', 'get_html_photo', 'decade', 'index', 'contour', 'source', 'get_static_png', )
+    readonly_fields = ('id', 'get_html_photo', 'index_image', 'average_value', 'get_description', )
+    fields = ('average_value', 'get_description', 'get_html_photo', 'decade', 'index', 'contour', 'source', )
     show_change_link = ('index', )
     extra = 0
+
+    def get_description(self, obj):
+        return obj.meaning_of_average_value.description
+
+    get_description.short_description = 'Значение показателя индекса'
 
     def get_html_photo(self, object):
         if object.index_image:
