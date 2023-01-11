@@ -4,41 +4,14 @@ from pathlib import Path
 
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSGeometry
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 
-from gip.models.contour import Contour
-from indexes.ndmi_funcs import average_ndmi, ndmi_calculator
-from indexes.ndvi_funcs import cutting_tiff, average_ndvi, ndvi_calculator
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.utils.translation import gettext_lazy as _
-from django.http import HttpResponseBadRequest, Http404
-
-DATE_OF_SATELLITE_IMAGES = (
-    ('Весна', '04.05.2022 (Весна)'),
-    ('Лето', '15.07.2022 (Лето)'),
-    ('Осень', '25.09.2022 (Осень)'),
-
-)
-
-
-class NDVIIndex(models.Model):
-    ndvi_image = models.FileField(upload_to='ndvi_png', blank=True, verbose_name='Картинка NDVI')
-    history = HistoricalRecords(verbose_name="История")
-    contour = models.ForeignKey(Contour, on_delete=models.SET_NULL, null=True, verbose_name='Контуры Поля')
-    date_of_satellite_image = models.CharField(
-        choices=DATE_OF_SATELLITE_IMAGES,
-        verbose_name='Дата космоснимка',
-        max_length=5)
-    average_NDVI = models.DecimalField(max_digits=5, decimal_places=3, verbose_name='Средий показатель NDVI', default=0)
-
-    class Meta:
-        verbose_name = 'Индекс NDVI'
-        verbose_name_plural = "Индексы NDVI"
-
-    def __str__(self):
-        return self.contour.ink
+from indexes.index_funcs.ndmi_funcs import average_ndmi, ndmi_calculator
+from indexes.index_funcs.ndvi_funcs import cutting_tiff, average_ndvi, ndvi_calculator
 
 
 class IndexFact(models.Model):
@@ -55,7 +28,6 @@ class IndexFact(models.Model):
         verbose_name='Значение среднего показателя',
         null=True
     )
-    decade = models.ForeignKey('culture_model.Decade', on_delete=models.CASCADE, verbose_name='Декада')
     index = models.ForeignKey('culture_model.Index', on_delete=models.CASCADE, verbose_name='Индекс')
     contour = models.ForeignKey('gip.Contour', on_delete=models.CASCADE, verbose_name='Контуры Поля')
     source = models.ForeignKey('indexes.SatelliteImages', on_delete=models.CASCADE, verbose_name='Источник')
@@ -140,33 +112,6 @@ class IndexFact(models.Model):
             raise ObjectDoesNotExist(_('Data base have no satellite images that have to process'))
 
 
-class SatelliteImages(models.Model):
-    region_name = models.CharField(max_length=100, verbose_name='Название региона')
-    description = models.TextField(null=True, blank=True, verbose_name='Описание', help_text='Заполняется при необходимости')
-    date = models.DateField(verbose_name='дата снимков')
-    B01 = models.FileField(upload_to='satellite_images', verbose_name='Слой B01', help_text='Coastal aerosol', blank=True, null=True)
-    B02 = models.FileField(upload_to='satellite_images', verbose_name='Слой B02', help_text='Blue', blank=True, null=True)
-    B03 = models.FileField(upload_to='satellite_images', verbose_name='Слой B03', help_text='Green', blank=True, null=True)
-    B04 = models.FileField(upload_to='satellite_images', verbose_name='Слой B04', help_text='Red', blank=True, null=True)
-    B05 = models.FileField(upload_to='satellite_images', verbose_name='Слой B05', help_text='Vegetation red edge', blank=True, null=True)
-    B06 = models.FileField(upload_to='satellite_images', verbose_name='Слой B06', help_text='Vegetation red edge', blank=True, null=True)
-    B07 = models.FileField(upload_to='satellite_images', verbose_name='Слой B07', help_text='Vegetation red edge', blank=True, null=True)
-    B08 = models.FileField(upload_to='satellite_images', verbose_name='Слой B08', help_text='NIR', blank=True, null=True)
-    B8A = models.FileField(upload_to='satellite_images', verbose_name='Слой B8A', help_text='Narrow NIR', blank=True, null=True)
-    B09 = models.FileField(upload_to='satellite_images', verbose_name='Слой B09', help_text='Water vapour', blank=True, null=True)
-    B10 = models.FileField(upload_to='satellite_images', verbose_name='Слой B10', help_text='SWIR – Cirrus', blank=True, null=True)
-    B11 = models.FileField(upload_to='satellite_images', verbose_name='Слой B11', help_text='SWIR – 1', blank=True, null=True)
-    B12 = models.FileField(upload_to='satellite_images', verbose_name='Слой B12', help_text='SWIR - 2', blank=True, null=True)
-    history = HistoricalRecords(verbose_name="История")
-
-    def __str__(self):
-        return self.region_name
-
-    class Meta:
-        verbose_name = 'Спутниковый снимок'
-        verbose_name_plural = "Спутниковые снимки"
-
-
 class IndexMeaning(models.Model):
     index = models.ForeignKey('culture_model.Index', on_delete=models.CASCADE, verbose_name='Индекс')
     min_index_value = models.DecimalField(max_digits=4, decimal_places=3, validators=[MinValueValidator(-1)], verbose_name='Минимальное значение')
@@ -179,5 +124,3 @@ class IndexMeaning(models.Model):
 
     def __str__(self):
         return f'{self.index} {self.min_index_value} {self.max_index_value}'
-
-
