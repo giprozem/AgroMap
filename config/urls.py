@@ -1,24 +1,24 @@
-from schema_graph.views import Schema
-from config import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
+from schema_graph.views import Schema
 
+from config import settings
 from culture_model.views import IndexPlanWithAPIView
-from gip.views.land_use import LandUseViewSet
-from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox
-from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, GraphicTablesAPIView, CulturePercentAPIView
 from gip.views.conton import ContonViewSet
 from gip.views.contour import ContoursViewSet, ContourViewSet
 from gip.views.crop_yield import CropYieldViewSet
 from gip.views.culture import CultureViewSet
 from gip.views.district import DistrictViewSet
+from gip.views.land_use import LandUseViewSet
 from gip.views.owner_details import OwnerDetailsAPIView
+from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox
 from gip.views.region import RegionViewSet
-from indexes.views import NDVIViewSet
+from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, GraphicTablesAPIView, CulturePercentAPIView
+from indexes.views.indexfact import IndexFactListCreateAPIView
 
 router = DefaultRouter()
 router.register('contours', ContoursViewSet, basename='contours')
@@ -29,7 +29,6 @@ router.register('district', DistrictViewSet)
 router.register('conton', ContonViewSet)
 router.register('culture', CultureViewSet)
 router.register('crop_yield', CropYieldViewSet)
-router.register('ndvi', NDVIViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -52,6 +51,7 @@ urlpatterns = [
     path("culture-percent/", CulturePercentAPIView.as_view()),
     path("index-plan/", IndexPlanWithAPIView.as_view()),
     path("polygons-in-bbox/", PolygonsInBbox.as_view()),
+    path("index/", IndexFactListCreateAPIView.as_view())
 ]
 
 if settings.DEBUG:

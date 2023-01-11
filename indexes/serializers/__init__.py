@@ -1,1 +1,1 @@
-from indexes.serializers.ndvi import *
+from indexes.serializers.indexfact import *
