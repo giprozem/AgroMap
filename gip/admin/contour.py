@@ -11,7 +11,7 @@ from indexes.models import IndexFact
 class NDVITabularInline(TabularInline):
     model = IndexFact
     readonly_fields = ('id', 'get_html_photo', 'index_image', 'average_value', 'get_description', )
-    fields = ('average_value', 'get_description', 'get_html_photo', 'decade', 'index', 'contour', 'source', )
+    fields = ('average_value', 'get_description', 'get_html_photo', 'index', 'contour', 'source', )
     show_change_link = ('index', )
     extra = 0
 
