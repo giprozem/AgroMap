@@ -1,1 +1,1 @@
-from indexes.views.ndvi import *
+from indexes.views.indexfact import *

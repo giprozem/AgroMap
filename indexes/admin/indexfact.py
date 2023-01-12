@@ -7,13 +7,13 @@ from indexes.models import IndexFact, IndexMeaning
 
 @admin.register(IndexFact)
 class IndexFactAdmin(admin.ModelAdmin):
-    list_display = ('id', 'average_value', 'get_description', 'index', 'contour', 'source', 'get_html_photo', )
-    readonly_fields = ('id', 'average_value', 'get_html_photo', )
+    list_display = ('id', 'average_value', 'get_description', 'index', 'contour', 'date', 'get_html_photo', )
+    readonly_fields = ('id', 'average_value', 'get_html_photo', 'get_description', )
     list_display_links = ('id', 'get_description', )
 
-    def get_html_photo(self, object):
-        if object.index_image:
-            return mark_safe(f"<img src='{object.index_image.url}' width=100>")
+    def get_html_photo(self, obj):
+        if obj.index_image:
+            return mark_safe(f"<img src='{obj.index_image.url}' width=100>")
 
     get_html_photo.short_description = 'Визуализация NDVI'
 

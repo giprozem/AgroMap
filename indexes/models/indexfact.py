@@ -12,6 +12,7 @@ from simple_history.models import HistoricalRecords
 
 from indexes.index_funcs.ndmi_funcs import average_ndmi, ndmi_calculator
 from indexes.index_funcs.ndvi_funcs import cutting_tiff, average_ndvi, ndvi_calculator
+from indexes.models.satelliteimage import SatelliteImages
 
 
 class IndexFact(models.Model):
@@ -30,11 +31,11 @@ class IndexFact(models.Model):
     )
     index = models.ForeignKey('culture_model.Index', on_delete=models.CASCADE, verbose_name='Индекс')
     contour = models.ForeignKey('gip.Contour', on_delete=models.CASCADE, verbose_name='Контуры Поля')
-    source = models.ForeignKey('indexes.SatelliteImages', on_delete=models.CASCADE, verbose_name='Источник')
+    date = models.DateField(verbose_name='Дата анализа', help_text='Введите дату космо снимка из которого будет высчитан индекс')
     history = HistoricalRecords(verbose_name="История")
 
     def __str__(self):
-        return f'{self.index} {self.contour.ink} {self.source.region_name}'
+        return f'{self.index} {self.contour.ink}'
 
     class Meta:
         verbose_name = 'Фактический Индекс'
@@ -45,15 +46,21 @@ class IndexFact(models.Model):
             os.remove(deleting_path)
 
     def save(self, *args, **kwargs):
+        source = SatelliteImages.objects.filter(date=self.date).first()
+
+        if source == None:
+            # TODO refactor the response
+            raise ObjectDoesNotExist('Data base have no satellite images that have to process')
+
         file_name = self.contour.ink + f'время сохранения {datetime.datetime.now()}'
 
         polygon = GEOSGeometry(self.contour.polygon).geojson
 
         if self.index.name == 'NDVI':
             output_path_B04 = f"./media/B04_{file_name}.tiff"
-            input_path_B04 = f'./media/{self.source.B04}'
+            input_path_B04 = f'./media/{source.B04}'
             output_path_B8A = f"./media/B8A_{file_name}.tiff"
-            input_path_B8A = f'./media/{self.source.B8A}'
+            input_path_B8A = f'./media/{source.B8A}'
             cutting_tiff(outputpath=output_path_B04, inputpath=input_path_B04, polygon=polygon)
             cutting_tiff(outputpath=output_path_B8A, inputpath=input_path_B8A, polygon=polygon)
             self.average_value = average_ndvi(red_file=output_path_B04, nir_file=output_path_B8A)
@@ -80,9 +87,9 @@ class IndexFact(models.Model):
                 super(IndexFact, self).save(*args, **kwargs)
         elif self.index.name == 'NDMI':
             output_path_B11 = f"./media/B11_{file_name}.tiff"
-            input_path_B11 = f'./media/{self.source.B11}'
+            input_path_B11 = f'./media/{self.date.B11}'
             output_path_B08 = f"./media/B08_{file_name}.tiff"
-            input_path_B08 = f'./media/{self.source.B08}'
+            input_path_B08 = f'./media/{self.date.B08}'
             cutting_tiff(outputpath=output_path_B11, inputpath=input_path_B11, polygon=polygon)
             cutting_tiff(outputpath=output_path_B08, inputpath=input_path_B08, polygon=polygon)
             self.average_value = average_ndmi(swir_file=output_path_B11, nir_file=output_path_B08)
