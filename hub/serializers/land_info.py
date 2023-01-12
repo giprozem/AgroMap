@@ -17,6 +17,11 @@ class LandInfoSerializers(GeoFeatureModelSerializer):
         geo_field = 'main_map'
 
 
+class LandInfoCustomSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LandInfo
+        fields = ('ink_code', )
+
 # class InfoPlotSerializers(GeoFeatureModelSerializer):
 #     class Meta:
 #         model = LandInfo
