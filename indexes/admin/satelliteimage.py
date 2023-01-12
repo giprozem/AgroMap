@@ -1,9 +1,9 @@
 from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
 
-from indexes.models import SatelliteImages
 from indexes.models.satelliteimage import SatelliteImages
 
 
 @admin.register(SatelliteImages)
-class SatelliteImagesAdmin(admin.ModelAdmin):
+class SatelliteImagesAdmin(SimpleHistoryAdmin):
     pass

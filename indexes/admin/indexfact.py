@@ -3,10 +3,11 @@ from django.utils.safestring import mark_safe
 
 from indexes.admin.forms import IndexMeaningForm
 from indexes.models import IndexFact, IndexMeaning
+from simple_history.admin import SimpleHistoryAdmin
 
 
 @admin.register(IndexFact)
-class IndexFactAdmin(admin.ModelAdmin):
+class IndexFactAdmin(SimpleHistoryAdmin):
     list_display = ('id', 'average_value', 'get_description', 'index', 'contour', 'date', 'get_html_photo', )
     readonly_fields = ('id', 'average_value', 'get_html_photo', 'get_description', )
     list_display_links = ('id', 'get_description', )
