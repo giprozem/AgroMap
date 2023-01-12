@@ -19,3 +19,4 @@ class LandInfoSearch(APIView):
         if search:
             ink_code = land_info.filter(ink_code__icontains=search)
             return Response({"list_ink_code": LandInfoCustomSearchSerializer(ink_code, many=True).data})
+        return Response([])
