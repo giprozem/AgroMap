@@ -54,3 +54,8 @@ sudo docker-compose exec web python manage.py test
 sudo docker-compose exec web coverage report
 
 ```
+
+## Indexes
+Now we have opportunity to get 2 kind of index(NDVI, NDMI). 
+You have to upload 4 satellite images in tiff format from Sentinel-2.
+Ther are B04, B08, B8A, B11.

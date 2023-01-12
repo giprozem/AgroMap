@@ -1,8 +1,10 @@
 from django.contrib.gis.db import models
 from simple_history.models import HistoricalRecords
+import rasterio
 
 
 class SatelliteImages(models.Model):
+    # TODO have to refactor code rename variables
     region_name = models.CharField(max_length=100, verbose_name='Название региона')
     description = models.TextField(null=True, blank=True, verbose_name='Описание', help_text='Заполняется при необходимости')
     date = models.DateField(verbose_name='дата снимков')
@@ -21,10 +23,25 @@ class SatelliteImages(models.Model):
     B11 = models.FileField(upload_to='satellite_images', verbose_name='Слой B11', help_text='SWIR – 1', blank=True, null=True)
     B12 = models.FileField(upload_to='satellite_images', verbose_name='Слой B12', help_text='SWIR - 2', blank=True, null=True)
     history = HistoricalRecords(verbose_name="История")
+    bbox = models.CharField(max_length=255, verbose_name='Координаты снимков')
 
     def __str__(self):
         return self.region_name
 
     class Meta:
-        verbose_name = 'Спутниковый снимок'
-        verbose_name_plural = "Спутниковые снимки"
+        verbose_name = 'Спутниковый снимок Sentinel -2'
+        verbose_name_plural = "Спутниковые снимки Sentinel -2"
+
+    def save(self, *args, **kwargs):
+        with rasterio.open(self.B04) as f:
+            B04 = f.bounds
+
+        with rasterio.open(self.B8A) as f:
+            B8A = f.bounds
+            print(f.crs)
+
+        if B8A == B04:
+            # TODO have to optimize code
+            self.bbox = B04
+
+        super(SatelliteImages, self).save(*args, **kwargs)
