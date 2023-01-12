@@ -19,6 +19,7 @@ from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, Polyg
 from gip.views.region import RegionViewSet
 from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, GraphicTablesAPIView, CulturePercentAPIView
 from hub.views.authetificated import LoginHubView
+from hub.views.land_info import LandInfoSearch
 from hub.views.zem_balance_api import ZemBalanceViewSet
 from indexes.views.indexfact import IndexFactListCreateAPIView
 
@@ -58,6 +59,7 @@ urlpatterns = [
     path("polygons-in-bbox/", PolygonsInBbox.as_view()),
     path("index/", IndexFactListCreateAPIView.as_view()),
     path('login_hub/', LoginHubView.as_view()),
+    path('search_ink_hub/', LandInfoSearch.as_view()),
 ]
 
 if settings.DEBUG:
