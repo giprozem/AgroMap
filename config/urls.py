@@ -18,6 +18,8 @@ from gip.views.owner_details import OwnerDetailsAPIView
 from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox
 from gip.views.region import RegionViewSet
 from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, GraphicTablesAPIView, CulturePercentAPIView
+from hub.views.authetificated import LoginHubView
+from hub.views.zem_balance_api import ZemBalanceViewSet
 from indexes.views.indexfact import IndexFactListCreateAPIView
 
 router = DefaultRouter()
@@ -29,10 +31,13 @@ router.register('district', DistrictViewSet)
 router.register('conton', ContonViewSet)
 router.register('culture', CultureViewSet)
 router.register('crop_yield', CropYieldViewSet)
+#Zem Balance
+router.register('zem_balance', ZemBalanceViewSet, basename='zem_balance')
+
 
 schema_view = get_schema_view(
     openapi.Info(
-        title='API PLOT',
+        title='API Agromap and Hub',
         default_version='v1',
     ),
     public=True,
@@ -51,7 +56,8 @@ urlpatterns = [
     path("culture-percent/", CulturePercentAPIView.as_view()),
     path("index-plan/", IndexPlanWithAPIView.as_view()),
     path("polygons-in-bbox/", PolygonsInBbox.as_view()),
-    path("index/", IndexFactListCreateAPIView.as_view())
+    path("index/", IndexFactListCreateAPIView.as_view()),
+    path('login_hub/', LoginHubView.as_view()),
 ]
 
 if settings.DEBUG:

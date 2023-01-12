@@ -6,7 +6,7 @@ from hub.serializers.authetificated import LoginSerializer
 from rest_framework.authtoken.models import Token
 
 
-class LoginView(APIView):
+class LoginHubView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
