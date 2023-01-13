@@ -11,7 +11,7 @@ class LoginHubView(APIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = authenticate(username=serializer.validated_data['username'], password=serializer.validated_data['password'])
-        print(user)
+
         if not user:
             raise exceptions.AuthenticationFailed(' “Логин или пароль введен неверно. Попробуйте снова.”')
 

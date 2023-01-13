@@ -50,7 +50,6 @@ class CultureTests(APITestCase):
                      inn_pin=f"20220515{random.randint(1, 100)}", bonitet=random.randint(1, 100), culture='Картофель', crop_yield=10.2,
                      property_type=property_type, document_type=document_type, document_link='', category_type=category_type, land_type=land_type, square=200,
                      contour=GEOSGeometry(contour))
-        print(land_info)
 
         self.land_info = land_info
 
@@ -72,7 +71,7 @@ class CultureTests(APITestCase):
             },
         ]
         response = self.client.get(f"/zem_balance/{self.id}/")
-        print(response)
+
         self.assertEqual(response.status_code, HTTP_200_OK)
         self.assertEqual(response.data, expected_data, 'Dannye ne sovpadaut')
 
