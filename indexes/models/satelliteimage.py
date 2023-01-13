@@ -38,7 +38,6 @@ class SatelliteImages(models.Model):
 
         with rasterio.open(self.B8A) as f:
             B8A = f.bounds
-            print(f.crs)
 
         if B8A == B04:
             # TODO have to optimize code

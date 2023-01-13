@@ -219,7 +219,6 @@ class GraphicTablesAPIView(APIView):
                 for i in rows:
                     name = i[0]
                     data = list(i)[2:]
-                    print(data)
                     datas.append({"region_name": name, "source": data})
 
 
