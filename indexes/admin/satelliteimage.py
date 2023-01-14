@@ -6,4 +6,4 @@ from indexes.models.satelliteimage import SatelliteImages
 
 @admin.register(SatelliteImages)
 class SatelliteImagesAdmin(SimpleHistoryAdmin):
-    pass
+    readonly_fields = ('id', 'bbox', )
