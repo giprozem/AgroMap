@@ -9,7 +9,7 @@ from indexes.serializers.indexfact import IndexFactSerializer
 
 class IndexFactListCreateAPIView(ListAPIView):
     """
-    required in request body:
+    required in request params:
      - contour = id of contour
      - index = id of index
      - date = date of satellite images that have to proces
@@ -17,23 +17,12 @@ class IndexFactListCreateAPIView(ListAPIView):
 
     def get(self, request, *args, **kwargs):
         response = IndexFact.objects.filter(
-            contour=request.data['contour']
+            contour=request.query_params['contour']
         ).filter(
-            index=request.data['index']
+            index=request.query_params['index']
         ).filter(
-            date=request.data['date']
+            date=request.query_params['date']
         )
 
-        if len(response) <= 0:
-            index = Index.objects.get(id=request.data['index'])
-            contour = Contour.objects.get(id=request.data['contour'])
-            index_fact = IndexFact.objects.create(contour=contour, index=index, date=request.data['date'])
-            index_fact.save()
-        response = IndexFact.objects.filter(
-            contour=request.data['contour']
-        ).filter(index=request.data['index']
-                 ).filter(
-            date=request.data['date']
-        )
         serializer = IndexFactSerializer(response, many=True)
         return Response(serializer.data, status=200)
