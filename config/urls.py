@@ -8,6 +8,7 @@ from schema_graph.views import Schema
 
 from config import settings
 from culture_model.views import IndexPlanWithAPIView
+from gip.views.authenticated import LoginAgromapView
 from gip.views.conton import ContonViewSet
 from gip.views.contour import ContoursViewSet, ContourViewSet
 from gip.views.crop_yield import CropYieldViewSet
@@ -59,6 +60,7 @@ urlpatterns = [
     path("polygons-in-bbox/", PolygonsInBbox.as_view()),
     path("index/", IndexFactListCreateAPIView.as_view()),
     path('login_hub/', LoginHubView.as_view()),
+    path('login_agromap/', LoginAgromapView.as_view()),
     path('search_ink_hub/', LandInfoSearch.as_view()),
 ]
 
