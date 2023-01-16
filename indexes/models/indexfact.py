@@ -87,9 +87,9 @@ class IndexFact(models.Model):
                 super(IndexFact, self).save(*args, **kwargs)
         elif self.index.name == 'NDMI':
             output_path_B11 = f"./media/B11_{file_name}.tiff"
-            input_path_B11 = f'./media/{self.date.B11}'
+            input_path_B11 = f'./media/{source.B11}'
             output_path_B08 = f"./media/B08_{file_name}.tiff"
-            input_path_B08 = f'./media/{self.date.B08}'
+            input_path_B08 = f'./media/{source.B08}'
             cutting_tiff(outputpath=output_path_B11, inputpath=input_path_B11, polygon=polygon)
             cutting_tiff(outputpath=output_path_B08, inputpath=input_path_B08, polygon=polygon)
             self.average_value = average_ndmi(swir_file=output_path_B11, nir_file=output_path_B08)

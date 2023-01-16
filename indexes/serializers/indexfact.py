@@ -17,3 +17,11 @@ class IndexFactSerializer(serializers.ModelSerializer):
     class Meta:
         model = IndexFact
         fields = '__all__'
+
+
+class SatelliteImageSerializer(serializers.ModelSerializer):
+    index = IndexSerializer()
+
+    class Meta:
+        model = IndexFact
+        fields = '__all__'
