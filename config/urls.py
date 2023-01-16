@@ -21,7 +21,7 @@ from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, Graph
 from hub.views.authetificated import LoginHubView
 from hub.views.land_info import LandInfoSearch
 from hub.views.zem_balance_api import ZemBalanceViewSet
-from indexes.views.indexfact import IndexFactListCreateAPIView
+from indexes.views.indexfact import IndexFactListCreateAPIView, SatelliteImagesDate
 
 router = DefaultRouter()
 router.register('contours', ContoursViewSet, basename='contours')
@@ -60,6 +60,7 @@ urlpatterns = [
     path("index/", IndexFactListCreateAPIView.as_view()),
     path('login_hub/', LoginHubView.as_view()),
     path('search_ink_hub/', LandInfoSearch.as_view()),
+    path('satellite_dates/<int:index>/<int:contour>/', SatelliteImagesDate.as_view()),
 ]
 
 if settings.DEBUG:

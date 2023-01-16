@@ -1,10 +1,9 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from culture_model.models import Index
-from gip.models import Contour
 from indexes.models.indexfact import IndexFact
-from indexes.serializers.indexfact import IndexFactSerializer
+from indexes.serializers.indexfact import IndexFactSerializer, SatelliteImageSerializer
 
 
 class IndexFactListCreateAPIView(ListAPIView):
@@ -25,4 +24,18 @@ class IndexFactListCreateAPIView(ListAPIView):
         )
 
         serializer = IndexFactSerializer(response, many=True)
+        return Response(serializer.data, status=200)
+
+
+class SatelliteImagesDate(APIView):
+    """
+    required:
+    first param = index_id
+    second param = contour id
+    """
+    def get(self, request, *args, **kwargs):
+        index = kwargs['index']
+        contour = kwargs['contour']
+        result = IndexFact.objects.filter(index=index).filter(contour=contour)
+        serializer = IndexFactSerializer(result, many=True)
         return Response(serializer.data, status=200)
