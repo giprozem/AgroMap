@@ -2,8 +2,8 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from indexes.models.indexfact import IndexFact
-from indexes.serializers.indexfact import IndexFactSerializer, SatelliteImageSerializer
+from indexes.models.actual_veg_index import ActuaVegIndex
+from indexes.serializers.actual_veg_index import ActuaVegIndexSerializer
 
 
 class IndexFactListCreateAPIView(ListAPIView):
@@ -15,7 +15,7 @@ class IndexFactListCreateAPIView(ListAPIView):
     """
 
     def get(self, request, *args, **kwargs):
-        response = IndexFact.objects.filter(
+        response = ActuaVegIndex.objects.filter(
             contour=request.query_params['contour']
         ).filter(
             index=request.query_params['index']
@@ -23,7 +23,7 @@ class IndexFactListCreateAPIView(ListAPIView):
             date=request.query_params['date']
         )
 
-        serializer = IndexFactSerializer(response, many=True)
+        serializer = ActuaVegIndexSerializer(response, many=True)
         return Response(serializer.data, status=200)
 
 
@@ -36,6 +36,6 @@ class SatelliteImagesDate(APIView):
     def get(self, request, *args, **kwargs):
         index = kwargs['index']
         contour = kwargs['contour']
-        result = IndexFact.objects.filter(index=index).filter(contour=contour)
-        serializer = IndexFactSerializer(result, many=True)
+        result = ActuaVegIndex.objects.filter(index=index).filter(contour=contour)
+        serializer = ActuaVegIndexSerializer(result, many=True)
         return Response(serializer.data, status=200)

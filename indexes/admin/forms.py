@@ -1,5 +1,5 @@
 from django.forms import ModelForm, Textarea
-from indexes.models import IndexMeaning, IndexFact
+from indexes.models import IndexMeaning
 
 
 class IndexMeaningForm(ModelForm):

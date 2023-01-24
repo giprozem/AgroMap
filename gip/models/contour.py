@@ -12,6 +12,13 @@ from simple_history.models import HistoricalRecords
 class LandType(models.Model):
     name = models.CharField(max_length=125, verbose_name='Название')
 
+    class Meta:
+        verbose_name = 'Тип земли '
+        verbose_name_plural = "Типы земель"
+
+    def __str__(self):
+        return self.name
+
 
 class Contour(BaseModel):
     type = models.ForeignKey(LandType, on_delete=models.SET_NULL, null=True, related_name='contours')
@@ -21,6 +28,7 @@ class Contour(BaseModel):
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Контур")
     area_ha = models.FloatField(blank=True, null=True, verbose_name="Площадь га")
     history = HistoricalRecords(verbose_name="История")
+    is_rounded = models.BooleanField(default=False, verbose_name='')
 
     def __str__(self):
         return self.ink if self.ink else '-'

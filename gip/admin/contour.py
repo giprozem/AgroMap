@@ -4,12 +4,12 @@ from django.utils.safestring import mark_safe
 from leaflet.admin import LeafletGeoAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
-from gip.models import Contour
-from indexes.models import IndexFact
+from gip.models import Contour, LandType
+from indexes.models import ActuaVegIndex
 
 
 class NDVITabularInline(TabularInline):
-    model = IndexFact
+    model = ActuaVegIndex
     readonly_fields = ('id', 'get_html_photo', 'index_image', 'average_value', 'get_description', )
     fields = ('average_value', 'get_description', 'get_html_photo', 'index', 'contour', 'date', )
     show_change_link = ('index', )
@@ -68,3 +68,8 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'ink', )
     inlines = [NDVITabularInline]
+
+
+@admin.register(LandType)
+class LandTypeAdmin(admin.ModelAdmin):
+    pass

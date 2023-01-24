@@ -1,1 +1,1 @@
-from indexes.views.indexfact import *
+from indexes.views.actual_veg_index import *

@@ -44,3 +44,47 @@ class SatelliteImages(models.Model):
             self.bbox = B04
 
         super(SatelliteImages, self).save(*args, **kwargs)
+
+
+class SatelliteImageSource(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Наименование')
+    description = models.TextField(verbose_name='Описание')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Источник спутниковых снимков'
+        verbose_name_plural = "Источники Спутниковых снимков"
+
+
+class SatelliteImageBand(models.Model):
+    band_name = models.CharField(max_length=255, verbose_name='Название диапазона спутникового снимка', unique=True)
+    band_description = models.TextField(verbose_name='Описание диапазона спутникового снимка')
+
+    class Meta:
+        verbose_name = 'Диапазон спутникового снимка'
+        verbose_name_plural = "Диапазоны спутникового снимка"
+
+    def __str__(self):
+        return self.band_name
+
+
+class SatelliteImageLayer(models.Model):
+    image = models.FileField(upload_to='satellite_image', verbose_name='Снимок')
+    source = models.ForeignKey(
+        'indexes.SatelliteImageSource',
+        on_delete=models.CASCADE,
+        verbose_name='Источник спутниковых снимков',
+        related_name='image_source'
+    )
+    band = models.ForeignKey(
+        'indexes.SatelliteImageBand',
+        on_delete=models.CASCADE,
+        verbose_name='Диапазон спутникового снимка',
+        related_name='image_band'
+    )
+
+    class Meta:
+        verbose_name = 'Слой спутникового снимка'
+        verbose_name_plural = "Слои спутниковых снимков"

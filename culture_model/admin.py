@@ -1,7 +1,7 @@
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
 
-from culture_model.models import Decade, Index, IndexPlan, Phase
+from culture_model.models import Decade, VegetationIndex, IndexPlan, Phase
 
 
 @admin.register(Decade)
@@ -9,7 +9,7 @@ class DecadeAdmin(SimpleHistoryAdmin):
     pass
 
 
-@admin.register(Index)
+@admin.register(VegetationIndex)
 class IndexAdmin(SimpleHistoryAdmin):
     pass
 

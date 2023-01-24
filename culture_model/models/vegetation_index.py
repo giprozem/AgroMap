@@ -1,7 +1,7 @@
 from django.contrib.gis.db import models
 
 
-class Index(models.Model):
+class VegetationIndex(models.Model):
     name = models.CharField(max_length=125, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
 

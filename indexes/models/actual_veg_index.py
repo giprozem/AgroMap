@@ -15,7 +15,7 @@ from indexes.index_funcs.ndvi_funcs import cutting_tiff, average_ndvi, ndvi_calc
 from indexes.models.satelliteimage import SatelliteImages
 
 
-class IndexFact(models.Model):
+class ActuaVegIndex(models.Model):
     index_image = models.FileField(upload_to='index_image', verbose_name='Картинка индекса', blank=True)
     average_value = models.DecimalField(
         max_digits=5,
@@ -29,7 +29,7 @@ class IndexFact(models.Model):
         verbose_name='Значение среднего показателя',
         null=True
     )
-    index = models.ForeignKey('culture_model.Index', on_delete=models.CASCADE, verbose_name='Индекс')
+    index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name='Индекс')
     contour = models.ForeignKey('gip.Contour', on_delete=models.CASCADE, verbose_name='Контуры Поля')
     date = models.DateField(verbose_name='Дата анализа', help_text='Введите дату космо снимка из которого будет высчитан индекс')
     history = HistoricalRecords(verbose_name="История")
@@ -68,7 +68,7 @@ class IndexFact(models.Model):
             self.meaning_of_average_value = IndexMeaning.objects.filter(
                 index=self.index
             ).filter(
-                min_index_value__lte=self.average_value
+                min_index_value__lt=self.average_value
             ).filter(
                 max_index_value__gte=self.average_value
             ).first()
@@ -84,7 +84,7 @@ class IndexFact(models.Model):
 
                 self.index_image = image
                 self.remove_file(f'./media/{file_name}.png')
-                super(IndexFact, self).save(*args, **kwargs)
+                super(ActuaVegIndex, self).save(*args, **kwargs)
         elif self.index.name == 'NDMI':
             output_path_B11 = f"./media/B11_{file_name}.tiff"
             input_path_B11 = f'./media/{source.B11}'
@@ -97,7 +97,7 @@ class IndexFact(models.Model):
             self.meaning_of_average_value = IndexMeaning.objects.filter(
                 index=self.index
             ).filter(
-                min_index_value__lte=self.average_value
+                min_index_value__lt=self.average_value
             ).filter(
                 max_index_value__gte=self.average_value
             ).first()
@@ -114,13 +114,13 @@ class IndexFact(models.Model):
 
                 self.index_image = image
                 self.remove_file(f'./media/{file_name}.png')
-                super(IndexFact, self).save(*args, **kwargs)
+                super(ActuaVegIndex, self).save(*args, **kwargs)
         else:
             raise ObjectDoesNotExist(_('Data base have no satellite images that have to process'))
 
 
 class IndexMeaning(models.Model):
-    index = models.ForeignKey('culture_model.Index', on_delete=models.CASCADE, verbose_name='Индекс')
+    index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name='Индекс')
     min_index_value = models.DecimalField(max_digits=4, decimal_places=3, validators=[MinValueValidator(-1)], verbose_name='Минимальное значение')
     max_index_value = models.DecimalField(max_digits=4, decimal_places=3, validators=[MaxValueValidator(1)], verbose_name='Максимальное значение')
     description = models.TextField(verbose_name='Описание')
