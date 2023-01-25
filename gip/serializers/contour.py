@@ -51,14 +51,14 @@ class ContourSerializer(GeoFeatureModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['properties'] = {'created_at': instance.created_at, 'updated_at': instance.updated_at,
-                                        'ink': instance.ink, 'sum_ha': instance.sum_ha, 'conton': instance.conton.name,
+                                        'ink': instance.ink, 'area_ha': instance.area_ha, 'conton': instance.conton.name,
                                         'farmer': instance.farmer.pin_inn,
                                         }
 
         if instance.crop_yields.exists():
             culture = instance.crop_yields.order_by("-year").first().culture
             representation['properties']["culture"] = culture.name
-            representation['properties']['crop_yield'] = round(culture.coefficient_crop * instance.sum_ha, 2)
+            representation['properties']['crop_yield'] = round(culture.coefficient_crop * instance.area_ha, 2)
             representation['properties']['group'] = culture.name
         else:
             representation['properties']['group'] = "Неиспользуемые земли"
