@@ -29,11 +29,11 @@ class StatisticsAPIView(APIView):
         else:
             if region:
                 with connection.cursor() as cursor:
-                    cols = "cntr.id, cy.year, cl.name, cntr.sum_ha, cl.coefficient_crop, " \
-                           "cntr.sum_ha * cl.coefficient_crop as crop"
+                    cols = "cntr.id, cy.year, cl.name, cntr.area_ha, cl.coefficient_crop, " \
+                           "cntr.area_ha * cl.coefficient_crop as crop"
                     col_lst = cols.split(", ")
                     cursor.execute(f"""select cy.year, cl.name, rgn.name, 
-                                   round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
+                                   round(sum(cntr.area_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
                                    from gip_contour as cntr
                                    join gip_cropyield as cy 
                                    on cntr.id = cy.contour_id
@@ -58,11 +58,11 @@ class StatisticsAPIView(APIView):
 
             elif district:
                 with connection.cursor() as cursor:
-                    cols = "cntr.id, cy.year, cl.name, cntr.sum_ha, cl.coefficient_crop, " \
-                           "cntr.sum_ha * cl.coefficient_crop as crop"
+                    cols = "cntr.id, cy.year, cl.name, cntr.area_ha, cl.coefficient_crop, " \
+                           "cntr.area_ha * cl.coefficient_crop as crop"
                     col_lst = cols.split(", ")
                     cursor.execute(f"""select cy.year, cl.name, dst.name, 
-                                   round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
+                                   round(sum(cntr.area_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
                                    from gip_contour as cntr
                                    join gip_cropyield as cy 
                                    on cntr.id = cy.contour_id
@@ -88,7 +88,7 @@ class StatisticsAPIView(APIView):
                     cols = "year, culture_name, conton_name, cy_sum, previous_year, difference"
                     col_lst = cols.split(", ")
                     cursor.execute(f"""select cy.year, cl.name, cntn.name, 
-                                   round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
+                                   round(sum(cntr.area_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
                                    from gip_contour as cntr
                                    join gip_cropyield as cy 
                                    on cntr.id = cy.contour_id
@@ -111,7 +111,7 @@ class StatisticsAPIView(APIView):
             else:
                 with connection.cursor() as cursor:
                     cursor.execute(f"""select cy.year, cl.name, 
-                                   round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
+                                   round(sum(cntr.area_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
                                    from gip_contour as cntr
                                    join gip_cropyield as cy 
                                    on cntr.id = cy.contour_id
@@ -138,7 +138,7 @@ class ContourCultureAPIView(APIView):
         ink = request.GET.get('ink')
         if conton:
             with connection.cursor() as cursor:
-                cursor.execute(f"""select cntn.name, cntr.ink, cl.name, cntr.sum_ha, cy.year
+                cursor.execute(f"""select cntn.name, cntr.ink, cl.name, cntr.area_ha, cy.year
                                    from gip_contour as cntr
                                    join gip_cropyield as cy 
                                    on cntr.id = cy.contour_id
@@ -153,7 +153,7 @@ class ContourCultureAPIView(APIView):
 
         elif ink:
             with connection.cursor() as cursor:
-                cursor.execute(f"""select cntn.name, cntr.ink, cl.name, cntr.sum_ha, cy.year
+                cursor.execute(f"""select cntn.name, cntr.ink, cl.name, cntr.area_ha, cy.year
                                    from gip_contour as cntr
                                    join gip_cropyield as cy 
                                    on cntr.id = cy.contour_id
@@ -167,7 +167,7 @@ class ContourCultureAPIView(APIView):
             return Response(rows)
         else:
             with connection.cursor() as cursor:
-                cursor.execute(f"""select cntn.name, cntr.ink, cl.name, cntr.sum_ha, cy.year
+                cursor.execute(f"""select cntn.name, cntr.ink, cl.name, cntr.area_ha, cy.year
                                    from gip_contour as cntr
                                    join gip_cropyield as cy 
                                    on cntr.id = cy.contour_id
@@ -197,7 +197,7 @@ class GraphicTablesAPIView(APIView):
                 cols = "year, culture_name, region_name, cy_sum, previous_year, difference"
                 col_lst = cols.split(", ")
                 cursor.execute(f"""with cte as (select rgn.name as region_name, cy.year as year, cl.name as culture_name,
-                               round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
+                               round(sum(cntr.area_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
                                from gip_contour as cntr
                                join gip_cropyield as cy
                                on cntr.id = cy.contour_id
@@ -250,7 +250,7 @@ class CulturePercentAPIView(APIView):
             if region:
                 with connection.cursor() as cursor:
                     cursor.execute(f"""select cy.year, cl.name as culture_name, rgn.name as region_name, 
-                                       round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as sum
+                                       round(sum(cntr.area_ha * cl.coefficient_crop)::numeric, 2) as sum
                                        from gip_contour as cntr
                                        join gip_cropyield as cy 
                                        on cntr.id = cy.contour_id
@@ -274,7 +274,7 @@ class CulturePercentAPIView(APIView):
             elif district:
                 with connection.cursor() as cursor:
                     cursor.execute(f"""select cy.year, cl.name as culture_name, dst.name as district_name, 
-                                       round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as sum
+                                       round(sum(cntr.area_ha * cl.coefficient_crop)::numeric, 2) as sum
                                        from gip_contour as cntr
                                        join gip_cropyield as cy 
                                        on cntr.id = cy.contour_id
@@ -295,7 +295,7 @@ class CulturePercentAPIView(APIView):
             else:
                 with connection.cursor() as cursor:
                     cursor.execute(f"""select cy.year, cl.name as culture_name, 
-                                       round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as sum
+                                       round(sum(cntr.area_ha * cl.coefficient_crop)::numeric, 2) as sum
                                        from gip_contour as cntr
                                        join gip_cropyield as cy 
                                        on cntr.id = cy.contour_id

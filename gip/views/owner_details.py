@@ -23,8 +23,8 @@ class OwnerDetailsAPIView(APIView):
                 return Response(formated_data)
         elif ink:
             with connection.cursor() as cursor:
-                cursor.execute(f"""select cntr.ink, cntr.polygon, cntr.sum_ha, frmr.pin_inn, cl.name as culture_name,
-                                round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
+                cursor.execute(f"""select cntr.ink, cntr.polygon, cntr.area_ha, frmr.pin_inn, cl.name as culture_name,
+                                round(sum(cntr.area_ha * cl.coefficient_crop)::numeric, 2) as cy_sum
                                from gip_contour as cntr 
                                join gip_farmer as frmr 
                                on frmr.id = cntr.farmer_id 
@@ -32,7 +32,7 @@ class OwnerDetailsAPIView(APIView):
                                on cntr.id = cy.contour_id
                                join gip_culture as cl
                                on cl.id = cy.culture_id
-                               group by cntr.ink, frmr.pin_inn, cntr.polygon, cntr.sum_ha, cl.name 
+                               group by cntr.ink, frmr.pin_inn, cntr.polygon, cntr.area_ha, cl.name 
                                having cntr.ink='{ink}'""")
                 rows = cursor.fetchall()
                 formated_data = {

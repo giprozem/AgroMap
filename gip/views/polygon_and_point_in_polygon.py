@@ -74,7 +74,7 @@ class PolygonsInBbox(APIView):
             with connection.cursor() as cursor:
                 cursor.execute(f""" 
                                select distinct on (cntr.id) cntr.id, cy.year as year, cntr.ink, cl.name, St_AsGeoJSON(cntr.polygon) as polygon,
-                               round(sum(cntr.sum_ha * cl.coefficient_crop)::numeric, 2) as sum
+                               round(sum(cntr.area_ha * cl.coefficient_crop)::numeric, 2) as sum
                                from gip_contour as cntr
                                join gip_cropyield as cy 
                                on cntr.id = cy.contour_id
