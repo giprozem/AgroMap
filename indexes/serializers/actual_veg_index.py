@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from culture_model.serializers.index import IndexSerializer
-from indexes.models.indexfact import IndexFact, IndexMeaning
+from indexes.models.actual_veg_index import ActuaVegIndex, IndexMeaning
 
 
 class IndexMeaningSerializer(serializers.ModelSerializer):
@@ -10,12 +10,12 @@ class IndexMeaningSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class IndexFactSerializer(serializers.ModelSerializer):
+class ActuaVegIndexSerializer(serializers.ModelSerializer):
     meaning_of_average_value = IndexMeaningSerializer()
     index = IndexSerializer()
 
     class Meta:
-        model = IndexFact
+        model = ActuaVegIndex
         fields = '__all__'
 
 
@@ -23,5 +23,5 @@ class SatelliteImageSerializer(serializers.ModelSerializer):
     index = IndexSerializer()
 
     class Meta:
-        model = IndexFact
+        model = ActuaVegIndex
         fields = '__all__'

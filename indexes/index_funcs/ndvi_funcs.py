@@ -29,7 +29,7 @@ def get_region_of_interest(ndvi, multiplier=1/2):
 
     # mean of both rows
     mean = (center_row1.copy()+center_row2.copy())/2
-    return mean
+    return round(mean, 3)
 
 
 def get_ndvi(red_file, nir_file):
