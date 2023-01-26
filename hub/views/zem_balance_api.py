@@ -10,33 +10,6 @@ from rest_framework.viewsets import GenericViewSet
 from hub.models import LandInfo
 from hub.serializers.land_info import ZemBalanceSerializers
 
-headers = {
-    "token": "p4qfbyzc7eeybt5uq4b2vafc24c386q9"
-}
-
-
-class InkZemBalanceAPIView(APIView):
-    def get(self, request):
-        ink = request.GET.get('ink')
-        if ink:
-            url = requests.get(f"https://balance.24mycrm.com/api.php?inkCode={ink}", headers=headers).json()
-            # ink_code = url[0]['ink_code']
-            # contour = url[0]['main_map']
-            # eni = url[0]['eni_code']
-            # inn_pin = url[0]['ink_code']
-            # name = url[0]['ink_code']
-            # bonitet = url[0]['ink_code']
-            # culture = url[0]['ink_code']
-            # crop_yield = url[0]['ink_code']
-            # property_type = url[0]['ink_code']
-            # document_type = url[0]['ink_code']
-            # document_link = url[0]['ink_code']
-            # category_type = url[0]['ink_code']
-            # land_type = url[0]['ink_code']
-            # square = url[0]['square']
-            # return Response([{"ink_code": ink_code, "contour": contour, "eni": eni, "square": square}])
-            return Response(url)
-
 
 class ZemBalanceViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
                         mixins.UpdateModelMixin, GenericViewSet):

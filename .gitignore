@@ -159,3 +159,5 @@ test_data
 contour.json
 agromap.json
 *.json
+regions
+*.geojson
