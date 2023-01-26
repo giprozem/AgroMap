@@ -9,6 +9,7 @@ class Region(BaseModel):
     population = models.IntegerField(verbose_name="Население")
     area = models.IntegerField(verbose_name="Площадь")
     density = models.FloatField(verbose_name="Плотность")
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Контур", blank=True, null=True)
     history = HistoricalRecords()
 
     def __str__(self):
