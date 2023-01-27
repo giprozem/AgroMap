@@ -11,7 +11,7 @@ class DecadeAdmin(SimpleHistoryAdmin):
 
 @admin.register(VegetationIndex)
 class IndexAdmin(SimpleHistoryAdmin):
-    pass
+    list_display = ('id', 'name')
 
 
 @admin.register(IndexPlan)

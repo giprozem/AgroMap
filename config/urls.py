@@ -23,6 +23,7 @@ from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, Graph
 from hub.views.authetificated import LoginHubView
 from hub.views.land_info import LandInfoSearch
 from hub.views.zem_balance_api import ZemBalanceViewSet
+from indexes.views import Creating, CreatingAverage
 from indexes.views.actual_veg_index import IndexFactListCreateAPIView, SatelliteImagesDate
 
 router = DefaultRouter()
@@ -65,7 +66,9 @@ urlpatterns = [
     path('search_ink_hub/', LandInfoSearch.as_view()),
     path('satellite_dates/<int:index>/<int:contour>/', SatelliteImagesDate.as_view()),
     path('geojson_ro_db/', GeojsonSavingToDBAPIView.as_view()),
-    path('filter_contour/', FilterContourAPIView.as_view())
+    path('filter_contour/', FilterContourAPIView.as_view()),
+    path('creating/', Creating.as_view()),
+    path('average/', CreatingAverage.as_view())
 ]
 
 if settings.DEBUG:
