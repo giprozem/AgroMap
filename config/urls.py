@@ -10,7 +10,7 @@ from config import settings
 from culture_model.views import IndexPlanWithAPIView
 from gip.views.authenticated import LoginAgromapView
 from gip.views.conton import ContonViewSet
-from gip.views.contour import ContoursViewSet, ContourViewSet
+from gip.views.contour import ContoursViewSet, ContourViewSet, FilterContourAPIView
 from gip.views.crop_yield import CropYieldViewSet
 from gip.views.culture import CultureViewSet
 from gip.views.district import DistrictViewSet
@@ -18,6 +18,7 @@ from gip.views.land_use import LandUseViewSet
 from gip.views.owner_details import OwnerDetailsAPIView
 from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox
 from gip.views.region import RegionViewSet
+from gip.views.script_for_saving_to_db import GeojsonSavingToDBAPIView
 from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, GraphicTablesAPIView, CulturePercentAPIView
 from hub.views.authetificated import LoginHubView
 from hub.views.land_info import LandInfoSearch
@@ -63,6 +64,8 @@ urlpatterns = [
     path('login_agromap/', LoginAgromapView.as_view()),
     path('search_ink_hub/', LandInfoSearch.as_view()),
     path('satellite_dates/<int:index>/<int:contour>/', SatelliteImagesDate.as_view()),
+    path('geojson_ro_db/', GeojsonSavingToDBAPIView.as_view()),
+    path('filter_contour/', FilterContourAPIView.as_view())
 ]
 
 if settings.DEBUG:
