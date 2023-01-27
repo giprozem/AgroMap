@@ -10,7 +10,7 @@ from config import settings
 from culture_model.views import IndexPlanWithAPIView
 from gip.views.authenticated import LoginAgromapView
 from gip.views.conton import ContonViewSet
-from gip.views.contour import ContoursViewSet, ContourViewSet, FilterContourAPIView
+from gip.views.contour import ContourViewSet, FilterContourAPIView, LandTypeViewSet
 from gip.views.crop_yield import CropYieldViewSet
 from gip.views.culture import CultureViewSet
 from gip.views.district import DistrictViewSet
@@ -26,7 +26,7 @@ from hub.views.zem_balance_api import ZemBalanceViewSet
 from indexes.views.actual_veg_index import IndexFactListCreateAPIView, SatelliteImagesDate
 
 router = DefaultRouter()
-router.register('contours', ContoursViewSet, basename='contours')
+router.register('land-type', LandTypeViewSet)
 router.register('contour', ContourViewSet, basename='contour')
 router.register('land-use', LandUseViewSet, basename='land-use')
 router.register('region', RegionViewSet)

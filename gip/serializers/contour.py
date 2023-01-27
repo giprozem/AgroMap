@@ -3,20 +3,13 @@ from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from gip.models import CropYield
 from gip.models.conton import Conton
-from gip.models.contour import Contour
+from gip.models.contour import Contour, LandType
 
 
 class ContonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conton
         fields = ('polygon', )
-
-
-class ContoursSerializer(GeoFeatureModelSerializer):
-    class Meta:
-        model = Contour
-        fields = '__all__'
-        geo_field = 'polygon'
 
 
 class ContourAutocompleteSerializer(serializers.ModelSerializer):
@@ -64,3 +57,9 @@ class ContourSerializer(GeoFeatureModelSerializer):
             representation['properties']['group'] = "Неиспользуемые земли"
 
         return representation
+
+
+class LandTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LandType
+        fields = '__all__'
