@@ -313,3 +313,24 @@ class CulturePercentAPIView(APIView):
                         "values": [row[-1] for row in rows]
                     }
                 return Response(formated_data)
+
+
+"""
+select cntr.id as contour_id, rgn.id as region_id, ltp.id as type_id from gip_contour as cntr join gip_conton as cntn on cntn.id=cntr.conton_id join gip_landtype as ltp on ltp.id=cntr.type_id join gip_district as dst on dst.id=cntn.district_id join gip_region as rgn on rgn.id=dst.region_id group by cntr.id, rgn.id, ltp.id having rgn.id=7;
+"""
+
+"""
+select rgn.id as region_id, cy.year, cntr.id, cl.name from gip_contour as cntr
+join gip_cropyield as cy 
+on cntr.id = cy.contour_id
+join gip_culture as cl
+on cl.id = cy.culture_id 
+join gip_conton as cntn 
+on cntn.id = cntr.conton_id 
+join gip_district as dst 
+on dst.id = cntn.district_id 
+join gip_region as rgn
+on rgn.id=dts.region_id
+group by cy.year, cntr.id, cl.name, rgn.id having rgn.id=7;
+
+"""

@@ -72,4 +72,4 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 
 @admin.register(LandType)
 class LandTypeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'name' )
