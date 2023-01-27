@@ -1,6 +1,8 @@
 from django.contrib.gis.db import models
 from simple_history.models import HistoricalRecords
 
+from indexes.models import ActuaVegIndex
+
 
 class ProductivityClass(models.Model):
     name = models.CharField(max_length=255, verbose_name='Наименование')
@@ -39,3 +41,21 @@ class ContourAverageIndex(models.Model):
     class Meta:
         verbose_name = 'Средний индек контура'
         verbose_name_plural = "Средние индесы контуров"
+
+    def save(self, *args, **kwargs):
+        try:
+            source = ActuaVegIndex.objects.filter(contour=self.contour)
+        except ValueError:
+            return 'Data base have no Vegetation index'
+        self.index_count = len(source)
+        value = []
+        date = []
+        for i in source:
+            value.append(i.average_value)
+            date.append(i.date)
+        self.value = (sum(value)) / self.index_count
+        sorted_date = sorted(date)
+        self.start_day = sorted_date[0]
+        self.end_day = sorted_date[-1]
+
+        super(ContourAverageIndex, self).save(*args, **kwargs)
