@@ -5,16 +5,14 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.views import APIView
 
-from gip.models.contour import Contour
+from gip.models.contour import Contour, LandType
 from gip.pagination.contour_pagination import ContourPagination
-from gip.serializers.contour import ContoursSerializer, ContourSerializer
+from gip.serializers.contour import ContourSerializer, LandTypeSerializer
 
 
-class ContoursViewSet(viewsets.ModelViewSet):
-    queryset = Contour.objects.all()
-    serializer_class = ContoursSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['ink', 'conton']
+class LandTypeViewSet(viewsets.ModelViewSet):
+    queryset = LandType.objects.all()
+    serializer_class = LandTypeSerializer
 
 
 class ContourViewSet(viewsets.ModelViewSet):
