@@ -103,3 +103,35 @@ class FilterContourAPIView(APIView):
                 return Response({"type": "FeatureCollection", "features": data})
         else:
             return Response(data={"message": "parameter 'region' is required"}, status=400)
+
+
+class PastureClassAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        with connection.cursor() as cursor:
+            cursor.execute(f"""
+                SELECT
+                    cntr.id, cntr.ink, cntr.type_id,
+                    St_AsGeoJSON(cntr.polygon) as polygon,
+                    cntr.area_ha,
+                    cai.value
+                FROM gip_contour as cntr
+                JOIN indexes_contouraverageindex as cai
+                ON cntr.id = cai.contour_id
+                WHERE cntr.type_id = 2
+                ORDER BY cai.value DESC
+            """)
+            rows = cursor.fetchall()
+        data = {}
+        prod_classes = ["high", "middle", "low"]
+        # print(rows[:3])
+        for num, cl in enumerate(prod_classes):
+            data[cl] = {"type": "FeatureCollection", "features": []}
+            start = round(num*len(rows)/len(prod_classes))
+            end = round((num+1)*len(rows)/len(prod_classes))
+            for i in rows[start:end]:
+                data[cl]["features"].append({"type": "Feature",
+                            "properties": {'id': i[0], 'ink': i[1], 'type': i[2], 'avg_index': i[-1]},
+                             "geometry": eval(i[3])
+                            })
+
+        return Response(data)

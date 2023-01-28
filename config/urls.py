@@ -11,6 +11,7 @@ from culture_model.views import IndexPlanWithAPIView
 from gip.views.authenticated import LoginAgromapView
 from gip.views.conton import ContonViewSet
 from gip.views.contour import ContourViewSet, FilterContourAPIView, LandTypeViewSet
+from gip.views.contour import ContourViewSet, FilterContourAPIView, PastureClassAPIView
 from gip.views.crop_yield import CropYieldViewSet
 from gip.views.culture import CultureViewSet
 from gip.views.district import DistrictViewSet
@@ -68,7 +69,8 @@ urlpatterns = [
     path('geojson_ro_db/', GeojsonSavingToDBAPIView.as_view()),
     path('filter_contour/', FilterContourAPIView.as_view()),
     path('creating/', Creating.as_view()),
-    path('average/', CreatingAverage.as_view())
+    path('average/', CreatingAverage.as_view()),
+    path('pasture-class-group/', PastureClassAPIView.as_view())
 ]
 
 if settings.DEBUG:
