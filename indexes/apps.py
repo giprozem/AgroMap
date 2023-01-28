@@ -5,3 +5,6 @@ class IndexesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'indexes'
     verbose_name = 'Вегатационные Индексы'
+
+    def ready(self):
+        import indexes.signals

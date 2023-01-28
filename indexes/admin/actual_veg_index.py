@@ -23,7 +23,7 @@ class IndexFactAdmin(SimpleHistoryAdmin):
         return obj.contour.id
 
     def get_description(self, obj):
-        return obj.meaning_of_average_value.description
+        return obj.meaning_of_average_value.description if obj.meaning_of_average_value else None
 
     get_description.short_description = 'Значение показателя индекса'
 
