@@ -1,12 +1,13 @@
 from django.db import connection
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
 
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.views import APIView
 
 from gip.models.contour import Contour, LandType
-from gip.pagination.contour_pagination import ContourPagination
+from gip.pagination.contour_pagination import ContourPagination, SearchContourPagination
 from gip.serializers.contour import ContourSerializer, LandTypeSerializer
 
 
@@ -21,6 +22,14 @@ class ContourViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['ink', 'conton']
     pagination_class = ContourPagination
+
+
+class SearchContourViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Contour.objects.all()
+    serializer_class = ContourSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['ink', 'conton']
+    pagination_class = SearchContourPagination
 
 
 class FilterContourAPIView(APIView):
@@ -135,3 +144,11 @@ class PastureClassAPIView(APIView):
                             })
 
         return Response(data)
+
+
+class ContourSearchAPIView(ListAPIView):
+    queryset = Contour.objects.all()
+    serializer_class = ContourSerializer
+    pagination_class = SearchContourPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['ink']
