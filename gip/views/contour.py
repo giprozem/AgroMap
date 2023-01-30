@@ -111,7 +111,24 @@ class FilterContourAPIView(APIView):
                                  "geometry": eval(i[3])})
                 return Response({"type": "FeatureCollection", "features": data})
         else:
-            return Response(data={"message": "parameter 'region' is required"}, status=400)
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                               select cntr.id, cntr.ink, cntr.type_id, St_AsGeoJSON(cntr.polygon) as polygon, area_ha
+                               from gip_contour as cntr
+                               join gip_conton as cntn
+                               on cntn.id=cntr.conton_id
+                               join gip_district as dst
+                               on dst.id=cntn.district_id
+                               join gip_region as rgn
+                               on rgn.id=dst.region_id
+                               """)
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({"type": "Feature",
+                                 "properties": {'id': i[0], 'ink': i[1], 'type': i[2], 'area_ha': i[-1]},
+                                 "geometry": eval(i[3])})
+                return Response({"type": "FeatureCollection", "features": data})
 
 
 class PastureClassAPIView(APIView):
