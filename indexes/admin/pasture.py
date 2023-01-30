@@ -14,3 +14,7 @@ class ContourAverageIndex(SimpleHistoryAdmin):
     readonly_fields = ('id', 'value', 'start_day', 'end_day', 'index_count')
     fields = ('id', 'contour', 'value', 'productivity_class', 'start_day', 'end_day', 'index_count')
     list_filter = ('contour', 'productivity_class', 'value', 'contour__is_rounded')
+    list_display = ('id', 'contour', 'get_contour_id')
+
+    def get_contour_id(self, obj):
+        return obj.contour.id

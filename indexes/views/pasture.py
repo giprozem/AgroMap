@@ -5,10 +5,17 @@ from rest_framework.views import APIView
 
 from indexes.models import ContourAverageIndex, ProductivityClass
 from indexes.utils import creating_ndvi
+from gip.models import Contour
 
 
 class Creating(APIView):
     def post(self, request, *args, **kwargs):
+        """
+        required query_params:
+        - date
+        - start
+        - end
+        """
         date = self.request.query_params['date']
         start = self.request.query_params['start']
         end = self.request.query_params['end']
@@ -19,19 +26,26 @@ class Creating(APIView):
 
 class CreatingAverage(APIView):
     def post(self, request, *args, **kwargs):
-        from gip.models import Contour
-        import json
+        """
+        required query_params:
+        - date
+        - start
+        - end
+        """
 
-        response = {}
+        start = self.request.query_params['start']
+        end = self.request.query_params['end']
 
-        for i in range(1135, 1891):
+        for i in range(start, end):
             try:
                 contour = Contour.objects.get(id=i)
                 pruductivity = ProductivityClass.objects.get(id=1)
                 ContourAverageIndex.objects.create(contour=contour, productivity_class=pruductivity)
             except Exception as e:
-                response[f'{contour.id}'] = f'{e}'
+                with open(f'reportCreatingAverage.txt', 'a') as file:
+                    file.write(f"{i}' = f'{e}")
+                    file.write(',')
+                    file.write('\n')
                 pass
-            print(contour.id)
 
-        return Response(json.dumps(response))
+        return Response('started')
