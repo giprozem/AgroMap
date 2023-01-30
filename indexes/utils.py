@@ -1,7 +1,6 @@
 from culture_model.models import VegetationIndex
 from gip.models import Contour
 from indexes.models import ActuaVegIndex
-from datetime import datetime
 
 
 def creating_ndvi(date, start, end):
@@ -11,9 +10,8 @@ def creating_ndvi(date, start, end):
             contour = Contour.objects.get(id=i)
             ActuaVegIndex.objects.create(contour=contour, index=index, date=date)
         except Exception as e:
-            with open(f'report-{datetime.now()}.txt', 'a') as file:
-                file.write(f"{contour.id}'] = f'{e}")
+            with open(f'report-{date}.txt', 'a') as file:
+                file.write(f"{i}' = f'{e}")
                 file.write(',')
                 file.write('\n')
-            print(contour.id)
             pass
