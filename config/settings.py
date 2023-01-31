@@ -12,6 +12,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
+CSRF_TRUSTED_ORIGINS = ['https://adminagro.24mycrm.com', 'https://10.118.50.27']
+
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
