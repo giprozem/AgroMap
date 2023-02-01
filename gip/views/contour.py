@@ -238,4 +238,4 @@ class ContourStatisticsAPIView(APIView):
                                                 "crop_yield": i[-1], 'area_ha': i[2], 'region': i[-2]}})
                 return Response(data)
         else:
-            pass
+            return Response(data={"message": "parameter 'region or culture' is required"}, status=400)
