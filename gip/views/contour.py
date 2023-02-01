@@ -85,32 +85,11 @@ class FilterContourAPIView(APIView):
                                 """)
                 rows = cursor.fetchall()
                 data = []
-                with connection.cursor() as cursor:
-                    cursor.execute(f"""
-                                      select count(cntr.id) as count_contour, round(sum(cntr.area_ha)::numeric, 2) as sum_area_in_ha, 
-                                           round(sum(cai.value) / count(cai.value)::numeric, 3) as sum_avg_index
-                                      from gip_contour as cntr
-                                      join gip_conton as cntn
-                                      on cntn.id=cntr.conton_id
-                                      join gip_district as dst
-                                      on dst.id=cntn.district_id
-                                      join gip_region as rgn
-                                      on rgn.id=dst.region_id
-                                      JOIN indexes_contouraverageindex as cai
-                                      ON cntr.id = cai.contour_id
-                                      join gip_landtype as ltp
-                                      on ltp.id=cntr.type_id
-                                      where rgn.id in ({region}) and ltp.id={land_type}""")
-                    rows2 = cursor.fetchall()
                 for i in rows:
                     data.append({"type": "Feature",
                                  "properties": {'id': i[0], 'ink': i[1], 'type': i[2], 'area_ha': i[-1]},
                                  "geometry": eval(i[3])})
-                return Response({"data": {"count_contour": rows2[0][0],
-                                          "sum_area": rows2[0][1],
-                                          "sum_avg_index": rows2[0][-1],
-                                          "period": '01.01.2022 - 31.12.2022'},
-                                 "type": "FeatureCollection", "features": data})
+                return Response({"type": "FeatureCollection", "features": data})
         elif region:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
@@ -126,30 +105,11 @@ class FilterContourAPIView(APIView):
                                """)
                 rows = cursor.fetchall()
                 data = []
-                with connection.cursor() as cursor:
-                    cursor.execute(f"""
-                       select count(cntr.id) as count_contour, round(sum(cntr.area_ha)::numeric, 2) as sum_area_in_ha, 
-                            round(sum(cai.value) / count(cai.value)::numeric, 3) as sum_avg_index
-                       from gip_contour as cntr
-                       join gip_conton as cntn
-                       on cntn.id=cntr.conton_id
-                       join gip_district as dst
-                       on dst.id=cntn.district_id
-                       join gip_region as rgn
-                       on rgn.id=dst.region_id
-                       JOIN indexes_contouraverageindex as cai
-                       ON cntr.id = cai.contour_id
-                       where rgn.id in ({region})""")
-                    rows2 = cursor.fetchall()
                 for i in rows:
                     data.append({"type": "Feature",
                                  "properties": {'id': i[0], 'ink': i[1], 'type': i[2], 'area_ha': i[-1]},
                                  "geometry": eval(i[3])})
-                return Response({"data": {"count_contour": rows2[0][0],
-                                          "sum_area": rows2[0][1],
-                                          "sum_avg_index": rows2[0][-1],
-                                          "period": '01.01.2022 - 31.12.2022'},
-                                 "type": "FeatureCollection", "features": data})
+                return Response({"type": "FeatureCollection", "features": data})
         else:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
@@ -209,3 +169,73 @@ class ContourSearchAPIView(ListAPIView):
     pagination_class = SearchContourPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['ink']
+
+
+class ContourStatisticsAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        region = request.GET.get('region')
+        culture = request.GET.get('culture')
+        if region and culture:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                select culture_name, count(contour_id) as cntr_id_count, sum(area_ha) as total_area_ha, region_name, 
+                round(sum(area_ha * coefficient_crop)::numeric, 2) as cropy_yeld
+                from (
+                  select cntr.id as contour_id, cl.name as culture_name, 
+                  rank() over (PARTITION BY cntr.id ORDER BY cy.year DESC) AS culture_rank, area_ha, 
+                  rgn.name as region_name, cl.coefficient_crop as coefficient_crop
+                  from gip_contour as cntr
+                  join gip_conton as cntn 
+                  on cntn.id=cntr.conton_id 
+                  join gip_district as dst 
+                  on dst.id=cntn.district_id 
+                  join gip_region as rgn 
+                  on rgn.id=dst.region_id
+                  join gip_landtype as ltp
+                  on ltp.id=cntr.type_id 
+                  left join gip_cropyield as cy
+                  on cy.contour_id = cntr.id
+                  left join gip_culture as cl
+                  on cy.culture_id = cl.id
+                  where rgn.id in ({region}) and cntr.type_id=1 and (cl.id in ({culture}))) as temp
+                        where culture_rank=1
+                        group by culture_name, region_name;""")
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({"properties": {'culture': i[0], 'count_contour': i[1],
+                                                "crop_yield": i[-1], 'area_ha': i[2], 'region': i[-2]}})
+                return Response(data)
+        elif region:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                select culture_name, count(contour_id) as cntr_id_count, sum(area_ha) as total_area_ha, region_name,
+                round(sum(area_ha * coefficient_crop)::numeric, 2) as cropy_yeld 
+                from (
+                  select cntr.id as contour_id, cl.name as culture_name, 
+                  rank() over (PARTITION BY cntr.id ORDER BY cy.year DESC) AS culture_rank, area_ha, 
+                  rgn.name as region_name, cl.coefficient_crop as coefficient_crop
+                  from gip_contour as cntr
+                  join gip_conton as cntn 
+                  on cntn.id=cntr.conton_id 
+                  join gip_district as dst 
+                  on dst.id=cntn.district_id 
+                  join gip_region as rgn 
+                  on rgn.id=dst.region_id
+                  join gip_landtype as ltp
+                  on ltp.id=cntr.type_id 
+                  left join gip_cropyield as cy
+                  on cy.contour_id = cntr.id
+                  left join gip_culture as cl
+                  on cy.culture_id = cl.id
+                  where rgn.id in ({region}) and cntr.type_id=1) as temp
+                        where culture_rank=1
+                        group by culture_name, region_name;""")
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({"properties": {'culture': i[0], 'count_contour': i[1],
+                                                "crop_yield": i[-1], 'area_ha': i[2], 'region': i[-2]}})
+                return Response(data)
+        else:
+            pass
