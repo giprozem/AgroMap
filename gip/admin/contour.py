@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 from leaflet.admin import LeafletGeoAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
-from gip.models import Contour, LandType
+from gip.models import Contour, LandType, ContourYear
 from indexes.models import ActuaVegIndex
 
 
@@ -59,15 +59,20 @@ class NDVITabularInline(TabularInline):
 
 @admin.register(Contour)
 class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
-    readonly_fields = ('id', 'created_at', 'updated_at', 'area_ha')
+    readonly_fields = ('id', 'created_at', 'updated_at')
     list_display = ('id', 'ink', 'conton', 'farmer', )
-    list_filter = ('conton', 'farmer', 'area_ha', )
+    list_filter = ('conton', 'farmer', )
     ordering = ('conton', 'created_at')
     list_per_page = 20
     search_fields = ('conton__name', 'farmer__pin_inn', 'ink', )
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'ink', )
     inlines = [NDVITabularInline]
+
+
+@admin.register(ContourYear)
+class ContourYearAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
+    pass
 
 
 @admin.register(LandType)

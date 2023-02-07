@@ -6,6 +6,7 @@ from simple_history.models import HistoricalRecords
 
 
 class District(BaseModel):
+    code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name='Код СОАТО')
     region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name='districts', verbose_name="Область")
     name = models.CharField(max_length=55, verbose_name="Район")
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Контур")

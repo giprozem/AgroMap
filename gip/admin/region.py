@@ -7,7 +7,7 @@ from gip.models import Region
 
 @admin.register(Region)
 class RegionAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
-    list_display = ('id', 'name', 'population', 'area', 'density', )
+    list_display = ('id', 'code_soato', 'name', 'population', 'area', 'density', )
     readonly_fields = ('id', 'created_at', 'updated_at', )
     list_filter = ('name', 'population', 'area', 'density', )
     ordering = ('name', 'created_at', )

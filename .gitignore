@@ -162,3 +162,4 @@ agromap.json
 regions
 *.geojson
 tiff
+*.zip

@@ -6,9 +6,10 @@ from simple_history.models import HistoricalRecords
 
 
 class Conton(BaseModel):
+    code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name='Код СОАТО')
     district = models.ForeignKey(District, on_delete=models.CASCADE, related_name='contons', verbose_name='Район')
     name = models.CharField(max_length=55, verbose_name="Наименование Айылного аймака")
-    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Контур")
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Контур", blank=True, null=True)
     history = HistoricalRecords(verbose_name="История")
 
     def __str__(self):
