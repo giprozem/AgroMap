@@ -5,6 +5,7 @@ from simple_history.models import HistoricalRecords
 
 
 class Region(BaseModel):
+    code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name='Код СОАТО')
     name = models.CharField(max_length=55, verbose_name="Наименование области")
     population = models.IntegerField(verbose_name="Население")
     area = models.IntegerField(verbose_name="Площадь")
