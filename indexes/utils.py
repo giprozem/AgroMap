@@ -2,8 +2,8 @@ from culture_model.models import VegetationIndex
 from indexes.models import ActuaVegIndex
 
 
-def creating_ndvi(date, start, end):
-    index = VegetationIndex.objects.get(id=1)
+def creating_ndvi(date, start, end, indexid):
+    index = VegetationIndex.objects.get(id=indexid)
     for i in range(start, end):
         try:
             ActuaVegIndex.objects.create(contour_id=i, index=index, date=date)
