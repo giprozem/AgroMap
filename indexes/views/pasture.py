@@ -19,7 +19,8 @@ class Creating(APIView):
         date = self.request.query_params['date']
         start = self.request.query_params['start']
         end = self.request.query_params['end']
-        thread_object = Thread(target=creating_ndvi, args=(date, int(start), int(end)))
+        indexid = self.request.query_params['indexid']
+        thread_object = Thread(target=creating_ndvi, args=(date, int(start), int(end), int(indexid)))
         thread_object.start()
         return Response('started')
 
