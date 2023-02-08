@@ -49,7 +49,7 @@ class ContourYear(BaseModel):
 
 
     def __str__(self):
-        return self.year if self.year else '-'
+        return self.year or self.code_soato
 
     class Meta:
         verbose_name = 'Контуры поля по годам'

@@ -67,7 +67,7 @@ urlpatterns = [
     path('login_agromap/', LoginAgromapView.as_view()),
     path('search_ink_hub/', LandInfoSearch.as_view()),
     path('satellite_dates/<int:index>/<int:contour>/', SatelliteImagesDate.as_view()),
-    path('geojson_ro_db/', GeojsonSavingToDBAPIView.as_view()),
+    path('geojson_to_db/', GeojsonSavingToDBAPIView.as_view()),
     path('filter_contour/', FilterContourAPIView.as_view()),
     path('creating/', Creating.as_view()),
     path('average/', CreatingAverage.as_view()),
