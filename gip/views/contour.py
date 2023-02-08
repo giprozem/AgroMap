@@ -36,99 +36,120 @@ class FilterContourAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
+        year = request.GET.get('year')
         land_type = request.GET.get('land_type')
-        culture = request.GET.get('culture')
-        if region and land_type and culture:
+        district = request.GET.get('district')
+        conton = request.GET.get('conton')
+        if region and district and conton and land_type and year:
             with connection.cursor() as cursor:
-                cursor.execute(
-                f""" select * from (
-                select cntr.id, cntr.ink, cntr.type_id, St_AsGeoJSON(cntr.polygon) as polygon, 
-                rank() over (PARTITION BY cntr.id ORDER BY cy.year DESC) AS culture_rank, cl.name, area_ha
-                from gip_contour as cntr
-                join gip_conton as cntn 
-                on cntn.id=cntr.conton_id 
-                join gip_district as dst 
-                on dst.id=cntn.district_id 
-                join gip_region as rgn 
-                on rgn.id=dst.region_id
-                join gip_landtype as ltp
-                on ltp.id=cntr.type_id 
-                left join gip_cropyield as cy
-                on cy.contour_id = cntr.id
-                left join gip_culture as cl
-                on cy.culture_id = cl.id
-                where rgn.id in ({region}) and cntr.type_id={land_type} and (cl.id in ({culture}) or cl.id is null)
-                order by cntr.id) as temp
-                where culture_rank=1;""")
+                cursor.execute(f"""
+                                       SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
+                                       gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                                       gcy.code_soato AS contour_year_cs, gcy.year, St_AsGeoJSON(gcy.polygon) as polygon  
+                                       FROM gip_contour AS cntr 
+                                       INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                                       INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                                       JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                                       JOIN gip_district AS dst ON dst.id=cntn.district_id
+                                       JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                                       where rgn.id in ({region}) and dst.id in ({district}) and cntn.id in ({conton}) 
+                                       and gcy.type_id in ({land_type}) and gcy.year='{year}' order by cntr.id;
+                                       """)
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({"type": "Feature",
-                                 "properties": {'id': i[0], 'ink': i[1], 'type': i[2],
-                                                "culture": i[-2], 'area_ha': i[-1]},
-                                 "geometry": eval(i[3])})
-                return Response({"type": "FeatureCollection", "features": data})
-        elif region and land_type:
+                    data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
+                                 "contour_year": {"type": "FeatureCollection",
+                                                  "features": [{"type": "Feature",
+                                                                "properties": {'contour_year_id': i[1],
+                                                                               'land_type_id': i[2],
+                                                                               'contour_year_cs': i[5],
+                                                                               'year': i[6]},
+                                                                "geometry": eval(i[-1])}]}})
+                return Response(data)
+        elif region and district and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                                select cntr.id, cntr.ink, cntr.type_id, St_AsGeoJSON(cntr.polygon) as polygon, area_ha 
-                                from gip_contour as cntr 
-                                join gip_conton as cntn 
-                                on cntn.id=cntr.conton_id 
-                                join gip_district as dst 
-                                on dst.id=cntn.district_id 
-                                join gip_region as rgn 
-                                on rgn.id=dst.region_id 
-                                join gip_landtype as ltp
-                                on ltp.id=cntr.type_id
-                                where rgn.id in ({region}) and ltp.id={land_type};
+                                SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
+                                gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                                gcy.code_soato AS contour_year_cs, gcy.year, St_AsGeoJSON(gcy.polygon) as polygon  
+                                FROM gip_contour AS cntr 
+                                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                                JOIN gip_district AS dst ON dst.id=cntn.district_id
+                                JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                                where gcy.type_id in ({land_type}) and rgn.id in ({region}) and gcy.year='{year}'
+                                and dst.id=({district}) order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({"type": "Feature",
-                                 "properties": {'id': i[0], 'ink': i[1], 'type': i[2], 'area_ha': i[-1]},
-                                 "geometry": eval(i[3])})
-                return Response({"type": "FeatureCollection", "features": data})
-        elif region:
+                    data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
+                                 "contour_year": {"type": "FeatureCollection",
+                                                  "features": [{"type": "Feature",
+                                                                "properties": {'contour_year_id': i[1],
+                                                                               'land_type_id': i[2],
+                                                                               'contour_year_cs': i[5],
+                                                                               'year': i[6]},
+                                                                "geometry": eval(i[-1])}]}})
+                return Response(data)
+        elif region and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                               select cntr.id, cntr.ink, cntr.type_id, St_AsGeoJSON(cntr.polygon) as polygon, area_ha
-                               from gip_contour as cntr
-                               join gip_conton as cntn
-                               on cntn.id=cntr.conton_id
-                               join gip_district as dst
-                               on dst.id=cntn.district_id
-                               join gip_region as rgn
-                               on rgn.id=dst.region_id
-                               where rgn.id in ({region})
-                               """)
+                                SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
+                                gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                                gcy.code_soato AS contour_year_cs, gcy.year, St_AsGeoJSON(gcy.polygon) as polygon  
+                                FROM gip_contour AS cntr 
+                                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                                JOIN gip_district AS dst ON dst.id=cntn.district_id
+                                JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                                where  gcy.type_id in ({land_type}) and rgn.id in ({region}) and gcy.year='{year}'
+                                order by cntr.id;
+                                """)
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({"type": "Feature",
-                                 "properties": {'id': i[0], 'ink': i[1], 'type': i[2], 'area_ha': i[-1]},
-                                 "geometry": eval(i[3])})
-                return Response({"type": "FeatureCollection", "features": data})
+                    data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
+                                 "contour_year": {"type": "FeatureCollection",
+                                                  "features": [{"type": "Feature",
+                                                                "properties": {'contour_year_id': i[1],
+                                                                               'land_type_id': i[2],
+                                                                               'contour_year_cs': i[5],
+                                                                               'year': i[6]},
+                                                                "geometry": eval(i[-1])}]}})
+                return Response(data)
+        elif year:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                                SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
+                                gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                                gcy.code_soato AS contour_year_cs, gcy.year, St_AsGeoJSON(gcy.polygon) as polygon  
+                                FROM gip_contour AS cntr 
+                                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                                JOIN gip_district AS dst ON dst.id=cntn.district_id
+                                JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                                where gcy.year='{year}'
+                                order by cntr.id;
+                                """)
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
+                                 "contour_year": {"type": "FeatureCollection",
+                                                  "features": [{"type": "Feature",
+                                                                "properties": {'contour_year_id': i[1],
+                                                                               'land_type_id': i[2],
+                                                                               'contour_year_cs': i[5],
+                                                                               'year': i[6]},
+                                                                "geometry": eval(i[-1])}]}})
+                return Response(data)
         else:
-            with connection.cursor() as cursor:
-                cursor.execute(f"""
-                               select cntr.id, cntr.ink, cntr.type_id, St_AsGeoJSON(cntr.polygon) as polygon, area_ha
-                               from gip_contour as cntr
-                               join gip_conton as cntn
-                               on cntn.id=cntr.conton_id
-                               join gip_district as dst
-                               on dst.id=cntn.district_id
-                               join gip_region as rgn
-                               on rgn.id=dst.region_id
-                               """)
-                rows = cursor.fetchall()
-                data = []
-                for i in rows:
-                    data.append({"type": "Feature",
-                                 "properties": {'id': i[0], 'ink': i[1], 'type': i[2], 'area_ha': i[-1]},
-                                 "geometry": eval(i[3])})
-                return Response({"type": "FeatureCollection", "features": data})
+            return Response(data={"message": "parameter 'year or land_type' is required"}, status=400)
 
 
 class PastureClassAPIView(APIView):
