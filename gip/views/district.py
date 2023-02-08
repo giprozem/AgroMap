@@ -9,4 +9,4 @@ class DistrictViewSet(viewsets.ModelViewSet):
     queryset = District.objects.all()
     serializer_class = DistrictSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['region',]
+    filterset_fields = ['region', ]
