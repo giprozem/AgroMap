@@ -58,13 +58,13 @@ class FilterContourAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
+                    data.append({'contour_id': i[0],  'contour_cs': i[4],
                                  "contour_year": {"type": "FeatureCollection",
                                                   "features": [{"type": "Feature",
                                                                 "properties": {'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
-                                                                               'year': i[6]},
+                                                                               'year': i[6], 'ink': i[3]},
                                                                 "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif region and district and land_type and year:
@@ -85,13 +85,13 @@ class FilterContourAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
+                    data.append({'contour_id': i[0],  'contour_cs': i[4],
                                  "contour_year": {"type": "FeatureCollection",
                                                   "features": [{"type": "Feature",
                                                                 "properties": {'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
-                                                                               'year': i[6]},
+                                                                               'year': i[6], 'ink': i[3]},
                                                                 "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif region and land_type and year:
@@ -112,13 +112,13 @@ class FilterContourAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
+                    data.append({'contour_id': i[0],  'contour_cs': i[4],
                                  "contour_year": {"type": "FeatureCollection",
                                                   "features": [{"type": "Feature",
                                                                 "properties": {'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
-                                                                               'year': i[6]},
+                                                                               'year': i[6], 'ink': i[3]},
                                                                 "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif year:
@@ -139,13 +139,13 @@ class FilterContourAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
+                    data.append({'contour_id': i[0],  'contour_cs': i[4],
                                  "contour_year": {"type": "FeatureCollection",
                                                   "features": [{"type": "Feature",
                                                                 "properties": {'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
-                                                                               'year': i[6]},
+                                                                               'year': i[6], 'ink': i[3]},
                                                                 "geometry": eval(i[-1])}]}})
                 return Response(data)
         else:
