@@ -1,4 +1,6 @@
 # import requests
+from datetime import date
+
 from geo.Geoserver import Geoserver
 from osgeo import gdal
 
@@ -215,34 +217,142 @@ from osgeo import gdal
 
 
 
-from rasterio.plot import show
-from rasterio.merge import merge
-from rasterio import plot
-import rasterio as rio
-from pathlib import Path
-path = Path('../../tiff/group')
-Path('output').mkdir(parents=True, exist_ok=True)
-output_path = '../../tiff/output/mosaic_output_2_layer.tif'
-raster_files = list(path.iterdir())
-raster_to_mosiac = []
-for p in raster_files:
-    raster = rio.open(p)
-    raster_to_mosiac.append(raster)
+# from rasterio.plot import show
+# from rasterio.merge import merge
+# from rasterio import plot
+# import rasterio as rio
+# from pathlib import Path
+# path = Path('../../tiff/group')
+# Path('output').mkdir(parents=True, exist_ok=True)
+# output_path = '../../tiff/output/mosaic_output_2_layer.tif'
+# raster_files = list(path.iterdir())
+# raster_to_mosiac = []
+# for p in raster_files:
+#     raster = rio.open(p)
+#     raster_to_mosiac.append(raster)
+#
+# mosaic, output = merge(raster_to_mosiac)
+#
+# output_meta = raster.meta.copy()
+# output_meta.update(
+#     {"driver": "GTiff",
+#         "height": mosaic.shape[1],
+#         "width": mosaic.shape[2],
+#         "transform": output,
+#     }
+# )
+#
+# with rio.open(output_path, "w", **output_meta) as m:
+#     m.write(mosaic)
+#
+#
+# with rio.open(output_path) as f:
+#     plot.show(f)
 
-mosaic, output = merge(raster_to_mosiac)
 
-output_meta = raster.meta.copy()
-output_meta.update(
-    {"driver": "GTiff",
-        "height": mosaic.shape[1],
-        "width": mosaic.shape[2],
-        "transform": output,
-    }
-)
+#
+#
+# import requests
+#
+# # Укажите ссылку API для поиска данных
+# search_url = "https://scihub.copernicus.eu/apihub/search"
+#
+# # Укажите параметры запроса, такие как ключевые слова, даты и т. д.
+# search_params = {
+#     "q": "filename:*.zip AND platformname:Sentinel-2 AND producttype:S2MSI1C",
+#     "rows": 1,
+# }
+#
+# # Отправьте запрос для поиска данных
+# search_response = requests.get(search_url, params=search_params)
+# print('---------------')
+# # Проверьте, что ответ на запрос успешен
+# if search_response.status_code == 200:
+#     # Извлеките идентификатор файла из ответа на запрос
+#     file_id = search_response.json()["feed"]["entry"][0]["id"]
+#     # Укажите ссылку API для скачивания данных
+#     download_url = f"https://scihub.copernicus.eu/apihub/odata/v1/Products('{file_id}')/$value"
+#
+#     # Отправьте запрос для скачивания данных
+#     download_response = requests.get(download_url)
+#
+#     # Проверьте, что ответ на запрос успешен
+#     if download_response.status_code == 200:
+#         # Запишите данные в файл
+#         with open("sentinel-2-image.zip", "wb") as f:
+#             f.write(download_response.content)
 
-with rio.open(output_path, "w", **output_meta) as m:
-    m.write(mosaic)
 
 
-with rio.open(output_path) as f:
-    plot.show(f)
+import requests
+
+# API endpoint for search request
+# search_url = "https://scihub.copernicus.eu/dhus/search"
+
+# Search parameters
+# search_params = {
+#     "q": "platformname:Sentinel-2 AND footprint:\"Intersects(POLYGON ((75.4724064976 42.6582517021209,75.4724064976 41.611372898496,78.0737066497125 41.611372898496,78.0737066497125 42.6582517021209,75.4724064976 42.6582517021209)))\"",
+#     "rows": 1,
+#     "start": 0,
+#     "format": "json",
+#     "time": "2022-08-01T00:00:00/2022-08-30T23:59:59"
+# }
+
+
+# Search parameters
+# search_params = {
+#     "productType": "S2MSI1C",
+#     "q": "platformname:Sentinel-2 AND footprint:\"Intersects(GEOMETRYCOLLECTION(POLYGON ((68.91495455221076 43.896843812009166, 68.91495455221076 39.072739557083395, 80.58067864562298 39.072739557083395, 80.58067864562298 43.896843812009166, 68.91495455221076 43.896843812009166))))\"",
+#     "time": "2022-08-01T00:00:00/2022-08-30T23:59:59",
+#     "maxRecords": 100,
+#     "sortOrder": "desc",
+#     "sortBy": "ingestiondate",
+#     "format": "json"
+# }
+
+# search_url = "https://scihub.copernicus.eu/dhus/search"
+#
+# search_params = {
+#     "productType": "S2MSI1C",
+#     "q": "platformname:Sentinel-2 AND footprint:\"Intersects(GEOMETRYCOLLECTION(POLYGON ((68.91495455221076 43.896843812009166, 68.91495455221076 39.072739557083395, 80.58067864562298 39.072739557083395, 80.58067864562298 43.896843812009166, 68.91495455221076 43.896843812009166))))\"",
+#     "time": "2022-08-01T00:00:00/2022-09-20T23:59:59",
+#     "maxRecords": 100,
+#     "sortOrder": "desc",
+#     "sortBy": "ingestiondate",
+#     "format": "json"
+# }
+#
+# search_response = requests.get(search_url, params=search_params, auth=('kaiumamanbaev', 'Copernicus123!'))
+# print(search_response)
+#
+# if search_response.status_code == 200:
+#     print(search_response.json())
+#     result = search_response.json()["feed"]["entry"][0]
+#
+#     download_url = result["link"][1]["href"] + '$value'
+#     print(download_url)
+#
+# #     download_response = requests.get(download_url, stream=True, auth=('kaiumamanbaev', 'Copernicus123!'))
+# #     print(download_response)
+# #
+# #     if download_response.status_code == 200:
+# #         print(download_response.status_code)
+# #         with open("product1.zip", "wb") as f:
+# #             for chunk in download_response.iter_content(chunk_size=1024000000):
+# #                 f.write(chunk)
+# #
+# # else:
+# #     print("Search request failed with status code:", search_response.status_code)
+
+
+# from sentinelsat import SentinelAPI, read_geojson, geojson_to_wkt
+#
+# api = SentinelAPI('kaiumamanbaev', 'Copernicus123!')
+# footprint = geojson_to_wkt(read_geojson('../../map (1).geojson'))
+# print(footprint)
+# products = api.query(footprint,
+#                      date=('20221019', date(2022, 10, 29)),
+#                      platformname='Sentinel-2',
+#                      cloudcoverpercentage=(0, 30))
+#
+# output = f"media/output/{api.download_all(products)}"
