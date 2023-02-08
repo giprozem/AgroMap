@@ -67,12 +67,14 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     search_fields = ('conton__name', 'farmer__pin_inn', 'ink', )
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'ink', )
-    inlines = [NDVITabularInline]
 
 
 @admin.register(ContourYear)
 class ContourYearAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
-    list_display = ('id', 'type')
+    readonly_fields = ('id', 'area_ha', 'code_soato', 'year', )
+    list_display = ('id', 'code_soato', 'type', 'year', )
+    ordering = ('id', )
+    inlines = [NDVITabularInline]
 
 
 @admin.register(LandType)

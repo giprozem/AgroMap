@@ -30,12 +30,12 @@ class ActuaVegIndex(models.Model):
         null=True
     )
     index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name='Индекс')
-    contour = models.ForeignKey('gip.Contour', on_delete=models.CASCADE, verbose_name='Контуры Поля')
+    contour = models.ForeignKey('gip.ContourYear', on_delete=models.CASCADE, verbose_name='Контуры Поля')
     date = models.DateField(verbose_name='Дата анализа', help_text='Введите дату космо снимка из которого будет высчитан индекс')
     history = HistoricalRecords(verbose_name="История")
 
     def __str__(self):
-        return f'{self.index} {self.contour.ink}'
+        return f'{self.index} {self.contour}'
 
     class Meta:
         verbose_name = 'Фактический Индекс'
@@ -52,7 +52,7 @@ class ActuaVegIndex(models.Model):
             # TODO refactor the response
             raise ObjectDoesNotExist('Data base have no satellite images that have to process')
 
-        file_name = self.contour.ink + f'время сохранения {datetime.datetime.now()}'
+        file_name = f'время сохранения {datetime.datetime.now()}'
 
         polygon = GEOSGeometry(self.contour.polygon).geojson
 
