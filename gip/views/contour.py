@@ -59,7 +59,8 @@ class FilterContourAPIView(APIView):
                 data = []
                 for i in rows:
                     data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
-                                 "contour_year": {"features": [{"type": "Feature",
+                                 "contour_year": {"type": "FeatureCollection",
+                                                  "features": [{"type": "Feature",
                                                                 "properties": {'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
@@ -85,7 +86,8 @@ class FilterContourAPIView(APIView):
                 data = []
                 for i in rows:
                     data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
-                                 "contour_year": {"features": [{"type": "Feature",
+                                 "contour_year": {"type": "FeatureCollection",
+                                                  "features": [{"type": "Feature",
                                                                 "properties": {'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
@@ -111,7 +113,8 @@ class FilterContourAPIView(APIView):
                 data = []
                 for i in rows:
                     data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
-                                 "contour_year": {"features": [{"type": "Feature",
+                                 "contour_year": {"type": "FeatureCollection",
+                                                  "features": [{"type": "Feature",
                                                                 "properties": {'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
@@ -137,7 +140,8 @@ class FilterContourAPIView(APIView):
                 data = []
                 for i in rows:
                     data.append({'contour_id': i[0], 'ink': i[3], 'contour_cs': i[4],
-                                 "contour_year": {"features": [{"type": "Feature",
+                                 "contour_year": {"type": "FeatureCollection",
+                                                  "features": [{"type": "Feature",
                                                                 "properties": {'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
@@ -168,7 +172,7 @@ class PastureClassAPIView(APIView):
         prod_classes = ["high", "middle", "low"]
         # print(rows[:3])
         for num, cl in enumerate(prod_classes):
-            data[cl] = { "features": []}
+            data[cl] = {"type": "FeatureCollection", "features": []}
             start = round(num*len(rows)/len(prod_classes))
             end = round((num+1)*len(rows)/len(prod_classes))
             for i in rows[start:end]:
