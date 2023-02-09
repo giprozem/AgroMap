@@ -7,7 +7,7 @@ from indexes.models.actual_veg_index import ActuaVegIndex, IndexMeaning
 class IndexMeaningSerializer(serializers.ModelSerializer):
     class Meta:
         model = IndexMeaning
-        fields = '__all__'
+        exclude = ('min_index_value', 'max_index_value', )
 
 
 class ActuaVegIndexSerializer(serializers.ModelSerializer):
