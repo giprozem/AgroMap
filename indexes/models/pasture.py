@@ -18,7 +18,7 @@ class ProductivityClass(models.Model):
 
 
 class ContourAverageIndex(models.Model):
-    contour = models.ForeignKey('gip.Contour', on_delete=models.CASCADE, verbose_name='Контуры Поля')
+    contour = models.ForeignKey('gip.ContourYear', on_delete=models.CASCADE, verbose_name='Контуры Поля')
     value = models.DecimalField(
         max_digits=5,
         decimal_places=3,
@@ -36,7 +36,7 @@ class ContourAverageIndex(models.Model):
     index_count = models.IntegerField(verbose_name='Колличество индексов использованных для подсчёта')
 
     def __str__(self):
-        return f'{self.contour.ink}: {self.value}'
+        return f'{self.contour}: {self.value}'
 
     class Meta:
         verbose_name = 'Средний индек контура'
@@ -57,5 +57,7 @@ class ContourAverageIndex(models.Model):
         sorted_date = sorted(date)
         self.start_day = sorted_date[0]
         self.end_day = sorted_date[-1]
+        # if self.contour.
+        # self.productivity_class
 
         super(ContourAverageIndex, self).save(*args, **kwargs)

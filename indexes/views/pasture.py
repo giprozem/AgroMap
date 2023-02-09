@@ -3,9 +3,9 @@ from threading import Thread
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from gip.models import ContourYear
 from indexes.models import ContourAverageIndex, ProductivityClass
 from indexes.utils import creating_ndvi
-from gip.models import Contour
 
 
 class Creating(APIView):
@@ -37,9 +37,9 @@ class CreatingAverage(APIView):
         start = self.request.query_params['start']
         end = self.request.query_params['end']
 
-        for i in range(start, end):
+        for i in range(int(start), int(end)):
             try:
-                contour = Contour.objects.get(id=i)
+                contour = ContourYear.objects.get(id=i)
                 pruductivity = ProductivityClass.objects.get(id=1)
                 ContourAverageIndex.objects.create(contour=contour, productivity_class=pruductivity)
             except Exception as e:
