@@ -285,8 +285,8 @@ class StatisticsContourProductivityAPIView(APIView):
         if region and district and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f""" select 
-                round(sum(case when (gcy.productivity)::float > 1.6 then gcy.area_ha else 0 end)) as "Productive", 
-                round(sum(case when (gcy.productivity)::float <= 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
+                round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
                 cntn.name from  gip_contour AS cntr 
                 INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                 INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
@@ -303,8 +303,8 @@ class StatisticsContourProductivityAPIView(APIView):
         elif region and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f""" select 
-                round(sum(case when (gcy.productivity)::float > 1.6 then gcy.area_ha else 0 end)) as "Productive", 
-                round(sum(case when (gcy.productivity)::float <= 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
+                round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
                 dst.name from  gip_contour AS cntr 
                 INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                 INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
@@ -321,8 +321,8 @@ class StatisticsContourProductivityAPIView(APIView):
         elif year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""select 
-                round(sum(case when (gcy.productivity)::float > 1.6 then gcy.area_ha else 0 end)) as "Productive", 
-                round(sum(case when (gcy.productivity)::float <= 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
+                round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
                 rgn.name from  gip_contour AS cntr 
                 INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                 INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
