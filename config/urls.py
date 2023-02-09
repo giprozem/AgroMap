@@ -77,7 +77,8 @@ urlpatterns = [
     path('contour-search/', ContourSearchAPIView.as_view()),
     path('contour-statistics/', ContourStatisticsAPIView.as_view()),
     path('contour-statistics-productivity/', StatisticsContourProductivityAPIView.as_view()),
-    path('contour-map-productivity/', MapContourProductivityAPIView.as_view())
+    path('contour-map-productivity/', MapContourProductivityAPIView.as_view()),
+    path('actual-veg-indexes/', ActualIndexesOfContourYear.as_view()),
 ]
 
 if settings.DEBUG:
