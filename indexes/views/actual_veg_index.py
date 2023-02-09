@@ -39,3 +39,16 @@ class SatelliteImagesDate(APIView):
         result = ActuaVegIndex.objects.filter(index=index).filter(contour=contour)
         serializer = ActuaVegIndexSerializer(result, many=True)
         return Response(serializer.data, status=200)
+
+
+class ActualIndexesOfContourYear(APIView):
+    """
+    required:
+    param = contour_id
+    """
+
+    def get(self, request, *args, **kwargs):
+        contour = request.query_params['contour_id']
+        response = ActuaVegIndex.objects.filter(contour=contour)
+        serializer = ActuaVegIndexSerializer(response, many=True, context={'request': request})
+        return Response(serializer.data, status=200)

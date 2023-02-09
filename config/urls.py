@@ -26,7 +26,7 @@ from hub.views.authetificated import LoginHubView
 from hub.views.land_info import LandInfoSearch
 from hub.views.zem_balance_api import ZemBalanceViewSet
 from indexes.views import Creating, CreatingAverage
-from indexes.views.actual_veg_index import IndexFactListCreateAPIView, SatelliteImagesDate
+from indexes.views.actual_veg_index import IndexFactListCreateAPIView, SatelliteImagesDate, ActualIndexesOfContourYear
 
 router = DefaultRouter()
 router.register('land-type', LandTypeViewSet)
@@ -75,7 +75,8 @@ urlpatterns = [
     path('pasture-class-group/', PastureClassAPIView.as_view()),
     path('contour-search/', ContourSearchAPIView.as_view()),
     path('contour-statistics/', ContourStatisticsAPIView.as_view()),
-    path('contour-statistics-productivity/', StatisticsContourProductivityAPIView.as_view())
+    path('contour-statistics-productivity/', StatisticsContourProductivityAPIView.as_view()),
+    path('actual-veg-indexes/', ActualIndexesOfContourYear.as_view()),
 ]
 
 if settings.DEBUG:
