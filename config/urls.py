@@ -11,7 +11,7 @@ from culture_model.views import IndexPlanWithAPIView
 from gip.views.authenticated import LoginAgromapView
 from gip.views.conton import ContonViewSet
 from gip.views.contour import ContourViewSet, FilterContourAPIView, LandTypeViewSet, ContourSearchAPIView, \
-    SearchContourViewSet, ContourStatisticsAPIView
+    SearchContourViewSet, ContourStatisticsAPIView, StatisticsContourProductivityAPIView
 from gip.views.contour import ContourViewSet, FilterContourAPIView, PastureClassAPIView
 from gip.views.crop_yield import CropYieldViewSet
 from gip.views.culture import CultureViewSet
@@ -73,7 +73,8 @@ urlpatterns = [
     path('average/', CreatingAverage.as_view()),
     path('pasture-class-group/', PastureClassAPIView.as_view()),
     path('contour-search/', ContourSearchAPIView.as_view()),
-    path('contour-statistics/', ContourStatisticsAPIView.as_view())
+    path('contour-statistics/', ContourStatisticsAPIView.as_view()),
+    path('contour-statistics-productivity/', StatisticsContourProductivityAPIView.as_view())
 ]
 
 if settings.DEBUG:
