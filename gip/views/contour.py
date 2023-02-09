@@ -51,8 +51,8 @@ class FilterContourAPIView(APIView):
                 cursor.execute(f"""
                                SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
                                gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                               gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, St_AsGeoJSON(gcy.polygon) as polygon  
-                               FROM gip_contour AS cntr 
+                               gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                            St_AsGeoJSON(gcy.polygon) as polygon    FROM gip_contour AS cntr 
                                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
@@ -71,7 +71,8 @@ class FilterContourAPIView(APIView):
                                                                                'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
-                                                                               'year': i[6], 'ink': i[3], 'area_ha': i[7]},
+                                                                               'year': i[6], 'ink': i[3],
+                                                                               'productivity': i[8],'area_ha': i[7]},
                                                                 "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif region and district and land_type and year:
@@ -79,8 +80,8 @@ class FilterContourAPIView(APIView):
                 cursor.execute(f"""
                                 SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
                                 gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                                gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, St_AsGeoJSON(gcy.polygon) as polygon  
-                                FROM gip_contour AS cntr 
+                                gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                                St_AsGeoJSON(gcy.polygon) as polygon  FROM gip_contour AS cntr 
                                 INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                                 INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
@@ -99,7 +100,8 @@ class FilterContourAPIView(APIView):
                                                                                'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
-                                                                               'year': i[6], 'ink': i[3], 'area_ha': i[7]},
+                                                                               'year': i[6], 'ink': i[3],
+                                                                               'productivity': i[8],'area_ha': i[7]},
                                                                 "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif region and land_type and year:
@@ -107,8 +109,8 @@ class FilterContourAPIView(APIView):
                 cursor.execute(f"""
                                 SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
                                 gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                                gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, St_AsGeoJSON(gcy.polygon) as polygon  
-                                FROM gip_contour AS cntr 
+                                gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                                St_AsGeoJSON(gcy.polygon) as polygon  FROM gip_contour AS cntr 
                                 INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                                 INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
@@ -127,22 +129,23 @@ class FilterContourAPIView(APIView):
                                                                                'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
-                                                                               'year': i[6], 'ink': i[3], 'area_ha': i[7]},
+                                                                               'year': i[6], 'ink': i[3],
+                                                                               'productivity': i[8],'area_ha': i[7]},
                                                                 "geometry": eval(i[-1])}]}})
                 return Response(data)
-        elif year:
+        elif year and land_type:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
                                 SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
                                 gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                                gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, St_AsGeoJSON(gcy.polygon) as polygon  
-                                FROM gip_contour AS cntr 
+                                gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                                St_AsGeoJSON(gcy.polygon) as polygon  FROM gip_contour AS cntr 
                                 INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                                 INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                                where gcy.year='{year}'
+                                where gcy.year='{year}' and gcy.type_id={land_type}
                                 order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
@@ -155,7 +158,8 @@ class FilterContourAPIView(APIView):
                                                                                'contour_year_id': i[1],
                                                                                'land_type_id': i[2],
                                                                                'contour_year_cs': i[5],
-                                                                               'year': i[6], 'ink': i[3], 'area_ha': i[7]},
+                                                                               'year': i[6], 'ink': i[3],
+                                                                               'productivity': i[8],'area_ha': i[7]},
                                                                 "geometry": eval(i[-1])}]}})
                 return Response(data)
         else:
@@ -332,3 +336,177 @@ class StatisticsContourProductivityAPIView(APIView):
                 for i in rows:
                     data.append({'Region': i[2], 'Productive': i[0], 'Unproductive': i[1]})
                 return Response(data)
+
+
+class MapContourProductivityAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        region = request.GET.get('region')
+        year = request.GET.get('year')
+        land_type = request.GET.get('land_type')
+        district = request.GET.get('district')
+        conton = request.GET.get('conton')
+        if region and year and land_type and conton:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 'productive'
+                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, gcy.id AS contour_year_id, 
+                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity, 
+                    St_AsGeoJSON(gcy.polygon) as polygon
+                    FROM gip_contour AS cntr
+                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id
+                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    WHERE gcy.year='{year}' AND gcy.type_id={land_type} and rgn.id in ({region}) 
+                    and dst.id in ({district}) and cntn.id in ({conton})
+                    GROUP BY rgn.name, "Type productivity", gcy.id, cntr.id;""")
+                rows = cursor.fetchall()
+                productive = []
+                unproductive = []
+
+                for i in rows:
+                    if i[0] in 'productive':
+                        productive.append({"type": "Feature", "properties": {'contour_id': i[1],  'contour_cs': i[5],
+                                                                             'contour_year_id': i[2],
+                                                                             'land_type_id': i[3],
+                                                                             'contour_year_cs': i[6],
+                                                                             'year': i[7], 'ink': i[3],
+                                                                             'productivity': i[9], 'area_ha': i[8]},
+                                                                             "geometry": eval(i[-1])})
+                    else:
+                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1],  'contour_cs': i[5],
+                                                                               'contour_year_id': i[2],
+                                                                               'land_type_id': i[3],
+                                                                               'contour_year_cs': i[6],
+                                                                               'year': i[7], 'ink': i[3],
+                                                                               'productivity': i[9], 'area_ha': i[8]},
+                                                                               'geometry': eval(i[-1])})
+                return Response({"productive": {"type": "FeatureCollection",
+                                                "features": productive},
+                                 "unproductive": {"type": "FeatureCollection",
+                                                  "features": unproductive}})
+        elif region and year and land_type:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 'productive'
+                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, gcy.id AS contour_year_id, 
+                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity, 
+                    St_AsGeoJSON(gcy.polygon) as polygon
+                    FROM gip_contour AS cntr
+                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id
+                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    WHERE gcy.year='{year}' AND gcy.type_id={land_type} and rgn.id in ({region}) 
+                    and dst.id in ({district})
+                    GROUP BY rgn.name, "Type productivity", gcy.id, cntr.id;""")
+                rows = cursor.fetchall()
+                productive = []
+                unproductive = []
+
+                for i in rows:
+                    if i[0] in 'productive':
+                        productive.append({"type": "Feature", "properties": {'contour_id': i[1],  'contour_cs': i[5],
+                                                                             'contour_year_id': i[2],
+                                                                             'land_type_id': i[3],
+                                                                             'contour_year_cs': i[6],
+                                                                             'year': i[7], 'ink': i[3],
+                                                                             'productivity': i[9], 'area_ha': i[8]},
+                                                                             "geometry": eval(i[-1])})
+                    else:
+                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1],  'contour_cs': i[5],
+                                                                               'contour_year_id': i[2],
+                                                                               'land_type_id': i[3],
+                                                                               'contour_year_cs': i[6],
+                                                                               'year': i[7], 'ink': i[3],
+                                                                               'productivity': i[9], 'area_ha': i[8]},
+                                                                               'geometry': eval(i[-1])})
+                return Response({"productive": {"type": "FeatureCollection",
+                                                "features": productive},
+                                 "unproductive": {"type": "FeatureCollection",
+                                                  "features": unproductive}})
+        elif region and year and land_type:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 'productive'
+                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, gcy.id AS contour_year_id, 
+                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity, 
+                    St_AsGeoJSON(gcy.polygon) as polygon
+                    FROM gip_contour AS cntr
+                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id
+                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    WHERE gcy.year='{year}' AND gcy.type_id={land_type} and rgn.id in ({region}) 
+                    GROUP BY rgn.name, "Type productivity", gcy.id, cntr.id;""")
+                rows = cursor.fetchall()
+                productive = []
+                unproductive = []
+
+                for i in rows:
+                    if i[0] in 'productive':
+                        productive.append({"type": "Feature", "properties": {'contour_id': i[1],  'contour_cs': i[5],
+                                                                             'contour_year_id': i[2],
+                                                                             'land_type_id': i[3],
+                                                                             'contour_year_cs': i[6],
+                                                                             'year': i[7], 'ink': i[3],
+                                                                             'productivity': i[9], 'area_ha': i[8]},
+                                                                             "geometry": eval(i[-1])})
+                    else:
+                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1],  'contour_cs': i[5],
+                                                                               'contour_year_id': i[2],
+                                                                               'land_type_id': i[3],
+                                                                               'contour_year_cs': i[6],
+                                                                               'year': i[7], 'ink': i[3],
+                                                                               'productivity': i[9], 'area_ha': i[8]},
+                                                                               'geometry': eval(i[-1])})
+                return Response({"productive": {"type": "FeatureCollection",
+                                                "features": productive},
+                                 "unproductive": {"type": "FeatureCollection",
+                                                  "features": unproductive}})
+        elif year and land_type:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 'productive'
+                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, gcy.id AS contour_year_id, 
+                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity, 
+                    St_AsGeoJSON(gcy.polygon) as polygon
+                    FROM gip_contour AS cntr
+                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id
+                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    WHERE gcy.year='{year}' AND gcy.type_id={land_type} 
+                    GROUP BY rgn.name, "Type productivity", gcy.id, cntr.id;""")
+                rows = cursor.fetchall()
+                productive = []
+                unproductive = []
+
+                for i in rows:
+                    if i[0] in 'productive':
+                        productive.append({"type": "Feature", "properties": {'contour_id': i[1],  'contour_cs': i[5],
+                                                                             'contour_year_id': i[2],
+                                                                             'land_type_id': i[3],
+                                                                             'contour_year_cs': i[6],
+                                                                             'year': i[7], 'ink': i[3],
+                                                                             'productivity': i[9], 'area_ha': i[8]},
+                                                                             "geometry": eval(i[-1])})
+                    else:
+                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1],  'contour_cs': i[5],
+                                                                               'contour_year_id': i[2],
+                                                                               'land_type_id': i[3],
+                                                                               'contour_year_cs': i[6],
+                                                                               'year': i[7], 'ink': i[3],
+                                                                               'productivity': i[9], 'area_ha': i[8]},
+                                                                               'geometry': eval(i[-1])})
+                return Response({"productive": {"type": "FeatureCollection",
+                                                "features": productive},
+                                 "unproductive": {"type": "FeatureCollection",
+                                                  "features": unproductive}})
+
+        else:
+            return Response(data={"message": "parameter 'year and land_type' is required"}, status=400)
