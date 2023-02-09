@@ -88,7 +88,7 @@ class FilterContourAPIView(APIView):
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
                                 where gcy.type_id in ({land_type}) and rgn.id in ({region}) and gcy.year='{year}'
-                                and dst.id=({district}) order by cntr.id;
+                                and dst.id in ({district}) order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
                 data = []
@@ -145,7 +145,7 @@ class FilterContourAPIView(APIView):
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                                where gcy.year='{year}' and gcy.type_id={land_type}
+                                where gcy.year='{year}' and gcy.type_id in ({land_type})
                                 order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
