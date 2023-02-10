@@ -7,23 +7,22 @@ import rasterio
 def get_region_of_interest(ndmi, multiplier=1/2):
 
     # undo the background adjustment
-    region = ndmi.copy()
-    region = np.where(region == -255, 0, region)
+    region = np.where(ndmi == -255, 0, ndmi)
 
     # mean of center rows
-    center_row1 = np.mean(region[int((multiplier) *len(region))])
-    center_row2 = np.mean(region[int((multiplier) *len(region))+1])
+    center_row1 = np.mean(region[int(multiplier * len(region))])
+    center_row2 = np.mean(region[int(multiplier * len(region)) + 1])
 
     # mean of both rows
-    mean = (center_row1.copy()+center_row2.copy())/2
+    mean = (center_row1 + center_row2) / 2
     return mean
 
 
 def get_ndmi(swir_file, nir_file):
-    band_swir = rasterio.open(swir_file)
-    band_nir = rasterio.open(nir_file)
-    swir = band_swir.read(1).astype('float64')
-    nir = band_nir.read(1).astype('float64')
+    with rasterio.open(swir_file) as band_swir:
+        swir = band_swir.read(1).astype('float64')
+    with rasterio.open(nir_file) as band_nir:
+        nir = band_nir.read(1).astype('float64')
 
     np.seterr(divide='ignore', invalid='ignore')
     # ndwi calculation, empty cells or nodata cells are reported as 0
@@ -59,6 +58,7 @@ def ndmi_calculator(B08, B11, saving_file_name):
     ax.axis('off')
 
     plt.savefig(f'./media/{saving_file_name}.png', format='png', transparent=True, bbox_inches='tight')
+    plt.close()
 
 
 def average_ndmi(swir_file, nir_file):
