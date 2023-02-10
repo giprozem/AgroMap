@@ -106,6 +106,36 @@ class FilterContourAPIView(APIView):
                                                                                'productivity': i[8],'area_ha': i[7]},
                                                                 "geometry": eval(i[-1])}]}})
                 return Response(data)
+
+        elif region and district and land_type and year:
+                with connection.cursor() as cursor:
+                    cursor.execute(f"""
+                                    SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
+                                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                                    St_AsGeoJSON(gcy.polygon) as polygon  FROM gip_contour AS cntr 
+                                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                                    where gcy.type_id in ({land_type}) and rgn.id in ({region}) and gcy.year='{year}'
+                                    and dst.id in ({district}) order by cntr.id;
+                                        """)
+                    rows = cursor.fetchall()
+                    data = []
+                    for i in rows:
+                        data.append({
+                            "contour_year": {"type": "FeatureCollection",
+                                             "features": [{"type": "Feature",
+                                                           "properties": {'contour_id': i[0], 'contour_cs': i[4],
+                                                                          'contour_year_id': i[1],
+                                                                          'land_type_id': i[2],
+                                                                          'contour_year_cs': i[5],
+                                                                          'year': i[6], 'ink': i[3],
+                                                                          'productivity': i[8], 'area_ha': i[7]},
+                                                           "geometry": eval(i[-1])}]}})
+                    return Response(data)
         elif conton and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
@@ -570,15 +600,3 @@ class MapContourProductivityAPIView(APIView):
 
         else:
             return Response(data={"message": "parameter 'year and land_type' is required"}, status=400)
-
-
-"""
-SELECT count(cntr.id), FROM gip_contour AS cntr
-                                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
-                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                                JOIN gip_district AS dst ON dst.id=cntn.district_id
-                                JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                                where gcy.type_id in (1,2) and gcy.year='2022'
-                                and dst.id in (8) order by cntr.id;
-"""
