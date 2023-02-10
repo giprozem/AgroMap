@@ -40,6 +40,14 @@ class SearchContourViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = SearchContourPagination
 
 
+class ContourSearchAPIView(ListAPIView):
+    queryset = Contour.objects.all()
+    serializer_class = ContourSerializer
+    pagination_class = SearchContourPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['ink']
+
+
 class FilterContourAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
@@ -285,14 +293,6 @@ class PastureClassAPIView(APIView):
         return Response(data)
 
 
-class ContourSearchAPIView(ListAPIView):
-    queryset = Contour.objects.all()
-    serializer_class = ContourSerializer
-    pagination_class = SearchContourPagination
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['ink']
-
-
 class ContourStatisticsAPIView(APIView):
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
@@ -369,9 +369,29 @@ class StatisticsContourProductivityAPIView(APIView):
         year = request.GET.get('year')
         land_type = request.GET.get('land_type')
         district = request.GET.get('district')
-        if region and district and land_type and year:
+        conton = request.GET.get('conton')
+        if region and district and conton and land_type and year:
             with connection.cursor() as cursor:
-                cursor.execute(f""" select 
+                cursor.execute(f"""select 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
+                    cntn.name from  gip_contour AS cntr 
+                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    where gcy.year='{year}' and gcy.type_id in ({land_type}) and cntn.id in ({conton}) 
+                    and rgn.id in ({region}) and dst.id in ({district})
+                    group by cntn.name;""")
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({'Conton': i[2], 'Productive': i[0], 'Unproductive': i[1]})
+                return Response(data)
+        elif region and district and land_type and year:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""select 
                 round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
                 round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
                 cntn.name from  gip_contour AS cntr 
@@ -380,7 +400,7 @@ class StatisticsContourProductivityAPIView(APIView):
                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                where rgn.id in ({region}) and gcy.type_id=2 and gcy.year='{year}' and dst.id in ({district})
+                where rgn.id in ({region}) and gcy.type_id in ({land_type}) and gcy.year='{year}' and dst.id in ({district})
                 group by cntn.name;""")
                 rows = cursor.fetchall()
                 data = []
@@ -398,31 +418,88 @@ class StatisticsContourProductivityAPIView(APIView):
                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                where rgn.id in ({region}) and gcy.type_id=2 and gcy.year='{year}'
+                where rgn.id in ({region}) and gcy.type_id in ({land_type}) and gcy.year='{year}'
                 group by dst.name;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
                     data.append({'District': i[2], 'Productive': i[0], 'Unproductive': i[1]})
                 return Response(data)
-        elif year:
+        elif district and conton and year and land_type:
+            print('---------')
             with connection.cursor() as cursor:
                 cursor.execute(f"""select 
-                round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
-                round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                rgn.name from  gip_contour AS cntr 
-                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
-                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                JOIN gip_district AS dst ON dst.id=cntn.district_id
-                JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                where gcy.year='{year}' and gcy.type_id=2
-                group by rgn.name;""")
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
+                    cntn.name from  gip_contour AS cntr 
+                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    where gcy.year='{year}' and gcy.type_id in ({land_type}) and dst.id in ({district}) 
+                    and cntn.id in ({conton}) group by cntn.name;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
                     data.append({'Region': i[2], 'Productive': i[0], 'Unproductive': i[1]})
                 return Response(data)
+        elif district and year and land_type:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""select 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
+                    cntn.name from  gip_contour AS cntr 
+                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    where gcy.year='{year}' and gcy.type_id in ({land_type}) and dst.id in ({district})
+                    group by cntn.name;""")
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({'Region': i[2], 'Productive': i[0], 'Unproductive': i[1]})
+                return Response(data)
+        elif conton and year and land_type:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""select 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
+                    cntn.name from  gip_contour AS cntr 
+                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    where gcy.year='{year}' and gcy.type_id in ({land_type}) and cntn.id in ({conton})
+                    group by cntn.name;""")
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({'Region': i[2], 'Productive': i[0], 'Unproductive': i[1]})
+                return Response(data)
+        elif year and land_type:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""select 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
+                    rgn.name from  gip_contour AS cntr 
+                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    where gcy.year='{year}' and gcy.type_id in ({land_type})
+                    group by rgn.name;""")
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({'Region': i[2], 'Productive': i[0], 'Unproductive': i[1]})
+                return Response(data)
+        else:
+            return Response(data={"message": "parameter 'year or land_type' is required"}, status=400)
 
 
 class MapContourProductivityAPIView(APIView):
@@ -598,14 +675,3 @@ class MapContourProductivityAPIView(APIView):
         else:
             return Response(data={"message": "parameter 'year and land_type' is required"}, status=400)
 
-
-"""
-SELECT count(cntr.id) FROM gip_contour AS cntr 
-                                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
-                                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                                    JOIN gip_district AS dst ON dst.id=cntn.district_id
-                                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                                    where gcy.type_id in (2) and rgn.id in (8) and gcy.year='2022'
-                                    and cntn.id in (9);
-"""
