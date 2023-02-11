@@ -26,7 +26,7 @@ from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, Graph
 from hub.views.authetificated import LoginHubView
 from hub.views.land_info import LandInfoSearch
 from hub.views.zem_balance_api import ZemBalanceViewSet
-from indexes.views import Creating, CreatingAverage
+from indexes.views import Creating, CreatingAverage, AllIndexesCreating
 from indexes.views.actual_veg_index import IndexFactListCreateAPIView, SatelliteImagesDate, ActualIndexesOfContourYear
 
 router = DefaultRouter()
@@ -79,6 +79,7 @@ urlpatterns = [
     path('contour-statistics-productivity/', StatisticsContourProductivityAPIView.as_view()),
     path('contour-map-productivity/', MapContourProductivityAPIView.as_view()),
     path('actual-veg-indexes/', ActualIndexesOfContourYear.as_view()),
+    path('all-indexes/', AllIndexesCreating.as_view())
 ]
 
 if settings.DEBUG:

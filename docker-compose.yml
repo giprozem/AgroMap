@@ -8,6 +8,7 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data/
     env_file: .env
+    restart: on-failure
 
   web:
     build: .

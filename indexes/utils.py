@@ -1,5 +1,7 @@
 from culture_model.models import VegetationIndex
+from gip.models import ContourYear
 from indexes.models import ActuaVegIndex
+import matplotlib.pyplot as plt
 
 
 def creating_ndvi(date, start, end, indexid):
@@ -14,4 +16,22 @@ def creating_ndvi(date, start, end, indexid):
                 file.write(',')
                 file.write('\n')
             print(f'unprocessed == {i}')
+            plt.close()
             pass
+
+
+def creating_indexes(date):
+    for contour in range(1, (ContourYear.objects.all().count() + 1)):
+        for index in range(1, (VegetationIndex.objects.all().count() + 1)):
+            try:
+                ActuaVegIndex.objects.create(contour_id=contour, index_id=index, date=date)
+                print(f'processed == {contour}')
+            except Exception as e:
+                with open(f'creating_indexes report-{date}.txt', 'a') as file:
+                    file.write(f"{contour}' = f'{e}")
+                    file.write(',')
+                    file.write('\n')
+                print(f'unprocessed == {contour}')
+                plt.close()
+                print(e)
+                pass
