@@ -71,8 +71,9 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 
 @admin.register(ContourYear)
 class ContourYearAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
-    readonly_fields = ('id', 'area_ha', 'code_soato', 'year', )
+    readonly_fields = ('id', 'area_ha', 'code_soato', )
     list_display = ('id', 'code_soato', 'type', 'year', )
+    list_filter = ('type', )
     ordering = ('id', )
     inlines = [NDVITabularInline]
 
