@@ -52,3 +52,16 @@ class LandTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = LandType
         fields = '__all__'
+
+
+class AuthDetailContourYearSerializer(GeoFeatureModelSerializer):
+    class Meta:
+        model = ContourYear
+        fields = '__all__'
+        geo_field = 'polygon'
+
+
+class AuthDetailContourSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contour
+        fields = '__all__'

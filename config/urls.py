@@ -12,7 +12,7 @@ from gip.views.authenticated import LoginAgromapView
 from gip.views.conton import ContonViewSet
 from gip.views.contour import ContourViewSet, FilterContourAPIView, LandTypeViewSet, ContourSearchAPIView, \
     SearchContourViewSet, ContourStatisticsAPIView, StatisticsContourProductivityAPIView, ContourYearViewSet, \
-    MapContourProductivityAPIView, CoordinatesPolygonAPIView
+    MapContourProductivityAPIView, CoordinatesPolygonAPIView, AuthDetailContourYearViewSet, AuthDetailContourViewSet
 from gip.views.contour import ContourViewSet, FilterContourAPIView, PastureClassAPIView
 from gip.views.crop_yield import CropYieldViewSet
 from gip.views.culture import CultureViewSet
@@ -32,7 +32,9 @@ from indexes.views.actual_veg_index import IndexFactListCreateAPIView, Satellite
 router = DefaultRouter()
 router.register('land-type', LandTypeViewSet)
 router.register('contour', ContourViewSet, basename='contour')
+router.register('auth-contour', AuthDetailContourViewSet, basename='auth-contour')
 router.register('contour_year', ContourYearViewSet, basename='contour_year')
+router.register('auth-contour-year', AuthDetailContourYearViewSet, basename='auth-contour-year')
 router.register('land-use', LandUseViewSet, basename='land-use')
 router.register('region', RegionViewSet)
 router.register('district', DistrictViewSet)
