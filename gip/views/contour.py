@@ -1,23 +1,42 @@
-from time import perf_counter
-
-from django.core import serializers
 from django.db import connection
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.generics import GenericAPIView, ListAPIView
+from rest_framework.generics import  ListAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, mixins
 from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
-from gip.models import Conton
 from gip.models.contour import Contour, LandType, ContourYear
 from gip.pagination.contour_pagination import ContourPagination, SearchContourPagination
-from gip.serializers.contour import ContourSerializer, LandTypeSerializer, ContourYearSerializer
+from gip.serializers.contour import ContourSerializer, LandTypeSerializer, ContourYearSerializer, \
+    AuthDetailContourYearSerializer, AuthDetailContourSerializer
 
 
 class LandTypeViewSet(viewsets.ModelViewSet):
     queryset = LandType.objects.all()
     serializer_class = LandTypeSerializer
+
+
+class AuthDetailContourViewSet(mixins.CreateModelMixin,
+                               mixins.RetrieveModelMixin,
+                               mixins.UpdateModelMixin,
+                               mixins.DestroyModelMixin,
+                               GenericViewSet):
+    queryset = Contour.objects.all()
+    serializer_class = AuthDetailContourSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class AuthDetailContourYearViewSet(mixins.CreateModelMixin,
+                                   mixins.RetrieveModelMixin,
+                                   mixins.UpdateModelMixin,
+                                   mixins.DestroyModelMixin,
+                                   GenericViewSet):
+    queryset = ContourYear.objects.all()
+    serializer_class = AuthDetailContourYearSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class ContourViewSet(viewsets.ModelViewSet):
