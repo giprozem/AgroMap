@@ -12,7 +12,7 @@ from gip.views.authenticated import LoginAgromapView
 from gip.views.conton import ContonViewSet
 from gip.views.contour import ContourViewSet, FilterContourAPIView, LandTypeViewSet, ContourSearchAPIView, \
     SearchContourViewSet, ContourStatisticsAPIView, StatisticsContourProductivityAPIView, ContourYearViewSet, \
-    MapContourProductivityAPIView
+    MapContourProductivityAPIView, CoordinatesPolygonAPIView
 from gip.views.contour import ContourViewSet, FilterContourAPIView, PastureClassAPIView
 from gip.views.crop_yield import CropYieldViewSet
 from gip.views.culture import CultureViewSet
@@ -79,7 +79,8 @@ urlpatterns = [
     path('contour-statistics-productivity/', StatisticsContourProductivityAPIView.as_view()),
     path('contour-map-productivity/', MapContourProductivityAPIView.as_view()),
     path('actual-veg-indexes/', ActualIndexesOfContourYear.as_view()),
-    path('all-indexes/', AllIndexesCreating.as_view())
+    path('all-indexes/', AllIndexesCreating.as_view()),
+    path('coordinates-polygon/', CoordinatesPolygonAPIView.as_view()),
 ]
 
 if settings.DEBUG:
