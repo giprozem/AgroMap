@@ -11,7 +11,8 @@ from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 
 from indexes.index_funcs.ndmi_funcs import average_ndmi, ndmi_calculator
-from indexes.index_funcs.ndvi_funcs import cutting_tiff, average_ndvi, ndvi_calculator
+from indexes.index_funcs.ndvi_funcs import average_ndvi, ndvi_calculator
+from indexes.index_funcs.common_funcs import cutting_tiff
 from indexes.models.satelliteimage import SatelliteImages
 
 
@@ -56,67 +57,54 @@ class ActuaVegIndex(models.Model):
 
         polygon = GEOSGeometry(self.contour.polygon).geojson
 
+        output_path_b04 = f"./media/B04_{file_name}.tiff"
+        output_path_b8a = f"./media/B8A_{file_name}.tiff"
+        output_path_b08 = f"./media/B08_{file_name}.tiff"
+        output_path_b11 = f"./media/B11_{file_name}.tiff"
+        output_path_b12 = f"./media/B12_{file_name}.tiff"
+
+        input_path_b04 = f'./media/{source.B04}'
+        input_path_b8a = f'./media/{source.B8A}'
+        input_path_b08 = f'./media/{source.B08}'
+        input_path_b11 = f'./media/{source.B11}'
+        input_path_b12 = f'./media/{source.B12}'
+
+        cutting_tiff(outputpath=output_path_b04, inputpath=input_path_b04, polygon=polygon)
+        cutting_tiff(outputpath=output_path_b8a, inputpath=input_path_b8a, polygon=polygon)
+        cutting_tiff(outputpath=output_path_b08, inputpath=input_path_b08, polygon=polygon)
+        cutting_tiff(outputpath=output_path_b11, inputpath=input_path_b11, polygon=polygon)
+        cutting_tiff(outputpath=output_path_b12, inputpath=input_path_b12, polygon=polygon)
+
         if self.index.name == 'NDVI':
-            output_path_B04 = f"./media/B04_{file_name}.tiff"
-            input_path_B04 = f'./media/{source.B04}'
-            output_path_B8A = f"./media/B8A_{file_name}.tiff"
-            input_path_B8A = f'./media/{source.B8A}'
-            cutting_tiff(outputpath=output_path_B04, inputpath=input_path_B04, polygon=polygon)
-            cutting_tiff(outputpath=output_path_B8A, inputpath=input_path_B8A, polygon=polygon)
-            self.average_value = average_ndvi(red_file=output_path_B04, nir_file=output_path_B8A)
+            self.average_value = average_ndvi(red_file=output_path_b04, nir_file=output_path_b8a)
 
-            self.meaning_of_average_value = IndexMeaning.objects.filter(
-                index=self.index
-            ).filter(
-                min_index_value__lt=self.average_value
-            ).filter(
-                max_index_value__gte=self.average_value
-            ).first()
-            # TODO code is repeating
-            ndvi_calculator(B04=output_path_B04, B8A=output_path_B8A, saving_file_name=file_name)
+            ndvi_calculator(B04=output_path_b04, B8A=output_path_b8a, saving_file_name=file_name)
 
-            self.remove_file(output_path_B04)
-            self.remove_file(output_path_B8A)
-
-            path = Path(f'./media/{file_name}.png')
-            with path.open(mode='rb') as f:
-                image = File(f, name=path.name)
-
-                self.index_image = image
-                self.remove_file(f'./media/{file_name}.png')
-                super(ActuaVegIndex, self).save(*args, **kwargs)
         elif self.index.name == 'NDMI':
-            output_path_B11 = f"./media/B11_{file_name}.tiff"
-            input_path_B11 = f'./media/{source.B11}'
-            output_path_B08 = f"./media/B08_{file_name}.tiff"
-            input_path_B08 = f'./media/{source.B08}'
-            cutting_tiff(outputpath=output_path_B11, inputpath=input_path_B11, polygon=polygon)
-            cutting_tiff(outputpath=output_path_B08, inputpath=input_path_B08, polygon=polygon)
-            self.average_value = average_ndmi(swir_file=output_path_B11, nir_file=output_path_B08)
+            self.average_value = average_ndmi(swir_file=output_path_b11, nir_file=output_path_b08)
 
-            self.meaning_of_average_value = IndexMeaning.objects.filter(
-                index=self.index
-            ).filter(
-                min_index_value__lt=self.average_value
-            ).filter(
-                max_index_value__gte=self.average_value
-            ).first()
-            # TODO code is repeating
+            ndmi_calculator(B11=output_path_b11, B08=output_path_b08, saving_file_name=file_name)
 
-            ndmi_calculator(B11=output_path_B11, B08=output_path_B08, saving_file_name=file_name)
-
-            self.remove_file(output_path_B11)
-            self.remove_file(output_path_B08)
-
-            path = Path(f'./media/{file_name}.png')
-            with path.open(mode='rb') as f:
-                image = File(f, name=path.name)
-
-                self.index_image = image
-                self.remove_file(f'./media/{file_name}.png')
-                super(ActuaVegIndex, self).save(*args, **kwargs)
         else:
             raise ObjectDoesNotExist(_('Data base have no satellite images that have to process'))
+        self.meaning_of_average_value = IndexMeaning.objects.filter(
+            index=self.index
+        ).filter(
+            min_index_value__lt=self.average_value
+        ).filter(
+            max_index_value__gte=self.average_value
+        ).first()
+        path = Path(f'./media/{file_name}.png')
+        with path.open(mode='rb') as f:
+            image = File(f, name=path.name)
+            self.index_image = image
+            super(ActuaVegIndex, self).save(*args, **kwargs)
+        self.remove_file(output_path_b04)
+        self.remove_file(output_path_b08)
+        self.remove_file(output_path_b8a)
+        self.remove_file(output_path_b11)
+        self.remove_file(output_path_b12)
+        self.remove_file(f'./media/{file_name}.png')
 
 
 class IndexMeaning(models.Model):
