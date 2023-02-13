@@ -906,5 +906,18 @@ class CoordinatesPolygonAPIView(APIView):
                                  "geometry": eval(i[-1]) if i[-1] else None})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": data}})
+        elif year and land_type:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""SELECT rgn.id, rgn.name, St_AsGeoJSON(rgn.polygon) AS polygon 
+                               FROM gip_region as rgn
+                               GROUP BY rgn.id
+                               ORDER BY rgn.id;""")
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({"type": "Feature", "properties": {'id': i[0], 'name': i[1]},
+                                 "geometry": eval(i[-1]) if i[-1] else None})
+                return Response({"productive": {"type": "FeatureCollection",
+                                                "features": data}})
         else:
             return Response(data={"message": "parameter 'year and land_type' is required"}, status=400)
