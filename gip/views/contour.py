@@ -808,7 +808,7 @@ class CoordinatesPolygonAPIView(APIView):
         land_type = request.GET.get('land_type')
         district = request.GET.get('district')
         conton = request.GET.get('conton')
-        if region and district and conton and year and land_type:
+        if region and district and conton:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT cntn.id, cntn.name, St_AsGeoJSON(cntn.polygon) AS polygon 
                                FROM gip_contour AS cntr
@@ -817,8 +817,7 @@ class CoordinatesPolygonAPIView(APIView):
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id 
                                JOIN gip_district AS dst ON dst.id=cntn.district_id 
                                JOIN gip_region AS rgn ON rgn.id=dst.region_id  
-                               WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) AND rgn.id IN ({region}) 
-                               AND dst.id IN ({district}) AND cntn.id IN ({conton})
+                               WHERE rgn.id IN ({region}) AND dst.id IN ({district}) AND cntn.id IN ({conton})
                                GROUP BY cntn.id
                                ORDER BY cntn.id;""")
                 rows = cursor.fetchall()
@@ -828,7 +827,7 @@ class CoordinatesPolygonAPIView(APIView):
                                  "geometry": eval(i[-1]) if i[-1] else None})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": data}})
-        elif region and district and year and land_type:
+        elif region and district:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT dst.id, dst.name, St_AsGeoJSON(dst.polygon) AS polygon 
                                FROM gip_contour AS cntr
@@ -837,8 +836,7 @@ class CoordinatesPolygonAPIView(APIView):
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id 
                                JOIN gip_district AS dst ON dst.id=cntn.district_id 
                                JOIN gip_region AS rgn ON rgn.id=dst.region_id 
-                               WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) AND rgn.id IN ({region}) 
-                               AND dst.id IN ({district})
+                               WHERE rgn.id IN ({region}) AND dst.id IN ({district})
                                GROUP BY dst.id
                                ORDER BY dst.id;""")
                 rows = cursor.fetchall()
@@ -848,7 +846,7 @@ class CoordinatesPolygonAPIView(APIView):
                                  "geometry": eval(i[-1]) if i[-1] else None})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": data}})
-        elif region and year and land_type:
+        elif region:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT rgn.id, rgn.name, St_AsGeoJSON(rgn.polygon) AS polygon 
                                FROM gip_contour AS cntr
@@ -857,7 +855,7 @@ class CoordinatesPolygonAPIView(APIView):
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id 
                                JOIN gip_district AS dst ON dst.id=cntn.district_id 
                                JOIN gip_region AS rgn ON rgn.id=dst.region_id 
-                               WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) AND rgn.id IN ({region}) 
+                               WHERE rgn.id IN ({region}) 
                                GROUP BY rgn.id
                                ORDER BY rgn.id;""")
                 rows = cursor.fetchall()
@@ -867,7 +865,7 @@ class CoordinatesPolygonAPIView(APIView):
                                  "geometry": eval(i[-1]) if i[-1] else None})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": data}})
-        elif district and conton and year and land_type:
+        elif district and conton:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT cntn.id, cntn.name, St_AsGeoJSON(cntn.polygon) AS polygon 
                                FROM gip_contour AS cntr
@@ -876,8 +874,7 @@ class CoordinatesPolygonAPIView(APIView):
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id 
                                JOIN gip_district AS dst ON dst.id=cntn.district_id 
                                JOIN gip_region AS rgn ON rgn.id=dst.region_id 
-                               WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) AND
-                               dst.id IN ({district}) AND cntn.id in ({conton})
+                               WHERE dst.id IN ({district}) AND cntn.id in ({conton})
                                GROUP BY cntn.id
                                ORDER BY cntn.id;""")
                 rows = cursor.fetchall()
@@ -896,7 +893,7 @@ class CoordinatesPolygonAPIView(APIView):
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id 
                                JOIN gip_district AS dst ON dst.id=cntn.district_id 
                                JOIN gip_region AS rgn ON rgn.id=dst.region_id 
-                               WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) AND dst.id IN ({district})
+                               WHERE dst.id IN ({district})
                                GROUP BY dst.id
                                ORDER BY dst.id;""")
                 rows = cursor.fetchall()
@@ -906,7 +903,7 @@ class CoordinatesPolygonAPIView(APIView):
                                  "geometry": eval(i[-1]) if i[-1] else None})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": data}})
-        elif conton and year and land_type:
+        elif conton:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT cntn.id, cntn.name, St_AsGeoJSON(cntn.polygon) AS polygon 
                                FROM gip_contour AS cntr
@@ -915,7 +912,7 @@ class CoordinatesPolygonAPIView(APIView):
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id 
                                JOIN gip_district AS dst ON dst.id=cntn.district_id 
                                JOIN gip_region AS rgn ON rgn.id=dst.region_id 
-                               WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) AND cntn.id IN ({conton})
+                               WHERE cntn.id IN ({conton})
                                GROUP BY cntn.id
                                ORDER BY cntn.id;""")
                 rows = cursor.fetchall()
@@ -925,7 +922,7 @@ class CoordinatesPolygonAPIView(APIView):
                                  "geometry": eval(i[-1]) if i[-1] else None})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": data}})
-        elif year and land_type:
+        else:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT rgn.id, rgn.name, St_AsGeoJSON(rgn.polygon) AS polygon 
                                FROM gip_region as rgn
@@ -938,5 +935,3 @@ class CoordinatesPolygonAPIView(APIView):
                                  "geometry": eval(i[-1]) if i[-1] else None})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": data}})
-        else:
-            return Response(data={"message": "parameter 'year and land_type' is required"}, status=400)
