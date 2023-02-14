@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import exceptions
-from hub.serializers.authetificated import LoginSerializer
+from account.serializers.authetificated import LoginSerializer
 from rest_framework.authtoken.models import Token
 
 

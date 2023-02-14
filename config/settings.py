@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'gip',
     'indexes',
     'culture_model',
-    'hub'
+    'hub',
+    'account'
 ]
 
 
@@ -111,6 +112,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+AUTH_USER_MODEL = 'account.MyUser'
 
 STATIC_URL = '/staticfiles/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
