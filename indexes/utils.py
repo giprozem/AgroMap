@@ -22,6 +22,7 @@ def creating_ndvi(date, start, end, indexid):
 
 def creating_indexes(date):
     for contour in range(1, (ContourYear.objects.all().count() + 1)):
+    # for contour in range(1, 3):
         for index in range(1, (VegetationIndex.objects.all().count() + 1)):
             try:
                 ActuaVegIndex.objects.create(contour_id=contour, index_id=index, date=date)
