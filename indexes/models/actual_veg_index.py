@@ -13,6 +13,7 @@ from simple_history.models import HistoricalRecords
 from indexes.index_funcs.ndmi_funcs import average_ndmi, ndmi_calculator
 from indexes.index_funcs.ndvi_funcs import average_ndvi, ndvi_calculator
 from indexes.index_funcs.ndwi_funcs import average_ndwi, ndwi_calculator
+from indexes.index_funcs.ndre_funcs import average_ndre, ndre_calculator
 from indexes.index_funcs.common_funcs import cutting_tiff
 from indexes.models.satelliteimage import SatelliteImages
 
@@ -60,26 +61,29 @@ class ActuaVegIndex(models.Model):
 
         output_path_b03 = f"./media/B03_{file_name}.tiff"
         output_path_b04 = f"./media/B04_{file_name}.tiff"
+        output_path_b07 = f"./media/B07_{file_name}.tiff"
         output_path_b8a = f"./media/B8A_{file_name}.tiff"
         output_path_b08 = f"./media/B08_{file_name}.tiff"
         output_path_b11 = f"./media/B11_{file_name}.tiff"
 
         input_path_b03 = f'./media/{source.B03}'
         input_path_b04 = f'./media/{source.B04}'
+        input_path_b07 = f'./media/{source.B07}'
         input_path_b8a = f'./media/{source.B8A}'
         input_path_b08 = f'./media/{source.B08}'
         input_path_b11 = f'./media/{source.B11}'
 
         cutting_tiff(outputpath=output_path_b03, inputpath=input_path_b03, polygon=polygon)
         cutting_tiff(outputpath=output_path_b04, inputpath=input_path_b04, polygon=polygon)
+        cutting_tiff(outputpath=output_path_b07, inputpath=input_path_b07, polygon=polygon)
         cutting_tiff(outputpath=output_path_b8a, inputpath=input_path_b8a, polygon=polygon)
         cutting_tiff(outputpath=output_path_b08, inputpath=input_path_b08, polygon=polygon)
         cutting_tiff(outputpath=output_path_b11, inputpath=input_path_b11, polygon=polygon)
 
         if self.index.name == 'NDVI':
-            self.average_value = average_ndvi(red_file=output_path_b04, nir_file=output_path_b8a)
+            self.average_value = average_ndvi(red_file=output_path_b04, nir_file=output_path_b08)
 
-            ndvi_calculator(B04=output_path_b04, B8A=output_path_b8a, saving_file_name=file_name)
+            ndvi_calculator(B04=output_path_b04, B08=output_path_b08, saving_file_name=file_name)
 
         elif self.index.name == 'NDMI':
             self.average_value = average_ndmi(swir_file=output_path_b11, nir_file=output_path_b08)
@@ -90,6 +94,10 @@ class ActuaVegIndex(models.Model):
             self.average_value = average_ndwi(green_file=output_path_b03, nir_file=output_path_b8a)
 
             ndwi_calculator(B03=output_path_b03, B08=output_path_b8a, saving_file_name=file_name)
+        elif self.index.name == 'NDRE':
+            self.average_value = average_ndre(red_file=output_path_b07, nir_file=output_path_b8a)
+
+            ndre_calculator(B07=output_path_b07, B8A=output_path_b8a, saving_file_name=file_name)
 
         else:
             raise ObjectDoesNotExist(_('Data base have no satellite images that have to process'))
@@ -108,6 +116,7 @@ class ActuaVegIndex(models.Model):
 
         self.remove_file(output_path_b03)
         self.remove_file(output_path_b04)
+        self.remove_file(output_path_b07)
         self.remove_file(output_path_b08)
         self.remove_file(output_path_b8a)
         self.remove_file(output_path_b11)
