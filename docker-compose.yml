@@ -26,17 +26,6 @@ services:
       - postgis
     restart: on-failure
 
-#  nginx:
-#    build: ./nginx
-#    ports:
-#      - '80:80'
-#    volumes:
-#      - ./media:/media
-#      - ./static:/static
-#      - ./dhparam.pem:/etc/ssl/private/dhparam.pem
-#      - /etc/letsencrypt:/etc/letsencrypt
-#      - /var/lib/letsencrypt:/var/www/certbot
-
 
 networks:
   default:
