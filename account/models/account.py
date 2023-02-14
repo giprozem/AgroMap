@@ -16,3 +16,15 @@ class MyUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class Profile(models.Model):
+    my_user = models.OneToOneField(MyUser, on_delete=models.CASCADE, primary_key=True, related_name='profiles')
+    full_name = models.CharField(max_length=55)
+    phone_number = models.CharField(max_length=14)
+
+    class Meta:
+        verbose_name_plural = 'Профиль'
+
+    def __str__(self):
+        return self.my_user.username
