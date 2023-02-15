@@ -391,10 +391,13 @@ class StatisticsContourProductivityAPIView(APIView):
         conton = request.GET.get('conton')
         if region and district and conton and land_type and year:
             with connection.cursor() as cursor:
-                cursor.execute(f"""select 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                cursor.execute(f"""SELECT 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    cntn.name from  gip_contour AS cntr 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
+                    cntn.name
+                    FROM  gip_contour AS cntr 
                     INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                     INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
@@ -406,69 +409,83 @@ class StatisticsContourProductivityAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'Conton': i[2], 'Productive': i[0], 'Unproductive': i[1]})
+                    data.append({'Conton': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         elif region and district and land_type and year:
             with connection.cursor() as cursor:
-                cursor.execute(f"""select 
-                round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
-                round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                cntn.name from  gip_contour AS cntr 
-                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
-                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                JOIN gip_district AS dst ON dst.id=cntn.district_id
-                JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                where rgn.id in ({region}) and gcy.type_id in ({land_type}) and gcy.year='{year}' and dst.id in ({district})
-                group by cntn.name;""")
-                rows = cursor.fetchall()
-                data = []
-                for i in rows:
-                    data.append({'Conton': i[2], 'Productive': i[0], 'Unproductive': i[1]})
-                return Response(data)
-        elif region and land_type and year:
-            with connection.cursor() as cursor:
-                cursor.execute(f""" select 
-                round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
-                round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                dst.name from  gip_contour AS cntr 
-                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
-                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                JOIN gip_district AS dst ON dst.id=cntn.district_id
-                JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                where rgn.id in ({region}) and gcy.type_id in ({land_type}) and gcy.year='{year}'
-                group by dst.name;""")
-                rows = cursor.fetchall()
-                data = []
-                for i in rows:
-                    data.append({'District': i[2], 'Productive': i[0], 'Unproductive': i[1]})
-                return Response(data)
-        elif district and conton and year and land_type:
-            print('---------')
-            with connection.cursor() as cursor:
-                cursor.execute(f"""select 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                cursor.execute(f"""SELECT 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    cntn.name from  gip_contour AS cntr 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
+                    cntn.name
+                    FROM  gip_contour AS cntr 
                     INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                     INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    where rgn.id in ({region}) and gcy.type_id in ({land_type}) and gcy.year='{year}' and dst.id in ({district})
+                    group by cntn.name;""")
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({'Conton': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                                 'Unproductive': {'ha': i[1], 'percent': i[3]}})
+                return Response(data)
+        elif region and land_type and year:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""SELECT 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
+                    dst.name
+                    FROM  gip_contour AS cntr 
+                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    where rgn.id in ({region}) and gcy.type_id in ({land_type}) and gcy.year='{year}'
+                    group by dst.name;""")
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({'District': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                                                    'Unproductive': {'ha': i[1], 'percent': i[3]}})
+                return Response(data)
+        elif district and conton and year and land_type:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""SELECT 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
+                    cntn.name
+                    FROM  gip_contour AS cntr 
+                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
                     where gcy.year='{year}' and gcy.type_id in ({land_type}) and dst.id in ({district}) 
                     and cntn.id in ({conton}) group by cntn.name;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'Conton': i[2], 'Productive': i[0], 'Unproductive': i[1]})
+                    data.append({'Conton': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         elif district and year and land_type:
             with connection.cursor() as cursor:
-                cursor.execute(f"""select 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                cursor.execute(f"""SELECT 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    cntn.name from  gip_contour AS cntr 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
+                    cntn.name 
+                    FROM  gip_contour AS cntr 
                     INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                     INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
@@ -479,14 +496,18 @@ class StatisticsContourProductivityAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'Conton': i[2], 'Productive': i[0], 'Unproductive': i[1]})
+                    data.append({'Conton': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         elif conton and year and land_type:
             with connection.cursor() as cursor:
-                cursor.execute(f"""select 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                cursor.execute(f"""SELECT 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    cntn.name from  gip_contour AS cntr 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
+                    cntn.name 
+                    FROM  gip_contour AS cntr 
                     INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                     INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
@@ -497,14 +518,18 @@ class StatisticsContourProductivityAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'Conton': i[2], 'Productive': i[0], 'Unproductive': i[1]})
+                    data.append({'Conton': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         elif year and land_type:
             with connection.cursor() as cursor:
-                cursor.execute(f"""select 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive", 
+                cursor.execute(f"""SELECT 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    rgn.name from  gip_contour AS cntr 
+                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
+                    rgn.name 
+                    FROM  gip_contour AS cntr 
                     INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
                     INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
@@ -515,7 +540,8 @@ class StatisticsContourProductivityAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'Region': i[2], 'Productive': i[0], 'Unproductive': i[1]})
+                    data.append({'Region': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                                 'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         else:
             return Response(data={"message": "parameter 'year or land_type' is required"}, status=400)
