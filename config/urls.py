@@ -83,6 +83,7 @@ urlpatterns = [
     path('actual-veg-indexes/', ActualIndexesOfContourYear.as_view()),
     path('all-indexes/', AllIndexesCreating.as_view()),
     path('coordinates-polygon/', CoordinatesPolygonAPIView.as_view()),
+    path('hub/', include("hub.urls")),
 ]
 
 if settings.DEBUG:
@@ -90,5 +91,4 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 admin.site.site_header = 'AgroMap'
-# admin.site.site_title = 'Mysite Admin Panel'
 admin.site.index_title = "Эталонная база данных Гипрозем"
