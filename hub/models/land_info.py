@@ -7,9 +7,8 @@ from hub.models.base import BaseModel
 
 class LandInfo(BaseModel):
     history = HistoricalRecords(verbose_name="История", inherit=True)
-    ink_code = models.CharField(max_length=100, unique=True, verbose_name='Код ИНК')
+    ink_code = models.CharField(max_length=100, verbose_name='Код ИНК')
     main_map = models.GeometryField(verbose_name='Контур', blank=True, null=True)
-    eni_code = models.CharField(max_length=35, blank=True, null=True, verbose_name='ЕНИ Код')
     inn_pin = models.IntegerField(blank=True, null=True, verbose_name='ИНН')
     # name = models.CharField(max_length=100, blank=True, null=True)
     bonitet = models.IntegerField(blank=True, null=True, verbose_name='Бонитет')
@@ -77,6 +76,26 @@ class LandInfo(BaseModel):
     description = models.CharField(max_length=55, blank=True, null=True)
     land_ctg = models.CharField(max_length=100, blank=True, null=True, verbose_name='Категории Земли (Зем. Баланс)')
     status = models.CharField(max_length=55, blank=True, null=True)
+    """Kadastr"""
+    eni_code = models.CharField(max_length=35, blank=True, null=True, verbose_name='ЕНИ Код')
+    propform = models.CharField(max_length=125, blank=True, null=True)
+    proptype = models.CharField(max_length=125, blank=True, null=True)
+    propforuse = models.CharField(max_length=125, blank=True, null=True)
+    propfor = models.CharField(max_length=125, blank=True, null=True)
+    propstatus = models.CharField(max_length=125, blank=True, null=True)
+    real_area = models.CharField(max_length=125, blank=True, null=True)
+    legl_area = models.CharField(max_length=125, blank=True, null=True)
+    ate_name = models.CharField(max_length=125, blank=True, null=True)
+    ate_type_name = models.CharField(max_length=125, blank=True, null=True)
+    ate2_name = models.CharField(max_length=125, blank=True, null=True)
+    ate2_type_name = models.CharField(max_length=125, blank=True, null=True)
+    ate3_name = models.CharField(max_length=125, blank=True, null=True)
+    ate3_type_name = models.CharField(max_length=125, blank=True, null=True)
+    street_name = models.CharField(max_length=125, blank=True, null=True)
+    street_type_name = models.CharField(max_length=125, blank=True, null=True)
+    building = models.CharField(max_length=125, blank=True, null=True)
+    flat = models.CharField(max_length=125, blank=True, null=True)
+    uchnum = models.CharField(max_length=125, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Главная таблица'
