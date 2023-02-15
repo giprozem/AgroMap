@@ -60,11 +60,11 @@ class MyUserAdmin(BaseUserAdmin):
     list_display = ['id', 'username', 'email']
     fieldsets = ((None, {'fields': ('username', 'password')}),
                  ('Permissions', {'fields': ('is_staff', 'is_superuser', 'is_supervisor', 'is_active', 'is_farmer',
-                                             'is_employee')}))
+                                             'is_employee', 'groups')}))
 
     add_fieldsets = (
         (None, {'fields': ('username', 'password', 'confirm_password', 'is_staff', 'is_superuser', 'is_supervisor',
-                           'is_farmer', 'is_employee')}),)
+                           'is_farmer', 'is_employee', 'groups')}),)
 
 
 @admin.register(Profile)
