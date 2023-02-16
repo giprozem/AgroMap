@@ -56,18 +56,24 @@ class PolygonsInBbox(APIView):
 
         if bbox:
             bboxs = Polygon(eval(bbox))
+            print(bboxs)
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                               select cntr.id as contour_id, cntr.ink as ink, St_AsGeoJSON(cntr.polygon) as polygon
-                               from gip_contour as cntr 
-                               where ST_Contains('{bboxs}'::geography::geometry, cntr.polygon::geometry);
+                               SELECT cntr.id, cntr.ink, cntr.conton_id, cntr.farmer_id, gcy.id,
+                               gcy.code_soato, gcy.year, gcy.productivity, gcy.type_id,
+                               St_AsGeoJSON(gcy.polygon) AS polygon
+                               FROM  gip_contour AS cntr 
+                               INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
+                               INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id 
+                               where ST_Intersects('{bboxs}'::geography::geometry, gcy.polygon::geometry);
                                """)
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
                     data.append({"type": "Feature",
-                                 "properties": {'contour_id': i[0], 'ink': i[1]},
-                                 "geometry": eval(i[2])})
+                                 "properties": {'contour_id': i[0],'contour_ink': i[1],'conton_id': i[2],'farmer_id': i[3],
+                                                'contour_year_id': i[4], 'productivity': i[5], 'land_type': i[6]},
+                                 "geometry": eval(i[-1])})
                 return Response({"type": "FeatureCollection", "features": data})
         elif polygon_properties:
             bbox_properties = Polygon(eval(polygon_properties))
@@ -88,9 +94,9 @@ class PolygonsInBbox(APIView):
                 data = []
                 for i in rows:
                     data.append({"type": "Feature",
-                                 "properties": {'year': i[1], 'contour_id': i[0], 'ink': i[2], 'crop_yield': i[-1], 'culture_name': i[3]},
+                                 "properties": {'year': i[1], 'contour_id': i[0], 'ink': i[2], 'crop_yield': i[-1],
+                                                'culture_name': i[3]},
                                  "geometry": eval(i[4])})
                 return Response({"type": "FeatureCollection", "features": data})
         else:
             return Response(data={"message": "parameter 'bbox or polygon_properties' is required"}, status=400)
-
