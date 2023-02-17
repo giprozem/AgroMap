@@ -2,11 +2,11 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from indexes.admin.forms import IndexMeaningForm
-from indexes.models import ActuaVegIndex, IndexMeaning
+from indexes.models import ActualVegIndex, IndexMeaning
 from simple_history.admin import SimpleHistoryAdmin
 
 
-@admin.register(ActuaVegIndex)
+@admin.register(ActualVegIndex)
 class IndexFactAdmin(SimpleHistoryAdmin):
     list_display = ('id', 'average_value', 'get_description', 'index', 'contour', 'date', 'get_html_photo', 'get_contour_id', )
     readonly_fields = ('id', 'average_value', 'get_html_photo', 'get_description', 'meaning_of_average_value', 'index_image')

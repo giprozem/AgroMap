@@ -18,7 +18,7 @@ from indexes.index_funcs.common_funcs import cutting_tiff
 from indexes.models.satelliteimage import SatelliteImages
 
 
-class ActuaVegIndex(models.Model):
+class ActualVegIndex(models.Model):
     index_image = models.FileField(upload_to='index_image', verbose_name='Картинка индекса', blank=True)
     average_value = models.DecimalField(
         max_digits=5,
@@ -33,7 +33,7 @@ class ActuaVegIndex(models.Model):
         null=True
     )
     index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name='Индекс')
-    contour = models.ForeignKey('gip.ContourYear', on_delete=models.CASCADE, verbose_name='Контуры Поля')
+    contour = models.ForeignKey('gip.ContourYear', on_delete=models.CASCADE, verbose_name='Контуры Поля', related_name='actual_veg_index')
     date = models.DateField(verbose_name='Дата анализа', help_text='Введите дату космо снимка из которого будет высчитан индекс')
     history = HistoricalRecords(verbose_name="История")
 
@@ -112,7 +112,7 @@ class ActuaVegIndex(models.Model):
         with path.open(mode='rb') as f:
             image = File(f, name=path.name)
             self.index_image = image
-            super(ActuaVegIndex, self).save(*args, **kwargs)
+            super(ActualVegIndex, self).save(*args, **kwargs)
 
         self.remove_file(output_path_b03)
         self.remove_file(output_path_b04)
