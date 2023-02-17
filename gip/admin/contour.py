@@ -5,11 +5,11 @@ from leaflet.admin import LeafletGeoAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
 from gip.models import Contour, LandType, ContourYear
-from indexes.models import ActuaVegIndex
+from indexes.models import ActualVegIndex
 
 
 class NDVITabularInline(TabularInline):
-    model = ActuaVegIndex
+    model = ActualVegIndex
     readonly_fields = ('id', 'get_html_photo', 'index_image', 'average_value', 'get_description', )
     fields = ('average_value', 'get_description', 'get_html_photo', 'index', 'contour', 'date', )
     show_change_link = ('index', )
@@ -73,7 +73,7 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 class ContourYearAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     readonly_fields = ('id', 'area_ha', 'code_soato', )
     list_display = ('id', 'code_soato', 'type', 'year', )
-    list_filter = ('type', )
+    list_filter = ('type', 'productivity', )
     ordering = ('id', )
     inlines = [NDVITabularInline]
 

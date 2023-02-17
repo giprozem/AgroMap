@@ -1,7 +1,7 @@
 from django.contrib.gis.db import models
 from simple_history.models import HistoricalRecords
 
-from indexes.models import ActuaVegIndex
+from indexes.models import ActualVegIndex
 
 
 class ProductivityClass(models.Model):
@@ -44,7 +44,7 @@ class ContourAverageIndex(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            source = ActuaVegIndex.objects.filter(contour=self.contour)
+            source = ActualVegIndex.objects.filter(contour=self.contour)
         except ValueError:
             return 'Data base have no Vegetation index'
         self.index_count = len(source)
@@ -57,7 +57,5 @@ class ContourAverageIndex(models.Model):
         sorted_date = sorted(date)
         self.start_day = sorted_date[0]
         self.end_day = sorted_date[-1]
-        # if self.contour.
-        # self.productivity_class
 
         super(ContourAverageIndex, self).save(*args, **kwargs)

@@ -84,6 +84,7 @@ urlpatterns = [
     path('all-indexes/', AllIndexesCreating.as_view()),
     path('coordinates-polygon/', CoordinatesPolygonAPIView.as_view()),
     path('hub/', include("hub.urls")),
+    path('', include('indexes.urls'))
 ]
 
 if settings.DEBUG:
