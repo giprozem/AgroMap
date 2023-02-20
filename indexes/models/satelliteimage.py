@@ -91,7 +91,7 @@ class SatelliteImageLayer(models.Model):
 
 
 class SciHubAreaInterest(models.Model):
-    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Область интересов")
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Область интереса")
 
 
 class SciHubImageDate(models.Model):
@@ -123,4 +123,5 @@ class SciHubImageDate(models.Model):
                            null=True)
     B12 = models.FileField(upload_to='satellite_images', verbose_name='Слой B12', help_text='SWIR - 2', blank=True,
                            null=True)
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Координат Снимка", blank=True, null=True)
     history = HistoricalRecords(verbose_name="История")
