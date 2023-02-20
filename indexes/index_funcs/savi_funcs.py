@@ -34,12 +34,12 @@ def get_savi(red_file, nir_file, L=0.5):
     return savi
 
 
-def savi_calculator(B07, B8A, saving_file_name, L=0.5):
+def savi_calculator(B04, B08, saving_file_name, L=0):
 
-    with rasterio.open(f'{B07}') as src:
+    with rasterio.open(f'{B04}') as src:
         band_red = src.read(1)
 
-    with rasterio.open(f'{B8A}') as f:
+    with rasterio.open(f'{B08}') as f:
         band_nir = f.read(1)
 
     # Allow division by zero
