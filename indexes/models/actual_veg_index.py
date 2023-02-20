@@ -14,6 +14,8 @@ from indexes.index_funcs.ndmi_funcs import average_ndmi, ndmi_calculator
 from indexes.index_funcs.ndvi_funcs import average_ndvi, ndvi_calculator
 from indexes.index_funcs.ndwi_funcs import average_ndwi, ndwi_calculator
 from indexes.index_funcs.ndre_funcs import average_ndre, ndre_calculator
+from indexes.index_funcs.savi_funcs import average_savi, savi_calculator
+from indexes.index_funcs.vari_funcs import average_vari, vari_calculator
 from indexes.index_funcs.common_funcs import cutting_tiff
 from indexes.models.satelliteimage import SatelliteImages
 
@@ -59,6 +61,7 @@ class ActualVegIndex(models.Model):
 
         polygon = GEOSGeometry(self.contour.polygon).geojson
 
+        output_path_b02 = f"./media/B02_{file_name}.tiff"
         output_path_b03 = f"./media/B03_{file_name}.tiff"
         output_path_b04 = f"./media/B04_{file_name}.tiff"
         output_path_b07 = f"./media/B07_{file_name}.tiff"
@@ -66,6 +69,7 @@ class ActualVegIndex(models.Model):
         output_path_b08 = f"./media/B08_{file_name}.tiff"
         output_path_b11 = f"./media/B11_{file_name}.tiff"
 
+        input_path_b02 = f'./media/{source.B02}'
         input_path_b03 = f'./media/{source.B03}'
         input_path_b04 = f'./media/{source.B04}'
         input_path_b07 = f'./media/{source.B07}'
@@ -73,6 +77,7 @@ class ActualVegIndex(models.Model):
         input_path_b08 = f'./media/{source.B08}'
         input_path_b11 = f'./media/{source.B11}'
 
+        cutting_tiff(outputpath=output_path_b02, inputpath=input_path_b02, polygon=polygon)
         cutting_tiff(outputpath=output_path_b03, inputpath=input_path_b03, polygon=polygon)
         cutting_tiff(outputpath=output_path_b04, inputpath=input_path_b04, polygon=polygon)
         cutting_tiff(outputpath=output_path_b07, inputpath=input_path_b07, polygon=polygon)
@@ -98,9 +103,22 @@ class ActualVegIndex(models.Model):
             self.average_value = average_ndre(red_file=output_path_b07, nir_file=output_path_b8a)
 
             ndre_calculator(B07=output_path_b07, B8A=output_path_b8a, saving_file_name=file_name)
+        elif self.index.name == 'SAVI':
+            self.average_value = average_savi(red_file=output_path_b04, nir_file=output_path_b08)
+
+            savi_calculator(B04=output_path_b04, B08=output_path_b08, saving_file_name=file_name)
+
+        elif self.index.name == 'VARI':
+            self.average_value = average_vari(
+                red_file=output_path_b04,
+                green_file=output_path_b03,
+                blue_file=output_path_b02
+            )
+
+            vari_calculator(B02=output_path_b02, B03=output_path_b03, B04=output_path_b04, saving_file_name=file_name)
 
         else:
-            raise ObjectDoesNotExist(_('Data base have no satellite images that have to process'))
+            raise ObjectDoesNotExist(_('Creating vegetation index error, Check the indexes names'))
         self.meaning_of_average_value = IndexMeaning.objects.filter(
             index=self.index
         ).filter(
@@ -114,6 +132,7 @@ class ActualVegIndex(models.Model):
             self.index_image = image
             super(ActualVegIndex, self).save(*args, **kwargs)
 
+        self.remove_file(output_path_b02)
         self.remove_file(output_path_b03)
         self.remove_file(output_path_b04)
         self.remove_file(output_path_b07)
