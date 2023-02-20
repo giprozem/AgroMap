@@ -11,10 +11,15 @@ class SatelliteImagesAdmin(SimpleHistoryAdmin):
     readonly_fields = ('id', 'bbox', )
 
 
-class SciHubImageDateAdmin(TabularInline):
+class SciHubImageDateInline(TabularInline):
     model = SciHubImageDate
 
 
 @admin.register(SciHubAreaInterest)
 class SciHubAreaInterestAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
-    inlines = [SciHubImageDateAdmin]
+    inlines = [SciHubImageDateInline]
+
+
+@admin.register(SciHubImageDate)
+class SciHubImageDateAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
+    pass
