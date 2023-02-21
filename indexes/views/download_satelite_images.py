@@ -3,6 +3,11 @@ import re
 import shutil
 import time
 from datetime import datetime
+
+import rasterio
+from pyproj import Proj, transform
+from django.contrib.gis.geos import GEOSGeometry
+from pyproj import transform
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from sentinelsat import SentinelAPI
@@ -15,6 +20,8 @@ from indexes.models import SciHubImageDate, SciHubAreaInterest
 class DownloadAPIView(APIView):
     def get(self, request):
         output = 'output/'
+        inProj = Proj(init='epsg:28473')
+        outProj = Proj(init='epsg:4326')
         # Скачиваем снимки через Sci-hub
         api = SentinelAPI('kaiumamanbaev', 'Copernicus123!', 'https://scihub.copernicus.eu/dhus')
         footprint = SciHubAreaInterest.objects.get(pk=1).polygon.wkt
@@ -65,6 +72,29 @@ class DownloadAPIView(APIView):
                                 if re.search(".*B01.*.tif", filename):
                                     sci_hub_image_date.B01.save('B01.tif', open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B02.*.tif", filename):
+                                    # Извлечение координат из Geotiff
+                                    with rasterio.open(f"{img_data_path}/{filename}") as src:
+                                        geometry = [[
+                                            [src.bounds.left, src.bounds.bottom],
+                                            [src.bounds.left, src.bounds.top],
+                                            [src.bounds.right, src.bounds.top],
+                                            [src.bounds.right, src.bounds.bottom],
+                                            [src.bounds.left, src.bounds.bottom]
+                                        ]]
+
+                                        coords = []
+                                        # Перевод с метровых координат в формате epsg:4326
+                                        for i in range(len(geometry[0])):
+                                            x1, y1 = geometry[0][i][0], geometry[0][i][1]
+                                            x2, y2 = transform(inProj, outProj, x1, y1)
+                                            coords.append([x2, y2])
+
+                                        coords.append(coords[0])
+                                        geojson = {
+                                                "type": "Polygon",
+                                                "coordinates": [coords]
+                                        }
+                                        sci_hub_image_date.polygon = GEOSGeometry(f"{geojson}")
                                     sci_hub_image_date.B02.save('B02.tif', open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B03.*.tif", filename):
                                     sci_hub_image_date.B03.save('B03.tif', open(f"{img_data_path}/{filename}", 'rb'))
