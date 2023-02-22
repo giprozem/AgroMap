@@ -16,7 +16,7 @@ services:
       - "8111:8111"
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8111"
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py update_translation_fields && python manage.py runserver 0.0.0.0:8111"
     volumes:
       - .:/usr/src/app
       - ./media:/usr/src/app/media
