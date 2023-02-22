@@ -10,7 +10,7 @@ class Conton(BaseModel):
     district = models.ForeignKey(District, on_delete=models.CASCADE, related_name='contons', verbose_name='District')
     name = models.CharField(max_length=55, verbose_name="Aiyl aimag name")
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Polygon", blank=True, null=True)
-    history = HistoricalRecords(verbose_name="History")
+    history = HistoricalRecords(excluded_fields=['name_ru', 'name_en', 'name_ky'], verbose_name="History")
 
     def __str__(self):
         return self.name

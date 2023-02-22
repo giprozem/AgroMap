@@ -6,4 +6,4 @@ from gip.models import Conton
 class ContonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conton
-        fields = '__all__'
+        exclude = ('name', )
