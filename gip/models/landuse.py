@@ -8,19 +8,19 @@ from simple_history.models import HistoricalRecords
 
 
 class LandUse(BaseModel):
-    contour = models.ForeignKey(Contour, on_delete=models.CASCADE, related_name='land_uses', verbose_name="Поле")
-    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='land_uses', verbose_name="Фермер")
-    culture = models.ForeignKey(Culture, on_delete=models.CASCADE, related_name='land_uses', verbose_name="Культура")
-    year = models.IntegerField(verbose_name="Год")
-    season = models.IntegerField(blank=True, null=True, verbose_name="Сезон")
+    contour = models.ForeignKey(Contour, on_delete=models.CASCADE, related_name='land_uses', verbose_name="Field")
+    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='land_uses', verbose_name="Farmer")
+    culture = models.ForeignKey(Culture, on_delete=models.CASCADE, related_name='land_uses', verbose_name="Culture")
+    year = models.IntegerField(verbose_name="Year")
+    season = models.IntegerField(blank=True, null=True, verbose_name="Season")
     history = HistoricalRecords()
 
     def __str__(self):
         return f'{self.contour}'
 
     class Meta:
-        verbose_name = 'Землепользование'
-        verbose_name_plural = "Земепользования"
+        verbose_name = 'Land use'
+        verbose_name_plural = "Land use"
 
 
 class LandUsePhotos(BaseModel):
@@ -29,5 +29,5 @@ class LandUsePhotos(BaseModel):
     history = HistoricalRecords()
 
     class Meta:
-        verbose_name = 'Фото землепользования'
-        verbose_name_plural = "Фото земепользования"
+        verbose_name = 'Land use photo'
+        verbose_name_plural = "Land use photos"

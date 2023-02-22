@@ -4,7 +4,7 @@ from .models.contour import LandType, ContourYear
 from .models.culture import Culture
 from .models.district import District
 from .models.fertility import Fertility
-
+from .models.orthophoto import OrthoPhoto
 @register(Conton)
 class ContonTranslationOptions(TranslationOptions):
     fields = ('name', )
@@ -33,3 +33,8 @@ class DistrictTranslationOptions(TranslationOptions):
 @register(Fertility)
 class FertilityTranslationOptions(TranslationOptions):
     fields = ('name', )
+
+
+@register(OrthoPhoto)
+class OrthoPhotoTranslationOptions(TranslationOptions):
+    fields = ('layer_name', )
