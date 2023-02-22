@@ -6,6 +6,6 @@ from gip.models import Region
 class RegionSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = Region
-        fields = '__all__'
+        exclude = ('name',)
         geo_field = 'polygon'
 

@@ -5,6 +5,9 @@ from .models.culture import Culture
 from .models.district import District
 from .models.fertility import Fertility
 from .models.orthophoto import OrthoPhoto
+from .models.region import Region
+
+
 @register(Conton)
 class ContonTranslationOptions(TranslationOptions):
     fields = ('name', )
@@ -38,3 +41,8 @@ class FertilityTranslationOptions(TranslationOptions):
 @register(OrthoPhoto)
 class OrthoPhotoTranslationOptions(TranslationOptions):
     fields = ('layer_name', )
+
+
+@register(Region)
+class RegionTranslationOptions(TranslationOptions):
+    fields = ('name', )
