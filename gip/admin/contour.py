@@ -80,5 +80,5 @@ class ContourYearAdmin(LeafletGeoAdmin, SimpleHistoryAdmin, TranslationAdmin):
 
 
 @admin.register(LandType)
-class LandTypeAdmin(admin.ModelAdmin, TranslationAdmin):
+class LandTypeAdmin(TranslationAdmin):
     list_display = ('id', 'name' )
