@@ -6,6 +6,6 @@ from gip.models import District
 class DistrictSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = District
-        fields = '__all__'
+        exclude = ('name',)
         geo_field = 'polygon'
 
