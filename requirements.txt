@@ -23,6 +23,7 @@ django-cors-headers==3.13.0
 django-filter==22.1
 django-jazzmin==2.6.0
 django-leaflet==0.28.3
+django-modeltranslation==0.18.9
 django-schema-graph==2.2.1
 django-simple-history==3.2.0
 djangorestframework==3.12.4

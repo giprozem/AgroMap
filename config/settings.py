@@ -16,6 +16,7 @@ CSRF_TRUSTED_ORIGINS = ['https://adminagro.24mycrm.com', 'https://10.118.50.27']
 
 INSTALLED_APPS = [
     'jazzmin',
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -111,6 +112,15 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+gettext = lambda s: s
+LANGUAGES = (
+    ('ru', gettext('Russian')),
+    ('ky', gettext('Kyrgyzstan')),
+    ('en', gettext('English')),
+)
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 
 AUTH_USER_MODEL = 'account.MyUser'
 

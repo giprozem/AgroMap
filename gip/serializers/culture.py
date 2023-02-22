@@ -6,4 +6,4 @@ from gip.models import Culture
 class CultureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Culture
-        fields = '__all__'
+        exclude = ('name',)

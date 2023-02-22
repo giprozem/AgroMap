@@ -1,5 +1,6 @@
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
+from modeltranslation.admin import TranslationAdmin
 
 from culture_model.models import Decade, VegetationIndex, IndexPlan, Phase
 
@@ -10,7 +11,7 @@ class DecadeAdmin(SimpleHistoryAdmin):
 
 
 @admin.register(VegetationIndex)
-class IndexAdmin(SimpleHistoryAdmin):
+class IndexAdmin(SimpleHistoryAdmin, TranslationAdmin):
     list_display = ('id', 'name')
 
 
@@ -21,6 +22,6 @@ class IndexPlanAdmin(SimpleHistoryAdmin):
 
 
 @admin.register(Phase)
-class PhaseAdmin(SimpleHistoryAdmin):
+class PhaseAdmin(SimpleHistoryAdmin, TranslationAdmin):
     pass
 

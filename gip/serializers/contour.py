@@ -44,20 +44,20 @@ class ContourSerializer(serializers.ModelSerializer):
 class ContourYearSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = ContourYear
-        fields = '__all__'
+        exclude = ('productivity', )
         geo_field = 'polygon'
 
 
 class LandTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = LandType
-        fields = '__all__'
+        exclude = ('name', )
 
 
 class AuthDetailContourYearSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = ContourYear
-        fields = '__all__'
+        exclude = ('productivity', )
         geo_field = 'polygon'
 
 

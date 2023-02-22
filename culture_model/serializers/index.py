@@ -6,4 +6,4 @@ from culture_model.models.vegetation_index import VegetationIndex
 class IndexSerializer(ModelSerializer):
     class Meta:
         model = VegetationIndex
-        fields = '__all__'
+        exclude = ('name', 'description')

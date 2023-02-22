@@ -10,50 +10,50 @@ from simple_history.models import HistoricalRecords
 
 
 class LandType(models.Model):
-    name = models.CharField(max_length=125, verbose_name='Название')
+    name = models.CharField(max_length=125, verbose_name='Name')
 
     class Meta:
-        verbose_name = 'Тип земли '
-        verbose_name_plural = "Типы земель"
+        verbose_name = 'Land type'
+        verbose_name_plural = "Land types"
 
     def __str__(self):
         return self.name
 
 
 class Contour(BaseModel):
-    code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name='Код СОАТО')
-    conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='contours', verbose_name="Айылный аймак")
-    ink = models.CharField(unique=True, max_length=100, verbose_name='ИНК', help_text='Идентификационный Номер Контура',
+    code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name='SOATO code')
+    conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='contours', verbose_name="Aiyl aimag")
+    ink = models.CharField(unique=True, max_length=100, verbose_name='ИНК', help_text='Loop identification number',
                            null=True, blank=True)
-    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='contours', verbose_name="Фермер",
+    farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='contours', verbose_name="Farmer",
                                blank=True, null=True)
-    history = HistoricalRecords(verbose_name="История")
+    history = HistoricalRecords(verbose_name="History")
     is_rounded = models.BooleanField(default=False)
 
     def __str__(self):
         return self.ink if self.ink else '-'
 
     class Meta:
-        verbose_name = 'Контуры Поля'
-        verbose_name_plural = "Контуры полей"
+        verbose_name = "Field's contours"
+        verbose_name_plural = "Fields' contours"
 
 
 class ContourYear(BaseModel):
-    code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name='Код СОАТО')
-    contour = models.ManyToManyField(Contour, verbose_name='Контуры полей', related_name='contour_year')
+    code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name='SOATO code')
+    contour = models.ManyToManyField(Contour, verbose_name="Fields' contours", related_name='contour_year')
     type = models.ForeignKey(LandType, on_delete=models.SET_NULL, null=True, related_name='contour_year')
-    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Контур")
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Polygon")
     year = models.CharField(max_length=20)
     productivity = models.CharField(max_length=20, blank=True, null=True)
-    area_ha = models.FloatField(blank=True, null=True, verbose_name="Площадь га")
+    area_ha = models.FloatField(blank=True, null=True, verbose_name="Area per hectare")
 
 
     def __str__(self):
         return self.year or self.code_soato
 
     class Meta:
-        verbose_name = 'Контуры поля по годам'
-        verbose_name_plural = "Контуры полей по годам"
+        verbose_name = "Field's contours by years"
+        verbose_name_plural = "Fields' contours by years"
 
 
 

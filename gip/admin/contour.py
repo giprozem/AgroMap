@@ -3,6 +3,7 @@ from django.contrib.gis import admin
 from django.utils.safestring import mark_safe
 from leaflet.admin import LeafletGeoAdmin
 from simple_history.admin import SimpleHistoryAdmin
+from modeltranslation.admin import TranslationAdmin
 
 from gip.models import Contour, LandType, ContourYear
 from indexes.models import ActualVegIndex
@@ -18,7 +19,7 @@ class NDVITabularInline(TabularInline):
     def get_description(self, obj):
         return obj.meaning_of_average_value.description
 
-    get_description.short_description = 'Значение показателя индекса'
+    get_description.short_description = 'Index value'
 
     def get_html_photo(self, obj):
         if obj.index_image:
@@ -41,8 +42,8 @@ class NDVITabularInline(TabularInline):
           <rect x="840" width="72" height="72" fill="rgb(241, 237, 204)"/>
           </svg>
           <div style="display: flex; justify-content: space-between">
-            <p style="margin: 0">высокий ndvi</p>
-            <p style="margin: 0">низкий ndvi</p>
+            <p style="margin: 0">high ndvi</p>
+            <p style="margin: 0">low ndvi</p>
           </div>
         </div>
         ''')
@@ -53,8 +54,8 @@ class NDVITabularInline(TabularInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    get_html_photo.short_description = 'Визуализация NDVI'
-    get_static_png.short_description = 'Шкала вегетационного индекса'
+    get_html_photo.short_description = 'Visualization of NDVI'
+    get_static_png.short_description = 'Vegetation index scale'
 
 
 @admin.register(Contour)
@@ -70,7 +71,7 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 
 
 @admin.register(ContourYear)
-class ContourYearAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
+class ContourYearAdmin(LeafletGeoAdmin, SimpleHistoryAdmin, TranslationAdmin):
     readonly_fields = ('id', 'area_ha', 'code_soato', )
     list_display = ('id', 'code_soato', 'type', 'year', )
     list_filter = ('type', 'productivity', )
@@ -79,5 +80,5 @@ class ContourYearAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 
 
 @admin.register(LandType)
-class LandTypeAdmin(admin.ModelAdmin):
+class LandTypeAdmin(TranslationAdmin):
     list_display = ('id', 'name' )
