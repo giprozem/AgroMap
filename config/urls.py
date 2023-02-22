@@ -26,7 +26,7 @@ from gip.views.statistics import StatisticsAPIView, ContourCultureAPIView, Graph
 from hub.views.authetificated import LoginHubView
 from hub.views.land_info import LandInfoSearch
 from hub.views.zem_balance_api import ZemBalanceViewSet
-from indexes.views import Creating, CreatingAverage, AllIndexesCreating
+from indexes.views import CreatingAverage, AllIndexesCreating
 from indexes.views.actual_veg_index import IndexFactListCreateAPIView, SatelliteImagesDate, ActualIndexesOfContourYear
 from indexes.views.download_satelite_images import DownloadAPIView
 
@@ -74,7 +74,6 @@ urlpatterns = [
     path('satellite_dates/<int:index>/<int:contour>/', SatelliteImagesDate.as_view()),
     path('geojson_to_db/', GeojsonSavingToDBAPIView.as_view()),
     path('filter_contour/', FilterContourAPIView.as_view()),
-    path('creating/', Creating.as_view()),
     path('average/', CreatingAverage.as_view()),
     path('pasture-class-group/', PastureClassAPIView.as_view()),
     path('contour-search/', ContourSearchAPIView.as_view()),
