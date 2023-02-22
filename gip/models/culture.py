@@ -5,9 +5,9 @@ from simple_history.models import HistoricalRecords
 
 
 class Culture(BaseModel):
-    name = models.CharField(max_length=55, verbose_name="Культура")
-    coefficient_crop = models.FloatField(verbose_name="Коеффициент урожайности")
-    history = HistoricalRecords()
+    name = models.CharField(max_length=55, verbose_name="Culture")
+    coefficient_crop = models.FloatField(verbose_name="Yield coefficient")
+    history = HistoricalRecords(excluded_fields=['name_ru', 'name_en', 'name_ky'])
     fill_color = models.CharField(max_length=55, default='#3388FF')
     stroke_color = models.CharField(max_length=55, default='#3388FF')
 
@@ -15,5 +15,5 @@ class Culture(BaseModel):
         return self.name
 
     class Meta:
-        verbose_name = 'Культура'
-        verbose_name_plural = "Культуры"
+        verbose_name = 'Culture'
+        verbose_name_plural = "Cultures"

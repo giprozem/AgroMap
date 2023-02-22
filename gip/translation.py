@@ -1,6 +1,7 @@
 from modeltranslation.translator import register, TranslationOptions
 from .models.conton import Conton
 from .models.contour import LandType, ContourYear
+from .models.culture import Culture
 
 @register(Conton)
 class ContonTranslationOptions(TranslationOptions):
@@ -15,3 +16,8 @@ class LandTypeTranslationOptions(TranslationOptions):
 @register(ContourYear)
 class ContourYearTranslationOptions(TranslationOptions):
     fields = ('productivity', )
+
+
+@register(Culture)
+class CultureTranslationOptions(TranslationOptions):
+    fields = ('name', )
