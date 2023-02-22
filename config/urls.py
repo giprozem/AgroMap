@@ -29,6 +29,7 @@ from hub.views.zem_balance_api import ZemBalanceViewSet
 from indexes.views import CreatingAverage, AllIndexesCreating
 from indexes.views.actual_veg_index import IndexFactListCreateAPIView, SatelliteImagesDate, ActualIndexesOfContourYear
 from indexes.views.download_satelite_images import DownloadAPIView
+from indexes.views.generated_indexes import TestAPIView
 
 router = DefaultRouter()
 router.register('land-type', LandTypeViewSet)
@@ -85,7 +86,8 @@ urlpatterns = [
     path('coordinates-polygon/', CoordinatesPolygonAPIView.as_view()),
     path('hub/', include("hub.urls")),
     path('', include('indexes.urls')),
-    path('download/', DownloadAPIView.as_view())
+    path('download/', DownloadAPIView.as_view()),
+    path('test/', TestAPIView.as_view())
 ]
 
 if settings.DEBUG:
