@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
+from simple_history.admin import SimpleHistoryAdmin
 
 from indexes.admin.forms import IndexMeaningForm
 from indexes.models import ActualVegIndex, IndexMeaning
-from simple_history.admin import SimpleHistoryAdmin
+from indexes.models.actual_veg_index_logs import IndexCreatingReport
 
 
 @admin.register(ActualVegIndex)
@@ -34,3 +35,11 @@ class IndexMeaningAdmin(admin.ModelAdmin):
     list_filter = ('index', )
     list_display = ('id', 'index', 'min_index_value', 'max_index_value', )
     list_display_links = ('id', 'index')
+
+
+@admin.register(IndexCreatingReport)
+class IndexCreatingReportAdmin(admin.ModelAdmin):
+    readonly_fields = ('id', 'contour', 'veg_index', 'satellite_image', 'is_processed', 'process_error', )
+    list_display = ('id', 'contour', 'veg_index', 'is_processed', )
+    list_display_links = ('id', 'contour', )
+    list_filter = ('contour', 'veg_index', 'satellite_image', 'is_processed', 'process_error',)

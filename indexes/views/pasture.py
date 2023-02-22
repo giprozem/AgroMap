@@ -6,24 +6,7 @@ from rest_framework.views import APIView
 
 from gip.models import ContourYear
 from indexes.models import ContourAverageIndex, ProductivityClass
-from indexes.utils import creating_ndvi, creating_indexes
-
-
-class Creating(APIView):
-    def post(self, request, *args, **kwargs):
-        """
-        required query_params:
-        - date
-        - start
-        - end
-        """
-        date = self.request.query_params['date']
-        start = self.request.query_params['start']
-        end = self.request.query_params['end']
-        indexid = self.request.query_params['indexid']
-        thread_object = Thread(target=creating_ndvi, args=(date, int(start), int(end), int(indexid)))
-        thread_object.start()
-        return Response('started')
+from indexes.utils import creating_indexes
 
 
 class CreatingAverage(APIView):
@@ -57,9 +40,15 @@ class CreatingAverage(APIView):
 class AllIndexesCreating(APIView):
 
     def post(self, request, *args, **kwargs):
+        """
+        required query_params:
+        - date
+        - satellite_image_id
+        """
         date = self.request.query_params['date']
+        satellite_image_id = self.request.query_params['satellite_image_id']
 
-        thread_object = Thread(target=creating_indexes, args=(date, ))
+        thread_object = Thread(target=creating_indexes, args=(date, satellite_image_id))
         thread_object.start()
 
         return Response('AllIndexesCreating')
