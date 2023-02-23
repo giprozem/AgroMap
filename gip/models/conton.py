@@ -8,13 +8,13 @@ from simple_history.models import HistoricalRecords
 class Conton(BaseModel):
     code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name='SOATO code')
     district = models.ForeignKey(District, on_delete=models.CASCADE, related_name='contons', verbose_name='District')
-    name = models.CharField(max_length=55, verbose_name="Aiyl aimag name")
+    name = models.CharField(max_length=55, verbose_name="Canton")
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Polygon", blank=True, null=True)
-    history = HistoricalRecords(excluded_fields=['name_ru', 'name_en', 'name_ky'], verbose_name="History")
+    # history = HistoricalRecords(verbose_name="History")
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = 'Aiyl aimag'
-        verbose_name_plural = "Aiyl aimags"
+        verbose_name = 'Canton'
+        verbose_name_plural = "Canton"

@@ -6,14 +6,14 @@ from gip.models.conton import Conton
 
 
 class Village(BaseModel):
-    conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='villages', verbose_name="Район")
-    name = models.CharField(max_length=55, verbose_name="Село")
-    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Контур")
-    history = HistoricalRecords()
+    conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='villages', verbose_name="Canton")
+    name = models.CharField(max_length=55, verbose_name="Village")
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Polygon")
+    # history = HistoricalRecords()
 
     def __str__(self):
         return self.conton.name
 
     class Meta:
-        verbose_name = 'Село'
-        verbose_name_plural = "Сёла"
+        verbose_name = 'Village'
+        verbose_name_plural = "Villages"
