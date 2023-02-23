@@ -10,7 +10,7 @@ class District(BaseModel):
     region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name='districts', verbose_name="Region")
     name = models.CharField(max_length=55, verbose_name="District")
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Polygon")
-    history = HistoricalRecords(excluded_fields=['name_ru', 'name_en', 'name_ky'])
+    # history = HistoricalRecords(excluded_fields=['name_ru', 'name_en', 'name_ky'])
 
     def __str__(self):
         return self.name

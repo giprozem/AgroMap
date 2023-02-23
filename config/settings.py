@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -112,6 +113,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
 
 gettext = lambda s: s
 LANGUAGES = (
@@ -176,6 +179,7 @@ JAZZMIN_SETTINGS = {
         {"name": "Эталонная база данных Гипрозем", "url": "admin:index", "permissions": ["auth.view_user"]},
         {"models": "auth.User"},
     ],
+    "language_chooser": True,
 }
 
 JAZZMIN_UI_TWEAKS = {

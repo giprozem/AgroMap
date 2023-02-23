@@ -9,9 +9,9 @@ class Region(BaseModel):
     name = models.CharField(max_length=55, verbose_name="Region name")
     population = models.IntegerField(verbose_name="Population")
     area = models.IntegerField(verbose_name="Area")
-    density = models.FloatField(verbose_name="density")
+    density = models.FloatField(verbose_name="Density")
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Polygon", blank=True, null=True)
-    history = HistoricalRecords(excluded_fields=['name_ru', 'name_en', 'name_ky'])
+    # history = HistoricalRecords()
 
     def __str__(self):
         return self.name

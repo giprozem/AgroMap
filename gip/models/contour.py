@@ -22,7 +22,7 @@ class LandType(models.Model):
 
 class Contour(BaseModel):
     code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name='SOATO code')
-    conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='contours', verbose_name="Aiyl aimag")
+    conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='contours', verbose_name="Canton")
     ink = models.CharField(unique=True, max_length=100, verbose_name='ИНК', help_text='Loop identification number',
                            null=True, blank=True)
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='contours', verbose_name="Farmer",
