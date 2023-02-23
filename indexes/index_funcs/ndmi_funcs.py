@@ -1,7 +1,10 @@
+from io import BytesIO
+
 import matplotlib.pyplot as plt
 import numpy
 import numpy as np
 import rasterio
+from django.core.files.base import ContentFile
 
 
 def get_region_of_interest(ndmi, multiplier=1/2):
@@ -57,8 +60,12 @@ def ndmi_calculator(B08, B11, saving_file_name):
 
     ax.axis('off')
 
-    plt.savefig(f'./media/{saving_file_name}.png', format='png', transparent=True, bbox_inches='tight')
+    f = BytesIO()
+
+    plt.savefig(f, format='png', transparent=True, bbox_inches='tight')
+    content_file = ContentFile(f.getvalue())
     plt.close()
+    return content_file
 
 
 def average_ndmi(swir_file, nir_file):

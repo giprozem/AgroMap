@@ -40,6 +40,6 @@ class IndexMeaningAdmin(admin.ModelAdmin):
 @admin.register(IndexCreatingReport)
 class IndexCreatingReportAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'contour', 'veg_index', 'satellite_image', 'is_processed', 'process_error', )
-    list_display = ('id', 'contour', 'veg_index', 'is_processed', )
+    list_display = ('id', 'contour', 'veg_index', 'is_processed', 'process_error', )
     list_display_links = ('id', 'contour', )
     list_filter = ('contour', 'veg_index', 'satellite_image', 'is_processed', 'process_error',)
