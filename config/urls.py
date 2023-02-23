@@ -30,6 +30,8 @@ from indexes.views import Creating, CreatingAverage, AllIndexesCreating
 from indexes.views.actual_veg_index import IndexFactListCreateAPIView, SatelliteImagesDate, ActualIndexesOfContourYear
 from indexes.views.download_satelite_images import DownloadAPIView
 
+from django.conf.urls.i18n import i18n_patterns
+
 router = DefaultRouter()
 router.register('land-type', LandTypeViewSet)
 router.register('contour', ContourViewSet, basename='contour')
@@ -55,7 +57,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("i18n/", include("django.conf.urls.i18n")),
     path('', include(router.urls)),
     path('docs/', schema_view.with_ui()),
     path("schema/", Schema.as_view()),
@@ -88,6 +90,10 @@ urlpatterns = [
     path('', include('indexes.urls')),
     path('download/', DownloadAPIView.as_view())
 ]
+
+urlpatterns += i18n_patterns(
+    path('admin/', admin.site.urls),
+)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
