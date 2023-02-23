@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy
 import numpy as np
 import rasterio
+from django.core.files.base import ContentFile
 
 
 def get_region_of_interest(ndwi, multiplier=1/2):
@@ -62,8 +63,10 @@ def ndwi_calculator(B03, B08, saving_file_name):
 
     f = BytesIO()
 
-    plt.savefig(f'./media/{saving_file_name}.png', format='png', transparent=True, bbox_inches='tight')
+    plt.savefig(f, format='png', transparent=True, bbox_inches='tight')
+    content_file = ContentFile(f.getvalue())
     plt.close()
+    return content_file
 
 
 def average_ndwi(green_file, nir_file):
