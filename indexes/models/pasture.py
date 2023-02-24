@@ -7,7 +7,6 @@ from indexes.models import ActualVegIndex
 class ProductivityClass(models.Model):
     name = models.CharField(max_length=255, verbose_name='Наименование')
     description = models.TextField(verbose_name='Описание', blank=True, null=True)
-    history = HistoricalRecords(verbose_name="История")
 
     def __str__(self):
         return self.name

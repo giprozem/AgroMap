@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from simple_history.admin import SimpleHistoryAdmin
+from modeltranslation.admin import TranslationAdmin
 
 from indexes.admin.forms import IndexMeaningForm
 from indexes.models import ActualVegIndex, IndexMeaning
@@ -30,7 +31,7 @@ class IndexFactAdmin(SimpleHistoryAdmin):
 
 
 @admin.register(IndexMeaning)
-class IndexMeaningAdmin(admin.ModelAdmin):
+class IndexMeaningAdmin(TranslationAdmin):
     form = IndexMeaningForm
     list_filter = ('index', )
     list_display = ('id', 'index', 'min_index_value', 'max_index_value', )
