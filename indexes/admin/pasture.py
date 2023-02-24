@@ -1,11 +1,12 @@
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
+from modeltranslation.admin import TranslationAdmin
 
 from indexes.models.pasture import ProductivityClass, ContourAverageIndex
 
 
 @admin.register(ProductivityClass)
-class ProductivityClassAdmin(SimpleHistoryAdmin):
+class ProductivityClassAdmin(SimpleHistoryAdmin, TranslationAdmin):
     pass
 
 
