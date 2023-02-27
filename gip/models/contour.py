@@ -31,7 +31,7 @@ class Contour(BaseModel):
     is_rounded = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.ink if self.ink else '-'
+        return self.code_soato if self.code_soato else self.ink
 
     class Meta:
         verbose_name = "Field's contours"
