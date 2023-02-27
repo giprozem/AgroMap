@@ -74,7 +74,8 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 class ContourYearAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     readonly_fields = ('id', 'area_ha', 'code_soato', )
     list_display = ('id', 'code_soato', 'type', 'year', )
-    list_filter = ('type', 'productivity', )
+    list_filter = ('type', 'productivity', 'contour__conton', )
+    list_display_links = ('id', 'code_soato', )
     ordering = ('id', )
     inlines = [NDVITabularInline]
 
