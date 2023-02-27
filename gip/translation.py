@@ -1,7 +1,7 @@
 from modeltranslation.translator import register, TranslationOptions
 import simple_history
 from .models.conton import Conton
-from .models.contour import LandType, ContourYear
+from .models.contour import LandType
 from .models.culture import Culture
 from .models.district import District
 from .models.fertility import Fertility
@@ -20,11 +20,6 @@ simple_history.register(Conton, inherit=True)
 @register(LandType)
 class LandTypeTranslationOptions(TranslationOptions):
     fields = ('name', )
-
-
-@register(ContourYear)
-class ContourYearTranslationOptions(TranslationOptions):
-    fields = ('productivity', )
 
 
 @register(Culture)
