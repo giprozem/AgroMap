@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-28 16:46+0600\n"
+"POT-Creation-Date: 2023-02-28 20:21+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -155,7 +155,7 @@ msgstr "Development phase"
 msgid "Фазы развития"
 msgstr "Development phases"
 
-#: culture_model/models/vegetation_index.py:7
+#: culture_model/models/vegetation_index.py:7 gip/models/soil.py:12
 #: indexes/models/actual_veg_index.py:40 indexes/models/pasture.py:9
 #: indexes/models/satelliteimage.py:52
 msgid "Описание"
@@ -311,7 +311,7 @@ msgstr "Taxpayer Identification Number or Personal Identification Number"
 msgid "Фермеры"
 msgstr "Farmer"
 
-#: gip/models/fertility.py:7 gip/models/fertility.py:13 gip/models/soil.py:12
+#: gip/models/fertility.py:7 gip/models/fertility.py:13
 msgid "Удобрение"
 msgstr "Fertilizer"
 
@@ -361,7 +361,7 @@ msgstr "Density"
 msgid "Области"
 msgstr "Regions"
 
-#: gip/models/soil.py:10 gip/models/soil.py:18 gip/models/soil.py:24
+#: gip/models/soil.py:11 gip/models/soil.py:18 gip/models/soil.py:24
 msgid "Тип почвы"
 msgstr "Soil type"
 
@@ -614,4 +614,3 @@ msgstr "Satellite images Sentinel -2"
 #: indexes/utils.py:165
 msgid "Ошибка создания индекса растительности, проверьте имена индексов"
 msgstr "Creating vegetation index error, Check the indexes name"
-
