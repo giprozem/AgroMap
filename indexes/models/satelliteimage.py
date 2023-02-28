@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 from simple_history.models import HistoricalRecords
+from django.utils.translation import gettext_lazy as _
 import rasterio
 
 
@@ -29,8 +30,8 @@ class SatelliteImages(models.Model):
         return self.region_name
 
     class Meta:
-        verbose_name = 'Спутниковый снимок Sentinel -2'
-        verbose_name_plural = "Спутниковые снимки Sentinel -2"
+        verbose_name = 'Спутниковый снимок Sentinel -2 beta'
+        verbose_name_plural = "Спутниковые снимки Sentinel -2 beta"
 
     def save(self, *args, **kwargs):
         with rasterio.open(self.B04) as f:
@@ -47,81 +48,90 @@ class SatelliteImages(models.Model):
 
 
 class SatelliteImageSource(models.Model):
-    name = models.CharField(max_length=255, verbose_name='Наименование')
-    description = models.TextField(verbose_name='Описание')
+    name = models.CharField(max_length=255, verbose_name=_('Название'))
+    description = models.TextField(verbose_name=_('Описание'))
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = 'Источник спутниковых снимков'
-        verbose_name_plural = "Источники Спутниковых снимков"
+        verbose_name = _('Источник спутниковых снимков')
+        verbose_name_plural = _("Источники спутниковых снимков")
 
 
 class SatelliteImageBand(models.Model):
-    band_name = models.CharField(max_length=255, verbose_name='Название диапазона спутникового снимка', unique=True)
-    band_description = models.TextField(verbose_name='Описание диапазона спутникового снимка')
+    band_name = models.CharField(max_length=255, verbose_name=_('Название диапазона спутникового снимка'), unique=True)
+    band_description = models.TextField(verbose_name=_('Описание диапазона спутникового снимка'))
 
     class Meta:
-        verbose_name = 'Диапазон спутникового снимка'
-        verbose_name_plural = "Диапазоны спутникового снимка"
+        verbose_name = _('Диапазон спутникового снимка')
+        verbose_name_plural = _("Диапазоны спутникового снимка")
 
     def __str__(self):
         return self.band_name
 
 
 class SatelliteImageLayer(models.Model):
-    image = models.FileField(upload_to='satellite_image', verbose_name='Снимок')
+    image = models.FileField(upload_to='satellite_image', verbose_name=_('Снимок'))
     source = models.ForeignKey(
         'indexes.SatelliteImageSource',
         on_delete=models.CASCADE,
-        verbose_name='Источник спутниковых снимков',
+        verbose_name=_('Источник спутниковых снимков'),
         related_name='image_source'
     )
     band = models.ForeignKey(
         'indexes.SatelliteImageBand',
         on_delete=models.CASCADE,
-        verbose_name='Диапазон спутникового снимка',
+        verbose_name=_('Диапазон спутникового снимка'),
         related_name='image_band'
     )
 
     class Meta:
-        verbose_name = 'Слой спутникового снимка'
-        verbose_name_plural = "Слои спутниковых снимков"
+        verbose_name = _('Слой спутникового снимка')
+        verbose_name_plural = _("Слои спутниковых снимков")
 
 
 class SciHubAreaInterest(models.Model):
-    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Область интереса")
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Область интереса"))
+
+    class Meta:
+        verbose_name = _('Область интереса спутникового снимка')
+        verbose_name_plural = _("Области интереса спутникового снимка")
 
 
 class SciHubImageDate(models.Model):
-    area_interest = models.ForeignKey(SciHubAreaInterest, on_delete=models.CASCADE, related_name='image_date')
-    date = models.DateTimeField(verbose_name='дата снимков')
-    B01 = models.FileField(upload_to='satellite_images', verbose_name='Слой B01', help_text='Coastal aerosol',
+    area_interest = models.ForeignKey(SciHubAreaInterest, on_delete=models.CASCADE, related_name='image_date',
+                                      verbose_name=_("Область интереса"))
+    date = models.DateTimeField(verbose_name=_('Дата снимков'))
+    B01 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B01'), help_text='Coastal aerosol',
                            blank=True, null=True)
-    B02 = models.FileField(upload_to='satellite_images', verbose_name='Слой B02', help_text='Blue', blank=True,
+    B02 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B02'), help_text='Blue', blank=True,
                            null=True)
-    B03 = models.FileField(upload_to='satellite_images', verbose_name='Слой B03', help_text='Green', blank=True,
+    B03 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B03'), help_text='Green', blank=True,
                            null=True)
-    B04 = models.FileField(upload_to='satellite_images', verbose_name='Слой B04', help_text='Red', blank=True,
+    B04 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B04'), help_text='Red', blank=True,
                            null=True)
-    B05 = models.FileField(upload_to='satellite_images', verbose_name='Слой B05', help_text='Vegetation red edge',
+    B05 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B05'), help_text='Vegetation red edge',
                            blank=True, null=True)
-    B06 = models.FileField(upload_to='satellite_images', verbose_name='Слой B06', help_text='Vegetation red edge',
+    B06 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B06'), help_text='Vegetation red edge',
                            blank=True, null=True)
-    B07 = models.FileField(upload_to='satellite_images', verbose_name='Слой B07', help_text='Vegetation red edge',
+    B07 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B07'), help_text='Vegetation red edge',
                            blank=True, null=True)
-    B08 = models.FileField(upload_to='satellite_images', verbose_name='Слой B08', help_text='NIR', blank=True,
+    B08 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B08'), help_text='NIR', blank=True,
                            null=True)
-    B8A = models.FileField(upload_to='satellite_images', verbose_name='Слой B8A', help_text='Narrow NIR', blank=True,
+    B8A = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B8A'), help_text='Narrow NIR', blank=True,
                            null=True)
-    B09 = models.FileField(upload_to='satellite_images', verbose_name='Слой B09', help_text='Water vapour', blank=True,
+    B09 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B09'), help_text='Water vapour', blank=True,
                            null=True)
-    B10 = models.FileField(upload_to='satellite_images', verbose_name='Слой B10', help_text='SWIR – Cirrus', blank=True,
+    B10 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B10'), help_text='SWIR – Cirrus', blank=True,
                            null=True)
-    B11 = models.FileField(upload_to='satellite_images', verbose_name='Слой B11', help_text='SWIR – 1', blank=True,
+    B11 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B11'), help_text='SWIR – 1', blank=True,
                            null=True)
-    B12 = models.FileField(upload_to='satellite_images', verbose_name='Слой B12', help_text='SWIR - 2', blank=True,
+    B12 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B12'), help_text='SWIR - 2', blank=True,
                            null=True)
-    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name="Координат Снимка", blank=True, null=True)
-    history = HistoricalRecords(verbose_name="История")
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Координаты снимка"), blank=True, null=True)
+    history = HistoricalRecords(verbose_name=_("История"))
+
+    class Meta:
+        verbose_name = _('Спутниковый снимок Sentinel -2')
+        verbose_name_plural = _("Спутниковые снимки Sentinel -2")

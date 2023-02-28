@@ -1,44 +1,47 @@
 from django.contrib.gis.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from simple_history.models import HistoricalRecords
-
+from django.utils.translation import gettext_lazy as _
 
 class ActualVegIndex(models.Model):
-    index_image = models.FileField(upload_to='index_image', verbose_name='Картинка индекса', blank=True)
+    index_image = models.FileField(upload_to='index_image', verbose_name=_("Изображение индекса"), blank=True)
     average_value = models.DecimalField(
         max_digits=5,
         decimal_places=3,
-        verbose_name='Средий показатель индекса',
+        verbose_name=_('Средний показатель индекса'),
         blank=True
     )
     meaning_of_average_value = models.ForeignKey(
         'indexes.IndexMeaning',
         on_delete=models.SET_NULL,
-        verbose_name='Значение среднего показателя',
+        verbose_name=_('Средний показатель индекса'),
         null=True
     )
-    index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name='Индекс')
-    contour = models.ForeignKey('gip.ContourYear', on_delete=models.CASCADE, verbose_name='Контуры Поля', related_name='actual_veg_index')
-    date = models.DateField(verbose_name='Дата анализа', help_text='Введите дату космо снимка из которого будет высчитан индекс')
-    history = HistoricalRecords(verbose_name="История")
+    index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name=_('Индекс'))
+    contour = models.ForeignKey('gip.ContourYear', on_delete=models.CASCADE, verbose_name=_('Контуры поля'),
+                                related_name='actual_veg_index')
+    date = models.DateField(verbose_name=_('Дата анализа'), help_text=_('Введите дату космо снимка из которого будет высчитан индекс'))
+    history = HistoricalRecords(verbose_name=_("История"))
 
     def __str__(self):
         return f'{self.index} {self.contour}'
 
     class Meta:
-        verbose_name = 'Фактический Индекс'
-        verbose_name_plural = "Фактические Индексы"
+        verbose_name = _('Фактический Индекс')
+        verbose_name_plural = _("Фактические Индексы")
 
 
 class IndexMeaning(models.Model):
-    index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name='Индекс')
-    min_index_value = models.DecimalField(max_digits=4, decimal_places=3, validators=[MinValueValidator(-1)], verbose_name='Минимальное значение')
-    max_index_value = models.DecimalField(max_digits=4, decimal_places=3, validators=[MaxValueValidator(1)], verbose_name='Максимальное значение')
-    description = models.TextField(verbose_name='Описание')
+    index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name=_('Индекс'))
+    min_index_value = models.DecimalField(max_digits=4, decimal_places=3, validators=[MinValueValidator(-1)],
+                                          verbose_name=_('Минимальное значение'))
+    max_index_value = models.DecimalField(max_digits=4, decimal_places=3, validators=[MaxValueValidator(1)],
+                                          verbose_name=_('Максимальное значение'))
+    description = models.TextField(verbose_name=_('Описание'))
 
     class Meta:
-        verbose_name = 'Значение показателя индекса'
-        verbose_name_plural = "Значение показателей индексов"
+        verbose_name = _('Значение показателя индекса')
+        verbose_name_plural = _("Значение показателей индексов")
 
     def __str__(self):
         return f'{self.index} {self.min_index_value} {self.max_index_value}'

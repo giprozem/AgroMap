@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import exceptions
 from account.serializers.authetificated import LoginSerializer
 from rest_framework.authtoken.models import Token
+from django.utils.translation import gettext_lazy as _
 
 
 class LoginAgromapView(APIView):
@@ -13,7 +14,7 @@ class LoginAgromapView(APIView):
         user = authenticate(username=serializer.validated_data['username'], password=serializer.validated_data['password'])
 
         if not user:
-            raise exceptions.AuthenticationFailed(' “Логин или пароль введен неверно. Попробуйте снова.”')
+            raise exceptions.AuthenticationFailed(_('“Логин или пароль введен неверно. Попробуйте снова.”'))
 
         token, created = Token.objects.get_or_create(user=user)
         return Response({

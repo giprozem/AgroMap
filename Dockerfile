@@ -11,6 +11,7 @@ RUN pip install --upgrade pip
 RUN apt-get update &&\
     apt-get install -y binutils libproj-dev gdal-bin python3-gdal
 RUN apt-get install --yes libgdal-dev
+RUN apt-get install --yes gettext
 RUN export CPLUS_INCLUDE_PATH=/usr/include/gdal
 RUN export C_INCLUDE_PATH=/usr/include/gdal
 

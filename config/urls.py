@@ -5,6 +5,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
 from schema_graph.views import Schema
+from django.utils.translation import gettext_lazy as _
 
 from config import settings
 from culture_model.views import IndexPlanWithAPIView
@@ -101,4 +102,4 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 admin.site.site_header = 'AgroMap'
-admin.site.index_title = "Эталонная база данных Гипрозем"
+admin.site.index_title = _("Эталонная база данных Гипрозем")
