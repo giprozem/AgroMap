@@ -162,7 +162,7 @@ def veg_index_creating():
                             )
 
                         else:
-                            raise ObjectDoesNotExist(_('Creating vegetation index error, Check the indexes names'))
+                            raise ObjectDoesNotExist(_('Ошибка создания индекса растительности, проверьте имена индексов'))
                         meaning_of_average_value = IndexMeaning.objects.filter(
                             index=veg_index
                         ).filter(

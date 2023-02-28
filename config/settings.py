@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 from decouple import config
 
@@ -118,9 +119,9 @@ LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
 
 gettext = lambda s: s
 LANGUAGES = (
-    ('ru', gettext('Russian')),
-    ('ky', gettext('Kyrgyzstan')),
-    ('en', gettext('English')),
+    ('ru', gettext('Русский')),
+    ('ky', gettext('Кыргызский')),
+    ('en', gettext('Английский')),
 )
 
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
@@ -176,7 +177,7 @@ JAZZMIN_SETTINGS = {
     "show_ui_builder": False,
     "changeform_format": "horizontal_tabs",
     "topmenu_links": [
-        {"name": "Эталонная база данных Гипрозем", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": _("Эталонная база данных Гипрозем"), "url": "admin:index", "permissions": ["auth.view_user"]},
         {"models": "auth.User"},
     ],
     "language_chooser": True,
