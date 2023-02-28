@@ -31,7 +31,7 @@ class Contour(BaseModel):
                                blank=True, null=True)
     history = HistoricalRecords(verbose_name=_("История"))
     is_rounded = models.BooleanField(default=False, verbose_name=_('Юридически подтвержденный'))
-    is_available = models.BooleanField(default=True, verbose_name=_('Доступный'))
+    is_deleted = models.BooleanField(default=False, verbose_name=_('Удаленный'))
 
     def __str__(self):
         return self.code_soato if self.code_soato else self.ink
@@ -49,7 +49,7 @@ class ContourYear(BaseModel):
     year = models.CharField(max_length=20, verbose_name=_("Год"))
     productivity = models.CharField(max_length=20, blank=True, null=True, verbose_name=_("Продуктивность"))
     area_ha = models.FloatField(blank=True, null=True, verbose_name=_("Площадь в гектарах"))
-    is_available = models.BooleanField(default=True, verbose_name=_('Доступный'))
+    is_deleted = models.BooleanField(default=False, verbose_name=_('Удаленный'))
     culture = models.ForeignKey(Culture, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Культура'))
 
 
