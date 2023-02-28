@@ -7,9 +7,9 @@ from django.utils.translation import gettext_lazy as _
 
 
 class SoilClass(BaseModel):
+    ID = models.BigIntegerField(verbose_name='ID')
     name = models.CharField(max_length=55, verbose_name=_('Тип почвы'))
-    fertility = models.ForeignKey(Fertility, on_delete=models.CASCADE, related_name='soil_classes',
-                                  verbose_name=_('Удобрение'))
+    description = models.TextField(verbose_name=_('Описание'))
 
     def __str__(self):
         return self.name
