@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-28 10:55+0600\n"
+"POT-Creation-Date: 2023-02-28 16:30+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr "Аккаунттар"
 msgid "Администратор"
 msgstr "Администратор"
 
-#: account/models/account.py:9 gip/models/contour.py:29 gip/models/farmer.py:11
+#: account/models/account.py:9 gip/models/contour.py:30 gip/models/farmer.py:11
 #: gip/models/farmer.py:21 gip/models/landuse.py:13
 msgid "Фермер"
 msgstr "Дыйкан"
@@ -72,19 +72,19 @@ msgid "“Логин или пароль введен неверно. Попро
 msgstr ""
 "“Логин же пароль туура эмес киргизилген. Дагы бир жолу аракет кылыныз.”"
 
-#: config/settings.py:123
+#: config/settings.py:122
 msgid "Русский"
 msgstr "Орус"
 
-#: config/settings.py:124
+#: config/settings.py:123
 msgid "Кыргызский"
 msgstr "Кыргыз"
 
-#: config/settings.py:125
+#: config/settings.py:124
 msgid "Английский"
 msgstr "Англис"
 
-#: config/settings.py:181 config/urls.py:105
+#: config/settings.py:180 config/urls.py:105
 msgid "Эталонная база данных Гипрозем"
 msgstr "Гипроземдин эталондук маалымат базасы"
 
@@ -108,8 +108,9 @@ msgstr "Декада"
 msgid "Декады"
 msgstr "Декадалар"
 
-#: culture_model/models/index_plan.py:10 gip/models/crop_yield.py:11
-#: gip/models/culture.py:8 gip/models/culture.py:17 gip/models/landuse.py:14
+#: culture_model/models/index_plan.py:10 gip/models/contour.py:53
+#: gip/models/crop_yield.py:11 gip/models/culture.py:8 gip/models/culture.py:17
+#: gip/models/landuse.py:14
 msgid "Культура"
 msgstr "Өсүмдүк"
 
@@ -142,7 +143,7 @@ msgid "Плановые значения индекса"
 msgstr "Пландуу индекстик маанилер"
 
 #: culture_model/models/phase.py:6 culture_model/models/vegetation_index.py:6
-#: gip/models/contour.py:14 indexes/models/pasture.py:8
+#: gip/models/contour.py:15 indexes/models/pasture.py:8
 #: indexes/models/satelliteimage.py:51
 msgid "Название"
 msgstr "Аталышы"
@@ -185,7 +186,7 @@ msgstr "Түзүлгөн датасы"
 msgid "Дата обновления"
 msgstr "Жаңыртуу датасы"
 
-#: gip/models/conton.py:9 gip/models/contour.py:25 gip/models/contour.py:43
+#: gip/models/conton.py:9 gip/models/contour.py:26 gip/models/contour.py:45
 #: gip/models/district.py:10 gip/models/region.py:8
 msgid "Код СОАТО"
 msgstr "СОАТО коду"
@@ -194,12 +195,12 @@ msgstr "СОАТО коду"
 msgid "Район"
 msgstr "Району"
 
-#: gip/models/conton.py:11 gip/models/conton.py:18 gip/models/contour.py:26
+#: gip/models/conton.py:11 gip/models/conton.py:18 gip/models/contour.py:27
 #: gip/models/village.py:9
 msgid "Округ"
 msgstr "Аймак"
 
-#: gip/models/conton.py:12 gip/models/contour.py:46 gip/models/district.py:13
+#: gip/models/conton.py:12 gip/models/contour.py:48 gip/models/district.py:13
 #: gip/models/region.py:13 gip/models/soil.py:25 gip/models/soil.py:44
 #: gip/models/village.py:11 indexes/models/actual_veg_index_logs.py:5
 msgid "Контур"
@@ -209,55 +210,63 @@ msgstr "Контуру"
 msgid "Округи"
 msgstr "Аймактар"
 
-#: gip/models/contour.py:17 gip/models/contour.py:45
+#: gip/models/contour.py:18 gip/models/contour.py:47
 msgid "Тип земли"
 msgstr "Жер түрү"
 
-#: gip/models/contour.py:18
+#: gip/models/contour.py:19
 msgid "Типы земли"
 msgstr "Жер түрлөрү"
 
-#: gip/models/contour.py:27
+#: gip/models/contour.py:28
 msgid "ИНК"
 msgstr "КИН"
 
-#: gip/models/contour.py:27
+#: gip/models/contour.py:28
 msgid "Идентификационный номер контура"
 msgstr "Контурдун идентификациялык номер"
 
-#: gip/models/contour.py:31 indexes/models/actual_veg_index.py:24
+#: gip/models/contour.py:32 indexes/models/actual_veg_index.py:24
 #: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:133
 msgid "История"
 msgstr "Тарых"
 
-#: gip/models/contour.py:38 indexes/models/actual_veg_index.py:21
+#: gip/models/contour.py:33
+msgid "Юридически подтвержденный"
+msgstr "Юридикалык тастыкталган"
+
+#: gip/models/contour.py:34 gip/models/contour.py:52
+msgid "Доступный"
+msgstr "Жеткиликтүү"
+
+#: gip/models/contour.py:40 indexes/models/actual_veg_index.py:21
 #: indexes/models/pasture.py:20
 msgid "Контуры поля"
 msgstr "Талаанын контурлору"
 
-#: gip/models/contour.py:39 gip/models/contour.py:44
+#: gip/models/contour.py:41 gip/models/contour.py:46
 msgid "Контуры полей"
 msgstr "Талаалардын контурлору"
 
-#: gip/models/contour.py:47 gip/models/crop_yield.py:14
+#: gip/models/contour.py:49 gip/models/crop_yield.py:14
 #: gip/models/landuse.py:15
 msgid "Год"
 msgstr "Жыл"
 
-#: gip/models/contour.py:48 gip/models/crop_yield.py:13
+#: gip/models/contour.py:50 gip/models/crop_yield.py:13
 #: gip/models/crop_yield.py:22 gip/models/crop_yield.py:23
 msgid "Продуктивность"
 msgstr "Өндүрүмдүүлүк"
 
-#: gip/models/contour.py:49
+#: gip/models/contour.py:51
 msgid "Площадь в гектарах"
 msgstr "Аянт гектар менен"
 
-#: gip/models/contour.py:56
+#: gip/models/contour.py:60
 msgid "Контуры поля по годам"
 msgstr "Жылдар боюнча талаанын контурлору"
 
-#: gip/models/contour.py:57
+#: gip/models/contour.py:61
 msgid "Контуры полей по годам"
 msgstr "Жылдар боюнча талаалардын контурлору"
 
@@ -605,4 +614,6 @@ msgstr "Спутниктен тартылган cүрөт Sentinel -2"
 
 #: indexes/utils.py:165
 msgid "Ошибка создания индекса растительности, проверьте имена индексов"
-msgstr "Өсүмдүктөрдүн вегетациондук индексин түзүүдө ката кетти, индекстин аттарын текшериңиз"
+msgstr ""
+"Өсүмдүктөрдүн вегетациондук индексин түзүүдө ката кетти, индекстин аттарын "
+"текшериңиз"
