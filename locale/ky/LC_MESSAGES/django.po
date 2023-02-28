@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-28 16:30+0600\n"
+"POT-Creation-Date: 2023-02-28 16:46+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -198,7 +198,7 @@ msgstr "Району"
 #: gip/models/conton.py:11 gip/models/conton.py:18 gip/models/contour.py:27
 #: gip/models/village.py:9
 msgid "Округ"
-msgstr "Аймак"
+msgstr "Айыл Аймак"
 
 #: gip/models/conton.py:12 gip/models/contour.py:48 gip/models/district.py:13
 #: gip/models/region.py:13 gip/models/soil.py:25 gip/models/soil.py:44
@@ -208,7 +208,7 @@ msgstr "Контуру"
 
 #: gip/models/conton.py:19
 msgid "Округи"
-msgstr "Аймактар"
+msgstr "Айыл Аймактар"
 
 #: gip/models/contour.py:18 gip/models/contour.py:47
 msgid "Тип земли"
@@ -236,8 +236,8 @@ msgid "Юридически подтвержденный"
 msgstr "Юридикалык тастыкталган"
 
 #: gip/models/contour.py:34 gip/models/contour.py:52
-msgid "Доступный"
-msgstr "Жеткиликтүү"
+msgid "Удаленный"
+msgstr "Жок кылынган"
 
 #: gip/models/contour.py:40 indexes/models/actual_veg_index.py:21
 #: indexes/models/pasture.py:20
@@ -617,3 +617,4 @@ msgid "Ошибка создания индекса растительности
 msgstr ""
 "Өсүмдүктөрдүн вегетациондук индексин түзүүдө ката кетти, индекстин аттарын "
 "текшериңиз"
+

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-28 16:30+0600\n"
+"POT-Creation-Date: 2023-02-28 16:46+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -235,8 +235,8 @@ msgid "Юридически подтвержденный"
 msgstr "Legally confirmed"
 
 #: gip/models/contour.py:34 gip/models/contour.py:52
-msgid "Доступный"
-msgstr "Available"
+msgid "Удаленный"
+msgstr "Deleted"
 
 #: gip/models/contour.py:40 indexes/models/actual_veg_index.py:21
 #: indexes/models/pasture.py:20
@@ -614,3 +614,4 @@ msgstr "Satellite images Sentinel -2"
 #: indexes/utils.py:165
 msgid "Ошибка создания индекса растительности, проверьте имена индексов"
 msgstr "Creating vegetation index error, Check the indexes name"
+
