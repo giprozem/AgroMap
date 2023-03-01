@@ -8,14 +8,14 @@ from gip.models.soil import SoilClass, SoilClassMap, SoilProductivity, SoilFerti
 
 @admin.register(SoilClass)
 class SoilClassAdmin(SimpleHistoryAdmin, TranslationAdmin):
-    list_display = ('id', 'ID', 'name', 'description', )
+    list_display = ('ID', 'name', 'description', )
     readonly_fields = ('id', 'created_at', 'updated_at', )
     list_filter = ('name', 'ID', )
     ordering = ('name', 'created_at', )
     list_per_page = 20
     search_fields = ('name', 'ID', )
     date_hierarchy = 'created_at'
-    list_display_links = ('id', 'name', 'ID', )
+    list_display_links = ('name', 'ID', )
 
 
 @admin.register(SoilClassMap)
