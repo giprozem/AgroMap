@@ -383,6 +383,7 @@ class PastureClassAPIView(APIView):
 
 
 class ContourStatisticsAPIView(APIView):
+    @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
         culture = request.GET.get('culture')
@@ -453,6 +454,7 @@ class ContourStatisticsAPIView(APIView):
 
 
 class StatisticsContourProductivityAPIView(APIView):
+    @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
         year = request.GET.get('year')
@@ -618,6 +620,7 @@ class StatisticsContourProductivityAPIView(APIView):
 
 
 class MapContourProductivityAPIView(APIView):
+    @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
         year = request.GET.get('year')
@@ -996,6 +999,7 @@ class MapContourProductivityAPIView(APIView):
 
 
 class CoordinatesPolygonAPIView(APIView):
+    @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
         year = request.GET.get('year')
