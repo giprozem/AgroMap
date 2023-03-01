@@ -43,7 +43,7 @@ class Contour(BaseModel):
 
 class ContourYear(BaseModel):
     code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name=_("Код СОАТО"))
-    contour = models.ManyToManyField(Contour, verbose_name=_("Контуры полей"), related_name='contour_year')
+    contour = models.ForeignKey(Contour, on_delete=models.CASCADE, verbose_name=_("Контуры полей"), related_name='contour_year')
     type = models.ForeignKey(LandType, on_delete=models.SET_NULL, null=True, verbose_name=_("Тип земли"), related_name='contour_year')
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Контур"))
     year = models.CharField(max_length=20, verbose_name=_("Год"))
