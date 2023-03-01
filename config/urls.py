@@ -89,6 +89,7 @@ urlpatterns = [
     path('coordinates-polygon/', CoordinatesPolygonAPIView.as_view()),
     path('hub/', include("hub.urls")),
     path('', include('indexes.urls')),
+    path('', include('gip.urls')),
     path('download/', DownloadAPIView.as_view()),
     path('test/', TestAPIView.as_view())
 ]
