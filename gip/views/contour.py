@@ -1,4 +1,6 @@
 from django.db import connection
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import  ListAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -71,6 +73,7 @@ class ContourSearchAPIView(ListAPIView):
 
 class FilterContourAPIView(APIView):
 
+    @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
         year = request.GET.get('year')
