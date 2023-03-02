@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from django.contrib.gis.geos import GEOSGeometry
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
+from osgeo import gdal
 
 from culture_model.models import VegetationIndex
 from gip.models import ContourYear
@@ -17,31 +18,6 @@ from indexes.index_funcs.ndwi_funcs import average_ndwi, ndwi_calculator
 from indexes.index_funcs.savi_funcs import average_savi, savi_calculator
 from indexes.index_funcs.vari_funcs import average_vari, vari_calculator
 from indexes.models import ActualVegIndex, IndexCreatingReport, SciHubImageDate, IndexMeaning
-from osgeo import gdal
-
-
-def creating_indexes(date, satellite_image_id):
-    for contour in range(1, (ContourYear.objects.all().count() + 1)):
-        for index in range(1, (VegetationIndex.objects.all().count() + 1)):
-            try:
-                ActualVegIndex.objects.create(contour_id=contour, index_id=index, date=date)
-                IndexCreatingReport.objects.create(
-                    contour_id=contour,
-                    veg_index_id=index,
-                    satellite_image_id=satellite_image_id,
-                    is_processed=True,
-                    process_error='No error'
-                )
-            except Exception as e:
-                IndexCreatingReport.objects.create(
-                    contour_id=contour,
-                    veg_index_id=index,
-                    satellite_image_id=satellite_image_id,
-                    is_processed=False,
-                    process_error=e
-                )
-                plt.close()
-                pass
 
 
 def veg_index_creating():
