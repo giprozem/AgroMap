@@ -2,57 +2,14 @@ from django.db import connection
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.generics import  ListAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets, filters
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-
-from rest_framework import viewsets, filters, mixins
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet
 
-from gip.models.contour import Contour, LandType, ContourYear
-from gip.pagination.contour_pagination import ContourPagination, SearchContourPagination
-from gip.serializers.contour import ContourSerializer, LandTypeSerializer, ContourYearSerializer, \
-    AuthDetailContourYearSerializer, AuthDetailContourSerializer
-
-
-class LandTypeViewSet(viewsets.ModelViewSet):
-    queryset = LandType.objects.all()
-    serializer_class = LandTypeSerializer
-
-
-class AuthDetailContourViewSet(mixins.CreateModelMixin,
-                               mixins.RetrieveModelMixin,
-                               mixins.UpdateModelMixin,
-                               mixins.DestroyModelMixin,
-                               GenericViewSet):
-    queryset = Contour.objects.all()
-    serializer_class = AuthDetailContourSerializer
-    permission_classes = (IsAuthenticated,)
-
-
-class AuthDetailContourYearViewSet(mixins.CreateModelMixin,
-                                   mixins.RetrieveModelMixin,
-                                   mixins.UpdateModelMixin,
-                                   mixins.DestroyModelMixin,
-                                   GenericViewSet):
-    queryset = ContourYear.objects.all()
-    serializer_class = AuthDetailContourYearSerializer
-    permission_classes = (IsAuthenticated,)
-
-
-class ContourViewSet(viewsets.ModelViewSet):
-    queryset = Contour.objects.all()
-    serializer_class = ContourSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['ink', 'conton']
-    pagination_class = ContourPagination
-
-
-class ContourYearViewSet(viewsets.ModelViewSet):
-    queryset = ContourYear.objects.all()
-    serializer_class = ContourYearSerializer
-    pagination_class = ContourPagination
+from gip.models.contour import Contour
+from gip.pagination.contour_pagination import SearchContourPagination
+from gip.serializers.contour import ContourSerializer
 
 
 class SearchContourViewSet(viewsets.ReadOnlyModelViewSet):
@@ -348,38 +305,6 @@ class FilterContourAPIView(APIView):
                 return Response(data)
         else:
             return Response(data={"message": "parameter 'year or land_type' is required"}, status=400)
-
-
-class PastureClassAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        with connection.cursor() as cursor:
-            cursor.execute(f"""
-                SELECT
-                    cntr.id, cntr.ink, cntr.type_id,
-                    St_AsGeoJSON(cntr.polygon) as polygon,
-                    cntr.area_ha,
-                    cai.value
-                FROM gip_contour as cntr
-                JOIN indexes_contouraverageindex as cai
-                ON cntr.id = cai.contour_id
-                WHERE cntr.type_id = 2
-                ORDER BY cai.value DESC
-            """)
-            rows = cursor.fetchall()
-        data = {}
-        prod_classes = ["high", "middle", "low"]
-        # print(rows[:3])
-        for num, cl in enumerate(prod_classes):
-            data[cl] = {"type": "FeatureCollection", "features": []}
-            start = round(num*len(rows)/len(prod_classes))
-            end = round((num+1)*len(rows)/len(prod_classes))
-            for i in rows[start:end]:
-                data[cl]["features"].append({"type": "Feature",
-                            "properties": {'id': i[0], 'ink': i[1], 'type': i[2], 'avg_index': i[-1]},
-                             "geometry": eval(i[3])
-                            })
-
-        return Response(data)
 
 
 class ContourStatisticsAPIView(APIView):

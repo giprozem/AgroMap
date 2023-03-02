@@ -6,27 +6,6 @@ from indexes.models.actual_veg_index import ActualVegIndex
 from indexes.serializers.actual_veg_index import ActuaVegIndexSerializer
 
 
-class IndexFactListCreateAPIView(ListAPIView):
-    """
-    required in request params:
-     - contour = id of contour
-     - index = id of index
-     - date = date of satellite images that have to proces
-    """
-
-    def get(self, request, *args, **kwargs):
-        response = ActualVegIndex.objects.filter(
-            contour=request.query_params['contour']
-        ).filter(
-            index=request.query_params['index']
-        ).filter(
-            date=request.query_params['date']
-        )
-
-        serializer = ActuaVegIndexSerializer(response, many=True)
-        return Response(serializer.data, status=200)
-
-
 class SatelliteImagesDate(APIView):
     """
     required:
