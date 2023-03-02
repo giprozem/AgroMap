@@ -90,9 +90,9 @@ class FilterContourAPIView(APIView):
                                dst.name_ru, dst.name_ky, dst.name_en,
                                cntn.name_ru, cntn.name_ky, cntn.name_en,
                                land.name_ru, land.name_ky, land.name_en,
-                               St_AsGeoJSON(gcy.polygon) as polygon    FROM gip_contour AS cntr 
-                               INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                               INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                               St_AsGeoJSON(gcy.polygon) as polygon   
+                               FROM gip_contour AS cntr 
+                               JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                                JOIN gip_landtype AS land ON land.id=gcy.type_id
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -128,9 +128,9 @@ class FilterContourAPIView(APIView):
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
-                                St_AsGeoJSON(gcy.polygon) as polygon  FROM gip_contour AS cntr 
-                                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                                St_AsGeoJSON(gcy.polygon) as polygon  
+                                FROM gip_contour AS cntr 
+                                JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                                 JOIN gip_landtype AS land ON land.id=gcy.type_id
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -166,14 +166,14 @@ class FilterContourAPIView(APIView):
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
-                                St_AsGeoJSON(gcy.polygon) as polygon  FROM gip_contour AS cntr 
-                                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                                St_AsGeoJSON(gcy.polygon) as polygon  
+                                FROM gip_contour AS cntr 
+                                JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                                 JOIN gip_landtype AS land ON land.id=gcy.type_id
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                                where  gcy.type_id in ({land_type}) and rgn.id in ({region}) and gcy.year='{year}'
+                                where gcy.type_id in ({land_type}) and rgn.id in ({region}) and gcy.year='{year}'
                                 order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
@@ -204,9 +204,9 @@ class FilterContourAPIView(APIView):
                                     dst.name_ru, dst.name_ky, dst.name_en,
                                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                                     land.name_ru, land.name_ky, land.name_en,
-                                    St_AsGeoJSON(gcy.polygon) as polygon  FROM gip_contour AS cntr 
-                                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                                    St_AsGeoJSON(gcy.polygon) as polygon  
+                                    FROM gip_contour AS cntr 
+                                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                                     JOIN gip_landtype AS land ON land.id=gcy.type_id
                                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                     JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -242,9 +242,9 @@ class FilterContourAPIView(APIView):
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
-                                St_AsGeoJSON(gcy.polygon) as polygon  FROM gip_contour AS cntr 
-                                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                                St_AsGeoJSON(gcy.polygon) as polygon  
+                                FROM gip_contour AS cntr 
+                                JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                                 JOIN gip_landtype AS land ON land.id=gcy.type_id
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -280,9 +280,9 @@ class FilterContourAPIView(APIView):
                                dst.name_ru, dst.name_ky, dst.name_en,
                                cntn.name_ru, cntn.name_ky, cntn.name_en,
                                land.name_ru, land.name_ky, land.name_en,
-                               St_AsGeoJSON(gcy.polygon) as polygon    FROM gip_contour AS cntr 
-                               INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                               INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                               St_AsGeoJSON(gcy.polygon) as polygon    
+                               FROM gip_contour AS cntr 
+                               JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                                JOIN gip_landtype AS land ON land.id=gcy.type_id
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -318,9 +318,9 @@ class FilterContourAPIView(APIView):
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
-                                St_AsGeoJSON(gcy.polygon) as polygon  FROM gip_contour AS cntr 
-                                INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                                INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                                St_AsGeoJSON(gcy.polygon) as polygon  
+                                FROM gip_contour AS cntr 
+                                JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                                 JOIN gip_landtype AS land ON land.id=gcy.type_id
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -469,9 +469,8 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
                     cntn.name
-                    FROM  gip_contour AS cntr 
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    FROM gip_contour AS cntr 
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
@@ -492,9 +491,8 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
                     cntn.name
-                    FROM  gip_contour AS cntr 
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    FROM gip_contour AS cntr 
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
@@ -514,9 +512,8 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
                     dst.name
-                    FROM  gip_contour AS cntr 
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    FROM gip_contour AS cntr 
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
@@ -536,9 +533,8 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
                     cntn.name
-                    FROM  gip_contour AS cntr 
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    FROM gip_contour AS cntr 
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     where gcy.year='{year}' and gcy.type_id in ({land_type}) and dst.id in ({district}) 
@@ -557,9 +553,8 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
                     cntn.name 
-                    FROM  gip_contour AS cntr 
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    FROM gip_contour AS cntr 
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
@@ -579,9 +574,8 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
                     cntn.name 
-                    FROM  gip_contour AS cntr 
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    FROM gip_contour AS cntr 
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
@@ -601,9 +595,8 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
                     rgn.name 
-                    FROM  gip_contour AS cntr 
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id 
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    FROM gip_contour AS cntr  
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
@@ -639,8 +632,7 @@ class MapContourProductivityAPIView(APIView):
                     land.name_ru, land.name_ky, land.name_en,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_landtype AS land ON land.id=gcy.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -692,8 +684,7 @@ class MapContourProductivityAPIView(APIView):
                     land.name_ru, land.name_ky, land.name_en,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_landtype AS land ON land.id=gcy.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -744,8 +735,7 @@ class MapContourProductivityAPIView(APIView):
                     land.name_ru, land.name_ky, land.name_en, 
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_landtype AS land ON land.id=gcy.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -796,8 +786,7 @@ class MapContourProductivityAPIView(APIView):
                     land.name_ru, land.name_ky, land.name_en,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_landtype AS land ON land.id=gcy.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -850,8 +839,7 @@ class MapContourProductivityAPIView(APIView):
                     land.name_ru, land.name_ky, land.name_en,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_landtype AS land ON land.id=gcy.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -902,8 +890,7 @@ class MapContourProductivityAPIView(APIView):
                     land.name_ru, land.name_ky, land.name_en,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_landtype AS land ON land.id=gcy.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -954,8 +941,7 @@ class MapContourProductivityAPIView(APIView):
                     land.name_ru, land.name_ky, land.name_en,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
-                    INNER JOIN gip_contouryear_contour AS cyc ON cntr.id=cyc.contour_id
-                    INNER JOIN gip_contouryear AS gcy ON gcy.id=cyc.contouryear_id
+                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_landtype AS land ON land.id=gcy.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
