@@ -1,358 +1,97 @@
-# import requests
-from datetime import date
-
-from geo.Geoserver import Geoserver
-from osgeo import gdal
-
-# from osgeo import gdal
-# # # Initialize the library
-# geo = Geoserver('https://geoserver.24mycrm.com/geoserver', username='admin', password='QjtUKPHMj46DHck')
-# print(geo.create_coveragestore(workspace='Issyk-Kul', layer_name='demo_layer', path='../../tiff/-issyk- (15).tif'))
-# # print(geo.get_layergroup(layer_name='-issyk-'))
-# # print(geo.get_layergroups(workspace='Issyk-Kul'))
-# # For creating workspace
-# # geo.create_workspace(workspace='Issyk-Kul')
-#
-# # For uploading raster data to the geoserver
-# geo.create_coveragestore(layer_name='group_layer_python_B08', path=r'../../tiff/output/mosaic_output_B08.tif', workspace='Issyk-Kul')
-# # print(geo.publish_style(layer_name='layer_4', workspace='Issyk-Kul', style_name='raster'))
-# # print(geo.get_layergroup(layer_name='North Yssyk-Kul crop', workspace='Issyk-Kul'))
-#
-#
-# # url = 'https://geoserver.24mycrm.com/geoserver/rest/workspaces/my_workspace/datastores/my_datastore/featuretypes'
-# # url = 'https://geoserver.24mycrm.com/geoserver/Issyk-Kul/wms?service=WMS&LAYERS=crop'
-# # headers = {'Content-Type': 'text/xml'}
-# # auth = ('admin', 'QjtUKPHMj46DHck')
-# #
-# # # define your XML string that you want to send to the server
-# # data = """
-# #     <featureType>
-# #     <name>layer_1</name>
-# #     <srs>EPSG:4326</srs>
-# #     <enabled>true</enabled>
-# #     <metadata>
-# #     <entry key="time">
-# #     <dimensionInfo>
-# #     <enabled>true</enabled>
-# #     <attribute>datetime</attribute>
-# #     <presentation>CONTINUOUS_INTERVAL</presentation>
-# #     <units>ISO8601</units>
-# #     <defaultValue><strategy>MAXIMUM</strategy></defaultValue>
-# #     </dimensionInfo>
-# #     </entry>
-# #     </metadata>
-# #     <store class="dataStore">
-# #         <name>my_datastore</name>
-# #     </store>
-# # </featureType>
-# # """
-# #
-# # # fire the request
-# # r = requests.post(url, headers=headers, auth=auth, data=data)
-# #
-# # # inspect the response
-# # print(r.text)
-#
-# # inputpath = "https://geoserver.24mycrm.com/geoserver/Issyk-Kul/wcs?service=WCS&version=2.0.1&request=GetCoverage&CoverageId=layer_4&format=image/tiff"
-# # inputpath = "https://geoserver.24mycrm.com/geoserver/gwc/service/wmts?&service=WMTS&request=GetTile&version=1.0.0&layer=I-K&style=raster&tilematrixset=EPSG:32643&format=image/png"
-# # inputpath = "https://geoserver.24mycrm.com/geoserver/gwc/service/wmts?&service=WMTS&request=GetTile&version=1.0.0&layer=spearfish&style=&tilematrixset=EPSG:900913&format=image/png&tilematrix=EPSG:900913:16tilerow=24685&tilecol=46018"
-# # inputpath = "https://geoserver.24mycrm.com/geoserver/gwc/service/wmts?&service=WMTS&request=GetTile&version=1.0.0&layer=-issyk-&style=raster&tilematrixset=EPSG:4326&format=image/png&tilematrix=EPSG:4326:21&tilerow=543478&tilecol=2970962"
-#
-# # "https://geoserver.24mycrm.com/geoserver/Issyk-Kul/wms?service=WMS&version=1.1.1&request=DescribeLayer&layers=-issyk-&format=image/tiff"
-# #
-# #
-# # inputpath = "https://geoserver.24mycrm.com/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=-issyk-&format=application/openlayers&srs=EPSG:32643&bbox=499980,4690200,809760,4800000&width=768&height=330"
-# # outputpath = '../../tiff/output/group_layers.tiff'
-# outputpath = '../../tiff/output/layer_geoserver.tif'
-# outputpath = '../../tiff/output/test.tif'
-# polygon = r'../../tiff/map.geojson'
-# # #
-# inputpath = '../../tiff/output/mosaic_output.tif'
-# # inputpath = 'https://geoserver.24mycrm.com/geoserver/Issyk-Kul/wcs?service=WCS&version=2.0.1&request=GetCoverage&CoverageId=north_tiff&format=image/tiff'
-# def cutting_tiff():
-#     gdal.Warp(destNameOrDestDS=outputpath,
-#               srcDSOrSrcDSTab=inputpath,
-#               cutlineDSName=polygon,
-#               cropToCutline=True,
-#               copyMetadata=True,
-#               dstNodata=0)
-#
-#
-# if __name__ == '__main__':
-#     cutting_tiff()
-
-#
-#
-#
-#
-# # from owslib.csw import CatalogueServiceWeb
-# # import urllib
-# #
-# # def getLinkByIDCWS(url, id, user, pwd):
-# #     csw = CatalogueServiceWeb(url, username=user, password=pwd)
-# #
-# #     csw.getrecordbyid(id=[id])
-# #     csw.records[id].references
-# #
-# #     link = csw.records[id].references[2]['url']
-# #
-# #     return link
-# #
-# # def downloadImage(url, fileName):
-# #     urllib.request.urlretrieve(url, fileName)
-# #
-# # # url = "https://geoserver.24mycrm.com/geoserver/csw?service=CSW&version=2.0.2&request=GetRecords&typeNames=gmd:MD_Metadata&resultType=results&elementSetName=full&outputSchema=http://www.isotc211.org/2005/gmd"
-# # url = "https://geoserver.24mycrm.com/geoserver/wmts?"
-# # record = "Issyk-Kul:layer_4"
-# # name = "admin"
-# # pwd = "QjtUKPHMj46DHck"
-# #
-# # link = getLinkByIDCWS(url, record, name, pwd)
-# # print(link)
-# #
-# # downloadImage(link, "test.arc")
-#
-#
-# # # a = "http://localhost:8080/geoserver/" + workspace[0] + "/wcs?service=WCS&version=2.0.1&request=GetCoverage&CoverageId=" + layer.params.LAYERS + "&format=image/tiff"
-# # a = "https://geoserver.24mycrm.com/geoserver/Issyk-Kul/wcs?service=WCS&version=2.0.1&request=GetCoverage&CoverageId=layer_4&format=image/tiff"
-# # headers = {
-# #     'username': 'admin',
-# #     'password': 'QjtUKPHMj46DHck'
-# # }
-# # print(requests.get(a).text)
-#
-# """
-# https://geoserver.24mycrm.com/geoserver/<workspace>/wms?service=WMS&version=1.1.0&request=GetMap&layers=<workspace>:<layer_group_name>&format=image/tiff&srs=<srs>&bbox=<bbox>&width=<width>&height=<height>
-# https://geoserver.24mycrm.com/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=-issyk-&format=image/geotiff&srs=EPSG:32643&bbox=499980,4690200,809760,4800000&WIDTH=3000&HEIGHT=1000
-#
-# """
-#
-# # import rasterio
-# # from rasterio import plot
-# #
-# #
-# # with rasterio.open('../../tiff/data/20220828_B08.tif') as f:
-# #     print(f.meta)
-# #     plot.show(f)
-#
-#
-#
-# # import requests
-# # import json
-# # #
-# # url = "https://geoserver.24mycrm.com/geoserver/rest/layergroups/-issyk-.json"
-# #
-# # auth = ('admin', 'QjtUKPHMj46DHck')
-# #
-# # response = requests.get(url, auth=auth)
-# # if response.status_code == 200:
-# #     data = json.loads(response.content)
-# #     # print(data["layerGroup"]["bounds"])
-# #     # bbox = data["layerGroup"]["bounds"]["nativeBounds"]
-# #     # print(bbox)
-# #     bbox = data["layerGroup"]["bounds"]
-# #     srs = bbox['crs']['$']
-# #
-# #     a = f"https://geoserver.24mycrm.com/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=-issyk-&format=image/geotiff&srs={srs}&bbox={bbox['minx']},{bbox['miny']},{bbox['maxx']},{bbox['maxy']}&WIDTH=3000&HEIGHT=1000"
-# #     response = requests.get(a)
-# #     with open('layer.tiff', "wb") as f:
-# #         print(f.write(response.content))
-#
-#
-# from django.contrib.gis.geos import GEOSGeometry
-#
-# # a = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"coordinates":[[[77.71434669540247,42.771522496633594],[77.71434669540247,42.694304425607584],[77.8217586218239,42.694304425607584],[77.8217586218239,42.771522496633594],[77.71434669540247,42.771522496633594]]],"type":"Polygon"}}]}
-# # b = GEOSGeometry(f"{a['features'][0]['geometry']}")
-# # print(b)
-#
-# # url = f"https://geoserver.24mycrm.com/geoserver/wfs?request=GetFeature&typeName=north_tiff_1&outputFormat=image/geotiff&CQL_FILTER=((77.71434669540247 42.771522496633594, 77.71434669540247 42.694304425607584, 77.8217586218239 42.694304425607584, 77.8217586218239 42.771522496633594, 77.71434669540247 42.771522496633594))"
-#
-# # response = requests.get(url)
-#
-# # if response.status_code == 200:
-# #     with open("geotiff.tiff", "wb") as f:
-# #         f.write(response.content)
-# #         print(f)
-#
-#
-# # width and height loyer_group
-# """
-# https://geoserver.24mycrm.com/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=-issyk-&format=image/geotiff&srs=EPSG:32643&bbox=499980,4690200,809760,4800000&width=6000&height=3000
-# https://geoserver.24mycrm.com/geoserver/wms?service=WMS&version=1.3.0&request=GetMap&layers=issyk&format=image/geotiff
-# https://geoserver.24mycrm.com/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=-issyk-&outputFormat=image/tiff.
-# https://geoserver.24mycrm.com/geoserver/Issyk-Kul/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Issyk-Kul:north_tiff&outputFormat=image/geotiff
-# https://geoserver.24mycrm.com/geoserver/workspaces/Issyk-Kul/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=image/geotiff
-# """
-
-# from tifffile import imread, imwrite
-# import numpy as np
-#
-# r = imread('../../tiff/group/20220805_B04.tif')
-# g = imread('../../tiff/group/20220825_B04.tif')
-# b = imread('../../tiff/group/20220828_B04.tif')
-# RGB = np.dstack((r,g,b))
-# imwrite('result.tif', RGB)
-
-# from PIL import Image
-#
-# import os
-#
-# path_to_file = '../../tiff/group'
-#
-# images = []
-#
-# for i in os.listdir(path_to_file):
-#     with Image.open(path_to_file + '/' + i) as im:
-#         images.append(im.copy())
-#
-# print(Image.new(images[0].mode, (images[0].size[0] * 3, images[0].size[1] * 5)))
-
-# new_image = Image.new(images[0].mode, (images[0].size[0] * 3, images[0].size[1] * 5))
-
-# new_image.paste(images[0])
-# new_image.paste(images[1], (images[0].size[0] * 1, 0))
-# new_image.paste(images[2], (images[0].size[0] * 2, 0))
-#
-# new_image.show()
-
-
-
-# from rasterio.plot import show
-# from rasterio.merge import merge
-# from rasterio import plot
-# import rasterio as rio
-# from pathlib import Path
-# path = Path('../../tiff/group')
-# Path('output').mkdir(parents=True, exist_ok=True)
-# output_path = '../../tiff/output/mosaic_output_2_layer.tif'
-# raster_files = list(path.iterdir())
-# raster_to_mosiac = []
-# for p in raster_files:
-#     raster = rio.open(p)
-#     raster_to_mosiac.append(raster)
-#
-# mosaic, output = merge(raster_to_mosiac)
-#
-# output_meta = raster.meta.copy()
-# output_meta.update(
-#     {"driver": "GTiff",
-#         "height": mosaic.shape[1],
-#         "width": mosaic.shape[2],
-#         "transform": output,
-#     }
-# )
-#
-# with rio.open(output_path, "w", **output_meta) as m:
-#     m.write(mosaic)
-#
-#
-# with rio.open(output_path) as f:
-#     plot.show(f)
-
-
-#
-#
-# import requests
-#
-# # Укажите ссылку API для поиска данных
-# search_url = "https://scihub.copernicus.eu/apihub/search"
-#
-# # Укажите параметры запроса, такие как ключевые слова, даты и т. д.
-# search_params = {
-#     "q": "filename:*.zip AND platformname:Sentinel-2 AND producttype:S2MSI1C",
-#     "rows": 1,
-# }
-#
-# # Отправьте запрос для поиска данных
-# search_response = requests.get(search_url, params=search_params)
-# print('---------------')
-# # Проверьте, что ответ на запрос успешен
-# if search_response.status_code == 200:
-#     # Извлеките идентификатор файла из ответа на запрос
-#     file_id = search_response.json()["feed"]["entry"][0]["id"]
-#     # Укажите ссылку API для скачивания данных
-#     download_url = f"https://scihub.copernicus.eu/apihub/odata/v1/Products('{file_id}')/$value"
-#
-#     # Отправьте запрос для скачивания данных
-#     download_response = requests.get(download_url)
-#
-#     # Проверьте, что ответ на запрос успешен
-#     if download_response.status_code == 200:
-#         # Запишите данные в файл
-#         with open("sentinel-2-image.zip", "wb") as f:
-#             f.write(download_response.content)
-
-
+import json
+import os
+import time
 
 import requests
+from rest_framework.response import Response
+from rest_framework.views import APIView
+import geopandas as gpd
 
-# API endpoint for search request
-# search_url = "https://scihub.copernicus.eu/dhus/search"
-
-# Search parameters
-# search_params = {
-#     "q": "platformname:Sentinel-2 AND footprint:\"Intersects(POLYGON ((75.4724064976 42.6582517021209,75.4724064976 41.611372898496,78.0737066497125 41.611372898496,78.0737066497125 42.6582517021209,75.4724064976 42.6582517021209)))\"",
-#     "rows": 1,
-#     "start": 0,
-#     "format": "json",
-#     "time": "2022-08-01T00:00:00/2022-08-30T23:59:59"
-# }
+from decouple import config
+from gip.models import ContourYear
 
 
-# Search parameters
-# search_params = {
-#     "productType": "S2MSI1C",
-#     "q": "platformname:Sentinel-2 AND footprint:\"Intersects(GEOMETRYCOLLECTION(POLYGON ((68.91495455221076 43.896843812009166, 68.91495455221076 39.072739557083395, 80.58067864562298 39.072739557083395, 80.58067864562298 43.896843812009166, 68.91495455221076 43.896843812009166))))\"",
-#     "time": "2022-08-01T00:00:00/2022-08-30T23:59:59",
-#     "maxRecords": 100,
-#     "sortOrder": "desc",
-#     "sortBy": "ingestiondate",
-#     "format": "json"
-# }
+class Geoserver(APIView):
+    def get(self, request, *args, **kwargs):
+        data = []
 
-# search_url = "https://scihub.copernicus.eu/dhus/search"
-#
-# search_params = {
-#     "productType": "S2MSI1C",
-#     "q": "platformname:Sentinel-2 AND footprint:\"Intersects(GEOMETRYCOLLECTION(POLYGON ((68.91495455221076 43.896843812009166, 68.91495455221076 39.072739557083395, 80.58067864562298 39.072739557083395, 80.58067864562298 43.896843812009166, 68.91495455221076 43.896843812009166))))\"",
-#     "time": "2022-08-01T00:00:00/2022-09-20T23:59:59",
-#     "maxRecords": 100,
-#     "sortOrder": "desc",
-#     "sortBy": "ingestiondate",
-#     "format": "json"
-# }
-#
-# search_response = requests.get(search_url, params=search_params, auth=('kaiumamanbaev', 'Copernicus123!'))
-# print(search_response)
-#
-# if search_response.status_code == 200:
-#     print(search_response.json())
-#     result = search_response.json()["feed"]["entry"][0]
-#
-#     download_url = result["link"][1]["href"] + '$value'
-#     print(download_url)
-#
-# #     download_response = requests.get(download_url, stream=True, auth=('kaiumamanbaev', 'Copernicus123!'))
-# #     print(download_response)
-# #
-# #     if download_response.status_code == 200:
-# #         print(download_response.status_code)
-# #         with open("product1.zip", "wb") as f:
-# #             for chunk in download_response.iter_content(chunk_size=1024000000):
-# #                 f.write(chunk)
-# #
-# # else:
-# #     print("Search request failed with status code:", search_response.status_code)
+        # Извлечение из бд геоданных
+        for i in ContourYear.objects.all():
+            data.append({"type": "Feature", "properties": {"id_contour_year": i.id, "type": i.type.id},
+                         "geometry": eval(i.polygon.geojson)})
+        geojson_data = {"type": "FeatureCollection", "features": data}
 
+        # Сохранение в geojson
+        with open('polygons.geojson', 'w') as f:
+            json.dump(geojson_data, f)
 
-# from sentinelsat import SentinelAPI, read_geojson, geojson_to_wkt
-#
-# api = SentinelAPI('kaiumamanbaev', 'Copernicus123!')
-# footprint = geojson_to_wkt(read_geojson('../../map (1).geojson'))
-# print(footprint)
-# products = api.query(footprint,
-#                      date=('20221019', date(2022, 10, 29)),
-#                      platformname='Sentinel-2',
-#                      cloudcoverpercentage=(0, 30))
-#
-# output = f"media/output/{api.download_all(products)}"
+        # Kонвертация GeoJson в Shpfile
+        gdf = gpd.read_file('polygons.geojson')
+        gdf.to_file('shp/polygons.shp')
+
+        time.sleep(5)
+        # GeoServer REST API
+        geoserver_url = f"{config('URL_GEOSERVER')}geoserver/rest"
+
+        # Учетные данные для аутентификации
+        username = config('USERNAME_GEOSERVER')
+        password = config('PASSWORD_GEOSERVER')
+
+        # Рабочее пространство и хранилище
+        workspace = 'agromap'
+        storename = 'agromap_store'
+
+        # Путь к шейп-файлу
+        shapefile_path = 'shp/polygons.shp'
+
+        # Создание рабочую область, если она еще не существует
+        workspace_url = f'{geoserver_url}/workspaces/{workspace}.json'
+        workspace_exists = requests.get(workspace_url, auth=(username, password)).ok
+
+        if not workspace_exists:
+            requests.post(f'{geoserver_url}/workspaces.json',
+                          auth=(username, password),
+                          headers={'Content-Type': 'application/json'},
+                          json={'workspace': {'name': workspace}})
+
+        # Создание хранилище, если она еще не существует
+        store_url = f'{geoserver_url}/workspaces/{workspace}/datastores/{storename}.json'
+        store_exists = requests.get(store_url, auth=(username, password)).ok
+
+        if not store_exists:
+            requests.post(f'{geoserver_url}/workspaces/{workspace}/datastores.json',
+                          auth=(username, password),
+                          headers={'Content-Type': 'application/json'},
+                          json={'dataStore': {
+                              'name': storename,
+                              'type': 'Shapefile',
+                              'enabled': True,
+                              'connectionParameters': {
+                                  'url': f'file:data/agromap/{shapefile_path}',
+                                  'create spatial index': True
+                              }
+                          }})
+        shpfile = os.path.basename(shapefile_path)
+        shpfile_no_ext = os.path.splitext(shpfile)[0]
+
+        with open(f'{shapefile_path}', 'rb') as f:
+            requests.put(f'{store_url}/file.shp?update=overwrite',
+                         auth=(username, password),
+                         data=f
+                         )
+
+        # Опубликация слой на GeoServer
+        layer_url = f'{geoserver_url}/workspaces/{workspace}/datastores/{storename}/featuretypes.json'
+        layer_name = shpfile_no_ext
+
+        requests.post(layer_url,
+                      auth=(username, password),
+                      headers={'Content-Type': 'application/json'},
+                      json={'featureType': {
+                          'name': layer_name,
+                          'nativeName': layer_name,
+                          'title': layer_name,
+                          'srs': 'EPSG:4326'
+                      }})
+
+        return Response('OK')

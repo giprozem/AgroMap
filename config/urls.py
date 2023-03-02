@@ -18,6 +18,7 @@ from gip.views.contour import ContourViewSet, FilterContourAPIView, PastureClass
 from gip.views.crop_yield import CropYieldViewSet
 from gip.views.culture import CultureViewSet
 from gip.views.district import DistrictViewSet
+from gip.views.geoserver import Geoserver
 from gip.views.land_use import LandUseViewSet
 from gip.views.owner_details import OwnerDetailsAPIView
 from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox
@@ -91,7 +92,8 @@ urlpatterns = [
     path('', include('indexes.urls')),
     path('', include('gip.urls')),
     path('download/', DownloadAPIView.as_view()),
-    path('test/', TestAPIView.as_view())
+    path('test/', TestAPIView.as_view()),
+    path('geoserver/', Geoserver.as_view()),
 ]
 
 urlpatterns += i18n_patterns(
