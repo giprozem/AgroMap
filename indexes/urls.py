@@ -10,9 +10,9 @@ router.register('contour-veg-index-statistics', ContourYearViewSet)
 urlpatterns = router.urls
 
 urlpatterns += [
-    path('satellite_dates/<int:index>/<int:contour>/', SatelliteImagesDate.as_view()),  #
+    path('satellite_dates/<int:index>/<int:contour>/', SatelliteImagesDate.as_view()),
     path('average/', CreatingAverage.as_view()),
     path('download/', DownloadAPIView.as_view()),
     path('test/', TestAPIView.as_view()),
-    path('actual-veg-indexes/', ActualIndexesOfContourYear.as_view()),  #
+    path('actual-veg-indexes/', ActualIndexesOfContourYear.as_view()),
 ]
