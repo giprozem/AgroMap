@@ -10,20 +10,9 @@ from schema_graph.views import Schema
 
 from account.views.authenticated import LoginAgromapView
 from config import settings
-from gip.views.contour import ContourSearchAPIView, \
-    ContourStatisticsAPIView, StatisticsContourProductivityAPIView, \
-    MapContourProductivityAPIView, CoordinatesPolygonAPIView
-from gip.views.contour import FilterContourAPIView
 from gip.views.geoserver import Geoserver
-from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox
-from gip.views.statistics import GraphicTablesAPIView, CulturePercentAPIView
 from hub.views.authetificated import LoginHubView
-from hub.views.land_info import LandInfoSearch
 from hub.views.zem_balance_api import ZemBalanceViewSet
-from indexes.views import CreatingAverage
-from indexes.views.actual_veg_index import SatelliteImagesDate, ActualIndexesOfContourYear
-from indexes.views.download_satelite_images import DownloadAPIView
-from indexes.views.generated_indexes import TestAPIView
 
 router = DefaultRouter()
 
@@ -47,8 +36,8 @@ urlpatterns = [
     path('', include('gip.urls')),
     path('docs/', schema_view.with_ui()),
     path("schema/", Schema.as_view()),
-    path('login_hub/', LoginHubView.as_view()),  #
-    path('login_agromap/', LoginAgromapView.as_view()),  #
+    path('login_hub/', LoginHubView.as_view()),
+    path('login_agromap/', LoginAgromapView.as_view()),
 
     path('geoserver/', Geoserver.as_view()),
 ]
