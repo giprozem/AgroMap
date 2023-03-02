@@ -163,3 +163,4 @@ regions
 *.geojson
 tiff
 *.zip
+shp
