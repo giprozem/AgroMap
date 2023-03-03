@@ -3,23 +3,38 @@ import os
 import time
 
 import requests
+from django.db import connection
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import geopandas as gpd
 
 from decouple import config
-from gip.models import ContourYear
 
 
 class Geoserver(APIView):
     def get(self, request, *args, **kwargs):
-        data = []
+        with connection.cursor() as cursor:
+            cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 1 ELSE 0 END AS "Type productivity",
+            gcy.id AS contour_year_id, rgn.id as rgn, dst.id as dst, cntn.id as cntn, coalesce(cl.id, NULL) AS cl_id,
+            gcy.type_id AS land_type_id, gcy.year, gcy.area_ha, gcy.productivity, St_AsGeoJSON(gcy.polygon) as polygon
+            FROM gip_contour AS cntr
+            JOIN gip_contouryear AS gcy ON cntr.id=gcy.contour_id
+            JOIN gip_landtype AS land ON land.id=gcy.type_id
+            JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+            JOIN gip_district AS dst ON dst.id=cntn.district_id
+            JOIN gip_region AS rgn ON rgn.id=dst.region_id
+            LEFT JOIN gip_cropyield as cy ON cy.contour_year_id = cntr.id
+            LEFT JOIN gip_culture as cl ON cy.culture_id = cl.id
+            GROUP BY "Type productivity", gcy.id, rgn.id, dst.id, cntn.id, land.id, cl.id;""")
+            rows = cursor.fetchall()
+            data = []
+            for i in rows:
+                data.append({"type": "Feature", "properties": {'id': i[1], 'rgn': i[2], 'dst': i[3], 'cntn': i[4],
+                                                               'clt': i[5], 'ltype': i[6], 'year': i[7], 'area': i[8],
+                                                               'prdvty': i[0]},
+                                                "geometry": eval(i[-1])})
 
-        # Извлечение из бд геоданных
-        for i in ContourYear.objects.all():
-            data.append({"type": "Feature", "properties": {"id_contour_year": i.id, "type": i.type.id},
-                         "geometry": eval(i.polygon.geojson)})
-        geojson_data = {"type": "FeatureCollection", "features": data}
+            geojson_data = {"type": "FeatureCollection", "features": data}
 
         # Сохранение в geojson
         with open('polygons.geojson', 'w') as f:
@@ -41,8 +56,8 @@ class Geoserver(APIView):
         workspace = 'agromap'
         storename = 'agromap_store'
 
-        # Путь к шейп-файлу
-        shapefile_path = 'shp/polygons.shp'
+        # Путь к папке с файлами
+        shapefile_path = 'shp'
 
         # Создание рабочую область, если она еще не существует
         workspace_url = f'{geoserver_url}/workspaces/{workspace}.json'
@@ -55,7 +70,7 @@ class Geoserver(APIView):
                           json={'workspace': {'name': workspace}})
 
         # Создание хранилище, если она еще не существует
-        store_url = f'{geoserver_url}/workspaces/{workspace}/datastores/{storename}.json'
+        store_url = f'{geoserver_url}/workspaces/{workspace}/datastores/{storename}'
         store_exists = requests.get(store_url, auth=(username, password)).ok
 
         if not store_exists:
@@ -71,18 +86,20 @@ class Geoserver(APIView):
                                   'create spatial index': True
                               }
                           }})
-        shpfile = os.path.basename(shapefile_path)
-        shpfile_no_ext = os.path.splitext(shpfile)[0]
 
-        with open(f'{shapefile_path}', 'rb') as f:
-            requests.put(f'{store_url}/file.shp?update=overwrite',
-                         auth=(username, password),
-                         data=f
-                         )
+        # Загрузка каждого файла в папке
+        for shpfile_path in os.listdir(shapefile_path):
+            shpfile = os.path.basename(shpfile_path)
 
-        # Опубликация слой на GeoServer
-        layer_url = f'{geoserver_url}/workspaces/{workspace}/datastores/{storename}/featuretypes.json'
-        layer_name = shpfile_no_ext
+            with open(f'{shapefile_path}/{shpfile}', 'rb') as f:
+                requests.put(f'{store_url}/file.{shpfile[-3:]}?update=overwrite',
+                             auth=(username, password),
+                             data=f
+                             )
+
+        # Опубликация слоя на GeoServer
+        layer_url = f'{geoserver_url}/workspaces/{workspace}/datastores/{storename}'
+        layer_name = 'polygons'
 
         requests.post(layer_url,
                       auth=(username, password),
@@ -91,7 +108,9 @@ class Geoserver(APIView):
                           'name': layer_name,
                           'nativeName': layer_name,
                           'title': layer_name,
-                          'srs': 'EPSG:4326'
+                          'srs': 'EPSG:4326',
+                          'type': 'ESRI Shapefile'
                       }})
+
 
         return Response('OK')
