@@ -10,13 +10,28 @@ from django.utils.translation import gettext_lazy as _
 
 
 class LoginAgromapView(APIView):
-    @swagger_auto_schema(request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        properties={
-            'username': openapi.Schema(type=openapi.TYPE_STRING),
-            'password': openapi.Schema(type=openapi.TYPE_STRING),
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type='object',
+            properties={
+                'username': openapi.Schema(type='string'),
+                'password': openapi.Schema(type='string'),
+            },
+            required=['username', 'password']
+        ),
+        responses={
+            200: openapi.Schema(
+                type='object',
+                properties={
+                    'token': openapi.Schema(type='string'),
+                    'user_id': openapi.Schema(type='integer'),
+                    'username': openapi.Schema(type='string'),
+                    'is_superuser': openapi.Schema(type='boolean'),
+                    'is_active': openapi.Schema(type='boolean'),
+                }
+            )
         }
-    ))
+    )
     def post(self, request, *args, **kwargs):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
