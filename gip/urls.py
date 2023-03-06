@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from gip.views.contour import FilterContourAPIView, ContourStatisticsAPIView, StatisticsContourProductivityAPIView, \
     MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView
-from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox
+from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox, PolygonsInScreen
 from gip.views.region import RegionViewSet
 from gip.views.soil import SoilAPIView
 from gip.views.statistics import GraphicTablesAPIView, CulturePercentAPIView
@@ -26,4 +26,5 @@ urlpatterns = [
     path('contour-map-productivity/', MapContourProductivityAPIView.as_view()),
     path('coordinates-polygon/', CoordinatesPolygonAPIView.as_view()),
     path('contour-search/', ContourSearchAPIView.as_view()),
+    path('polygons-in-screen/', PolygonsInScreen.as_view()),
 ]
