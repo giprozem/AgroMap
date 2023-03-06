@@ -2,6 +2,8 @@ from django.db import connection
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, filters
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
@@ -29,7 +31,16 @@ class ContourSearchAPIView(ListAPIView):
 
 
 class FilterContourAPIView(APIView):
-
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('year', openapi.IN_QUERY, description="Year", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('land_type', openapi.IN_QUERY, description="Land type", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('region', openapi.IN_QUERY, description="Region", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('district', openapi.IN_QUERY, description="District", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('conton', openapi.IN_QUERY, description="Conton", type=openapi.TYPE_INTEGER),
+        ],
+        responses={200: 'Success'}
+    )
     @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
@@ -379,6 +390,16 @@ class ContourStatisticsAPIView(APIView):
 
 
 class StatisticsContourProductivityAPIView(APIView):
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('year', openapi.IN_QUERY, description="Year", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('land_type', openapi.IN_QUERY, description="Land type", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('region', openapi.IN_QUERY, description="Region", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('district', openapi.IN_QUERY, description="District", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('conton', openapi.IN_QUERY, description="Conton", type=openapi.TYPE_INTEGER),
+        ],
+        responses={200: 'Success'}
+    )
     @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
@@ -534,10 +555,20 @@ class StatisticsContourProductivityAPIView(APIView):
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         else:
-            return Response(data={"message": "parameter 'year or land_type' is required"}, status=400)
+            return Response(data={"message": "parameter 'year and land_type' is required"}, status=400)
 
 
 class MapContourProductivityAPIView(APIView):
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('year', openapi.IN_QUERY, description="Year", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('land_type', openapi.IN_QUERY, description="Land type", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('region', openapi.IN_QUERY, description="Region", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('district', openapi.IN_QUERY, description="District", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('conton', openapi.IN_QUERY, description="Conton", type=openapi.TYPE_INTEGER),
+        ],
+        responses={200: 'Success'}
+    )
     @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
