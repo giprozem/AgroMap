@@ -19,8 +19,10 @@ from indexes.models import SciHubImageDate, SciHubAreaInterest
 
 class DownloadAPIView(APIView):
     def get(self, request):
-        start_date = request.GET.get('start_date')
-        end_date = request.GET.get('end_date')
+
+        # start_date = request.GET.get('start_date')
+        # end_date = request.GET.get('end_date')
+
 
         output = 'output/'
 
@@ -30,9 +32,17 @@ class DownloadAPIView(APIView):
         # Скачиваем снимки через Sci-hub
         api = SentinelAPI('kaiumamanbaev', 'Copernicus123!', 'https://scihub.copernicus.eu/dhus')
 
+        date = {
+            'start_date': ['20221001', '20221101', '20221201', '20221201', '20230101', '20220201'],
+            'end_date': ['20221030', '20221130', '20221230', '20221230', '20230130', '20220227']
+        }
+
         # Define a list of footprints
-        footprints = [sci_hub_area_interest.polygon.wkt for sci_hub_area_interest in SciHubAreaInterest.objects.all()]
-        if start_date and end_date:
+        footprints = [sci_hub_area_interest.polygon.wkt for sci_hub_area_interest in SciHubAreaInterest.objects.filter(id__in=(1,2))]
+
+        for i in range(len(date['start_date'])):
+            start_date = date['start_date'][i]
+            end_date = date['end_date'][i]
             for footprint in footprints:
                 products = api.query(footprint,
                                      date=(start_date, end_date),
@@ -130,5 +140,5 @@ class DownloadAPIView(APIView):
                                         sci_hub_image_date.save()
                 except Exception as e:
                     print(e)
-                shutil.rmtree(output)
+            shutil.rmtree(output)
         return Response('OK')
