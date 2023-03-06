@@ -1,11 +1,8 @@
-from django.contrib.gis.geos import Point, Polygon, MultiLineString, LinearRing, LineString
+from django.contrib.gis.geos import Point, Polygon
 from django.db import connection
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import renderers
-from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.schemas import SchemaGenerator
 from rest_framework.views import APIView
 
 
@@ -108,6 +105,7 @@ class PolygonsInBbox(APIView):
 
 
 class PolygonsInScreen(APIView):
+
     @swagger_auto_schema(request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
@@ -131,6 +129,19 @@ class PolygonsInScreen(APIView):
         required=['_southWest', '_northEast']
     ))
     def post(self, request, *args, **kwargs):
+        """
+        *Example*
+            {
+            "_southWest": {
+                "lat": 42.70399473713915,
+                "lng": 78.38859908922761
+            },
+            "_northEast": {
+                "lat": 42.71093250783867,
+                "lng": 78.4042846475467
+            }
+            }
+        """
 
         if request.data:
             bboxs = Polygon.from_bbox((request.data['_southWest']['lng'], request.data['_southWest']['lat'],

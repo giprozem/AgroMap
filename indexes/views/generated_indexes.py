@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from indexes.utils import veg_index_creating
 
 
-class TestAPIView(APIView):
+class CreatingVegIndexesAPIView(APIView):
     def get(self, request):
         thread_object = Thread(target=veg_index_creating)
         thread_object.start()
