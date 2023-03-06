@@ -2,6 +2,7 @@ from django.contrib.gis.geos import Point, Polygon
 from django.db import connection
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -106,28 +107,78 @@ class PolygonsInBbox(APIView):
 
 class PolygonsInScreen(APIView):
 
-    @swagger_auto_schema(request_body=openapi.Schema(
-        type=openapi.TYPE_OBJECT,
-        properties={
-            '_southWest': openapi.Schema(
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                '_southWest': openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'lat': openapi.Schema(type=openapi.TYPE_NUMBER),
+                        'lng': openapi.Schema(type=openapi.TYPE_NUMBER),
+                    },
+                    required=['lat', 'lng']
+                ),
+                '_northEast': openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'lat': openapi.Schema(type=openapi.TYPE_NUMBER),
+                        'lng': openapi.Schema(type=openapi.TYPE_NUMBER),
+                    },
+                    required=['lat', 'lng']
+                ),
+            },
+            required=['_southWest', '_northEast']
+        ),
+        responses={
+            status.HTTP_200_OK: openapi.Schema(
                 type=openapi.TYPE_OBJECT,
                 properties={
-                    'lat': openapi.Schema(type=openapi.TYPE_NUMBER),
-                    'lng': openapi.Schema(type=openapi.TYPE_NUMBER),
+                    'type': openapi.Schema(type=openapi.TYPE_STRING),
+                    'features': openapi.Schema(
+                        type=openapi.TYPE_ARRAY,
+                        items=openapi.Schema(
+                            type=openapi.TYPE_OBJECT,
+                            properties={
+                                'type': openapi.Schema(type=openapi.TYPE_STRING),
+                                'properties': openapi.Schema(
+                                    type=openapi.TYPE_OBJECT,
+                                    properties={
+                                        'contour_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'contour_ink': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'conton_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'farmer_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'contour_year_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'productivity': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'land_type': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                    }
+                                ),
+                                'geometry': openapi.Schema(
+                                    type=openapi.TYPE_OBJECT,
+                                    properties={
+                                        'type': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'coordinates': openapi.Schema(
+                                            type=openapi.TYPE_ARRAY,
+                                            items=openapi.Schema(
+                                                type=openapi.TYPE_ARRAY,
+                                                items=openapi.Schema(
+                                                    type=openapi.TYPE_ARRAY,
+                                                    items=openapi.Schema(
+                                                        type=openapi.TYPE_NUMBER,
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                    ),
                 },
-                required=['lat', 'lng']
-            ),
-            '_northEast': openapi.Schema(
-                type=openapi.TYPE_OBJECT,
-                properties={
-                    'lat': openapi.Schema(type=openapi.TYPE_NUMBER),
-                    'lng': openapi.Schema(type=openapi.TYPE_NUMBER),
-                },
-                required=['lat', 'lng']
             ),
         },
-        required=['_southWest', '_northEast']
-    ))
+        operation_description="Your operation description goes here",
+    )
     def post(self, request, *args, **kwargs):
         """
         *Example*

@@ -4,7 +4,7 @@ from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, status
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -39,7 +39,53 @@ class FilterContourAPIView(APIView):
             openapi.Parameter('district', openapi.IN_QUERY, description="District", type=openapi.TYPE_INTEGER),
             openapi.Parameter('conton', openapi.IN_QUERY, description="Conton", type=openapi.TYPE_INTEGER),
         ],
-        responses={200: 'Success'}
+        responses={
+            status.HTTP_200_OK: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'type': openapi.Schema(type=openapi.TYPE_STRING),
+                    'features': openapi.Schema(
+                        type=openapi.TYPE_ARRAY,
+                        items=openapi.Schema(
+                            type=openapi.TYPE_OBJECT,
+                            properties={
+                                'type': openapi.Schema(type=openapi.TYPE_STRING),
+                                'properties': openapi.Schema(
+                                    type=openapi.TYPE_OBJECT,
+                                    properties={
+                                        'contour_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'contour_ink': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'conton_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'farmer_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'contour_year_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'productivity': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'land_type': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                    }
+                                ),
+                                'geometry': openapi.Schema(
+                                    type=openapi.TYPE_OBJECT,
+                                    properties={
+                                        'type': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'coordinates': openapi.Schema(
+                                            type=openapi.TYPE_ARRAY,
+                                            items=openapi.Schema(
+                                                type=openapi.TYPE_ARRAY,
+                                                items=openapi.Schema(
+                                                    type=openapi.TYPE_ARRAY,
+                                                    items=openapi.Schema(
+                                                        type=openapi.TYPE_NUMBER,
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                    ),
+                },
+            ),
+        },
     )
     @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
@@ -398,7 +444,54 @@ class StatisticsContourProductivityAPIView(APIView):
             openapi.Parameter('district', openapi.IN_QUERY, description="District", type=openapi.TYPE_INTEGER),
             openapi.Parameter('conton', openapi.IN_QUERY, description="Conton", type=openapi.TYPE_INTEGER),
         ],
-        responses={200: 'Success'}
+        responses={
+            status.HTTP_200_OK: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'type': openapi.Schema(type=openapi.TYPE_STRING),
+                    'features': openapi.Schema(
+                        type=openapi.TYPE_ARRAY,
+                        items=openapi.Schema(
+                            type=openapi.TYPE_OBJECT,
+                            properties={
+                                'type': openapi.Schema(type=openapi.TYPE_STRING),
+                                'properties': openapi.Schema(
+                                    type=openapi.TYPE_OBJECT,
+                                    properties={
+                                        'contour_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'contour_ink': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'conton_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'farmer_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'contour_year_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'productivity': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'land_type': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                    }
+                                ),
+                                'geometry': openapi.Schema(
+                                    type=openapi.TYPE_OBJECT,
+                                    properties={
+                                        'type': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'coordinates': openapi.Schema(
+                                            type=openapi.TYPE_ARRAY,
+                                            items=openapi.Schema(
+                                                type=openapi.TYPE_ARRAY,
+                                                items=openapi.Schema(
+                                                    type=openapi.TYPE_ARRAY,
+                                                    items=openapi.Schema(
+                                                        type=openapi.TYPE_NUMBER,
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                    ),
+                },
+            ),
+        },
+
     )
     @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
@@ -567,7 +660,54 @@ class MapContourProductivityAPIView(APIView):
             openapi.Parameter('district', openapi.IN_QUERY, description="District", type=openapi.TYPE_INTEGER),
             openapi.Parameter('conton', openapi.IN_QUERY, description="Conton", type=openapi.TYPE_INTEGER),
         ],
-        responses={200: 'Success'}
+        responses={
+            status.HTTP_200_OK: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'type': openapi.Schema(type=openapi.TYPE_STRING),
+                    'features': openapi.Schema(
+                        type=openapi.TYPE_ARRAY,
+                        items=openapi.Schema(
+                            type=openapi.TYPE_OBJECT,
+                            properties={
+                                'type': openapi.Schema(type=openapi.TYPE_STRING),
+                                'properties': openapi.Schema(
+                                    type=openapi.TYPE_OBJECT,
+                                    properties={
+                                        'contour_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'contour_ink': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'conton_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'farmer_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'contour_year_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'productivity': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                        'land_type': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                    }
+                                ),
+                                'geometry': openapi.Schema(
+                                    type=openapi.TYPE_OBJECT,
+                                    properties={
+                                        'type': openapi.Schema(type=openapi.TYPE_STRING),
+                                        'coordinates': openapi.Schema(
+                                            type=openapi.TYPE_ARRAY,
+                                            items=openapi.Schema(
+                                                type=openapi.TYPE_ARRAY,
+                                                items=openapi.Schema(
+                                                    type=openapi.TYPE_ARRAY,
+                                                    items=openapi.Schema(
+                                                        type=openapi.TYPE_NUMBER,
+                                                    ),
+                                                ),
+                                            ),
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                    ),
+                },
+            ),
+        },
+
     )
     @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
