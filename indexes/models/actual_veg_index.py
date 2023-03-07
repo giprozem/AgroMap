@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from simple_history.models import HistoricalRecords
 from django.utils.translation import gettext_lazy as _
 
+
 class ActualVegIndex(models.Model):
     index_image = models.FileField(upload_to='index_image', verbose_name=_("Изображение индекса"), blank=True)
     average_value = models.DecimalField(
