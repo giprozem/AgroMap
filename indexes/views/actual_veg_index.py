@@ -1,4 +1,5 @@
-from rest_framework.generics import ListAPIView
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -6,28 +7,33 @@ from indexes.models.actual_veg_index import ActualVegIndex
 from indexes.serializers.actual_veg_index import ActuaVegIndexSerializer
 
 
-class SatelliteImagesDate(APIView):
-    """
-    required:
-    first param = index_id
-    second param = contour id
-    """
-    def get(self, request, *args, **kwargs):
-        index = kwargs['index']
-        contour = kwargs['contour']
-        result = ActualVegIndex.objects.filter(index=index).filter(contour=contour)
-        serializer = ActuaVegIndexSerializer(result, many=True)
-        return Response(serializer.data, status=200)
-
-
 class ActualIndexesOfContourYear(APIView):
-    """
-    required:
-    param = contour_id
-    """
-
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                name='contour_id',
+                in_=openapi.IN_QUERY,
+                type=openapi.TYPE_INTEGER,
+                description='Contour ID',
+                required=True
+            )
+        ],
+        responses={
+            200: openapi.Response(
+                description='Successful response',
+                schema=ActuaVegIndexSerializer(many=True)
+            ),
+            400: openapi.Response(
+                description='We have no data to show',
+                schema=ActuaVegIndexSerializer(many=True)
+            )
+        },
+        operation_summary='required contour_id return all indexes and values of required conrour'
+    )
     def get(self, request, *args, **kwargs):
-        contour = request.query_params['contour_id']
-        response = ActualVegIndex.objects.filter(contour=contour)
+
+        response = ActualVegIndex.objects.filter(contour=request.query_params['contour_id'])
         serializer = ActuaVegIndexSerializer(response, many=True, context={'request': request})
-        return Response(serializer.data, status=200)
+        if response:
+            return Response(serializer.data, status=200)
+        return Response('We have no data to show', status=400)
