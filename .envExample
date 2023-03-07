@@ -3,3 +3,4 @@ POSTGRES_USER=plot_user
 POSTGRES_PASSWORD=plot_password
 POSTGRES_HOST=postgis
 POSTGRES_PORT=5432
+SECRET_KEY=some_secret_key

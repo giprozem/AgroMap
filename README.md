@@ -27,6 +27,7 @@ The web backend expects the following environment variables to be set:
 - `POSTGRES_USER`
 - `POSTGRES_HOST`
 - `POSTGRES_PORT`
+- `SECRET_KEY`
 
 
 ### Setup
