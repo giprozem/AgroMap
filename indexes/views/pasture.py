@@ -6,9 +6,13 @@ from rest_framework.views import APIView
 
 from gip.models import ContourYear
 from indexes.models import ContourAverageIndex, ProductivityClass
+from drf_yasg.utils import swagger_auto_schema
 
 
 class CreatingAverage(APIView):
+    @swagger_auto_schema(
+        operation_summary='for now do not required for front'
+    )
     def post(self, request, *args, **kwargs):
         """
         required query_params:
