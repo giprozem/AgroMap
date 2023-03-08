@@ -14,10 +14,10 @@ from gip.views.geoserver import Geoserver
 from hub.views.authetificated import LoginHubView
 from hub.views.zem_balance_api import ZemBalanceViewSet
 
-router = DefaultRouter()
-
-#Zem Balance
-router.register('zem_balance', ZemBalanceViewSet, basename='zem_balance')
+# router = DefaultRouter()
+#
+# #Zem Balance
+# router.register('zem_balance', ZemBalanceViewSet, basename='zem_balance')
 
 
 schema_view = get_schema_view(
@@ -30,15 +30,12 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
-    path('', include(router.urls)),
     path('hub/', include("hub.urls")),
     path('', include('indexes.urls')),
     path('', include('gip.urls')),
     path('docs/', schema_view.with_ui()),
     path("schema/", Schema.as_view()),
-    path('login_hub/', LoginHubView.as_view()),
     path('login_agromap/', LoginAgromapView.as_view()),
-
     path('geoserver/', Geoserver.as_view()),
 ]
 
