@@ -37,3 +37,26 @@ class ActualIndexesOfContourYear(APIView):
         if response:
             return Response(serializer.data, status=200)
         return Response('We have no data to show', status=400)
+
+
+class SatelliteImagesDate(APIView):
+    @swagger_auto_schema(
+        responses={
+            200: openapi.Response(
+                description='Successful response',
+                schema=ActuaVegIndexSerializer(many=True)
+            ),
+            400: openapi.Response(
+                description='We have no data to show',
+                schema=ActuaVegIndexSerializer(many=True)
+            )
+        },
+        operation_summary='required contour_id return all indexes and values of required conrour'
+    )
+    def get(self, request, *args, **kwargs):
+        index = kwargs['index']
+        contour = kwargs['contour']
+        result = ActualVegIndex.objects.filter(index=index).filter(contour=contour)
+        serializer = ActuaVegIndexSerializer(result, many=True)
+        return Response(serializer.data, status=200)
+
