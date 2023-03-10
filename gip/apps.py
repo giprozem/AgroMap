@@ -6,3 +6,6 @@ class GipConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'gip'
     verbose_name = _('АгроМап')
+
+    def ready(self):
+        import gip.signals
