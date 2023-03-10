@@ -1,5 +1,6 @@
 from django.urls import path
 
+from gip.views.conton import ContonAPIView
 from gip.views.contour import FilterContourAPIView, ContourStatisticsAPIView, StatisticsContourProductivityAPIView, \
     MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView
 from gip.views.district import DistrictAPIView
@@ -25,4 +26,5 @@ urlpatterns = [
     path('geoserver/', Geoserver.as_view()),
     path('region/', RegionAPIView.as_view()),
     path('district/', DistrictAPIView.as_view()),
+    path('conton/', ContonAPIView.as_view()),
 ]

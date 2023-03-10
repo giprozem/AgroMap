@@ -14,4 +14,4 @@ class DistrictWithoutPolygonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = District
-        exclude = ('polygon', 'created_at', 'updated_at', )
+        exclude = ('polygon', 'created_at', 'updated_at', 'name', )

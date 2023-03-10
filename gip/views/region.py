@@ -4,24 +4,83 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from gip.models import Region
-from gip.serializers.region import RegionSerializer
+from gip.serializers.region import RegionSerializer, RegionWithoutPolygonSerializer
 
 
 class RegionAPIView(APIView):
     @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                name='polygon',
+                in_=openapi.IN_QUERY,
+                description='Flag to include/exclude polygon data',
+                type=openapi.TYPE_BOOLEAN,
+                required=True
+            )
+        ],
         responses={
             200: openapi.Response(
-                description='Successful response',
-                schema=RegionSerializer(many=True)
+                description='List of regions',
+                schema=openapi.Schema(
+                    type=openapi.TYPE_ARRAY,
+                    items=openapi.Schema(
+                        type=openapi.TYPE_OBJECT,
+                        properties={
+                            'id': openapi.Schema(
+                                type=openapi.TYPE_INTEGER,
+                                description='Region ID'
+                            ),
+                            'name': openapi.Schema(
+                                type=openapi.TYPE_STRING,
+                                description='Region name'
+                            ),
+                            'polygon': openapi.Schema(
+                                type=openapi.TYPE_OBJECT,
+                                description='Region polygon data',
+                                properties={
+                                    'type': openapi.Schema(
+                                        type=openapi.TYPE_STRING,
+                                        description='Polygon type'
+                                    ),
+                                    'coordinates': openapi.Schema(
+                                        type=openapi.TYPE_ARRAY,
+                                        description='List of coordinates',
+                                        items=openapi.Schema(
+                                            type=openapi.TYPE_ARRAY,
+                                            items=openapi.Schema(
+                                                type=openapi.TYPE_NUMBER
+                                            )
+                                        )
+                                    )
+                                }
+                            )
+                        }
+                    )
+                )
             ),
             400: openapi.Response(
-                description='We have no data to show',
-                schema=RegionSerializer(many=True)
+                description='Bad request',
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'detail': openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            description='Error message'
+                        )
+                    }
+                )
             )
-        },
-        operation_summary='return all regions with all data'
+        }
     )
     def get(self, request, *args, **kwargs):
-        queryset = Region.objects.all()
-        serializer = RegionSerializer(queryset, many=True)
-        return Response(serializer.data, status=200)
+        try:
+            if request.query_params['polygon'] == 'true':
+                query = Region.objects.all()
+                serializer = RegionSerializer(query, many=True)
+                return Response(serializer.data, status=200)
+            elif request.query_params['polygon'] == 'false':
+                query = Region.objects.all()
+                serializer = RegionWithoutPolygonSerializer(query, many=True)
+                return Response(serializer.data, status=200)
+        except Exception as e:
+            return Response('Required polygon param', status=400)
