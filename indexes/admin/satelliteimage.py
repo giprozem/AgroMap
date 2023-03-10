@@ -53,7 +53,5 @@ class SciHubAreaInterestAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 
 @admin.register(SciHubImageDate)
 class SciHubImageDateAdmin(LeafletGeoAdmin, SimpleHistoryAdmin, admin.ModelAdmin):
-    # formfield_overrides = {
-    #     models.FileField: {'widget': FileInput}
-    # }
-    pass
+    list_display = ('id', 'date', 'area_interest')
+    list_display_links = ('id', 'date', 'area_interest')
