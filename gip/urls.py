@@ -2,6 +2,7 @@ from django.urls import path
 
 from gip.views.contour import FilterContourAPIView, ContourStatisticsAPIView, StatisticsContourProductivityAPIView, \
     MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView
+from gip.views.district import DistrictAPIView
 from gip.views.geoserver import Geoserver
 from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox, PolygonsInScreen
 from gip.views.region import RegionAPIView
@@ -23,4 +24,5 @@ urlpatterns = [
     path('polygons-in-screen/', PolygonsInScreen.as_view()),
     path('geoserver/', Geoserver.as_view()),
     path('region/', RegionAPIView.as_view()),
+    path('district/', DistrictAPIView.as_view()),
 ]

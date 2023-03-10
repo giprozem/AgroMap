@@ -11,7 +11,8 @@ SECRET_KEY = config('SECRET_KEY').split(',')
 
 DEBUG = True
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
+# ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['https://adminagro.24mycrm.com', 'https://10.118.50.27']
 
