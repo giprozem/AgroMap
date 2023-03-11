@@ -4,6 +4,7 @@ import time
 
 import requests
 from django.db import connection
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import geopandas as gpd
@@ -12,6 +13,9 @@ from decouple import config
 
 
 class Geoserver(APIView):
+    @swagger_auto_schema(
+        operation_summary='do not required for front'
+    )
     def get(self, request, *args, **kwargs):
         with connection.cursor() as cursor:
             cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 1 ELSE 0 END AS "Type productivity",
@@ -32,7 +36,7 @@ class Geoserver(APIView):
                 data.append({"type": "Feature", "properties": {'id': i[1], 'rgn': i[2], 'dst': i[3], 'cntn': i[4],
                                                                'clt': i[5], 'ltype': i[6], 'year': i[7], 'area': i[8],
                                                                'prdvty': i[0]},
-                                                "geometry": eval(i[-1])})
+                             "geometry": eval(i[-1])})
 
             geojson_data = {"type": "FeatureCollection", "features": data}
 
@@ -111,6 +115,5 @@ class Geoserver(APIView):
                           'srs': 'EPSG:4326',
                           'type': 'ESRI Shapefile'
                       }})
-
 
         return Response('OK')

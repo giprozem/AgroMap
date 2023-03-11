@@ -1,6 +1,7 @@
 import requests
 from decouple import config
 from django.contrib.gis.geos import GEOSGeometry
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -64,6 +65,9 @@ class ZemBalanceViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.R
 
 
 class AsrEniCodeAPIView(APIView):
+    @swagger_auto_schema(
+        operation_summary='do not required for front'
+    )
     def get(self, request, *args, **kwargs):
         ASR_URL = config("ASR_URL")
         eni_code = request.GET.get('eni_code')
@@ -72,7 +76,8 @@ class AsrEniCodeAPIView(APIView):
             get_asr_json = get_asr.json()
             data = {'propcode': get_asr_json[0]['propcode'], 'propform': propform.get(get_asr_json[0]['propform']),
                     'proptype': proptype.get(get_asr_json[0]['proptype']),
-                    'propforuse': propforuse.get(get_asr_json[0]['propforuse']), 'propfor': propfor.get(get_asr_json[0]['propfor']),
+                    'propforuse': propforuse.get(get_asr_json[0]['propforuse']),
+                    'propfor': propfor.get(get_asr_json[0]['propfor']),
                     'propstatus': propstatus.get(get_asr_json[0]['propstatus']),
                     'real_area': get_asr_json[0]['real_area'], 'legl_area': get_asr_json[0]['legl_area'],
                     'ate_name': get_asr_json[0]['ate_name'], 'ate_type_name': get_asr_json[0]['ate_type_name'],
@@ -80,7 +85,8 @@ class AsrEniCodeAPIView(APIView):
                     'ate3_name': get_asr_json[0]['ate3_name'], 'ate3_type_name': get_asr_json[0]['ate3_type_name'],
                     'street_name': get_asr_json[0]['street_name'],
                     'street_type_name': get_asr_json[0]['street_type_name'],
-                    'building': get_asr_json[0]['building'], 'flat': get_asr_json[0]['flat'], 'uchnum': get_asr_json[0]['uchnum']}
+                    'building': get_asr_json[0]['building'], 'flat': get_asr_json[0]['flat'],
+                    'uchnum': get_asr_json[0]['uchnum']}
             return Response(data)
         else:
             return Response('NULL')
