@@ -3,13 +3,11 @@ import re
 import shutil
 import time
 from datetime import datetime
-from osgeo import ogr, osr, gdal
+from osgeo import osr
 
-import rasterio
 from drf_yasg.utils import swagger_auto_schema
 from pyproj import Proj
 from django.contrib.gis.geos import GEOSGeometry
-from pyproj import transform
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -33,9 +31,6 @@ class DownloadAPIView(APIView):
         first_day_of_previous_month = date(current_date.year, current_date.month - 1, 1)
 
         output = 'output/'
-
-        inProj = Proj(init='epsg:28473')
-        outProj = Proj(init='epsg:4326')
 
         # Скачиваем снимки через Sci-hub
         api = SentinelAPI('kaiumamanbaev', 'Copernicus123!', 'https://scihub.copernicus.eu/dhus')
