@@ -5,6 +5,7 @@ import time
 import requests
 from django.db import connection
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import geopandas as gpd
@@ -13,6 +14,8 @@ from decouple import config
 
 
 class Geoserver(APIView):
+    permission_classes = [IsAdminUser]
+
     @swagger_auto_schema(
         operation_summary='do not required for front'
     )
