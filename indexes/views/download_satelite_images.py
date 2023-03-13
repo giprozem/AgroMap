@@ -3,6 +3,7 @@ import re
 import shutil
 import time
 from datetime import datetime
+from osgeo import ogr, osr, gdal
 
 import rasterio
 from drf_yasg.utils import swagger_auto_schema
@@ -54,7 +55,7 @@ class DownloadAPIView(APIView):
 
             if len(products) >= 1:
                 product_id = list(products.keys())[0]  # Получаем идентификатор продукта
-                # api.download(product_id, directory_path=output)
+                api.download(product_id, directory_path=output)
             else:
                 print("Не удалось получить ни один продукт")
 
@@ -92,29 +93,33 @@ class DownloadAPIView(APIView):
                                         sci_hub_image_date.B01.save('B01.tif',
                                                                     open(f"{img_data_path}/{filename}", 'rb'))
                                     elif re.search(".*B02.*.tif", filename):
-                                        # Извлечение координат из Geotiff
-                                        with rasterio.open(f"{img_data_path}/{filename}") as src:
-                                            geometry = [[
-                                                [src.bounds.left, src.bounds.bottom],
-                                                [src.bounds.left, src.bounds.top],
-                                                [src.bounds.right, src.bounds.top],
-                                                [src.bounds.right, src.bounds.bottom],
-                                                [src.bounds.left, src.bounds.bottom]
-                                            ]]
+                                        # Открываем файл в режиме чтения
+                                        ds = gdal.Open(f"{img_data_path}/{filename}", gdal.GA_ReadOnly)
 
-                                            coords = []
-                                            # Перевод с метровых координат в формате epsg:4326
-                                            for i in range(len(geometry[0])):
-                                                x1, y1 = geometry[0][i][0], geometry[0][i][1]
-                                                x2, y2 = transform(inProj, outProj, x1, y1)
-                                                coords.append([x2, y2])
+                                        # Получаем преобразование координат между проекцией изображения и WGS84
+                                        proj = osr.SpatialReference(wkt=ds.GetProjection())
+                                        proj_wgs84 = osr.SpatialReference()
+                                        proj_wgs84.ImportFromEPSG(4326)  # код EPSG для WGS84
+                                        transform = osr.CoordinateTransformation(proj, proj_wgs84)
 
-                                            coords.append(coords[0])
-                                            geojson = {
-                                                "type": "Polygon",
-                                                "coordinates": [coords]
-                                            }
-                                            sci_hub_image_date.polygon = GEOSGeometry(f"{geojson}")
+                                        # Получаем границы изображения в координатах проекции
+                                        ulx, xres, xskew, uly, yskew, yres = ds.GetGeoTransform()
+                                        lrx = ulx + (ds.RasterXSize * xres)
+                                        lry = uly + (ds.RasterYSize * yres)
+
+                                        # Преобразуем границы изображения в координаты WGS84
+                                        ul_lon, ul_lat, _ = transform.TransformPoint(ulx, uly)
+                                        lr_lon, lr_lat, _ = transform.TransformPoint(lrx, lry)
+
+                                        # Создаем объект границ изображения в формате GeoJSON
+                                        coords = [
+                                            [[ul_lat, ul_lon, ], [ul_lat, lr_lon], [lr_lat, lr_lon], [lr_lat, ul_lon],
+                                             [ul_lat, ul_lon]]]
+                                        geojson = {
+                                            "type": "Polygon",
+                                            "coordinates": coords
+                                        }
+                                        sci_hub_image_date.polygon = GEOSGeometry(f"{geojson}")
                                         sci_hub_image_date.B02.save('B02.tif',
                                                                     open(f"{img_data_path}/{filename}", 'rb'))
                                     elif re.search(".*B03.*.tif", filename):
