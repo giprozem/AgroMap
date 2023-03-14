@@ -4,14 +4,47 @@ from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import viewsets, filters, status
+from rest_framework import viewsets, filters, status, mixins
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
-from gip.models.contour import Contour
+from gip.models.contour import Contour, ContourYear
 from gip.pagination.contour_pagination import SearchContourPagination
-from gip.serializers.contour import ContourSerializer
+from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializer, AuthDetailContourYearSerializer
+
+
+class AuthDetailContourViewSet(mixins.CreateModelMixin,
+                               mixins.RetrieveModelMixin,
+                               mixins.UpdateModelMixin,
+                               mixins.DestroyModelMixin,
+                               viewsets.GenericViewSet):
+    queryset = Contour.objects.all()
+    serializer_class = AuthDetailContourSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def destroy(self):
+        item = self.get_object()
+        item.is_deleted = True
+        item.save()
+        return Response('Contour is deleted')
+
+
+class AuthDetailContourYearViewSet(mixins.CreateModelMixin,
+                                   mixins.RetrieveModelMixin,
+                                   mixins.UpdateModelMixin,
+                                   mixins.DestroyModelMixin,
+                                   viewsets.GenericViewSet):
+    queryset = ContourYear.objects.all()
+    serializer_class = AuthDetailContourYearSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def destroy(self):
+        item = self.get_object()
+        item.is_deleted = True
+        item.save()
+        return Response('Contour-year is deleted')
 
 
 class SearchContourViewSet(viewsets.ReadOnlyModelViewSet):

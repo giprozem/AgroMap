@@ -1,14 +1,20 @@
-from django.urls import path
+from django.urls import path, include
 
 from gip.views.conton import ContonAPIView
 from gip.views.contour import FilterContourAPIView, ContourStatisticsAPIView, StatisticsContourProductivityAPIView, \
-    MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView
+    MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView, AuthDetailContourViewSet, \
+    AuthDetailContourYearViewSet
 from gip.views.district import DistrictAPIView
 from gip.views.geoserver import Geoserver
 from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox, PolygonsInScreen
 from gip.views.region import RegionAPIView
 from gip.views.soil import SoilAPIView
 from gip.views.statistics import GraphicTablesAPIView, CulturePercentAPIView
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register('contour', AuthDetailContourViewSet)
+router.register('contour-year', AuthDetailContourYearViewSet)
 
 urlpatterns = [
     path('soil-creating/', SoilAPIView.as_view()),
@@ -27,4 +33,5 @@ urlpatterns = [
     path('region/', RegionAPIView.as_view()),
     path('district/', DistrictAPIView.as_view()),
     path('conton/', ContonAPIView.as_view()),
+    path('', include(router.urls)),
 ]
