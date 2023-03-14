@@ -70,109 +70,112 @@ def veg_index_creating():
                 cutting_error.append(f'B11 layer cutting error {b11_error}')
 
             for veg_index in VegetationIndex.objects.all():
-                if IndexCreatingReport.objects.filter(
-                        contour_id=contour.id,
-                        is_processed=True,
-                        satellite_image=image_date,
-                        veg_index=veg_index
-                ):
-
+                if IndexCreatingReport.objects.filter(veg_index=veg_index, contour=contour, satellite_image=image_date):
                     pass
                 else:
-                    try:
-                        if veg_index.name == 'NDVI':
-                            average_value = average_ndvi(red_file=output_path_b04, nir_file=output_path_b8a)
-
-                            result_to_save = ndvi_calculator(
-                                B04=output_path_b04,
-                                B08=output_path_b8a,
-                                saving_file_name=file_name
-                            )
-
-                        elif veg_index.name == 'NDMI':
-                            average_value = average_ndmi(swir_file=output_path_b11, nir_file=output_path_b8a)
-
-                            result_to_save = ndmi_calculator(
-                                B11=output_path_b11,
-                                B08=output_path_b8a,
-                                saving_file_name=file_name
-                            )
-
-                        elif veg_index.name == 'NDWI':
-                            average_value = average_ndwi(green_file=output_path_b03, nir_file=output_path_b8a)
-
-                            result_to_save = ndwi_calculator(
-                                B03=output_path_b03,
-                                B08=output_path_b8a,
-                                saving_file_name=file_name
-                            )
-                        elif veg_index.name == 'NDRE':
-                            average_value = average_ndre(red_file=output_path_b07, nir_file=output_path_b8a)
-
-                            result_to_save = ndre_calculator(
-                                B07=output_path_b07,
-                                B8A=output_path_b8a,
-                                saving_file_name=file_name
-                            )
-                        elif veg_index.name == 'SAVI':
-                            average_value = average_savi(red_file=output_path_b04, nir_file=output_path_b8a)
-
-                            result_to_save = savi_calculator(
-                                B04=output_path_b04,
-                                B08=output_path_b8a,
-                                saving_file_name=file_name
-                            )
-
-                        elif veg_index.name == 'VARI':
-                            average_value = average_vari(
-                                red_file=output_path_b04,
-                                green_file=output_path_b03,
-                                blue_file=output_path_b02
-                            )
-
-                            result_to_save = vari_calculator(
-                                B02=output_path_b02,
-                                B03=output_path_b03,
-                                B04=output_path_b04,
-                                saving_file_name=file_name
-                            )
-
-                        else:
-                            raise ObjectDoesNotExist(_('Ошибка создания индекса растительности, проверьте имена индексов'))
-                        meaning_of_average_value = IndexMeaning.objects.filter(
-                            index=veg_index
-                        ).filter(
-                            min_index_value__lt=average_value
-                        ).filter(
-                            max_index_value__gte=average_value
-                        ).first()
-
-                        actual = ActualVegIndex.objects.create(
-                            average_value=average_value,
-                            meaning_of_average_value=meaning_of_average_value,
+                    if IndexCreatingReport.objects.filter(
                             contour_id=contour.id,
-                            index_id=veg_index.id,
-                            date=image_date.date
-                        )
-                        actual.index_image.save(f'{file_name}.png', result_to_save)
-
-                        IndexCreatingReport.objects.create(
-                            contour_id=contour.id,
-                            veg_index_id=veg_index.id,
-                            satellite_image_id=image_date.id,
                             is_processed=True,
-                            process_error='No error'
-                        )
-                    except Exception as e:
-                        plt.close()
-                        # creating report
-                        IndexCreatingReport.objects.create(
-                            contour_id=contour.id,
-                            veg_index_id=veg_index.id,
-                            satellite_image_id=image_date.id,
-                            is_processed=False,
-                            process_error=f'{e}, {cutting_error}'
-                        )
+                            satellite_image=image_date,
+                            veg_index=veg_index
+                    ):
+
+                        pass
+                    else:
+                        try:
+                            if veg_index.name == 'NDVI':
+                                average_value = average_ndvi(red_file=output_path_b04, nir_file=output_path_b8a)
+
+                                result_to_save = ndvi_calculator(
+                                    B04=output_path_b04,
+                                    B08=output_path_b8a,
+                                    saving_file_name=file_name
+                                )
+
+                            elif veg_index.name == 'NDMI':
+                                average_value = average_ndmi(swir_file=output_path_b11, nir_file=output_path_b8a)
+
+                                result_to_save = ndmi_calculator(
+                                    B11=output_path_b11,
+                                    B08=output_path_b8a,
+                                    saving_file_name=file_name
+                                )
+
+                            elif veg_index.name == 'NDWI':
+                                average_value = average_ndwi(green_file=output_path_b03, nir_file=output_path_b8a)
+
+                                result_to_save = ndwi_calculator(
+                                    B03=output_path_b03,
+                                    B08=output_path_b8a,
+                                    saving_file_name=file_name
+                                )
+                            elif veg_index.name == 'NDRE':
+                                average_value = average_ndre(red_file=output_path_b07, nir_file=output_path_b8a)
+
+                                result_to_save = ndre_calculator(
+                                    B07=output_path_b07,
+                                    B8A=output_path_b8a,
+                                    saving_file_name=file_name
+                                )
+                            elif veg_index.name == 'SAVI':
+                                average_value = average_savi(red_file=output_path_b04, nir_file=output_path_b8a)
+
+                                result_to_save = savi_calculator(
+                                    B04=output_path_b04,
+                                    B08=output_path_b8a,
+                                    saving_file_name=file_name
+                                )
+
+                            elif veg_index.name == 'VARI':
+                                average_value = average_vari(
+                                    red_file=output_path_b04,
+                                    green_file=output_path_b03,
+                                    blue_file=output_path_b02
+                                )
+
+                                result_to_save = vari_calculator(
+                                    B02=output_path_b02,
+                                    B03=output_path_b03,
+                                    B04=output_path_b04,
+                                    saving_file_name=file_name
+                                )
+
+                            else:
+                                raise ObjectDoesNotExist(_('Ошибка создания индекса растительности, проверьте имена индексов'))
+                            meaning_of_average_value = IndexMeaning.objects.filter(
+                                index=veg_index
+                            ).filter(
+                                min_index_value__lt=average_value
+                            ).filter(
+                                max_index_value__gte=average_value
+                            ).first()
+
+                            actual = ActualVegIndex.objects.create(
+                                average_value=average_value,
+                                meaning_of_average_value=meaning_of_average_value,
+                                contour_id=contour.id,
+                                index_id=veg_index.id,
+                                date=image_date.date
+                            )
+                            actual.index_image.save(f'{file_name}.png', result_to_save)
+
+                            IndexCreatingReport.objects.create(
+                                contour_id=contour.id,
+                                veg_index_id=veg_index.id,
+                                satellite_image_id=image_date.id,
+                                is_processed=True,
+                                process_error='No error'
+                            )
+                        except Exception as e:
+                            plt.close()
+                            # creating report
+                            IndexCreatingReport.objects.create(
+                                contour_id=contour.id,
+                                veg_index_id=veg_index.id,
+                                satellite_image_id=image_date.id,
+                                is_processed=False,
+                                process_error=f'{e}, {cutting_error}'
+                            )
 
             # Search files with .txt extension in current directory
             pattern = "./media/*.tiff"
