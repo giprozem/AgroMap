@@ -1,4 +1,5 @@
 from django.contrib.gis.geos import GEOSGeometry
+from django.core import serializers
 from django.db import connection
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -10,6 +11,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import GenericViewSet
 
 from gip.models.contour import Contour, ContourYear
 from gip.pagination.contour_pagination import SearchContourPagination
@@ -25,8 +27,9 @@ class AuthDetailContourViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_deleted = True
+        ContourYear.objects.filter(contour_id=instance.pk).update(is_deleted=True)
         instance.save()
-        return Response('Contour is deleted')
+        return Response('Contour and contour-year is deleted')
 
 
 class AuthDetailContourYearViewSet(viewsets.ModelViewSet):
