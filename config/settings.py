@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'indexes',
     'culture_model',
     'hub',
-    'account'
+    'account',
+    # AI container
+    'container',
 ]
 
 
