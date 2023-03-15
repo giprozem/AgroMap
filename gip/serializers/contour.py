@@ -44,7 +44,7 @@ class ContourSerializer(serializers.ModelSerializer):
 class ContourYearSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = ContourYear
-        exclude = ('productivity', )
+        fields = '__all__'
         geo_field = 'polygon'
 
 
@@ -57,8 +57,22 @@ class LandTypeSerializer(serializers.ModelSerializer):
 class AuthDetailContourYearSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = ContourYear
-        exclude = ('productivity', )
+        fields = '__all__'
         geo_field = 'polygon'
+
+    def validate_year(self, value):
+        if int(value) < 2010:
+            raise serializers.ValidationError("Год должен быть не менее 2010 года")
+        return value
+
+    def validate(self, data):
+        if int(data['year']) > 2023:
+            raise serializers.ValidationError("Год не может быть больше текущего года")
+        return data
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.error_messages['required'] = 'Это поле обязательно для заполнения'
 
 
 class AuthDetailContourSerializer(serializers.ModelSerializer):
