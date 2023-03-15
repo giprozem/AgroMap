@@ -40,8 +40,6 @@ INSTALLED_APPS = [
     'culture_model',
     'hub',
     'account',
-    # AI container
-    'container',
 ]
 
 
