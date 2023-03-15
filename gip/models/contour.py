@@ -52,7 +52,8 @@ class ContourYear(BaseModel):
     area_ha = models.FloatField(blank=True, null=True, verbose_name=_("Площадь в гектарах"))
     is_deleted = models.BooleanField(default=False, verbose_name=_('Удаленный'))
     culture = models.ForeignKey(Culture, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Культура'))
-    elevation = models.CharField(max_length=25, blank=True, null=True)
+    elevation = models.CharField(max_length=25, blank=True, null=True, verbose_name=_('Высота'))
+    history = HistoricalRecords(verbose_name=_("История"))
 
     def __str__(self):
         return self.year or self.code_soato
@@ -63,5 +64,9 @@ class ContourYear(BaseModel):
 
 
 class Elevation(models.Model):
-    elevation = models.CharField(max_length=25, blank=True, null=True)
+    elevation = models.CharField(max_length=25, blank=True, null=True, verbose_name=_('Высота'))
     point = models.PointField(verbose_name=_("Контур"), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("Высота")
+        verbose_name_plural = _("Высоты")

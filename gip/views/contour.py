@@ -1,5 +1,4 @@
 from django.contrib.gis.geos import GEOSGeometry
-from django.core import serializers
 from django.db import connection
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -11,7 +10,6 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import GenericViewSet
 
 from gip.models.contour import Contour, ContourYear
 from gip.pagination.contour_pagination import SearchContourPagination
@@ -27,9 +25,8 @@ class AuthDetailContourViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_deleted = True
-        ContourYear.objects.filter(contour_id=instance.pk).update(is_deleted=True)
         instance.save()
-        return Response('Contour and contour-year is deleted')
+        return Response('Contour is deleted')
 
 
 class AuthDetailContourYearViewSet(viewsets.ModelViewSet):
@@ -136,7 +133,7 @@ class FilterContourAPIView(APIView):
             ),
         },
     )
-    @method_decorator(cache_page(60 * 60 * 2))
+    # @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
         year = request.GET.get('year')
@@ -153,6 +150,7 @@ class FilterContourAPIView(APIView):
                                dst.name_ru, dst.name_ky, dst.name_en,
                                cntn.name_ru, cntn.name_ky, cntn.name_en,
                                land.name_ru, land.name_ky, land.name_en,
+                               cntr.is_deleted, gcy.is_deleted,
                                St_AsGeoJSON(gcy.polygon) as polygon   
                                FROM gip_contour AS cntr 
                                JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -161,7 +159,9 @@ class FilterContourAPIView(APIView):
                                JOIN gip_district AS dst ON dst.id=cntn.district_id
                                JOIN gip_region AS rgn ON rgn.id=dst.region_id
                                where rgn.id in ({region}) and dst.id in ({district}) and cntn.id in ({conton}) 
-                               and gcy.type_id in ({land_type}) and gcy.year='{year}' order by cntr.id;
+                               and gcy.type_id in ({land_type}) and gcy.year='{year}' 
+                               and cntr.is_deleted=false and gcy.is_deleted=false 
+                               order by cntr.id;
                                """)
                 rows = cursor.fetchall()
                 data = []
@@ -195,6 +195,7 @@ class FilterContourAPIView(APIView):
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
+                                cntr.is_deleted, gcy.is_deleted,
                                 St_AsGeoJSON(gcy.polygon) as polygon  
                                 FROM gip_contour AS cntr 
                                 JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -203,7 +204,9 @@ class FilterContourAPIView(APIView):
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
                                 where gcy.type_id in ({land_type}) and rgn.id in ({region}) and gcy.year='{year}'
-                                and dst.id in ({district}) order by cntr.id;
+                                and dst.id in ({district}) 
+                                and cntr.is_deleted=false and gcy.is_deleted=false 
+                                order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
                 data = []
@@ -237,6 +240,7 @@ class FilterContourAPIView(APIView):
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
+                                cntr.is_deleted, gcy.is_deleted,
                                 St_AsGeoJSON(gcy.polygon) as polygon  
                                 FROM gip_contour AS cntr 
                                 JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -245,6 +249,7 @@ class FilterContourAPIView(APIView):
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
                                 where gcy.type_id in ({land_type}) and rgn.id in ({region}) and gcy.year='{year}'
+                                and cntr.is_deleted=false and gcy.is_deleted=false 
                                 order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
@@ -279,6 +284,7 @@ class FilterContourAPIView(APIView):
                                     dst.name_ru, dst.name_ky, dst.name_en,
                                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                                     land.name_ru, land.name_ky, land.name_en,
+                                    cntr.is_deleted, gcy.is_deleted,
                                     St_AsGeoJSON(gcy.polygon) as polygon  
                                     FROM gip_contour AS cntr 
                                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -287,8 +293,10 @@ class FilterContourAPIView(APIView):
                                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                                     where gcy.type_id in ({land_type}) and dst.id in ({district}) and gcy.year='{year}'
-                                    and cntn.id in ({conton}) order by cntr.id;
-                                        """)
+                                    and cntn.id in ({conton}) 
+                                    and cntr.is_deleted=false and gcy.is_deleted=false 
+                                    order by cntr.id;
+                                    """)
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -321,6 +329,7 @@ class FilterContourAPIView(APIView):
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
+                                cntr.is_deleted, gcy.is_deleted,
                                 St_AsGeoJSON(gcy.polygon) as polygon  
                                 FROM gip_contour AS cntr 
                                 JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -328,7 +337,8 @@ class FilterContourAPIView(APIView):
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                                where gcy.type_id in ({land_type}) and gcy.year='{year}' and dst.id in ({district}) 
+                                where gcy.type_id in ({land_type}) and gcy.year='{year}' and dst.id in ({district})
+                                and cntr.is_deleted=false and gcy.is_deleted=false
                                 order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
@@ -363,6 +373,7 @@ class FilterContourAPIView(APIView):
                                dst.name_ru, dst.name_ky, dst.name_en,
                                cntn.name_ru, cntn.name_ky, cntn.name_en,
                                land.name_ru, land.name_ky, land.name_en,
+                               cntr.is_deleted, gcy.is_deleted,
                                St_AsGeoJSON(gcy.polygon) as polygon    
                                FROM gip_contour AS cntr 
                                JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -370,7 +381,8 @@ class FilterContourAPIView(APIView):
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                JOIN gip_district AS dst ON dst.id=cntn.district_id
                                JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                               where cntn.id in ({conton}) and gcy.type_id in ({land_type}) and gcy.year='{year}' 
+                               where cntn.id in ({conton}) and gcy.type_id in ({land_type}) and gcy.year='{year}'
+                               and cntr.is_deleted=false and gcy.is_deleted=false
                                order by cntr.id;
                                """)
                 rows = cursor.fetchall()
@@ -405,6 +417,7 @@ class FilterContourAPIView(APIView):
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
+                                cntr.is_deleted, gcy.is_deleted,
                                 St_AsGeoJSON(gcy.polygon) as polygon  
                                 FROM gip_contour AS cntr 
                                 JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -413,6 +426,7 @@ class FilterContourAPIView(APIView):
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
                                 where gcy.year='{year}' and gcy.type_id in ({land_type})
+                                and cntr.is_deleted=false and gcy.is_deleted=false
                                 order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
@@ -570,7 +584,7 @@ class StatisticsContourProductivityAPIView(APIView):
         },
 
     )
-    @method_decorator(cache_page(60 * 60 * 2))
+    # @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
         year = request.GET.get('year')
@@ -584,7 +598,7 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntn.name
+                    cntr.is_deleted, gcy.is_deleted, cntn.name
                     FROM gip_contour AS cntr 
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
@@ -592,7 +606,8 @@ class StatisticsContourProductivityAPIView(APIView):
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     where gcy.year='{year}' and gcy.type_id in ({land_type}) and cntn.id in ({conton}) 
                     and rgn.id in ({region}) and dst.id in ({district})
-                    group by cntn.name;""")
+                    and cntr.is_deleted=false and gcy.is_deleted=false
+                    group by cntn.name, cntr.is_deleted, gcy.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -606,14 +621,15 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntn.name
+                    cntr.is_deleted, gcy.is_deleted, cntn.name
                     FROM gip_contour AS cntr 
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     where rgn.id in ({region}) and gcy.type_id in ({land_type}) and gcy.year='{year}' and dst.id in ({district})
-                    group by cntn.name;""")
+                    and cntr.is_deleted=false and gcy.is_deleted=false
+                    group by cntn.name, cntr.is_deleted, gcy.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -627,14 +643,15 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    dst.name
+                    cntr.is_deleted, gcy.is_deleted, dst.name
                     FROM gip_contour AS cntr 
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     where rgn.id in ({region}) and gcy.type_id in ({land_type}) and gcy.year='{year}'
-                    group by dst.name;""")
+                    and cntr.is_deleted=false and gcy.is_deleted=false
+                    group by dst.name, cntr.is_deleted, gcy.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -648,13 +665,14 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntn.name
+                    cntr.is_deleted, gcy.is_deleted, cntn.name
                     FROM gip_contour AS cntr 
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
-                    where gcy.year='{year}' and gcy.type_id in ({land_type}) and dst.id in ({district}) 
-                    and cntn.id in ({conton}) group by cntn.name;""")
+                    where gcy.year='{year}' and gcy.type_id in ({land_type}) and dst.id in ({district})
+                    and cntr.is_deleted=false and gcy.is_deleted=false
+                    and cntn.id in ({conton}) group by cntn.name, cntr.is_deleted, gcy.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -668,14 +686,15 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntn.name 
+                    cntr.is_deleted, gcy.is_deleted, cntn.name 
                     FROM gip_contour AS cntr 
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     where gcy.year='{year}' and gcy.type_id in ({land_type}) and dst.id in ({district})
-                    group by cntn.name;""")
+                    and cntr.is_deleted=false and gcy.is_deleted=false
+                    group by cntn.name, cntr.is_deleted, gcy.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -689,14 +708,15 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntn.name 
+                    cntr.is_deleted, gcy.is_deleted, cntn.name 
                     FROM gip_contour AS cntr 
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     where gcy.year='{year}' and gcy.type_id in ({land_type}) and cntn.id in ({conton})
-                    group by cntn.name;""")
+                    and cntr.is_deleted=false and gcy.is_deleted=false
+                    group by cntn.name, cntr.is_deleted, gcy.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -710,14 +730,15 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
                     round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
                     round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    rgn.name 
+                    cntr.is_deleted, gcy.is_deleted, rgn.name 
                     FROM gip_contour AS cntr  
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     where gcy.year='{year}' and gcy.type_id in ({land_type})
-                    group by rgn.name;""")
+                    and cntr.is_deleted=false and gcy.is_deleted=false
+                    group by rgn.name, cntr.is_deleted, gcy.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -786,7 +807,7 @@ class MapContourProductivityAPIView(APIView):
         },
 
     )
-    @method_decorator(cache_page(60 * 60 * 2))
+    # @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
         year = request.GET.get('year')
@@ -803,6 +824,7 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
+                    cntr.is_deleted, gcy.is_deleted,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -812,6 +834,7 @@ class MapContourProductivityAPIView(APIView):
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and rgn.id in ({region}) 
                     and dst.id in ({district}) and cntn.id in ({conton})
+                    and cntr.is_deleted=false and gcy.is_deleted=false
                     GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
@@ -866,6 +889,7 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
+                    cntr.is_deleted, gcy.is_deleted,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -874,7 +898,9 @@ class MapContourProductivityAPIView(APIView):
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and rgn.id in ({region}) 
-                    and dst.id in ({district}) GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
+                    and dst.id in ({district}) 
+                    and cntr.is_deleted=false and gcy.is_deleted=false
+                    GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
                 unproductive = []
@@ -927,7 +953,8 @@ class MapContourProductivityAPIView(APIView):
                     rgn.name_ru, rgn.name_ky, rgn.name_en,
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
-                    land.name_ru, land.name_ky, land.name_en, 
+                    land.name_ru, land.name_ky, land.name_en,
+                    cntr.is_deleted, gcy.is_deleted,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -935,7 +962,8 @@ class MapContourProductivityAPIView(APIView):
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and rgn.id in ({region}) 
+                    WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and rgn.id in ({region})
+                    and cntr.is_deleted=false and gcy.is_deleted=false
                     GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
@@ -990,6 +1018,7 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
+                    cntr.is_deleted, gcy.is_deleted,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -998,7 +1027,8 @@ class MapContourProductivityAPIView(APIView):
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and dst.id in ({district})
-                    and cntn.id in ({conton}) 
+                    and cntn.id in ({conton})
+                    and cntr.is_deleted=false and gcy.is_deleted=false
                     GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
@@ -1053,6 +1083,7 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
+                    cntr.is_deleted, gcy.is_deleted,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -1061,6 +1092,7 @@ class MapContourProductivityAPIView(APIView):
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and dst.id in ({district})
+                    and cntr.is_deleted=false and gcy.is_deleted=false
                     GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
@@ -1115,6 +1147,7 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
+                    cntr.is_deleted, gcy.is_deleted,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -1123,6 +1156,7 @@ class MapContourProductivityAPIView(APIView):
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and cntn.id in ({conton})
+                    and cntr.is_deleted=false and gcy.is_deleted=false
                     GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
@@ -1177,6 +1211,7 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
+                    cntr.is_deleted, gcy.is_deleted,
                     St_AsGeoJSON(gcy.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
@@ -1184,7 +1219,8 @@ class MapContourProductivityAPIView(APIView):
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) 
+                    WHERE gcy.year='{year}' AND gcy.type_id in ({land_type})
+                    and cntr.is_deleted=false and gcy.is_deleted=false
                     GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
