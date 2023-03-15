@@ -61,7 +61,7 @@ class ContonAPIView(APIView):
     )
     def get(self, request, *args, **kwargs):
         try:
-            if request.query_params['polygon'] == 'true' and not request.query_params['district_id']:
+            if request.query_params['polygon'] == 'true' and request.query_params['district_id'] == 'false':
                 query = Conton.objects.all()
                 serializer = ContonSerializer(query, many=True)
                 return Response(serializer.data, status=200)
@@ -69,7 +69,7 @@ class ContonAPIView(APIView):
                 query = Conton.objects.filter(district_id=int(request.query_params['district_id']))
                 serializer = ContonSerializer(query, many=True)
                 return Response(serializer.data, status=200)
-            elif request.query_params['polygon'] == 'false' and not request.query_params['district_id']:
+            elif request.query_params['polygon'] == 'false' and request.query_params['district_id'] == 'false':
                 query = Conton.objects.all()
                 serializer = ContonWithoutPolygonSerializer(query, many=True)
                 return Response(serializer.data, status=200)

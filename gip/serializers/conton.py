@@ -10,6 +10,8 @@ class ContonSerializer(serializers.ModelSerializer):
 
 
 class ContonWithoutPolygonSerializer(serializers.ModelSerializer):
+    polygon = serializers.NullBooleanField(default=False)
+
     class Meta:
         model = Conton
-        exclude = ('polygon', 'name', 'created_at', 'updated_at',)
+        exclude = ('name', 'created_at', 'updated_at',)
