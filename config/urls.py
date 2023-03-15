@@ -9,6 +9,7 @@ from schema_graph.views import Schema
 
 from account.views.authenticated import LoginAgromapView
 from config import settings
+from container.views import PredictAPIView, predicting, last_predict
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -26,6 +27,9 @@ urlpatterns = [
     path('docs/', schema_view.with_ui()),
     path("schema/", Schema.as_view()),
     path('login_agromap/', LoginAgromapView.as_view()),
+    path('predict/', PredictAPIView.as_view()),
+    path('predicting/', predicting, name='predicting'),
+    path('last_predict/', last_predict, name='last_predict')
 ]
 
 urlpatterns += i18n_patterns(
