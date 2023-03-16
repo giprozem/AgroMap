@@ -143,25 +143,23 @@ class FilterContourAPIView(APIView):
         if region and district and conton and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                               SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                               gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                               gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                               SELECT cntr.id AS contour_id, 
+                               cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                               cntr.year, cntr.area_ha, cntr.productivity,
                                rgn.name_ru, rgn.name_ky, rgn.name_en,
                                dst.name_ru, dst.name_ky, dst.name_en,
                                cntn.name_ru, cntn.name_ky, cntn.name_en,
                                land.name_ru, land.name_ky, land.name_en,
-                               cntr.is_deleted, gcy.is_deleted,
-                               St_AsGeoJSON(gcy.polygon) as polygon   
+                               cntr.is_deleted,
+                               St_AsGeoJSON(cntr.polygon) as polygon   
                                FROM gip_contour AS cntr 
-                               JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                               JOIN gip_landtype AS land ON land.id=gcy.type_id
+                               JOIN gip_landtype AS land ON land.id=cntr.type_id
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                JOIN gip_district AS dst ON dst.id=cntn.district_id
                                JOIN gip_region AS rgn ON rgn.id=dst.region_id
                                where rgn.id in ({region}) and dst.id in ({district}) and cntn.id in ({conton}) 
-                               and gcy.type_id in ({land_type}) and gcy.year='{year}' 
-                               and cntr.is_deleted=false and gcy.is_deleted=false 
-                               order by cntr.id;
+                               and cntr.type_id in ({land_type}) and cntr.year='{year}' 
+                               and cntr.is_deleted=false order by cntr.id;
                                """)
                 rows = cursor.fetchall()
                 data = []
@@ -169,44 +167,39 @@ class FilterContourAPIView(APIView):
                     data.append({
                         "contour_year": {"type": "FeatureCollection",
                                          "features": [{"type": "Feature",
-                                                       "properties": {'contour_id': i[0], 'contour_cs': i[4],
-                                                                      'contour_year_id': i[1],
-                                                                      'land_type_id': i[2],
-                                                                      'contour_year_cs': i[5],
-                                                                      'year': i[6], 'ink': i[3],
-                                                                      'productivity': i[8], 'area_ha': i[7],
-                                                                      'region_ru': i[9], 'region_ky': i[10],
-                                                                      'region_en': i[11],
-                                                                      'district_ru': i[12], 'district_ky': i[13],
-                                                                      'district_en': i[14],
-                                                                      'conton_ru': i[15], 'conton_ky': i[16],
-                                                                      'conton_en': i[17],
-                                                                      'land_type_ru': i[18], 'land_type_ky': i[19],
-                                                                      'land_type_en': i[20]},
+                                                       "properties": {'contour_id': i[0], 'contour_cs': i[3],
+                                                                      'land_type_id': i[1],
+                                                                      'year': i[4], 'ink': i[2],
+                                                                      'productivity': i[6], 'area_ha': i[5],
+                                                                      'region_ru': i[7], 'region_ky': i[8],
+                                                                      'region_en': i[9],
+                                                                      'district_ru': i[10], 'district_ky': i[11],
+                                                                      'district_en': i[12],
+                                                                      'conton_ru': i[13], 'conton_ky': i[14],
+                                                                      'conton_en': i[15],
+                                                                      'land_type_ru': i[16], 'land_type_ky': i[17],
+                                                                      'land_type_en': i[18]},
                                                        "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif region and district and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                                SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                                gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                                gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                                SELECT cntr.id AS contour_id, 
+                                cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                                cntr.year, cntr.area_ha, cntr.productivity,
                                 rgn.name_ru, rgn.name_ky, rgn.name_en,
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
-                                cntr.is_deleted, gcy.is_deleted,
-                                St_AsGeoJSON(gcy.polygon) as polygon  
+                                cntr.is_deleted,
+                                St_AsGeoJSON(cntr.polygon) as polygon  
                                 FROM gip_contour AS cntr 
-                                JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                                JOIN gip_landtype AS land ON land.id=gcy.type_id
+                                JOIN gip_landtype AS land ON land.id=cntr.type_id
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                                where gcy.type_id in ({land_type}) and rgn.id in ({region}) and gcy.year='{year}'
-                                and dst.id in ({district}) 
-                                and cntr.is_deleted=false and gcy.is_deleted=false 
-                                order by cntr.id;
+                                where cntr.type_id in ({land_type}) and rgn.id in ({region}) and cntr.year='{year}'
+                                and dst.id in ({district}) and cntr.is_deleted=false order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
                 data = []
@@ -214,43 +207,39 @@ class FilterContourAPIView(APIView):
                     data.append({
                         "contour_year": {"type": "FeatureCollection",
                                          "features": [{"type": "Feature",
-                                                       "properties": {'contour_id': i[0], 'contour_cs': i[4],
-                                                                      'contour_year_id': i[1],
-                                                                      'land_type_id': i[2],
-                                                                      'contour_year_cs': i[5],
-                                                                      'year': i[6], 'ink': i[3],
-                                                                      'productivity': i[8], 'area_ha': i[7],
-                                                                      'region_ru': i[9], 'region_ky': i[10],
-                                                                      'region_en': i[11],
-                                                                      'district_ru': i[12], 'district_ky': i[13],
-                                                                      'district_en': i[14],
-                                                                      'conton_ru': i[15], 'conton_ky': i[16],
-                                                                      'conton_en': i[17],
-                                                                      'land_type_ru': i[18], 'land_type_ky': i[19],
-                                                                      'land_type_en': i[20]},
+                                                       "properties": {'contour_id': i[0], 'contour_cs': i[3],
+                                                                      'land_type_id': i[1],
+                                                                      'year': i[4], 'ink': i[2],
+                                                                      'productivity': i[6], 'area_ha': i[5],
+                                                                      'region_ru': i[7], 'region_ky': i[8],
+                                                                      'region_en': i[9],
+                                                                      'district_ru': i[10], 'district_ky': i[11],
+                                                                      'district_en': i[12],
+                                                                      'conton_ru': i[13], 'conton_ky': i[14],
+                                                                      'conton_en': i[15],
+                                                                      'land_type_ru': i[16], 'land_type_ky': i[17],
+                                                                      'land_type_en': i[18]},
                                                        "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif region and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                                SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                                gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                                gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                                SELECT cntr.id AS contour_id,
+                                cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                                cntr.year, cntr.area_ha, cntr.productivity,
                                 rgn.name_ru, rgn.name_ky, rgn.name_en,
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
-                                cntr.is_deleted, gcy.is_deleted,
-                                St_AsGeoJSON(gcy.polygon) as polygon  
+                                cntr.is_deleted,
+                                St_AsGeoJSON(cntr.polygon) as polygon  
                                 FROM gip_contour AS cntr 
-                                JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                                JOIN gip_landtype AS land ON land.id=gcy.type_id
+                                JOIN gip_landtype AS land ON land.id=cntr.type_id
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                                where gcy.type_id in ({land_type}) and rgn.id in ({region}) and gcy.year='{year}'
-                                and cntr.is_deleted=false and gcy.is_deleted=false 
-                                order by cntr.id;
+                                where cntr.type_id in ({land_type}) and rgn.id in ({region}) and cntr.year='{year}'
+                                and cntr.is_deleted=false order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
                 data = []
@@ -258,44 +247,39 @@ class FilterContourAPIView(APIView):
                     data.append({
                         "contour_year": {"type": "FeatureCollection",
                                          "features": [{"type": "Feature",
-                                                       "properties": {'contour_id': i[0], 'contour_cs': i[4],
-                                                                      'contour_year_id': i[1],
-                                                                      'land_type_id': i[2],
-                                                                      'contour_year_cs': i[5],
-                                                                      'year': i[6], 'ink': i[3],
-                                                                      'productivity': i[8], 'area_ha': i[7],
-                                                                      'region_ru': i[9], 'region_ky': i[10],
-                                                                      'region_en': i[11],
-                                                                      'district_ru': i[12], 'district_ky': i[13],
-                                                                      'district_en': i[14],
-                                                                      'conton_ru': i[15], 'conton_ky': i[16],
-                                                                      'conton_en': i[17],
-                                                                      'land_type_ru': i[18], 'land_type_ky': i[19],
-                                                                      'land_type_en': i[20]},
+                                                       "properties": {'contour_id': i[0], 'contour_cs': i[3],
+                                                                      'land_type_id': i[1],
+                                                                      'year': i[4], 'ink': i[2],
+                                                                      'productivity': i[6], 'area_ha': i[5],
+                                                                      'region_ru': i[7], 'region_ky': i[8],
+                                                                      'region_en': i[9],
+                                                                      'district_ru': i[10], 'district_ky': i[11],
+                                                                      'district_en': i[12],
+                                                                      'conton_ru': i[13], 'conton_ky': i[14],
+                                                                      'conton_en': i[15],
+                                                                      'land_type_ru': i[16], 'land_type_ky': i[17],
+                                                                      'land_type_en': i[18]},
                                                        "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif district and conton and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                                    SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                                    SELECT cntr.id AS contour_id,
+                                    cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                                    cntr.year, cntr.area_ha, cntr.productivity,
                                     rgn.name_ru, rgn.name_ky, rgn.name_en,
                                     dst.name_ru, dst.name_ky, dst.name_en,
                                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                                     land.name_ru, land.name_ky, land.name_en,
-                                    cntr.is_deleted, gcy.is_deleted,
-                                    St_AsGeoJSON(gcy.polygon) as polygon  
+                                    cntr.is_deleted,
+                                    St_AsGeoJSON(cntr.polygon) as polygon  
                                     FROM gip_contour AS cntr 
-                                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                                    JOIN gip_landtype AS land ON land.id=gcy.type_id
+                                    JOIN gip_landtype AS land ON land.id=cntr.type_id
                                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                                    where gcy.type_id in ({land_type}) and dst.id in ({district}) and gcy.year='{year}'
-                                    and cntn.id in ({conton}) 
-                                    and cntr.is_deleted=false and gcy.is_deleted=false 
-                                    order by cntr.id;
+                                    where cntr.type_id in ({land_type}) and dst.id in ({district}) and cntr.year='{year}'
+                                    and cntn.id in ({conton}) and cntr.is_deleted=false order by cntr.id;
                                     """)
                 rows = cursor.fetchall()
                 data = []
@@ -303,43 +287,39 @@ class FilterContourAPIView(APIView):
                     data.append({
                         "contour_year": {"type": "FeatureCollection",
                                          "features": [{"type": "Feature",
-                                                       "properties": {'contour_id': i[0], 'contour_cs': i[4],
-                                                                      'contour_year_id': i[1],
-                                                                      'land_type_id': i[2],
-                                                                      'contour_year_cs': i[5],
-                                                                      'year': i[6], 'ink': i[3],
-                                                                      'productivity': i[8], 'area_ha': i[7],
-                                                                      'region_ru': i[9], 'region_ky': i[10],
-                                                                      'region_en': i[11],
-                                                                      'district_ru': i[12], 'district_ky': i[13],
-                                                                      'district_en': i[14],
-                                                                      'conton_ru': i[15], 'conton_ky': i[16],
-                                                                      'conton_en': i[17],
-                                                                      'land_type_ru': i[18], 'land_type_ky': i[19],
-                                                                      'land_type_en': i[20]},
+                                                       "properties": {'contour_id': i[0], 'contour_cs': i[3],
+                                                                      'land_type_id': i[1],
+                                                                      'year': i[4], 'ink': i[2],
+                                                                      'productivity': i[6], 'area_ha': i[5],
+                                                                      'region_ru': i[7], 'region_ky': i[8],
+                                                                      'region_en': i[9],
+                                                                      'district_ru': i[10], 'district_ky': i[11],
+                                                                      'district_en': i[12],
+                                                                      'conton_ru': i[13], 'conton_ky': i[14],
+                                                                      'conton_en': i[15],
+                                                                      'land_type_ru': i[16], 'land_type_ky': i[17],
+                                                                      'land_type_en': i[18]},
                                                        "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif district and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                                SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                                gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                                gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                                SELECT cntr.id AS contour_id,
+                                cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                                cntr.year, cntr.area_ha, cntr.productivity,
                                 rgn.name_ru, rgn.name_ky, rgn.name_en,
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
-                                cntr.is_deleted, gcy.is_deleted,
-                                St_AsGeoJSON(gcy.polygon) as polygon  
+                                cntr.is_deleted,
+                                St_AsGeoJSON(cntr.polygon) as polygon  
                                 FROM gip_contour AS cntr 
-                                JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                                JOIN gip_landtype AS land ON land.id=gcy.type_id
+                                JOIN gip_landtype AS land ON land.id=cntr.type_id
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                                where gcy.type_id in ({land_type}) and gcy.year='{year}' and dst.id in ({district})
-                                and cntr.is_deleted=false and gcy.is_deleted=false
-                                order by cntr.id;
+                                where cntr.type_id in ({land_type}) and cntr.year='{year}' and dst.id in ({district})
+                                and cntr.is_deleted=false order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
                 data = []
@@ -347,43 +327,39 @@ class FilterContourAPIView(APIView):
                     data.append({
                         "contour_year": {"type": "FeatureCollection",
                                          "features": [{"type": "Feature",
-                                                       "properties": {'contour_id': i[0], 'contour_cs': i[4],
-                                                                      'contour_year_id': i[1],
-                                                                      'land_type_id': i[2],
-                                                                      'contour_year_cs': i[5],
-                                                                      'year': i[6], 'ink': i[3],
-                                                                      'productivity': i[8], 'area_ha': i[7],
-                                                                      'region_ru': i[9], 'region_ky': i[10],
-                                                                      'region_en': i[11],
-                                                                      'district_ru': i[12], 'district_ky': i[13],
-                                                                      'district_en': i[14],
-                                                                      'conton_ru': i[15], 'conton_ky': i[16],
-                                                                      'conton_en': i[17],
-                                                                      'land_type_ru': i[18], 'land_type_ky': i[19],
-                                                                      'land_type_en': i[20]},
+                                                       "properties": {'contour_id': i[0], 'contour_cs': i[3],
+                                                                      'land_type_id': i[1],
+                                                                      'year': i[4], 'ink': i[2],
+                                                                      'productivity': i[6], 'area_ha': i[5],
+                                                                      'region_ru': i[7], 'region_ky': i[8],
+                                                                      'region_en': i[9],
+                                                                      'district_ru': i[10], 'district_ky': i[11],
+                                                                      'district_en': i[12],
+                                                                      'conton_ru': i[13], 'conton_ky': i[14],
+                                                                      'conton_en': i[15],
+                                                                      'land_type_ru': i[16], 'land_type_ky': i[17],
+                                                                      'land_type_en': i[18]},
                                                        "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif conton and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                               SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                               gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                               gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                               SELECT cntr.id AS contour_id,
+                               cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                               cntr.year, cntr.area_ha, cntr.productivity,
                                rgn.name_ru, rgn.name_ky, rgn.name_en,
                                dst.name_ru, dst.name_ky, dst.name_en,
                                cntn.name_ru, cntn.name_ky, cntn.name_en,
                                land.name_ru, land.name_ky, land.name_en,
-                               cntr.is_deleted, gcy.is_deleted,
-                               St_AsGeoJSON(gcy.polygon) as polygon    
+                               cntr.is_deleted,
+                               St_AsGeoJSON(cntr.polygon) as polygon    
                                FROM gip_contour AS cntr 
-                               JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                               JOIN gip_landtype AS land ON land.id=gcy.type_id
+                               JOIN gip_landtype AS land ON land.id=cntr.type_id
                                JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                JOIN gip_district AS dst ON dst.id=cntn.district_id
                                JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                               where cntn.id in ({conton}) and gcy.type_id in ({land_type}) and gcy.year='{year}'
-                               and cntr.is_deleted=false and gcy.is_deleted=false
-                               order by cntr.id;
+                               where cntn.id in ({conton}) and cntr.type_id in ({land_type}) and cntr.year='{year}'
+                               and cntr.is_deleted=false order by cntr.id;
                                """)
                 rows = cursor.fetchall()
                 data = []
@@ -391,43 +367,39 @@ class FilterContourAPIView(APIView):
                     data.append({
                         "contour_year": {"type": "FeatureCollection",
                                          "features": [{"type": "Feature",
-                                                       "properties": {'contour_id': i[0], 'contour_cs': i[4],
-                                                                      'contour_year_id': i[1],
-                                                                      'land_type_id': i[2],
-                                                                      'contour_year_cs': i[5],
-                                                                      'year': i[6], 'ink': i[3],
-                                                                      'productivity': i[8], 'area_ha': i[7],
-                                                                      'region_ru': i[9], 'region_ky': i[10],
-                                                                      'region_en': i[11],
-                                                                      'district_ru': i[12], 'district_ky': i[13],
-                                                                      'district_en': i[14],
-                                                                      'conton_ru': i[15], 'conton_ky': i[16],
-                                                                      'conton_en': i[17],
-                                                                      'land_type_ru': i[18], 'land_type_ky': i[19],
-                                                                      'land_type_en': i[20]},
+                                                       "properties": {'contour_id': i[0], 'contour_cs': i[3],
+                                                                      'land_type_id': i[1],
+                                                                      'year': i[4], 'ink': i[2],
+                                                                      'productivity': i[6], 'area_ha': i[5],
+                                                                      'region_ru': i[7], 'region_ky': i[8],
+                                                                      'region_en': i[9],
+                                                                      'district_ru': i[10], 'district_ky': i[11],
+                                                                      'district_en': i[12],
+                                                                      'conton_ru': i[13], 'conton_ky': i[14],
+                                                                      'conton_en': i[15],
+                                                                      'land_type_ru': i[16], 'land_type_ky': i[17],
+                                                                      'land_type_en': i[18]},
                                                        "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif year and land_type:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                                SELECT cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                                gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                                gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                                SELECT cntr.id AS contour_id,
+                                cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                                cntr.year, cntr.area_ha, cntr.productivity,
                                 rgn.name_ru, rgn.name_ky, rgn.name_en,
                                 dst.name_ru, dst.name_ky, dst.name_en,
                                 cntn.name_ru, cntn.name_ky, cntn.name_en,
                                 land.name_ru, land.name_ky, land.name_en,
-                                cntr.is_deleted, gcy.is_deleted,
-                                St_AsGeoJSON(gcy.polygon) as polygon  
+                                cntr.is_deleted,
+                                St_AsGeoJSON(cntr.polygon) as polygon  
                                 FROM gip_contour AS cntr 
-                                JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                                JOIN gip_landtype AS land ON land.id=gcy.type_id
+                                JOIN gip_landtype AS land ON land.id=cntr.type_id
                                 JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                                 JOIN gip_district AS dst ON dst.id=cntn.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                                where gcy.year='{year}' and gcy.type_id in ({land_type})
-                                and cntr.is_deleted=false and gcy.is_deleted=false
-                                order by cntr.id;
+                                where cntr.year='{year}' and cntr.type_id in ({land_type})
+                                and cntr.is_deleted=false order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
                 data = []
@@ -435,20 +407,18 @@ class FilterContourAPIView(APIView):
                     data.append({
                         "contour_year": {"type": "FeatureCollection",
                                          "features": [{"type": "Feature",
-                                                       "properties": {'contour_id': i[0], 'contour_cs': i[4],
-                                                                      'contour_year_id': i[1],
-                                                                      'land_type_id': i[2],
-                                                                      'contour_year_cs': i[5],
-                                                                      'year': i[6], 'ink': i[3],
-                                                                      'productivity': i[8], 'area_ha': i[7],
-                                                                      'region_ru': i[9], 'region_ky': i[10],
-                                                                      'region_en': i[11],
-                                                                      'district_ru': i[12], 'district_ky': i[13],
-                                                                      'district_en': i[14],
-                                                                      'conton_ru': i[15], 'conton_ky': i[16],
-                                                                      'conton_en': i[17],
-                                                                      'land_type_ru': i[18], 'land_type_ky': i[19],
-                                                                      'land_type_en': i[20]},
+                                                       "properties": {'contour_id': i[0], 'contour_cs': i[3],
+                                                                      'land_type_id': i[1],
+                                                                      'year': i[4], 'ink': i[2],
+                                                                      'productivity': i[6], 'area_ha': i[5],
+                                                                      'region_ru': i[7], 'region_ky': i[8],
+                                                                      'region_en': i[9],
+                                                                      'district_ru': i[10], 'district_ky': i[11],
+                                                                      'district_en': i[12],
+                                                                      'conton_ru': i[13], 'conton_ky': i[14],
+                                                                      'conton_en': i[15],
+                                                                      'land_type_ru': i[16], 'land_type_ky': i[17],
+                                                                      'land_type_en': i[18]},
                                                        "geometry": eval(i[-1])}]}})
                 return Response(data)
         else:
@@ -594,20 +564,19 @@ class StatisticsContourProductivityAPIView(APIView):
         if region and district and conton and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, gcy.is_deleted, cntn.name
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr .area_ha) * 100) as "unproductive_pct",
+                    cntr.is_deleted, cntn.name
                     FROM gip_contour AS cntr 
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where gcy.year='{year}' and gcy.type_id in ({land_type}) and cntn.id in ({conton}) 
+                    where cntr.year='{year}' and cntr.type_id in ({land_type}) and cntn.id in ({conton}) 
                     and rgn.id in ({region}) and dst.id in ({district})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    group by cntn.name, cntr.is_deleted, gcy.is_deleted;""")
+                    and cntr.is_deleted=false
+                    group by cntn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -617,19 +586,17 @@ class StatisticsContourProductivityAPIView(APIView):
         elif region and district and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, gcy.is_deleted, cntn.name
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
+                    cntr.is_deleted, cntn.name
                     FROM gip_contour AS cntr 
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where rgn.id in ({region}) and gcy.type_id in ({land_type}) and gcy.year='{year}' and dst.id in ({district})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    group by cntn.name, cntr.is_deleted, gcy.is_deleted;""")
+                    where rgn.id in ({region}) and cntr.type_id in ({land_type}) and cntr.year='{year}' and dst.id in ({district})
+                    and cntr.is_deleted=false group by cntn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -639,19 +606,17 @@ class StatisticsContourProductivityAPIView(APIView):
         elif region and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, gcy.is_deleted, dst.name
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
+                    cntr.is_deleted, dst.name
                     FROM gip_contour AS cntr 
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where rgn.id in ({region}) and gcy.type_id in ({land_type}) and gcy.year='{year}'
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    group by dst.name, cntr.is_deleted, gcy.is_deleted;""")
+                    where rgn.id in ({region}) and cntr.type_id in ({land_type}) and cntr.year='{year}'
+                    and cntr.is_deleted=false group by dst.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -661,18 +626,16 @@ class StatisticsContourProductivityAPIView(APIView):
         elif district and conton and year and land_type:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, gcy.is_deleted, cntn.name
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
+                    cntr.is_deleted, cntn.name
                     FROM gip_contour AS cntr 
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
-                    where gcy.year='{year}' and gcy.type_id in ({land_type}) and dst.id in ({district})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    and cntn.id in ({conton}) group by cntn.name, cntr.is_deleted, gcy.is_deleted;""")
+                    where cntr.year='{year}' and cntr.type_id in ({land_type}) and dst.id in ({district})
+                    and cntn.id in ({conton}) and cntr.is_deleted=false group by cntn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -682,19 +645,17 @@ class StatisticsContourProductivityAPIView(APIView):
         elif district and year and land_type:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, gcy.is_deleted, cntn.name 
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
+                    cntr.is_deleted, cntn.name 
                     FROM gip_contour AS cntr 
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where gcy.year='{year}' and gcy.type_id in ({land_type}) and dst.id in ({district})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    group by cntn.name, cntr.is_deleted, gcy.is_deleted;""")
+                    where cntr.year='{year}' and cntr.type_id in ({land_type}) and dst.id in ({district})
+                    and cntr.is_deleted=false group by cntn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -704,19 +665,17 @@ class StatisticsContourProductivityAPIView(APIView):
         elif conton and year and land_type:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, gcy.is_deleted, cntn.name 
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
+                    cntr.is_deleted, cntn.name 
                     FROM gip_contour AS cntr 
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where gcy.year='{year}' and gcy.type_id in ({land_type}) and cntn.id in ({conton})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    group by cntn.name, cntr.is_deleted, gcy.is_deleted;""")
+                    where cntr.year='{year}' and cntr.type_id in ({land_type}) and cntn.id in ({conton})
+                    and cntr.is_deleted=false group by cntn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -726,19 +685,17 @@ class StatisticsContourProductivityAPIView(APIView):
         elif year and land_type:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (gcy.productivity)::float >= 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (gcy.productivity)::float < 1.6 then gcy.area_ha else 0 end) / sum(gcy.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, gcy.is_deleted, rgn.name 
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
+                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
+                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
+                    cntr.is_deleted, rgn.name 
                     FROM gip_contour AS cntr  
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where gcy.year='{year}' and gcy.type_id in ({land_type})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    group by rgn.name, cntr.is_deleted, gcy.is_deleted;""")
+                    where cntr.year='{year}' and cntr.type_id in ({land_type})
+                    and cntr.is_deleted=false group by rgn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
@@ -816,64 +773,58 @@ class MapContourProductivityAPIView(APIView):
         conton = request.GET.get('conton')
         if region and district and conton and year and land_type:
             with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 'productive'
-                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                cursor.execute(f"""SELECT CASE WHEN (cntr.productivity)::float >= 1.6 THEN 'productive'
+                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id,
+                    cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                    cntr.year, cntr.area_ha, cntr.productivity,
                     rgn.name_ru, rgn.name_ky, rgn.name_en,
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted, gcy.is_deleted,
-                    St_AsGeoJSON(gcy.polygon) as polygon
+                    cntr.is_deleted,
+                    St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                    JOIN gip_landtype AS land ON land.id=gcy.type_id
+                    JOIN gip_landtype AS land ON land.id=cntr.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and rgn.id in ({region}) 
+                    WHERE cntr.year='{year}' AND cntr.type_id in ({land_type}) and rgn.id in ({region}) 
                     and dst.id in ({district}) and cntn.id in ({conton})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
+                    and cntr.is_deleted=false
+                    GROUP BY "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
                 unproductive = []
                 for i in rows:
                     if i[0] in 'productive':
-                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                             'contour_year_id': i[2],
-                                                                             'land_type_id': i[3],
-                                                                             'contour_year_cs': i[6],
-                                                                             'year': i[7], 'ink': i[3],
-                                                                             'productivity': i[9], 'area_ha': i[8],
-                                                                             'region_ru': i[10], 'region_ky': i[11],
-                                                                             'region_en': i[12],
-                                                                             'district_ru': i[13], 'district_ky': i[14],
-                                                                             'district_en': i[15],
-                                                                             'conton_ru': i[16], 'conton_ky': i[17],
-                                                                             'conton_en': i[18],
-                                                                             'land_type_ru': i[19],
-                                                                             'land_type_ky': i[20],
-                                                                             'land_type_en': i[21]},
+                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                            "geometry": eval(i[-1])})
                     else:
-                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                               'contour_year_id': i[2],
-                                                                               'land_type_id': i[3],
-                                                                               'contour_year_cs': i[6],
-                                                                               'year': i[7], 'ink': i[3],
-                                                                               'productivity': i[9], 'area_ha': i[8],
-                                                                               'region_ru': i[10], 'region_ky': i[11],
-                                                                               'region_en': i[12],
-                                                                               'district_ru': i[13],
-                                                                               'district_ky': i[14],
-                                                                               'district_en': i[15],
-                                                                               'conton_ru': i[16], 'conton_ky': i[17],
-                                                                               'conton_en': i[18],
-                                                                               'land_type_ru': i[19],
-                                                                               'land_type_ky': i[20],
-                                                                               'land_type_en': i[21]},
+                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -881,64 +832,57 @@ class MapContourProductivityAPIView(APIView):
                                                   "features": unproductive}})
         elif region and district and year and land_type:
             with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 'productive'
-                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                cursor.execute(f"""SELECT CASE WHEN (cntr.productivity)::float >= 1.6 THEN 'productive'
+                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id,
+                    cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                    cntr.year, cntr.area_ha, cntr.productivity,
                     rgn.name_ru, rgn.name_ky, rgn.name_en,
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted, gcy.is_deleted,
-                    St_AsGeoJSON(gcy.polygon) as polygon
+                    cntr.is_deleted,
+                    St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                    JOIN gip_landtype AS land ON land.id=gcy.type_id
+                    JOIN gip_landtype AS land ON land.id=cntr.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and rgn.id in ({region}) 
-                    and dst.id in ({district}) 
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
+                    WHERE cntr.year='{year}' AND cntr.type_id in ({land_type}) and rgn.id in ({region}) 
+                    and dst.id in ({district}) and cntr.is_deleted=false
+                    GROUP BY "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
                 unproductive = []
                 for i in rows:
                     if i[0] in 'productive':
-                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                             'contour_year_id': i[2],
-                                                                             'land_type_id': i[3],
-                                                                             'contour_year_cs': i[6],
-                                                                             'year': i[7], 'ink': i[3],
-                                                                             'productivity': i[9], 'area_ha': i[8],
-                                                                             'region_ru': i[10], 'region_ky': i[11],
-                                                                             'region_en': i[12],
-                                                                             'district_ru': i[13], 'district_ky': i[14],
-                                                                             'district_en': i[15],
-                                                                             'conton_ru': i[16], 'conton_ky': i[17],
-                                                                             'conton_en': i[18],
-                                                                             'land_type_ru': i[19],
-                                                                             'land_type_ky': i[20],
-                                                                             'land_type_en': i[21]},
+                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                            "geometry": eval(i[-1])})
                     else:
-                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                               'contour_year_id': i[2],
-                                                                               'land_type_id': i[3],
-                                                                               'contour_year_cs': i[6],
-                                                                               'year': i[7], 'ink': i[3],
-                                                                               'productivity': i[9], 'area_ha': i[8],
-                                                                               'region_ru': i[10], 'region_ky': i[11],
-                                                                               'region_en': i[12],
-                                                                               'district_ru': i[13],
-                                                                               'district_ky': i[14],
-                                                                               'district_en': i[15],
-                                                                               'conton_ru': i[16], 'conton_ky': i[17],
-                                                                               'conton_en': i[18],
-                                                                               'land_type_ru': i[19],
-                                                                               'land_type_ky': i[20],
-                                                                               'land_type_en': i[21]},
+                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -946,63 +890,57 @@ class MapContourProductivityAPIView(APIView):
                                                   "features": unproductive}})
         elif region and year and land_type:
             with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 'productive'
-                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                cursor.execute(f"""SELECT CASE WHEN (cntr.productivity)::float >= 1.6 THEN 'productive'
+                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id,
+                    cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                    cntr.year, cntr.area_ha, cntr.productivity,
                     rgn.name_ru, rgn.name_ky, rgn.name_en,
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted, gcy.is_deleted,
-                    St_AsGeoJSON(gcy.polygon) as polygon
+                    cntr.is_deleted,
+                    St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                    JOIN gip_landtype AS land ON land.id=gcy.type_id
+                    JOIN gip_landtype AS land ON land.id=cntr.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and rgn.id in ({region})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
+                    WHERE cntr.year='{year}' AND cntr.type_id in ({land_type}) and rgn.id in ({region})
+                    and cntr.is_deleted=false
+                    GROUP BY "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
                 unproductive = []
                 for i in rows:
                     if i[0] in 'productive':
-                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                             'contour_year_id': i[2],
-                                                                             'land_type_id': i[3],
-                                                                             'contour_year_cs': i[6],
-                                                                             'year': i[7], 'ink': i[3],
-                                                                             'productivity': i[9], 'area_ha': i[8],
-                                                                             'region_ru': i[10], 'region_ky': i[11],
-                                                                             'region_en': i[12],
-                                                                             'district_ru': i[13], 'district_ky': i[14],
-                                                                             'district_en': i[15],
-                                                                             'conton_ru': i[16], 'conton_ky': i[17],
-                                                                             'conton_en': i[18],
-                                                                             'land_type_ru': i[19],
-                                                                             'land_type_ky': i[20],
-                                                                             'land_type_en': i[21]},
+                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                            "geometry": eval(i[-1])})
                     else:
-                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                               'contour_year_id': i[2],
-                                                                               'land_type_id': i[3],
-                                                                               'contour_year_cs': i[6],
-                                                                               'year': i[7], 'ink': i[3],
-                                                                               'productivity': i[9], 'area_ha': i[8],
-                                                                               'region_ru': i[10], 'region_ky': i[11],
-                                                                               'region_en': i[12],
-                                                                               'district_ru': i[13],
-                                                                               'district_ky': i[14],
-                                                                               'district_en': i[15],
-                                                                               'conton_ru': i[16], 'conton_ky': i[17],
-                                                                               'conton_en': i[18],
-                                                                               'land_type_ru': i[19],
-                                                                               'land_type_ky': i[20],
-                                                                               'land_type_en': i[21]},
+                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -1010,64 +948,58 @@ class MapContourProductivityAPIView(APIView):
                                                   "features": unproductive}})
         elif district and conton and year and land_type:
             with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 'productive'
-                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                cursor.execute(f"""SELECT CASE WHEN (cntr.productivity)::float >= 1.6 THEN 'productive'
+                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, 
+                    cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                    cntr.year, cntr.area_ha, cntr.productivity,
                     rgn.name_ru, rgn.name_ky, rgn.name_en,
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted, gcy.is_deleted,
-                    St_AsGeoJSON(gcy.polygon) as polygon
+                    cntr.is_deleted,
+                    St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                    JOIN gip_landtype AS land ON land.id=gcy.type_id
+                    JOIN gip_landtype AS land ON land.id=cntr.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and dst.id in ({district})
-                    and cntn.id in ({conton})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
+                    WHERE cntr.year='{year}' AND cntr.type_id in ({land_type}) and dst.id in ({district})
+                    and cntn.id in ({conton}) and cntr.is_deleted=false
+                    GROUP BY "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
                 unproductive = []
                 for i in rows:
-                    productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                         'contour_year_id': i[2],
-                                                                         'land_type_id': i[3],
-                                                                         'contour_year_cs': i[6],
-                                                                         'year': i[7], 'ink': i[3],
-                                                                         'productivity': i[9], 'area_ha': i[8],
-                                                                         'region_ru': i[10], 'region_ky': i[11],
-                                                                         'region_en': i[12],
-                                                                         'district_ru': i[13], 'district_ky': i[14],
-                                                                         'district_en': i[15],
-                                                                         'conton_ru': i[16], 'conton_ky': i[17],
-                                                                         'conton_en': i[18],
-                                                                         'land_type_ru': i[19], 'land_type_ky': i[20],
-                                                                         'land_type_en': i[21]},
+                    productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                        'land_type_id': i[2],
+                                                                        'year': i[5], 'ink': i[3],
+                                                                        'productivity': i[7], 'area_ha': i[6],
+                                                                        'region_ru': i[8], 'region_ky': i[9],
+                                                                        'region_en': i[10],
+                                                                        'district_ru': i[11], 'district_ky': i[12],
+                                                                        'district_en': i[13],
+                                                                        'conton_ru': i[14], 'conton_ky': i[15],
+                                                                        'conton_en': i[16],
+                                                                        'land_type_ru': i[17],
+                                                                        'land_type_ky': i[18],
+                                                                        'land_type_en': i[19]},
                                        "geometry": eval(i[-1])})
                     if i[0] in 'productive':
                         pass
                     else:
-                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                               'contour_year_id': i[2],
-                                                                               'land_type_id': i[3],
-                                                                               'contour_year_cs': i[6],
-                                                                               'year': i[7], 'ink': i[3],
-                                                                               'productivity': i[9], 'area_ha': i[8],
-                                                                               'region_ru': i[10], 'region_ky': i[11],
-                                                                               'region_en': i[12],
-                                                                               'district_ru': i[13],
-                                                                               'district_ky': i[14],
-                                                                               'district_en': i[15],
-                                                                               'conton_ru': i[16], 'conton_ky': i[17],
-                                                                               'conton_en': i[18],
-                                                                               'land_type_ru': i[19],
-                                                                               'land_type_ky': i[20],
-                                                                               'land_type_en': i[21]},
+                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -1075,63 +1007,57 @@ class MapContourProductivityAPIView(APIView):
                                                   "features": unproductive}})
         elif district and year and land_type:
             with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 'productive'
-                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                cursor.execute(f"""SELECT CASE WHEN (cntr.productivity)::float >= 1.6 THEN 'productive'
+                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id,
+                    cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                    cntr.year, cntr.area_ha, cntr.productivity,
                     rgn.name_ru, rgn.name_ky, rgn.name_en,
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted, gcy.is_deleted,
-                    St_AsGeoJSON(gcy.polygon) as polygon
+                    cntr.is_deleted,
+                    St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                    JOIN gip_landtype AS land ON land.id=gcy.type_id
+                    JOIN gip_landtype AS land ON land.id=cntr.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and dst.id in ({district})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
+                    WHERE cntr.year='{year}' AND cntr.type_id in ({land_type}) and dst.id in ({district})
+                    and cntr.is_deleted=false
+                    GROUP BY "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
                 unproductive = []
                 for i in rows:
                     if i[0] in 'productive':
-                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                             'contour_year_id': i[2],
-                                                                             'land_type_id': i[3],
-                                                                             'contour_year_cs': i[6],
-                                                                             'year': i[7], 'ink': i[3],
-                                                                             'productivity': i[9], 'area_ha': i[8],
-                                                                             'region_ru': i[10], 'region_ky': i[11],
-                                                                             'region_en': i[12],
-                                                                             'district_ru': i[13], 'district_ky': i[14],
-                                                                             'district_en': i[15],
-                                                                             'conton_ru': i[16], 'conton_ky': i[17],
-                                                                             'conton_en': i[18],
-                                                                             'land_type_ru': i[19],
-                                                                             'land_type_ky': i[20],
-                                                                             'land_type_en': i[21]},
+                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                            "geometry": eval(i[-1])})
                     else:
-                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                               'contour_year_id': i[2],
-                                                                               'land_type_id': i[3],
-                                                                               'contour_year_cs': i[6],
-                                                                               'year': i[7], 'ink': i[3],
-                                                                               'productivity': i[9], 'area_ha': i[8],
-                                                                               'region_ru': i[10], 'region_ky': i[11],
-                                                                               'region_en': i[12],
-                                                                               'district_ru': i[13],
-                                                                               'district_ky': i[14],
-                                                                               'district_en': i[15],
-                                                                               'conton_ru': i[16], 'conton_ky': i[17],
-                                                                               'conton_en': i[18],
-                                                                               'land_type_ru': i[19],
-                                                                               'land_type_ky': i[20],
-                                                                               'land_type_en': i[21]},
+                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -1139,63 +1065,57 @@ class MapContourProductivityAPIView(APIView):
                                                   "features": unproductive}})
         elif conton and year and land_type:
             with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 'productive'
-                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity,
+                cursor.execute(f"""SELECT CASE WHEN (cntr.productivity)::float >= 1.6 THEN 'productive'
+                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id,
+                    cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                    cntr.year, cntr.area_ha, cntr.productivity,
                     rgn.name_ru, rgn.name_ky, rgn.name_en,
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted, gcy.is_deleted,
-                    St_AsGeoJSON(gcy.polygon) as polygon
+                    cntr.is_deleted,
+                    St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                    JOIN gip_landtype AS land ON land.id=gcy.type_id
+                    JOIN gip_landtype AS land ON land.id=cntr.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    WHERE gcy.year='{year}' AND gcy.type_id in ({land_type}) and cntn.id in ({conton})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
+                    WHERE cntr.year='{year}' AND cntr.type_id in ({land_type}) and cntn.id in ({conton})
+                    and cntr.is_deleted=false
+                    GROUP BY "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
                 unproductive = []
                 for i in rows:
                     if i[0] in 'productive':
-                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                             'contour_year_id': i[2],
-                                                                             'land_type_id': i[3],
-                                                                             'contour_year_cs': i[6],
-                                                                             'year': i[7], 'ink': i[3],
-                                                                             'productivity': i[9], 'area_ha': i[8],
-                                                                             'region_ru': i[10], 'region_ky': i[11],
-                                                                             'region_en': i[12],
-                                                                             'district_ru': i[13], 'district_ky': i[14],
-                                                                             'district_en': i[15],
-                                                                             'conton_ru': i[16], 'conton_ky': i[17],
-                                                                             'conton_en': i[18],
-                                                                             'land_type_ru': i[19],
-                                                                             'land_type_ky': i[20],
-                                                                             'land_type_en': i[21]},
+                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                            "geometry": eval(i[-1])})
                     else:
-                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                               'contour_year_id': i[2],
-                                                                               'land_type_id': i[3],
-                                                                               'contour_year_cs': i[6],
-                                                                               'year': i[7], 'ink': i[3],
-                                                                               'productivity': i[9], 'area_ha': i[8],
-                                                                               'region_ru': i[10], 'region_ky': i[11],
-                                                                               'region_en': i[12],
-                                                                               'district_ru': i[13],
-                                                                               'district_ky': i[14],
-                                                                               'district_en': i[15],
-                                                                               'conton_ru': i[16], 'conton_ky': i[17],
-                                                                               'conton_en': i[18],
-                                                                               'land_type_ru': i[19],
-                                                                               'land_type_ky': i[20],
-                                                                               'land_type_en': i[21]},
+                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -1203,63 +1123,57 @@ class MapContourProductivityAPIView(APIView):
                                                   "features": unproductive}})
         elif year and land_type:
             with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT CASE WHEN (gcy.productivity)::float >= 1.6 THEN 'productive'
-                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id, gcy.id AS contour_year_id, 
-                    gcy.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
-                    gcy.code_soato AS contour_year_cs, gcy.year, gcy.area_ha, gcy.productivity, 
+                cursor.execute(f"""SELECT CASE WHEN (cntr.productivity)::float >= 1.6 THEN 'productive'
+                    ELSE 'unproductive' END AS "Type productivity", cntr.id AS contour_id,
+                    cntr.type_id AS land_type_id, cntr.ink, cntr.code_soato AS contour_cs,
+                    cntr.year, cntr.area_ha, cntr.productivity, 
                     rgn.name_ru, rgn.name_ky, rgn.name_en,
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted, gcy.is_deleted,
-                    St_AsGeoJSON(gcy.polygon) as polygon
+                    cntr.is_deleted,
+                    St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
-                    JOIN gip_contouryear AS gcy ON gcy.contour_id=cntr.id
-                    JOIN gip_landtype AS land ON land.id=gcy.type_id
+                    JOIN gip_landtype AS land ON land.id=cntr.type_id
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    WHERE gcy.year='{year}' AND gcy.type_id in ({land_type})
-                    and cntr.is_deleted=false and gcy.is_deleted=false
-                    GROUP BY "Type productivity", gcy.id, cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
+                    WHERE cntr.year='{year}' AND cntr.type_id in ({land_type})
+                    and cntr.is_deleted=false 
+                    GROUP BY "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id;""")
                 rows = cursor.fetchall()
                 productive = []
                 unproductive = []
                 for i in rows:
                     if i[0] in 'productive':
-                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                             'contour_year_id': i[2],
-                                                                             'land_type_id': i[3],
-                                                                             'contour_year_cs': i[6],
-                                                                             'year': i[7], 'ink': i[3],
-                                                                             'productivity': i[9], 'area_ha': i[8],
-                                                                             'region_ru': i[10], 'region_ky': i[11],
-                                                                             'region_en': i[12],
-                                                                             'district_ru': i[13], 'district_ky': i[14],
-                                                                             'district_en': i[15],
-                                                                             'conton_ru': i[16], 'conton_ky': i[17],
-                                                                             'conton_en': i[18],
-                                                                             'land_type_ru': i[19],
-                                                                             'land_type_ky': i[20],
-                                                                             'land_type_en': i[21]},
+                        productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                            "geometry": eval(i[-1])})
                     else:
-                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[5],
-                                                                               'contour_year_id': i[2],
-                                                                               'land_type_id': i[3],
-                                                                               'contour_year_cs': i[6],
-                                                                               'year': i[7], 'ink': i[3],
-                                                                               'productivity': i[9], 'area_ha': i[8],
-                                                                               'region_ru': i[10], 'region_ky': i[11],
-                                                                               'region_en': i[12],
-                                                                               'district_ru': i[13],
-                                                                               'district_ky': i[14],
-                                                                               'district_en': i[15],
-                                                                               'conton_ru': i[16], 'conton_ky': i[17],
-                                                                               'conton_en': i[18],
-                                                                               'land_type_ru': i[19],
-                                                                               'land_type_ky': i[20],
-                                                                               'land_type_en': i[21]},
+                        unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
+                                                                             'land_type_id': i[2],
+                                                                             'year': i[5], 'ink': i[3],
+                                                                             'productivity': i[7], 'area_ha': i[6],
+                                                                             'region_ru': i[8], 'region_ky': i[9],
+                                                                             'region_en': i[10],
+                                                                             'district_ru': i[11], 'district_ky': i[12],
+                                                                             'district_en': i[13],
+                                                                             'conton_ru': i[14], 'conton_ky': i[15],
+                                                                             'conton_en': i[16],
+                                                                             'land_type_ru': i[17],
+                                                                             'land_type_ky': i[18],
+                                                                             'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
