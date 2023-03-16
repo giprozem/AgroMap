@@ -2,8 +2,7 @@ from django.urls import path, include
 
 from gip.views.conton import ContonAPIView
 from gip.views.contour import FilterContourAPIView, ContourStatisticsAPIView, StatisticsContourProductivityAPIView, \
-    MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView, AuthDetailContourViewSet, \
-    AuthDetailContourYearViewSet
+    MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView, AuthDetailContourViewSet
 from gip.views.district import DistrictAPIView
 from gip.views.geoserver import Geoserver
 from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox, PolygonsInScreen
@@ -16,7 +15,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register('contour', AuthDetailContourViewSet)
-router.register('contour-year', AuthDetailContourYearViewSet)
+# router.register('contour-year', AuthDetailContourYearViewSet)
 router.register('culture', CultureViewSet)
 
 

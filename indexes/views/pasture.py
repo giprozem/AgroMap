@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from gip.models import ContourYear
+from gip.models import Contour
 from indexes.models import ContourAverageIndex, ProductivityClass
 from drf_yasg.utils import swagger_auto_schema
 
@@ -26,7 +26,7 @@ class CreatingAverage(APIView):
 
         for i in range(int(start), int(end)):
             try:
-                contour = ContourYear.objects.get(id=i)
+                contour = Contour.objects.get(id=i)
                 pruductivity = ProductivityClass.objects.get(id=1)
                 ContourAverageIndex.objects.create(contour=contour, productivity_class=pruductivity)
             except Exception as e:

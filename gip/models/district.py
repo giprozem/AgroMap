@@ -5,7 +5,6 @@ from gip.models.region import Region
 from django.utils.translation import gettext_lazy as _
 
 
-
 class District(BaseModel):
     code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name=_("Код СОАТО"))
     region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name='districts', verbose_name=_("Область"))

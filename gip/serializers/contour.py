@@ -3,7 +3,7 @@ from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from gip.models import CropYield
 from gip.models.conton import Conton
-from gip.models.contour import Contour, LandType, ContourYear
+from gip.models.contour import Contour, LandType
 
 
 class ContonSerializer(serializers.ModelSerializer):
@@ -41,11 +41,11 @@ class ContourSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ContourYearSerializer(GeoFeatureModelSerializer):
-    class Meta:
-        model = ContourYear
-        fields = '__all__'
-        geo_field = 'polygon'
+# class ContourYearSerializer(GeoFeatureModelSerializer):
+#     class Meta:
+#         model = ContourYear
+#         fields = '__all__'
+#         geo_field = 'polygon'
 
 
 class LandTypeSerializer(serializers.ModelSerializer):
@@ -53,27 +53,27 @@ class LandTypeSerializer(serializers.ModelSerializer):
         model = LandType
         exclude = ('name', )
 
-
-class AuthDetailContourYearSerializer(GeoFeatureModelSerializer):
-    class Meta:
-        model = ContourYear
-        fields = '__all__'
-        geo_field = 'polygon'
-
-    def validate_year(self, value):
-        if int(value) < 2010:
-            raise serializers.ValidationError("Год должен быть не менее 2010 года")
-        return value
-
-    def validate(self, data):
-        if int(data['year']) > 2023:
-            raise serializers.ValidationError("Год не может быть больше текущего года")
-        return data
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.error_messages['required'] = 'Это поле обязательно для заполнения'
-
+#
+# class AuthDetailContourYearSerializer(GeoFeatureModelSerializer):
+#     class Meta:
+#         model = ContourYear
+#         fields = '__all__'
+#         geo_field = 'polygon'
+#
+#     def validate_year(self, value):
+#         if int(value) < 2010:
+#             raise serializers.ValidationError("Год должен быть не менее 2010 года")
+#         return value
+#
+#     def validate(self, data):
+#         if int(data['year']) > 2023:
+#             raise serializers.ValidationError("Год не может быть больше текущего года")
+#         return data
+#
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.error_messages['required'] = 'Это поле обязательно для заполнения'
+#
 
 class AuthDetailContourSerializer(serializers.ModelSerializer):
     class Meta:

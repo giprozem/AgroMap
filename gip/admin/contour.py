@@ -6,7 +6,7 @@ from simple_history.admin import SimpleHistoryAdmin
 from modeltranslation.admin import TranslationAdmin
 from django.utils.translation import gettext_lazy as _
 
-from gip.models import Contour, LandType, ContourYear, Elevation
+from gip.models import Contour, LandType, Elevation
 from indexes.models import ActualVegIndex
 
 
@@ -69,15 +69,6 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     search_fields = ('conton__name', 'farmer__pin_inn', 'ink', )
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'ink', )
-
-
-@admin.register(ContourYear)
-class ContourYearAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
-    readonly_fields = ('id', 'area_ha', 'code_soato', 'elevation')
-    list_display = ('id', 'code_soato', 'type', 'year', )
-    list_filter = ('type', 'productivity', 'contour__conton', )
-    list_display_links = ('id', 'code_soato', )
-    ordering = ('id', )
     inlines = [NDVITabularInline]
 
 

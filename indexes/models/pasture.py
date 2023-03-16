@@ -17,7 +17,7 @@ class ProductivityClass(models.Model):
 
 
 class ContourAverageIndex(models.Model):
-    contour = models.ForeignKey('gip.ContourYear', on_delete=models.CASCADE, verbose_name=_('Контуры поля'))
+    contour = models.ForeignKey('gip.Contour', on_delete=models.CASCADE, verbose_name=_('Контуры поля'))
     value = models.DecimalField(
         max_digits=5,
         decimal_places=3,

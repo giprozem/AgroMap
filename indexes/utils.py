@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from osgeo import gdal
 
 from culture_model.models import VegetationIndex
-from gip.models import ContourYear
+from gip.models import Contour
 from indexes.index_funcs import cutting_tiff
 from indexes.index_funcs.ndmi_funcs import average_ndmi, ndmi_calculator
 from indexes.index_funcs.ndre_funcs import average_ndre, ndre_calculator
@@ -24,7 +24,7 @@ def veg_index_creating():
 
     image_dates = SciHubImageDate.objects.all()
     for image_date in image_dates:
-        contours = ContourYear.objects.filter(polygon__coveredby=image_date.polygon)
+        contours = Contour.objects.filter(polygon__coveredby=image_date.polygon)
         for contour in contours:
             polygon = GEOSGeometry(contour.polygon).geojson
             file_name = f'temporary file {datetime.datetime.now()}'
