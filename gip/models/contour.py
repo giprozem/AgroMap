@@ -42,7 +42,7 @@ class Contour(BaseModel):
     is_rounded = models.BooleanField(default=False, verbose_name=_('Юридически подтвержденный'))
 
     def __str__(self):
-        return self.code_soato if self.code_soato else self.ink
+        return self.code_soato or self.ink if self.code_soato or self.ink else ''
 
     class Meta:
         verbose_name = _("Контуры поля")

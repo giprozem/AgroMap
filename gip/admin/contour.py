@@ -61,8 +61,8 @@ class NDVITabularInline(TabularInline):
 
 @admin.register(Contour)
 class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
-    readonly_fields = ('id', 'created_at', 'updated_at')
-    list_display = ('id', 'ink', 'code_soato', 'conton', 'farmer', )
+    readonly_fields = ('id', 'created_at', 'updated_at', 'elevation')
+    list_display = ('id', 'ink', 'code_soato', 'conton', 'farmer', 'elevation')
     list_filter = ('conton', 'farmer', )
     ordering = ('conton', 'created_at')
     list_per_page = 20
