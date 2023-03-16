@@ -12,16 +12,18 @@ from django.contrib.gis.geos.prototypes.io import wkt_w
 
 class GeojsonSavingToDBAPIView(APIView):
     def get(self, request):
-        with open('qwer.geojson') as f:
+        with open('pasture_cords.geojson') as f:
             data = json.load(f)['features']
-            print(data)
+            a = {'Садыр аке': 9, 'Тору-Айгырский': 11, 'Семеновский': 12, 'Орюктинский': 13, 'Кара-Ойский': 14,
+                 'Темировский': 15, 'Ананьевский': 16, 'Бостеринский': 17, 'Кум-Бельский': 18,
+                 'Тамчынский': 19, 'Абдрахмановский': 20, 'Чон-Сары-Ойский': 21}
             for i in data:
                 time.sleep(1)
-                try:
-                    ink = f"{random.randint(400, 500)}-02-123-{random.randint(2000, 9000)}-78-{random.randint(1, 350)}"
-                    Contour.objects.create(ink=ink, polygon=GEOSGeometry(f"{i['geometry']}"), type_id=1, year='2022', conton_id=10)
-                except Exception as e:
-                    print(e)
+                code_soate = f"{i['properties']['SOATE']}-{random.randint(400, 800)}-{random.randint(1, 800)}"
+                if i['properties']['Name_aa'] in a.keys():
+                    Contour.objects.create(polygon=GEOSGeometry(f"{i['geometry']}"), conton_id=a.get(i['properties']['Name_aa']), code_soato=code_soate,
+                                                     productivity=i['properties']['Urojainost'],
+                                                     type_id=2, year='2022')
             return Response('OK')
 
     # def post(self, request, *args, **kwargs):
