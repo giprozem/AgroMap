@@ -5,7 +5,7 @@ from shapely.wkt import loads
 import requests
 from django.contrib.gis.geos import Point
 
-from gip.models import ContourYear, Elevation
+from gip.models import Elevation
 
 
 # @receiver(post_save, sender=ContourYear)

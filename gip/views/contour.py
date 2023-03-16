@@ -11,9 +11,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from gip.models.contour import Contour, ContourYear
+from gip.models.contour import Contour
 from gip.pagination.contour_pagination import SearchContourPagination
-from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializer, AuthDetailContourYearSerializer
+from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializer
 from gip.views.handbook_contour import contour_Kyrgyzstan
 
 
@@ -28,36 +28,36 @@ class AuthDetailContourViewSet(viewsets.ModelViewSet):
         instance.save()
         return Response('Contour is deleted')
 
-
-class AuthDetailContourYearViewSet(viewsets.ModelViewSet):
-    queryset = ContourYear.objects.all()
-    serializer_class = AuthDetailContourYearSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        intersect = ContourYear.objects.filter(
-            polygon__intersects=GEOSGeometry(f"{serializer.initial_data['polygon']}"))
-        with connection.cursor() as cursor:
-            cursor.execute(
-                f"""SELECT ST_Contains('{contour_Kyrgyzstan}'::geography::geometry, 
-                '{GEOSGeometry(f"{serializer.initial_data['polygon']}")}'::geography::geometry);""")
-            inside = cursor.fetchall()
-            print(inside)
-        if intersect:
-            return Response("Пересекаются поля")
-        elif not inside[0][0]:
-            return Response("Создайте поле внутри Кыргызстана")
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.is_deleted = True
-        instance.save()
-        return Response('Contour-year is deleted')
+#
+# class AuthDetailContourYearViewSet(viewsets.ModelViewSet):
+#     queryset = ContourYear.objects.all()
+#     serializer_class = AuthDetailContourYearSerializer
+#     permission_classes = (IsAuthenticated,)
+#
+#     def create(self, request, *args, **kwargs):
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         intersect = ContourYear.objects.filter(
+#             polygon__intersects=GEOSGeometry(f"{serializer.initial_data['polygon']}"))
+#         with connection.cursor() as cursor:
+#             cursor.execute(
+#                 f"""SELECT ST_Contains('{contour_Kyrgyzstan}'::geography::geometry,
+#                 '{GEOSGeometry(f"{serializer.initial_data['polygon']}")}'::geography::geometry);""")
+#             inside = cursor.fetchall()
+#             print(inside)
+#         if intersect:
+#             return Response("Пересекаются поля")
+#         elif not inside[0][0]:
+#             return Response("Создайте поле внутри Кыргызстана")
+#         self.perform_create(serializer)
+#         headers = self.get_success_headers(serializer.data)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+#
+#     def destroy(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         instance.is_deleted = True
+#         instance.save()
+#         return Response('Contour-year is deleted')
 
 
 class SearchContourViewSet(viewsets.ReadOnlyModelViewSet):

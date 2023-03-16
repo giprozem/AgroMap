@@ -19,7 +19,7 @@ class ActualVegIndex(models.Model):
         null=True
     )
     index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name=_('Индекс'))
-    contour = models.ForeignKey('gip.ContourYear', on_delete=models.CASCADE, verbose_name=_('Контуры поля'),
+    contour = models.ForeignKey('gip.Contour', on_delete=models.CASCADE, verbose_name=_('Контуры поля'),
                                 related_name='actual_veg_index')
     date = models.DateField(verbose_name=_('Дата анализа'), help_text=_('Введите дату космо снимка из которого будет высчитан индекс'))
     history = HistoricalRecords(verbose_name=_("История"))
