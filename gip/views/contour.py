@@ -1,13 +1,10 @@
-import datetime
-
-from django.contrib.gis.geos import GEOSGeometry
 from django.db import connection
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema, logger
-from rest_framework import viewsets, filters, status, mixins
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import viewsets, filters, status
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -16,20 +13,18 @@ from rest_framework.permissions import IsAuthenticated
 from gip.models.contour import Contour
 from gip.pagination.contour_pagination import SearchContourPagination
 from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializer
-from gip.views.handbook_contour import contour_Kyrgyzstan
-from rest_framework import serializers
 
 
 class AuthDetailContourViewSet(viewsets.ModelViewSet):
     queryset = Contour.objects.all().order_by('id')
     serializer_class = AuthDetailContourSerializer
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_deleted = True
         instance.save()
-        return Response('Contour-year is deleted')
+        return Response('Contour is deleted')
 
 
 class SearchContourViewSet(viewsets.ReadOnlyModelViewSet):
@@ -785,18 +780,19 @@ class MapContourProductivityAPIView(APIView):
                                            "geometry": eval(i[-1])})
                     else:
                         unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
-                                                                             'land_type_id': i[2],
-                                                                             'year': i[5], 'ink': i[3],
-                                                                             'productivity': i[7], 'area_ha': i[6],
-                                                                             'region_ru': i[8], 'region_ky': i[9],
-                                                                             'region_en': i[10],
-                                                                             'district_ru': i[11], 'district_ky': i[12],
-                                                                             'district_en': i[13],
-                                                                             'conton_ru': i[14], 'conton_ky': i[15],
-                                                                             'conton_en': i[16],
-                                                                             'land_type_ru': i[17],
-                                                                             'land_type_ky': i[18],
-                                                                             'land_type_en': i[19]},
+                                                                               'land_type_id': i[2],
+                                                                               'year': i[5], 'ink': i[3],
+                                                                               'productivity': i[7], 'area_ha': i[6],
+                                                                               'region_ru': i[8], 'region_ky': i[9],
+                                                                               'region_en': i[10],
+                                                                               'district_ru': i[11],
+                                                                               'district_ky': i[12],
+                                                                               'district_en': i[13],
+                                                                               'conton_ru': i[14], 'conton_ky': i[15],
+                                                                               'conton_en': i[16],
+                                                                               'land_type_ru': i[17],
+                                                                               'land_type_ky': i[18],
+                                                                               'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -843,18 +839,19 @@ class MapContourProductivityAPIView(APIView):
                                            "geometry": eval(i[-1])})
                     else:
                         unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
-                                                                             'land_type_id': i[2],
-                                                                             'year': i[5], 'ink': i[3],
-                                                                             'productivity': i[7], 'area_ha': i[6],
-                                                                             'region_ru': i[8], 'region_ky': i[9],
-                                                                             'region_en': i[10],
-                                                                             'district_ru': i[11], 'district_ky': i[12],
-                                                                             'district_en': i[13],
-                                                                             'conton_ru': i[14], 'conton_ky': i[15],
-                                                                             'conton_en': i[16],
-                                                                             'land_type_ru': i[17],
-                                                                             'land_type_ky': i[18],
-                                                                             'land_type_en': i[19]},
+                                                                               'land_type_id': i[2],
+                                                                               'year': i[5], 'ink': i[3],
+                                                                               'productivity': i[7], 'area_ha': i[6],
+                                                                               'region_ru': i[8], 'region_ky': i[9],
+                                                                               'region_en': i[10],
+                                                                               'district_ru': i[11],
+                                                                               'district_ky': i[12],
+                                                                               'district_en': i[13],
+                                                                               'conton_ru': i[14], 'conton_ky': i[15],
+                                                                               'conton_en': i[16],
+                                                                               'land_type_ru': i[17],
+                                                                               'land_type_ky': i[18],
+                                                                               'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -901,18 +898,19 @@ class MapContourProductivityAPIView(APIView):
                                            "geometry": eval(i[-1])})
                     else:
                         unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
-                                                                             'land_type_id': i[2],
-                                                                             'year': i[5], 'ink': i[3],
-                                                                             'productivity': i[7], 'area_ha': i[6],
-                                                                             'region_ru': i[8], 'region_ky': i[9],
-                                                                             'region_en': i[10],
-                                                                             'district_ru': i[11], 'district_ky': i[12],
-                                                                             'district_en': i[13],
-                                                                             'conton_ru': i[14], 'conton_ky': i[15],
-                                                                             'conton_en': i[16],
-                                                                             'land_type_ru': i[17],
-                                                                             'land_type_ky': i[18],
-                                                                             'land_type_en': i[19]},
+                                                                               'land_type_id': i[2],
+                                                                               'year': i[5], 'ink': i[3],
+                                                                               'productivity': i[7], 'area_ha': i[6],
+                                                                               'region_ru': i[8], 'region_ky': i[9],
+                                                                               'region_en': i[10],
+                                                                               'district_ru': i[11],
+                                                                               'district_ky': i[12],
+                                                                               'district_en': i[13],
+                                                                               'conton_ru': i[14], 'conton_ky': i[15],
+                                                                               'conton_en': i[16],
+                                                                               'land_type_ru': i[17],
+                                                                               'land_type_ky': i[18],
+                                                                               'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -943,35 +941,36 @@ class MapContourProductivityAPIView(APIView):
                 unproductive = []
                 for i in rows:
                     productive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
-                                                                        'land_type_id': i[2],
-                                                                        'year': i[5], 'ink': i[3],
-                                                                        'productivity': i[7], 'area_ha': i[6],
-                                                                        'region_ru': i[8], 'region_ky': i[9],
-                                                                        'region_en': i[10],
-                                                                        'district_ru': i[11], 'district_ky': i[12],
-                                                                        'district_en': i[13],
-                                                                        'conton_ru': i[14], 'conton_ky': i[15],
-                                                                        'conton_en': i[16],
-                                                                        'land_type_ru': i[17],
-                                                                        'land_type_ky': i[18],
-                                                                        'land_type_en': i[19]},
+                                                                         'land_type_id': i[2],
+                                                                         'year': i[5], 'ink': i[3],
+                                                                         'productivity': i[7], 'area_ha': i[6],
+                                                                         'region_ru': i[8], 'region_ky': i[9],
+                                                                         'region_en': i[10],
+                                                                         'district_ru': i[11], 'district_ky': i[12],
+                                                                         'district_en': i[13],
+                                                                         'conton_ru': i[14], 'conton_ky': i[15],
+                                                                         'conton_en': i[16],
+                                                                         'land_type_ru': i[17],
+                                                                         'land_type_ky': i[18],
+                                                                         'land_type_en': i[19]},
                                        "geometry": eval(i[-1])})
                     if i[0] in 'productive':
                         pass
                     else:
                         unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
-                                                                             'land_type_id': i[2],
-                                                                             'year': i[5], 'ink': i[3],
-                                                                             'productivity': i[7], 'area_ha': i[6],
-                                                                             'region_ru': i[8], 'region_ky': i[9],
-                                                                             'region_en': i[10],
-                                                                             'district_ru': i[11], 'district_ky': i[12],
-                                                                             'district_en': i[13],
-                                                                             'conton_ru': i[14], 'conton_ky': i[15],
-                                                                             'conton_en': i[16],
-                                                                             'land_type_ru': i[17],
-                                                                             'land_type_ky': i[18],
-                                                                             'land_type_en': i[19]},
+                                                                               'land_type_id': i[2],
+                                                                               'year': i[5], 'ink': i[3],
+                                                                               'productivity': i[7], 'area_ha': i[6],
+                                                                               'region_ru': i[8], 'region_ky': i[9],
+                                                                               'region_en': i[10],
+                                                                               'district_ru': i[11],
+                                                                               'district_ky': i[12],
+                                                                               'district_en': i[13],
+                                                                               'conton_ru': i[14], 'conton_ky': i[15],
+                                                                               'conton_en': i[16],
+                                                                               'land_type_ru': i[17],
+                                                                               'land_type_ky': i[18],
+                                                                               'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -1018,18 +1017,19 @@ class MapContourProductivityAPIView(APIView):
                                            "geometry": eval(i[-1])})
                     else:
                         unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
-                                                                             'land_type_id': i[2],
-                                                                             'year': i[5], 'ink': i[3],
-                                                                             'productivity': i[7], 'area_ha': i[6],
-                                                                             'region_ru': i[8], 'region_ky': i[9],
-                                                                             'region_en': i[10],
-                                                                             'district_ru': i[11], 'district_ky': i[12],
-                                                                             'district_en': i[13],
-                                                                             'conton_ru': i[14], 'conton_ky': i[15],
-                                                                             'conton_en': i[16],
-                                                                             'land_type_ru': i[17],
-                                                                             'land_type_ky': i[18],
-                                                                             'land_type_en': i[19]},
+                                                                               'land_type_id': i[2],
+                                                                               'year': i[5], 'ink': i[3],
+                                                                               'productivity': i[7], 'area_ha': i[6],
+                                                                               'region_ru': i[8], 'region_ky': i[9],
+                                                                               'region_en': i[10],
+                                                                               'district_ru': i[11],
+                                                                               'district_ky': i[12],
+                                                                               'district_en': i[13],
+                                                                               'conton_ru': i[14], 'conton_ky': i[15],
+                                                                               'conton_en': i[16],
+                                                                               'land_type_ru': i[17],
+                                                                               'land_type_ky': i[18],
+                                                                               'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -1076,18 +1076,19 @@ class MapContourProductivityAPIView(APIView):
                                            "geometry": eval(i[-1])})
                     else:
                         unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
-                                                                             'land_type_id': i[2],
-                                                                             'year': i[5], 'ink': i[3],
-                                                                             'productivity': i[7], 'area_ha': i[6],
-                                                                             'region_ru': i[8], 'region_ky': i[9],
-                                                                             'region_en': i[10],
-                                                                             'district_ru': i[11], 'district_ky': i[12],
-                                                                             'district_en': i[13],
-                                                                             'conton_ru': i[14], 'conton_ky': i[15],
-                                                                             'conton_en': i[16],
-                                                                             'land_type_ru': i[17],
-                                                                             'land_type_ky': i[18],
-                                                                             'land_type_en': i[19]},
+                                                                               'land_type_id': i[2],
+                                                                               'year': i[5], 'ink': i[3],
+                                                                               'productivity': i[7], 'area_ha': i[6],
+                                                                               'region_ru': i[8], 'region_ky': i[9],
+                                                                               'region_en': i[10],
+                                                                               'district_ru': i[11],
+                                                                               'district_ky': i[12],
+                                                                               'district_en': i[13],
+                                                                               'conton_ru': i[14], 'conton_ky': i[15],
+                                                                               'conton_en': i[16],
+                                                                               'land_type_ru': i[17],
+                                                                               'land_type_ky': i[18],
+                                                                               'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},
@@ -1134,18 +1135,19 @@ class MapContourProductivityAPIView(APIView):
                                            "geometry": eval(i[-1])})
                     else:
                         unproductive.append({"type": "Feature", "properties": {'contour_id': i[1], 'contour_cs': i[4],
-                                                                             'land_type_id': i[2],
-                                                                             'year': i[5], 'ink': i[3],
-                                                                             'productivity': i[7], 'area_ha': i[6],
-                                                                             'region_ru': i[8], 'region_ky': i[9],
-                                                                             'region_en': i[10],
-                                                                             'district_ru': i[11], 'district_ky': i[12],
-                                                                             'district_en': i[13],
-                                                                             'conton_ru': i[14], 'conton_ky': i[15],
-                                                                             'conton_en': i[16],
-                                                                             'land_type_ru': i[17],
-                                                                             'land_type_ky': i[18],
-                                                                             'land_type_en': i[19]},
+                                                                               'land_type_id': i[2],
+                                                                               'year': i[5], 'ink': i[3],
+                                                                               'productivity': i[7], 'area_ha': i[6],
+                                                                               'region_ru': i[8], 'region_ky': i[9],
+                                                                               'region_en': i[10],
+                                                                               'district_ru': i[11],
+                                                                               'district_ky': i[12],
+                                                                               'district_en': i[13],
+                                                                               'conton_ru': i[14], 'conton_ky': i[15],
+                                                                               'conton_en': i[16],
+                                                                               'land_type_ru': i[17],
+                                                                               'land_type_ky': i[18],
+                                                                               'land_type_en': i[19]},
                                              'geometry': eval(i[-1])})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": productive},

@@ -202,20 +202,21 @@ class PolygonsInScreen(APIView):
 
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                               SELECT cntr.id, cntr.ink, cntr.conton_id, cntr.farmer_id, gcy.id,
-                               gcy.code_soato, gcy.year, gcy.productivity, gcy.type_id,
-                               St_AsGeoJSON(gcy.polygon) AS polygon
-                               FROM  gip_contouryear AS gcy
-                               JOIN gip_contour AS cntr ON cntr.id=gcy.contour_id
-                               where ST_Intersects('{bboxs}'::geography::geometry, gcy.polygon::geometry);
+                               SELECT id, conton_id, farmer_id, ink, is_rounded, code_soato, is_deleted, area_ha,
+                               culture_id, elevation, productivity, type_id, year,
+                               St_AsGeoJSON(cntr.polygon) AS polygon
+                               FROM gip_contour AS cntr
+                               WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry);
                                """)
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
                     data.append({"type": "Feature",
-                                 "properties": {'contour_id': i[0],'contour_ink': i[1],'conton_id': i[2],'farmer_id': i[3],
-                                                'contour_year_id': i[4], 'productivity': i[5], 'land_type': i[-2]},
-                                 "geometry": eval(i[-1])})
+                                 "properties": {'id': i[0], 'conton_id': i[1],  'farmer_id': i[2], 'ink': i[3],
+                                                'is_rounded': i[4], 'code_soato': i[5], 'is_deleted': i[6],
+                                                'area_ha': i[7], 'culture_id': i[8], 'elevation': i[9],
+                                                'productivity': i[10], 'land_type': i[11], 'year': i[12]},
+                                 "geometry": eval(i[13])})
                 return Response({"type": "FeatureCollection", "features": data})
         else:
             return Response(data={"message": "parameter is required"}, status=400)
