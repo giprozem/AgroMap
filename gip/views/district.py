@@ -61,7 +61,7 @@ class DistrictAPIView(APIView):
     )
     def get(self, request, *args, **kwargs):
         try:
-            if request.query_params['polygon'] == 'true' and not request.query_params['region_id']:
+            if request.query_params['polygon'] == 'true' and request.query_params['region_id'] == 'false':
                 query = District.objects.all()
                 serializer = DistrictSerializer(query, many=True)
                 return Response(serializer.data, status=200)
@@ -69,7 +69,7 @@ class DistrictAPIView(APIView):
                 query = District.objects.filter(region_id=int(request.query_params['region_id']))
                 serializer = DistrictSerializer(query, many=True)
                 return Response(serializer.data, status=200)
-            elif request.query_params['polygon'] == 'false' and not request.query_params['region_id']:
+            elif request.query_params['polygon'] == 'false' and request.query_params['region_id'] == 'false':
                 query = District.objects.all()
                 serializer = DistrictWithoutPolygonSerializer(query, many=True)
                 return Response(serializer.data, status=200)
