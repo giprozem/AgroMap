@@ -73,14 +73,12 @@ class RegionAPIView(APIView):
         }
     )
     def get(self, request, *args, **kwargs):
-        try:
-            if request.query_params['polygon'] == 'true':
-                query = Region.objects.all()
-                serializer = RegionSerializer(query, many=True)
-                return Response(serializer.data, status=200)
-            elif request.query_params['polygon'] == 'false':
-                query = Region.objects.all()
-                serializer = RegionWithoutPolygonSerializer(query, many=True)
-                return Response(serializer.data, status=200)
-        except Exception as e:
-            return Response('Required polygon param', status=400)
+        polygon = request.query_params.get('polygon')
+        if polygon:
+            query = Region.objects.all()
+            serializer = RegionSerializer(query, many=True)
+            return Response(serializer.data, status=200)
+        elif not polygon:
+            query = Region.objects.all()
+            serializer = RegionWithoutPolygonSerializer(query, many=True)
+            return Response(serializer.data, status=200)
