@@ -7,6 +7,7 @@ from gip.views.district import DistrictAPIView
 from gip.views.geoserver import Geoserver
 from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox, PolygonsInScreen
 from gip.views.region import RegionAPIView
+from gip.views.saving_to_db_contour import GeojsonSavingToDBAPIView
 from gip.views.soil import SoilAPIView
 from gip.views.statistics import GraphicTablesAPIView, CulturePercentAPIView
 from gip.views.culture import CultureViewSet
@@ -37,5 +38,6 @@ urlpatterns = [
     path('district/', DistrictAPIView.as_view()),
     path('conton/', ContonAPIView.as_view()),
     path('land-type/', LandTypeAPIView.as_view()),
+    path('saving/', GeojsonSavingToDBAPIView.as_view()),
     path('', include(router.urls)),
 ]
