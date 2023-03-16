@@ -9,20 +9,13 @@ class ContonSerializer(serializers.ModelSerializer):
         exclude = ('name', )
 
 
-class DistrictWithoutPolygonSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = District
-        exclude = ('polygon', 'created_at', 'updated_at', 'name', 'region')
-
-
 class ContonWithoutPolygonSerializer(serializers.ModelSerializer):
-    polygon = serializers.NullBooleanField(default=False)
-    district = DistrictWithoutPolygonSerializer()
     region = serializers.SerializerMethodField()
+
+    def get_region(self, obj):
+        region = Region.objects.get(name=obj.district.region)
+        return region.pk
 
     class Meta:
         model = Conton
         exclude = ('polygon', 'name', 'created_at', 'updated_at',)
-
-    def get_region(self, obj):
-        return RegionWithoutPolygonSerializer(Region.objects.get(name=obj.district.region)).data

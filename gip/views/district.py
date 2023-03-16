@@ -60,22 +60,21 @@ class DistrictAPIView(APIView):
         }
     )
     def get(self, request, *args, **kwargs):
-        try:
-            if request.query_params['polygon'] == 'true' and request.query_params['region_id'] == 'false':
-                query = District.objects.all()
-                serializer = DistrictSerializer(query, many=True)
-                return Response(serializer.data, status=200)
-            elif request.query_params['polygon'] == 'true' and request.query_params['region_id']:
-                query = District.objects.filter(region_id=int(request.query_params['region_id']))
-                serializer = DistrictSerializer(query, many=True)
-                return Response(serializer.data, status=200)
-            elif request.query_params['polygon'] == 'false' and request.query_params['region_id'] == 'false':
-                query = District.objects.all()
-                serializer = DistrictWithoutPolygonSerializer(query, many=True)
-                return Response(serializer.data, status=200)
-            elif request.query_params['polygon'] == 'false' and request.query_params['region_id']:
-                query = District.objects.filter(region_id=int(request.query_params['region_id']))
-                serializer = DistrictWithoutPolygonSerializer(query, many=True)
-                return Response(serializer.data, status=200)
-        except Exception as e:
-            return Response('Required polygon param', status=400)
+        polygon = request.query_params.get('polygon')
+        region = request.query_params.get('region_id')
+        if polygon and not region:
+            query = District.objects.all()
+            serializer = DistrictSerializer(query, many=True)
+            return Response(serializer.data, status=200)
+        elif polygon and region:
+            query = District.objects.filter(region_id=int(region))
+            serializer = DistrictSerializer(query, many=True)
+            return Response(serializer.data, status=200)
+        elif not polygon and not region:
+            query = District.objects.all()
+            serializer = DistrictWithoutPolygonSerializer(query, many=True)
+            return Response(serializer.data, status=200)
+        elif not polygon and region:
+            query = District.objects.filter(region_id=int(region))
+            serializer = DistrictWithoutPolygonSerializer(query, many=True)
+            return Response(serializer.data, status=200)

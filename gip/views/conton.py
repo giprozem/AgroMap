@@ -60,23 +60,21 @@ class ContonAPIView(APIView):
         }
     )
     def get(self, request, *args, **kwargs):
-        try:
-            if request.query_params['polygon'] == 'true' and request.query_params['district_id'] == 'false':
-                query = Conton.objects.all()
-                serializer = ContonSerializer(query, many=True)
-                return Response(serializer.data, status=200)
-            elif request.query_params['polygon'] == 'true' and request.query_params['district_id']:
-                query = Conton.objects.filter(district_id=int(request.query_params['district_id']))
-                serializer = ContonSerializer(query, many=True)
-                return Response(serializer.data, status=200)
-            elif request.query_params['polygon'] == 'false' and request.query_params['district_id'] == 'false':
-                query = Conton.objects.all()
-                serializer = ContonWithoutPolygonSerializer(query, many=True)
-                return Response(serializer.data, status=200)
-            elif request.query_params['polygon'] == 'false' and request.query_params['district_id']:
-                query = Conton.objects.filter(district_id=int(request.query_params['district_id']))
-                serializer = ContonWithoutPolygonSerializer(query, many=True)
-                return Response(serializer.data, status=200)
-        except Exception as e:
-            print(e)
-            return Response('Required polygon param', status=400)
+        polygon = request.query_params.get('polygon')
+        district = request.query_params.get('district_id')
+        if polygon and not district:
+            query = Conton.objects.all()
+            serializer = ContonSerializer(query, many=True)
+            return Response(serializer.data, status=200)
+        elif polygon and district:
+            query = Conton.objects.filter(district_id=int(district))
+            serializer = ContonSerializer(query, many=True)
+            return Response(serializer.data, status=200)
+        elif not polygon and not district:
+            query = Conton.objects.all()
+            serializer = ContonWithoutPolygonSerializer(query, many=True)
+            return Response(serializer.data, status=200)
+        elif not polygon and district:
+            query = Conton.objects.filter(district_id=int(district))
+            serializer = ContonWithoutPolygonSerializer(query, many=True)
+            return Response(serializer.data, status=200)

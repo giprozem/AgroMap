@@ -12,7 +12,6 @@ class DistrictSerializer(serializers.GeoFeatureModelSerializer):
 
 
 class DistrictWithoutPolygonSerializer(serializers.ModelSerializer):
-    region = RegionWithoutPolygonSerializer()
 
     class Meta:
         model = District
