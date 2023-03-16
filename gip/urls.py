@@ -1,5 +1,4 @@
 from django.urls import path, include
-
 from gip.views.conton import ContonAPIView
 from gip.views.contour import FilterContourAPIView, ContourStatisticsAPIView, StatisticsContourProductivityAPIView, \
     MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView, AuthDetailContourViewSet
@@ -15,7 +14,6 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register('contour', AuthDetailContourViewSet)
-# router.register('contour-year', AuthDetailContourYearViewSet)
 router.register('culture', CultureViewSet)
 
 
