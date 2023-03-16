@@ -15,14 +15,14 @@ class DistrictAPIView(APIView):
                 'polygon',
                 in_=openapi.IN_QUERY,
                 type=openapi.TYPE_BOOLEAN,
-                description='If set to `true`, returns the serialized polygon for each district. '
-                            'If set to `false`, returns only the district data without polygons.'
+                description='If set, returns the serialized polygon for each district. '
+                            'If doesnot set, returns only the district data without polygons.'
             ),
             openapi.Parameter(
                 'region_id',
                 in_=openapi.IN_QUERY,
                 type=openapi.TYPE_INTEGER,
-                description='If `polygon` is set to `false`, this parameter can be used to filter districts by region ID.'
+                description='If `polygon` is set, this parameter can be used to filter districts by region ID.'
             ),
         ],
         responses={
