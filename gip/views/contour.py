@@ -1,10 +1,12 @@
+import datetime
+
 from django.contrib.gis.geos import GEOSGeometry
 from django.db import connection
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema, logger
 from rest_framework import viewsets, filters, status, mixins
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
@@ -15,49 +17,19 @@ from gip.models.contour import Contour
 from gip.pagination.contour_pagination import SearchContourPagination
 from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializer
 from gip.views.handbook_contour import contour_Kyrgyzstan
+from rest_framework import serializers
 
 
 class AuthDetailContourViewSet(viewsets.ModelViewSet):
     queryset = Contour.objects.all().order_by('id')
     serializer_class = AuthDetailContourSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_deleted = True
         instance.save()
-        return Response('Contour is deleted')
-
-#
-# class AuthDetailContourYearViewSet(viewsets.ModelViewSet):
-#     queryset = ContourYear.objects.all()
-#     serializer_class = AuthDetailContourYearSerializer
-#     permission_classes = (IsAuthenticated,)
-#
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         intersect = ContourYear.objects.filter(
-#             polygon__intersects=GEOSGeometry(f"{serializer.initial_data['polygon']}"))
-#         with connection.cursor() as cursor:
-#             cursor.execute(
-#                 f"""SELECT ST_Contains('{contour_Kyrgyzstan}'::geography::geometry,
-#                 '{GEOSGeometry(f"{serializer.initial_data['polygon']}")}'::geography::geometry);""")
-#             inside = cursor.fetchall()
-#             print(inside)
-#         if intersect:
-#             return Response("Пересекаются поля")
-#         elif not inside[0][0]:
-#             return Response("Создайте поле внутри Кыргызстана")
-#         self.perform_create(serializer)
-#         headers = self.get_success_headers(serializer.data)
-#         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-#
-#     def destroy(self, request, *args, **kwargs):
-#         instance = self.get_object()
-#         instance.is_deleted = True
-#         instance.save()
-#         return Response('Contour-year is deleted')
+        return Response('Contour-year is deleted')
 
 
 class SearchContourViewSet(viewsets.ReadOnlyModelViewSet):
