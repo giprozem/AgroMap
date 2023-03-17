@@ -18,7 +18,7 @@ from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializ
 class AuthDetailContourViewSet(viewsets.ModelViewSet):
     queryset = Contour.objects.all().order_by('id')
     serializer_class = AuthDetailContourSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

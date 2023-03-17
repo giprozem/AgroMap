@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'leaflet',
     'simple_history',
+    'django_extensions',
 
     'schema_graph',
     'gip',

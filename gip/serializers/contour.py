@@ -48,13 +48,6 @@ class ContourSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class ContourYearSerializer(GeoFeatureModelSerializer):
-#     class Meta:
-#         model = ContourYear
-#         fields = '__all__'
-#         geo_field = 'polygon'
-
-
 class LandTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = LandType
@@ -64,14 +57,14 @@ class LandTypeSerializer(serializers.ModelSerializer):
 class AuthDetailContourSerializer(GeoFeatureModelSerializer):
     year = serializers.IntegerField(required=True)
     code_soato = serializers.CharField(
-        max_length=30,
+        max_length=30, required=False,
         validators=[UniqueValidator(queryset=Contour.objects.all(),
                                     message=(
                                         "C таким Код территории по СОАТО уже существует в базе"))]
     )
 
     ink = serializers.CharField(
-        max_length=30,
+        max_length=30, required=False,
         validators=[UniqueValidator(queryset=Contour.objects.all(),
                                     message=(
                                         "C таким Идентификационный номер контура уже существует в базе"))]
