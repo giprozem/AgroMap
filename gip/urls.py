@@ -3,6 +3,7 @@ from gip.views.conton import ContonAPIView
 from gip.views.contour import FilterContourAPIView, ContourStatisticsAPIView, StatisticsContourProductivityAPIView, \
     MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView, AuthDetailContourViewSet
 from gip.views.district import DistrictAPIView
+from gip.views.geoserver import Geoserver
 from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox, PolygonsInScreen
 from gip.views.region import RegionAPIView
 from gip.views.soil import SoilAPIView
@@ -33,5 +34,6 @@ urlpatterns = [
     path('district/', DistrictAPIView.as_view()),
     path('conton/', ContonAPIView.as_view()),
     path('land-type/', LandTypeAPIView.as_view()),
+    path('geoserver/', Geoserver.as_view()),
     path('', include(router.urls)),
 ]
