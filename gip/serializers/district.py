@@ -4,11 +4,10 @@ from gip.models import District
 from gip.serializers.region import RegionWithoutPolygonSerializer
 
 
-class DistrictSerializer(serializers.GeoFeatureModelSerializer):
+class DistrictSerializer(serializers.ModelSerializer):
     class Meta:
         model = District
         exclude = ('name',)
-        geo_field = 'polygon'
 
 
 class DistrictWithoutPolygonSerializer(serializers.ModelSerializer):
