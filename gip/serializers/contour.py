@@ -75,6 +75,22 @@ class AuthDetailContourSerializer(GeoFeatureModelSerializer):
         fields = '__all__'
         geo_field = 'polygon'
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['properties'] = {'created_at': instance.created_at, 'updated_at': instance.updated_at,
+                                        'ink': instance.ink, 'code_soato': instance.code_soato,
+                                        'year': instance.year, 'area_ha': instance.area_ha,
+                                        'conton': instance.conton.pk,
+                                        'farmer': instance.farmer.pk if instance.farmer else None,
+                                        'district': instance.conton.district.pk if instance.conton.district else None,
+                                        'region': instance.conton.district.region.pk if instance.conton.district.region else None,
+                                        'productivity': instance.productivity,
+                                        'culture': instance.culture.pk if instance.culture else None,
+                                        'type': instance.type.pk, 'is_deleted': instance.is_deleted,
+                                        'elevation': instance.elevation, 'is_rounded': instance.is_rounded
+                                        }
+        return representation
+
     def validate(self, attrs):
         with connection.cursor() as cursor:
             cursor.execute(f"""
