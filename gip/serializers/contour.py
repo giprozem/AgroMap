@@ -6,7 +6,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
-from gip.models import CropYield
+from gip.models import CropYield, District
 from gip.models.conton import Conton
 from gip.models.contour import Contour, LandType
 from gip.views.handbook_contour import contour_Kyrgyzstan
@@ -58,14 +58,14 @@ class AuthDetailContourSerializer(GeoFeatureModelSerializer):
     year = serializers.IntegerField(required=True)
     code_soato = serializers.CharField(
         max_length=30, required=False,
-        validators=[UniqueValidator(queryset=Contour.objects.all(),
+        validators=[UniqueValidator(queryset=Contour.objects.all().filter(is_deleted=False),
                                     message=(
                                         "C таким Код территории по СОАТО уже существует в базе"))]
     )
 
     ink = serializers.CharField(
         max_length=30, required=False,
-        validators=[UniqueValidator(queryset=Contour.objects.all(),
+        validators=[UniqueValidator(queryset=Contour.objects.all().filter(is_deleted=False),
                                     message=(
                                         "C таким Идентификационный номер контура уже существует в базе"))]
     )
@@ -91,20 +91,55 @@ class AuthDetailContourSerializer(GeoFeatureModelSerializer):
                                         }
         return representation
 
-    def validate(self, attrs):
+    def is_polygon_inside_Kyrgyzstan(self, request, *args, **kwargs):
         with connection.cursor() as cursor:
             cursor.execute(f"""
-            SELECT ST_Contains('{contour_Kyrgyzstan}'::geography::geometry, '{attrs['polygon']}'::geography::geometry);
+                SELECT ST_Contains('{contour_Kyrgyzstan}'::geography::geometry, '{request}'::geography::geometry);
             """)
             inside = cursor.fetchall()
-        intersect = Contour.objects.filter(
-            polygon__intersects=attrs['polygon'], is_deleted=False)
+        return inside[0][0]
+
+    def get_district(self, attrs):
+        with connection.cursor() as cursor:
+            cursor.execute(f"""
+            SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
+            '{attrs['polygon']}'::geography::geometry);
+            """)
+            district = cursor.fetchall()
+        return district[0][0]
+
+    def get_db_district(self, attrs):
+        db_district = [i.district.pk if i.district else None for i in Conton.objects.filter(id=attrs['conton'].pk)]
+        return db_district[0]
+
+    def validate_district(self, attrs):
+        district = self.get_district(attrs)
+        db_district = self.get_db_district(attrs)
+        if district != db_district:
+            raise ValidationError({
+                "district": f"Ваш контур выходит за пределы <{attrs['conton']}>"
+            })
+
+    def is_valid_year(self, attrs):
         if int(attrs['year']) > datetime.date.today().year:
             raise ValidationError({"year": "Год не может быть больше текущего года"})
         elif int(attrs['year']) < 2010:
             raise ValidationError({"year": "Год должен быть не менее 2010 года"})
-        elif not inside[0][0]:
-            raise ValidationError({"polygon": "Создайте поле внутри Кыргызстана"})
-        elif intersect:
+
+    def is_polygon_intersect(self, attrs):
+        intersect = Contour.objects.filter(
+            polygon__intersects=attrs['polygon'], is_deleted=False)
+        if intersect:
             raise ValidationError({"polygon": "Пересекаются поля"})
+
+    def validate(self, attrs):
+        if not self.is_polygon_inside_Kyrgyzstan(attrs['polygon']):
+            raise ValidationError({"polygon": "Создайте поле внутри Кыргызстана"})
+
+        self.validate_district(attrs)
+
+        self.is_valid_year(attrs)
+
+        self.is_polygon_intersect(attrs)
+
         return attrs
