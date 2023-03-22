@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 
+from gip.models.soil import SoilClass
 from gip.models.base import BaseModel
 from gip.models.conton import Conton
 from gip.models.farmer import Farmer
@@ -40,6 +41,8 @@ class Contour(BaseModel):
                                blank=True, null=True)
     history = HistoricalRecords(verbose_name=_("История"))
     is_rounded = models.BooleanField(default=False, verbose_name=_('Юридически подтвержденный'))
+    soil_class = models.ForeignKey(SoilClass, on_delete=models.SET_NULL, blank=True, null=True,
+                                   verbose_name='Тип почвы')
 
     def __str__(self):
         return self.code_soato or self.ink if self.code_soato or self.ink else ''

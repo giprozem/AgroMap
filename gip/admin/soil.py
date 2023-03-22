@@ -13,7 +13,7 @@ class SoilClassAdmin(SimpleHistoryAdmin, TranslationAdmin):
     list_filter = ('name', 'ID', )
     ordering = ('name', 'created_at', )
     list_per_page = 20
-    search_fields = ('name', 'ID', )
+    search_fields = ('name', 'ID', 'id')
     date_hierarchy = 'created_at'
     list_display_links = ('name', 'ID', )
 
@@ -25,7 +25,7 @@ class SoilClassMapAdmin(LeafletGeoAdmin, SimpleHistoryAdmin, TranslationAdmin):
     list_filter = ('soil_class', )
     ordering = ('soil_class', 'created_at', )
     list_per_page = 20
-    search_fields = ('soil_class', )
+    search_fields = ('soil_class', 'id')
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'soil_class', )
 
