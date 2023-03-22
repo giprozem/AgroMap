@@ -1,8 +1,6 @@
 from django.contrib.gis.db import models
 
 from gip.models.base import BaseModel
-from gip.models.fertility import Fertility
-from simple_history.models import HistoricalRecords
 from django.utils.translation import gettext_lazy as _
 
 
@@ -23,7 +21,6 @@ class SoilClassMap(BaseModel):
     soil_class = models.ForeignKey(SoilClass, on_delete=models.CASCADE, related_name='soil_class_maps',
                                    verbose_name=_('Тип почвы'))
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_('Контур'))
-    history = HistoricalRecords()
 
     class Meta:
         verbose_name = _('Контур типа почвы')
@@ -42,7 +39,6 @@ class SoilFertility(BaseModel):
     soil_productivity = models.ForeignKey(SoilProductivity, on_delete=models.CASCADE, related_name='soil_fertility',
                                           verbose_name=_('Плодородие почвы'))
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_('Контур'))
-    history = HistoricalRecords()
 
     class Meta:
         verbose_name = _('Плодородие почвы')
