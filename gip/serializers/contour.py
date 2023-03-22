@@ -128,7 +128,7 @@ class AuthDetailContourSerializer(GeoFeatureModelSerializer):
 
     def is_polygon_intersect(self, attrs):
         intersect = Contour.objects.filter(
-            polygon__intersects=attrs['polygon'], is_deleted=False)
+            polygon__intersects=attrs['polygon'], is_deleted=False, year=attrs['year'])
         if intersect:
             raise ValidationError({"polygon": "Пересекаются поля"})
 
