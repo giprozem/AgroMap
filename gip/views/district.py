@@ -67,7 +67,7 @@ class DistrictAPIView(APIView):
             serializer = DistrictSerializer(query, many=True)
             return Response(serializer.data, status=200)
         elif polygon and region:
-            query = District.objects.filter(region_id=int(region))
+            query = District.objects.filter(region_id__in=[int(district_id) for district_id in region.split(',')])
             serializer = DistrictSerializer(query, many=True)
             return Response(serializer.data, status=200)
         elif not polygon and not region:
@@ -75,6 +75,6 @@ class DistrictAPIView(APIView):
             serializer = DistrictWithoutPolygonSerializer(query, many=True)
             return Response(serializer.data, status=200)
         elif not polygon and region:
-            query = District.objects.filter(region_id=int(region))
+            query = District.objects.filter(region_id__in=[int(district_id) for district_id in region.split(',')])
             serializer = DistrictWithoutPolygonSerializer(query, many=True)
             return Response(serializer.data, status=200)
