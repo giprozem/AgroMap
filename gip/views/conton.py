@@ -62,19 +62,22 @@ class ContonAPIView(APIView):
     def get(self, request, *args, **kwargs):
         polygon = request.query_params.get('polygon')
         district = request.query_params.get('district_id')
-        if polygon and not district:
-            query = Conton.objects.all()
+        id = request.query_params.get('id')
+        if polygon and id:
+            query = Conton.objects.all().filter(id__in=[int(id) for id in id.split(',')])
             serializer = ContonSerializer(query, many=True)
             return Response(serializer.data, status=200)
-        elif polygon and district:
-            query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')])
+        elif id and polygon and district:
+            query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
+                                          id__in=[int(id) for id in id.split(',')])
             serializer = ContonSerializer(query, many=True)
             return Response(serializer.data, status=200)
-        elif not polygon and not district:
-            query = Conton.objects.all()
+        elif id:
+            query = Conton.objects.all().filter(id__in=[int(id) for id in id.split(',')])
             serializer = ContonWithoutPolygonSerializer(query, many=True)
             return Response(serializer.data, status=200)
-        elif not polygon and district:
-            query = Conton.objects.filter(district__in=[int(district_id) for district_id in district.split(',')])
+        elif id and district:
+            query = Conton.objects.filter(district__in=[int(district_id) for district_id in district.split(',')],
+                                          id__in=[int(id) for id in id.split(',')])
             serializer = ContonWithoutPolygonSerializer(query, many=True)
             return Response(serializer.data, status=200)
