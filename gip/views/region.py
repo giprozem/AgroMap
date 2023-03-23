@@ -74,11 +74,12 @@ class RegionAPIView(APIView):
     )
     def get(self, request, *args, **kwargs):
         polygon = request.query_params.get('polygon')
-        if polygon:
-            query = Region.objects.all()
+        id = request.query_params.get('id')
+        if polygon and id:
+            query = Region.objects.all().filter(id__in=[int(id) for id in id.split(',')])
             serializer = RegionSerializer(query, many=True)
             return Response(serializer.data, status=200)
-        elif not polygon:
-            query = Region.objects.all()
+        elif id:
+            query = Region.objects.all().filter(id__in=[int(id) for id in id.split(',')])
             serializer = RegionWithoutPolygonSerializer(query, many=True)
             return Response(serializer.data, status=200)

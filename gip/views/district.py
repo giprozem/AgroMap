@@ -62,19 +62,22 @@ class DistrictAPIView(APIView):
     def get(self, request, *args, **kwargs):
         polygon = request.query_params.get('polygon')
         region = request.query_params.get('region_id')
-        if polygon and not region:
-            query = District.objects.all()
+        id = request.query_params.get('id')
+        if id and polygon:
+            query = District.objects.all().filter(id__in=[int(id) for id in id.split(',')])
             serializer = DistrictSerializer(query, many=True)
             return Response(serializer.data, status=200)
-        elif polygon and region:
-            query = District.objects.filter(region_id__in=[int(district_id) for district_id in region.split(',')])
+        elif id and polygon and region:
+            query = District.objects.filter(region_id__in=[int(district_id) for district_id in region.split(',')],
+                                            id__in=[int(id) for id in id.split(',')])
             serializer = DistrictSerializer(query, many=True)
             return Response(serializer.data, status=200)
-        elif not polygon and not region:
-            query = District.objects.all()
+        elif id:
+            query = District.objects.all().filter(id__in=[int(id) for id in id.split(',')])
             serializer = DistrictWithoutPolygonSerializer(query, many=True)
             return Response(serializer.data, status=200)
-        elif not polygon and region:
-            query = District.objects.filter(region_id__in=[int(district_id) for district_id in region.split(',')])
+        elif region and id:
+            query = District.objects.filter(region_id__in=[int(district_id) for district_id in region.split(',')],
+                                            id__in=[int(id) for id in id.split(',')])
             serializer = DistrictWithoutPolygonSerializer(query, many=True)
             return Response(serializer.data, status=200)
