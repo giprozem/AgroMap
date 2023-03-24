@@ -6,12 +6,7 @@ from django.forms import FileInput
 from leaflet.admin import LeafletGeoAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
-from indexes.models.satelliteimage import SatelliteImages, SciHubAreaInterest, SciHubImageDate
-
-
-@admin.register(SatelliteImages)
-class SatelliteImagesAdmin(SimpleHistoryAdmin):
-    readonly_fields = ('id', 'bbox', )
+from indexes.models.satelliteimage import SciHubAreaInterest, SciHubImageDate
 
 
 class SciHubImageDateInline(TabularInline):
