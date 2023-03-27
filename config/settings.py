@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'culture_model',
     'hub',
     'account',
+    'ai',
 ]
 
 
