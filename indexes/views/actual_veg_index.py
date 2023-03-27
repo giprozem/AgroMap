@@ -36,7 +36,7 @@ class ActualIndexesOfContourYear(APIView):
         serializer = ActuaVegIndexSerializer(response, many=True, context={'request': request})
         if response:
             return Response(serializer.data, status=200)
-        return Response('We have no data to show', status=400)
+        return Response([], status=200)
 
 
 class SatelliteImagesDate(APIView):
