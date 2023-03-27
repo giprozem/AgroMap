@@ -23,9 +23,8 @@ class ActualIndexesOfContourYear(APIView):
                 description='Successful response',
                 schema=ActuaVegIndexSerializer(many=True)
             ),
-            400: openapi.Response(
-                description='We have no data to show',
-                schema=ActuaVegIndexSerializer(many=True)
+            204: openapi.Response(
+                description='We have no data to show'
             )
         },
         operation_summary='required contour_id return all indexes and values of required conrour'
@@ -36,7 +35,7 @@ class ActualIndexesOfContourYear(APIView):
         serializer = ActuaVegIndexSerializer(response, many=True, context={'request': request})
         if response:
             return Response(serializer.data, status=200)
-        return Response([], status=200)
+        return Response([], status=204)
 
 
 class SatelliteImagesDate(APIView):
