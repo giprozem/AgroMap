@@ -1,16 +1,14 @@
 import datetime
 
-from django.contrib.gis.geos import GEOSGeometry
 from django.db import connection
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
-from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
-from gip.models import CropYield, District
+from gip.models import CropYield
 from gip.models.conton import Conton
 from gip.models.contour import Contour, LandType
 from gip.views.handbook_contour import contour_Kyrgyzstan
 from rest_framework.validators import UniqueValidator
+from rest_framework.exceptions import APIException
 
 
 class ContonSerializer(serializers.ModelSerializer):
@@ -76,20 +74,9 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        # representation['properties'] = {'created_at': instance.created_at, 'updated_at': instance.updated_at,
-        #                                 'ink': instance.ink, 'code_soato': instance.code_soato,
-        #                                 'year': instance.year, 'area_ha': instance.area_ha,
-        #                                 'conton': instance.conton.pk,
-        #                                 'farmer': instance.farmer.pk if instance.farmer else None,
-        #                                 'district': instance.conton.district.pk if instance.conton.district else None,
-        #                                 'region': instance.conton.district.region.pk if instance.conton.district.region else None,
-        #                                 'productivity': instance.productivity,
-        #                                 'culture': instance.culture.pk if instance.culture else None,
-        #                                 'type': instance.type.pk, 'is_deleted': instance.is_deleted,
-        #                                 'elevation': instance.elevation, 'is_rounded': instance.is_rounded
-        #                                 }
         representation['region_id'] = instance.conton.district.region.pk if instance.conton.district.region else None
         representation['district_id'] = instance.conton.district.pk if instance.conton.district else None
+
         return representation
 
     def is_polygon_inside_Kyrgyzstan(self, request, *args, **kwargs):
@@ -117,25 +104,25 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
         district = self.get_district(attrs)
         db_district = self.get_db_district(attrs)
         if district != db_district:
-            raise ValidationError({
-                "district": f"Ваш контур выходит за пределы <{attrs['conton']}>"
+            raise APIException({
+                "message": f"Ваш контур выходит за пределы <{attrs['conton']}>"
             })
 
     def is_valid_year(self, attrs):
         if int(attrs['year']) > datetime.date.today().year:
-            raise ValidationError({"year": "Год не может быть больше текущего года"})
+            raise APIException({"message": "Год не может быть больше текущего года"})
         elif int(attrs['year']) < 2010:
-            raise ValidationError({"year": "Год должен быть не менее 2010 года"})
+            raise APIException({"message": "Год должен быть не менее 2010 года"})
 
     def is_polygon_intersect(self, attrs):
         intersect = Contour.objects.filter(
             polygon__intersects=attrs['polygon'], is_deleted=False, year=attrs['year'])
         if intersect:
-            raise ValidationError({"polygon": "Пересекаются поля"})
+            raise APIException({"message": "Пересекаются поля"})
 
     def validate(self, attrs):
         if not self.is_polygon_inside_Kyrgyzstan(attrs['polygon']):
-            raise ValidationError({"polygon": "Создайте поле внутри Кыргызстана"})
+            raise APIException({"message": "Создайте поле внутри Кыргызстана"})
 
         self.validate_district(attrs)
 
