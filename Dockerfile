@@ -14,6 +14,7 @@ RUN apt-get install --yes libgdal-dev
 RUN apt-get install --yes gettext
 RUN export CPLUS_INCLUDE_PATH=/usr/include/gdal
 RUN export C_INCLUDE_PATH=/usr/include/gdal
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 # Копируем все файлы приложения в рабочую директорию в контейнере
 WORKDIR /usr/src/app
