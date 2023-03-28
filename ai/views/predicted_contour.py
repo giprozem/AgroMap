@@ -3,12 +3,13 @@ from rest_framework.views import APIView
 from ai.utils import create_rgb, cut_image
 import shutil
 import os
-from ai.models import Contour, Images, Yolo
+from ai.models import Contour_AI, Images_AI, Yolo
 from ultralytics import YOLO
 import rasterio
 from PIL import Image
 from pyproj import Proj, transform
 from django.contrib.gis.geos import Polygon
+from django.core.files.images import ImageFile
 
 
 class CutAPIView(APIView):
@@ -22,17 +23,21 @@ class PredictAPIView(APIView):
     def get(self, request, *args, **kwargs):
         file = Yolo.objects.get(id=1)
         model = YOLO(f'media/{file.ai}')
-        image = Image.open('media/rgb/file.tif')
-        results = model.predict(source=image, save=True, conf=0.9)
+        image = Image.open('media/cutted_tiff/tile_0_20546084632.tif')
+        results = model.predict(source=image, save=False, conf=0.5, hide_labels=True, line_thickness=1)
         arrays = results[0].masks.segments
         confs = results[0].boxes.conf
-        images = Images.objects.create()
-        images.image.save(os.listdir('runs/segment/predict/')[0],
-                          open(f"runs/segment/predict/{os.listdir('runs/segment/predict/')[0]}", 'rb'))
+        images = Images_AI.objects.create()
+        img = results[0].plot(show_conf=False, line_width=1)
+        img = img[..., ::-1]
+        im = Image.fromarray(img)
+        im.save('media/images/field.png')
+        images.image.save(os.listdir('media/images/')[0],
+                          open(f"media/images/{os.listdir('media/images')[0]}", 'rb'))
         w, h = image.size
         x = 1 / w
         y = 1 / h
-        with rasterio.open('media/rgb/file.tif') as src:
+        with rasterio.open('media/cutted_tiff/tile_0_20546084632.tif') as src:
             for n in range(0, len(arrays)):
                 coordinates = []
                 for i in arrays[n]:
@@ -48,6 +53,6 @@ class PredictAPIView(APIView):
                 geojson = tuple(geojson)
                 conf = confs[n]
                 poly = Polygon(geojson)
-                Contour.objects.create(polygon=poly, percent=conf)
-            shutil.rmtree('runs')
+                Contour_AI.objects.create(polygon=poly, percent=conf)
+            #shutil.rmtree('images')
         return Response({"message": "ok"})
