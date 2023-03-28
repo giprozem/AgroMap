@@ -18,7 +18,9 @@ class ContourAPIView(APIView):
 
 
 class ContourProductivityPredictAPIView(APIView):
-
+    @swagger_auto_schema(
+        operation_summary='do not required for front'
+    )
     def post(self, request, *args, **kwargs):
         contour = self.request.query_params['contour_id']
         query = Contour.objects.get(id=contour)
