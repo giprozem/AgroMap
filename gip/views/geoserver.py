@@ -24,7 +24,7 @@ class Geoserver(APIView):
             JOIN gip_region AS rgn ON rgn.id=dst.region_id
             LEFT JOIN gip_cropyield as cy ON cy.contour_id = cntr.id
             LEFT JOIN gip_culture as cl ON cy.culture_id = cl.id
-            WHERE cntr.is_deleted=False
+            WHERE cntr.is_deleted=False and land.id=2
             GROUP BY "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id, cl.id;""")
             rows = cursor.fetchall()
             data = []
@@ -59,33 +59,33 @@ class Geoserver(APIView):
             # Путь к папке с файлами
             shapefile_path = 'shp'
 
-            # Создание рабочую область, если она еще не существует
-            workspace_url = f'{geoserver_url}/workspaces/{workspace}.json'
-            workspace_exists = requests.get(workspace_url, auth=(username, password)).ok
+            """Создание рабочую область, если она еще не существует"""
+            # workspace_url = f'{geoserver_url}/workspaces/{workspace}.json'
+            # workspace_exists = requests.get(workspace_url, auth=(username, password)).ok
+            #
+            # if not workspace_exists:
+            #     requests.post(f'{geoserver_url}/workspaces.json',
+            #                   auth=(username, password),
+            #                   headers={'Content-Type': 'application/json'},
+            #                   json={'workspace': {'name': workspace}})
 
-            if not workspace_exists:
-                requests.post(f'{geoserver_url}/workspaces.json',
-                              auth=(username, password),
-                              headers={'Content-Type': 'application/json'},
-                              json={'workspace': {'name': workspace}})
-
-            # Создание хранилище, если она еще не существует
+            """Создание хранилище, если она еще не существует"""
             store_url = f'{geoserver_url}/workspaces/{workspace}/datastores/{storename}'
-            store_exists = requests.get(store_url, auth=(username, password)).ok
-
-            if not store_exists:
-                requests.post(f'{geoserver_url}/workspaces/{workspace}/datastores.json',
-                              auth=(username, password),
-                              headers={'Content-Type': 'application/json'},
-                              json={'dataStore': {
-                                  'name': storename,
-                                  'type': 'Shapefile',
-                                  'enabled': True,
-                                  'connectionParameters': {
-                                      'url': f'file:data/agromap/{shapefile_path}',
-                                      'create spatial index': True
-                                  }
-                              }})
+            # store_exists = requests.get(store_url, auth=(username, password)).ok
+            #
+            # if not store_exists:
+            #     requests.post(f'{geoserver_url}/workspaces/{workspace}/datastores.json',
+            #                   auth=(username, password),
+            #                   headers={'Content-Type': 'application/json'},
+            #                   json={'dataStore': {
+            #                       'name': storename,
+            #                       'type': 'Shapefile',
+            #                       'enabled': True,
+            #                       'connectionParameters': {
+            #                           'url': f'file:data/agromap/{shapefile_path}',
+            #                           'create spatial index': True
+            #                       }
+            #                   }})
 
             # Загрузка каждого файла в папке
             for shpfile_path in os.listdir(shapefile_path):
@@ -112,3 +112,11 @@ class Geoserver(APIView):
                               'type': 'ESRI Shapefile'
                           }})
         return Response('OK')
+
+
+# import requests
+#
+# try:
+#     requests.get('https://adminagro.24mycrm.com/gip/geoserver/')
+# except Exception as e:
+#     print(e)

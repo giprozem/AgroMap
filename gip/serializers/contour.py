@@ -52,6 +52,34 @@ class LandTypeSerializer(serializers.ModelSerializer):
         exclude = ('name',)
 
 
+class UpdateAuthDetailContourSerializer(serializers.ModelSerializer):
+    year = serializers.IntegerField(required=True)
+    code_soato = serializers.CharField(
+        max_length=30, required=False,
+        validators=[UniqueValidator(queryset=Contour.objects.all().filter(is_deleted=False),
+                                    message=(
+                                        "C таким Код территории по СОАТО уже существует в базе"))]
+    )
+
+    ink = serializers.CharField(
+        max_length=30, required=False,
+        validators=[UniqueValidator(queryset=Contour.objects.all().filter(is_deleted=False),
+                                    message=(
+                                        "C таким Идентификационный номер контура уже существует в базе"))]
+    )
+
+    class Meta:
+        model = Contour
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['region_id'] = instance.conton.district.region.pk if instance.conton.district.region else None
+        representation['district_id'] = instance.conton.district.pk if instance.conton.district else None
+
+        return representation
+
+
 class AuthDetailContourSerializer(serializers.ModelSerializer):
     year = serializers.IntegerField(required=True)
     code_soato = serializers.CharField(
