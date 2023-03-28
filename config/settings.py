@@ -184,6 +184,31 @@ JAZZMIN_SETTINGS = {
         {"models": "auth.User"},
     ],
     "language_chooser": True,
+    "order_with_respect_to": [
+        "account",
+        "auth",
+        "gip",
+        "gip.Contour",
+        "gip.LandType",
+        "gip.Region",
+        "gip.Conton",
+        "gip.District",
+        "gip.SoilClass",
+        "gip.SoilClassMap",
+        "gip.SoilProductivity",
+        "gip.SoilFertility",
+        "indexes",
+        "indexes.ActualVegIndex",
+        "indexes.IndexCreatingReport",
+        "indexes.IndexMeaning",
+        "indexes.SciHubImageDate",
+        "indexes.SciHubAreaInterest",
+
+        "ai",
+        "culture_model",
+
+        "hub"
+    ],
 }
 
 JAZZMIN_UI_TWEAKS = {
