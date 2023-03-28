@@ -13,10 +13,15 @@ from osgeo import gdal
 from datetime import date
 
 from indexes.models import SciHubImageDate, SciHubAreaInterest
+from decouple import config
 
 """
 */10 * * * * docker exec plot_web_1 ./manage.py runscript cron_download_S2_Copernicus -v3
 """
+
+
+SCI_HUB_USERNAME = config('SCI_HUB_USERNAME').split(',')
+SCI_HUB_PASSWORD = config('SCI_HUB_PASSWORD').split(',')
 
 
 def run():
@@ -26,7 +31,7 @@ def run():
     output = 'output/'
 
     # Скачиваем снимки через Sci-hub
-    api = SentinelAPI('kaiumamanbaev', 'Copernicus123!', 'https://scihub.copernicus.eu/dhus')
+    api = SentinelAPI(SCI_HUB_USERNAME, SCI_HUB_PASSWORD, 'https://scihub.copernicus.eu/dhus')
 
     # Define a list of footprints
     footprints = [sci_hub_area_interest.polygon.wkt for sci_hub_area_interest in

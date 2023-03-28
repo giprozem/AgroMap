@@ -28,6 +28,8 @@ The web backend expects the following environment variables to be set:
 - `POSTGRES_HOST`
 - `POSTGRES_PORT`
 - `SECRET_KEY`
+- `SCI_HUB_USERNAME`
+- `SCI_HUB_PASSWORD`
 
 
 ### Setup
