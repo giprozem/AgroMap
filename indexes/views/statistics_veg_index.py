@@ -24,6 +24,6 @@ class ContourProductivityPredictAPIView(APIView):
     def post(self, request, *args, **kwargs):
         contour = self.request.query_params['contour_id']
         query = Contour.objects.get(id=contour)
-        serializer = ContourStatisticsSerializer(query, many=True)
+        serializer = ContourStatisticsSerializer(query)
         return Response(serializer.data, status=200)
     
