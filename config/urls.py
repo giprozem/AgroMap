@@ -27,6 +27,7 @@ urlpatterns = [
     path("schema/", Schema.as_view()),
     path('login_agromap/', LoginAgromapView.as_view()),
     path('info/', include('culture_model.urls')),
+    path('ai/', include('ai.urls')),
 ]
 
 urlpatterns += i18n_patterns(

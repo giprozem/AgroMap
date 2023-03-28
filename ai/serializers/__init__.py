@@ -1,0 +1,1 @@
+from ai.serializers.predicted_contour import *
