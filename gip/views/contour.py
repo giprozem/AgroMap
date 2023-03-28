@@ -12,13 +12,24 @@ from rest_framework.permissions import IsAuthenticated
 
 from gip.models.contour import Contour
 from gip.pagination.contour_pagination import SearchContourPagination
-from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializer
+from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializer, UpdateAuthDetailContourSerializer
 
 
 class AuthDetailContourViewSet(viewsets.ModelViewSet):
     queryset = Contour.objects.all().order_by('id')
     serializer_class = AuthDetailContourSerializer
     # permission_classes = (IsAuthenticated,)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = UpdateAuthDetailContourSerializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+        return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

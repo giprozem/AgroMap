@@ -6,5 +6,5 @@ from ai.utils import cut_image, create_rgb
 class CutAPIView(APIView):
     def post(self, request):
         create_rgb()
-        cut_image()
+        # cut_image()
         return Response({"message": "ok"})

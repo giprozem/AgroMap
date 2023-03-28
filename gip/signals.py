@@ -4,9 +4,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from shapely.wkt import loads
 import requests
-from django.contrib.gis.geos import Point, GEOSGeometry
-
-from gip.models import Elevation, Contour, SoilClassMap
+from django.contrib.gis.geos import Point
+from gip.models import Elevation, Contour
 
 
 @receiver(post_save, sender=Contour)
@@ -30,7 +29,6 @@ def update(sender, instance, created, **kwargs):
                     """)
             rows = cursor.fetchall()
             result_soil_class = rows[0][1] if rows != [] else None
-
         instance.soil_class_id = result_soil_class
         center = loads(f"{geom.polygon.centroid}".strip('SRID=4326;'))
         x, y = center.x, center.y
