@@ -1,17 +1,22 @@
+import json
 import random
 import time
 from datetime import datetime
 
-from osgeo import gdal
+from django.db import connection
+from osgeo import gdal, osr
 import os
+
+from gip.views.handbook_contour import contour_test_for_ai
 from indexes.models.satelliteimage import SciHubImageDate
 import rasterio
 import numpy as np
 from ai.models import Contour_AI, Images_AI, Yolo
 from ultralytics import YOLO
 from PIL import Image
-from pyproj import Proj, transform
-from django.contrib.gis.geos import Polygon
+from pyproj import Proj, Transformer
+from pyproj.transformer import transform as trnsfrm
+from django.contrib.gis.geos import Polygon, GEOSGeometry
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -108,45 +113,106 @@ def yolo():
     file = Yolo.objects.get(id=1)
     model = YOLO(f'media/{file.ai}')
     cutted_files = os.listdir('media/cutted_tiff')
+
     for file in cutted_files:
-        image = Image.open(f'media/cutted_tiff/{file}')
-        results = model.predict(source=image, save=False, conf=0.5, hide_labels=True, line_thickness=1)
-        try:
-            arrays = results[0].masks.segments
-            confs = results[0].boxes.conf
-            w, h = image.size
-            x = 1 / w
-            y = 1 / h
-            img = Image.fromarray(results[0].orig_img)
-            plt.imshow(img)
-            for i in arrays:
-                df = pd.DataFrame(i)
-                df.loc[len(df)] = ([i[0][0], i[0][1]])
-                plt.plot(df[0] / x, df[1] / y, c="red")
-            plt.axis('off')
-            plt.savefig('media/images/field.png', transparent=True, bbox_inches='tight', pad_inches=0)
-            images = Images_AI.objects.create()
-            images.image.save(os.listdir('media/images/')[0],
-                              open(f"media/images/{os.listdir('media/images')[0]}", 'rb'))
-            with rasterio.open(f'media/cutted_tiff/{file}') as src:
-                for n in range(0, len(arrays)):
-                    coordinates = []
-                    for i in arrays[n]:
-                        coordinates.append(src.xy(i[1] / x, i[0] / y))
-                    coordinates.append(coordinates[0])
-                    geojson = []
-                    for i in range(0, len(coordinates)):
-                        inProj = Proj(init=f'epsg:{src.crs.to_epsg()}')
-                        outProj = Proj(init='epsg:4326')
-                        x1, y1 = coordinates[i][0], coordinates[i][1]
-                        x2, y2 = transform(inProj, outProj, x1, y1)
-                        geojson.append([x2, y2])
-                    geojson = tuple(geojson)
-                    conf = confs[n]
-                    poly = Polygon(geojson)
-                    Contour_AI.objects.create(polygon=poly, percent=conf, images=images)
-        except:
-            print('error')
+        ds = gdal.Open(f"media/cutted_tiff/{file}", gdal.GA_ReadOnly)
+
+        proj = osr.SpatialReference(wkt=ds.GetProjection())
+        proj_wgs84 = osr.SpatialReference()
+        proj_wgs84.ImportFromEPSG(4326)
+        transform = osr.CoordinateTransformation(proj, proj_wgs84)
+
+        ulx, xres, xskew, uly, yskew, yres = ds.GetGeoTransform()
+        lrx = ulx + (ds.RasterXSize * xres)
+        lry = uly + (ds.RasterYSize * yres)
+
+        ul_lon, ul_lat, _ = transform.TransformPoint(ulx, uly)
+        lr_lon, lr_lat, _ = transform.TransformPoint(lrx, lry)
+
+        coords = [
+            [[ul_lat, ul_lon, ], [ul_lat, lr_lon], [lr_lat, lr_lon], [lr_lat, ul_lon],
+             [ul_lat, ul_lon]]]
+        geojson = {
+            "type": "Polygon",
+            "coordinates": coords
+        }
+
+        with connection.cursor() as cursor:
+            cursor.execute(f"""
+                SELECT ST_Intersects('{contour_test_for_ai}'::geography::geometry, '{GEOSGeometry(f"{geojson}")}'::geography::geometry);
+            """)
+            inside = cursor.fetchall()
+        if inside[0][0] == True:
+            image = Image.open(f'media/cutted_tiff/{file}')
+            results = model.predict(source=image, save=False, conf=0.5, hide_labels=True, line_thickness=1)
+            try:
+                arrays = results[0].masks.segments
+                confs = results[0].boxes.conf
+                w, h = image.size
+                x = 1 / w
+                y = 1 / h
+                img = Image.fromarray(results[0].orig_img)
+                # plt.imshow(img)
+                for i in arrays:
+                    df = pd.DataFrame(i)
+                    df.loc[len(df)] = ([i[0][0], i[0][1]])
+                    plt.plot(df[0] / x, df[1] / y, c="red")
+                plt.axis('off')
+                plt.savefig(f'media/images/{file[:-4]}.png', transparent=True, bbox_inches='tight', pad_inches=0)
+                images = Images_AI.objects.create()
+                images.image.save(os.listdir('media/images/')[0],
+                                  open(f"media/images/{os.listdir('media/images')[0]}", 'rb'))
+                with rasterio.open(f'media/cutted_tiff/{file}') as src:
+                    for n in range(0, len(arrays)):
+                        coordinates = []
+                        for i in arrays[n]:
+                            coordinates.append(src.xy(i[1] / x, i[0] / y))
+                        coordinates.append(coordinates[0])
+                        geojsons = []
+                        for i in range(0, len(coordinates)):
+                            inProj = Proj(init=f'epsg:{src.crs.to_epsg()}')
+                            outProj = Proj(init='epsg:4326')
+                            x1, y1 = coordinates[i][0], coordinates[i][1]
+                            x2, y2 = trnsfrm(inProj, outProj, x1, y1)
+                            geojsons.append([x2, y2])
+                        conf = confs[n]
+                        geojson = {
+                            "type": "Polygon",
+                            "coordinates": [geojsons]
+                        }
+                        poly = GEOSGeometry(f"{geojson}")
+                        with connection.cursor() as cursor:
+                            cursor.execute(f"""
+                            SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
+                            '{poly}'::geography::geometry);
+                            """)
+                            district = cursor.fetchall()[0][0]
+                        Contour_AI.objects.create(polygon=poly, percent=conf, district_id=district)
+
+                        # with connection.cursor() as cursor:
+                        #
+                        #     cursor.execute(f"""
+                        #     SELECT SUM(subquery.percent) as total_percent
+                        #     FROM (
+                        #         SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
+                        #         '{poly}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent
+                        #         FROM ai_contour_ai as scm
+                        #     ) as subquery;
+                        #     """)
+                        #     # percent = cursor.fetchall()[0][0]
+                        #     percent = cursor.fetchall()[0][0]
+                        # if round(percent) < 30:
+                        #     with connection.cursor() as cursor:
+                        #         cursor.execute(f"""
+                        #         SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
+                        #         '{poly}'::geography::geometry);
+                        #         """)
+                        #         # district = cursor.fetchall()[0][0]
+                        #         district = cursor.fetchall()
+                        #         # print(district)
+                        #     # Contour_AI.objects.create(polygon=poly, percent=conf, district_id=district)
+            except Exception as e:
+                print(e)
 
 
 def deleted_files():
