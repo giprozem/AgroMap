@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ai.utils import create_rgb, cut_image
+from ai.utils.predicted_contour import create_rgb, cut_image
 import shutil
 import os
 from ai.models import Contour_AI, Images_AI, Yolo
