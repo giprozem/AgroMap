@@ -12,6 +12,8 @@ from ultralytics import YOLO
 from PIL import Image
 from pyproj import Proj, transform
 from django.contrib.gis.geos import Polygon
+import matplotlib.pyplot as plt
+import pandas as pd
 
 
 def merge_bands():
@@ -109,36 +111,42 @@ def yolo():
     for file in cutted_files:
         image = Image.open(f'media/cutted_tiff/{file}')
         results = model.predict(source=image, save=False, conf=0.5, hide_labels=True, line_thickness=1)
-        arrays = results[0].masks.segments
-        confs = results[0].boxes.conf
-        images = Images_AI.objects.create()
-        img = results[0].plot(show_conf=False, line_width=1)
-        img = img[..., ::-1]
-        im = Image.fromarray(img)
-        im.save(f'media/images/{file[:-4]}.png')
-        images.image.save(os.listdir('media/images/')[0],
-                          open(f"media/images/{os.listdir('media/images')[0]}", 'rb'))
-        w, h = image.size
-        x = 1 / w
-        y = 1 / h
-        with rasterio.open(f'media/cutted_tiff/{file}') as src:
-            for n in range(0, len(arrays)):
-                coordinates = []
-                for i in arrays[n]:
-                    coordinates.append(src.xy(i[1] / x, i[0] / y))
-                coordinates.append(coordinates[0])
-                geojson = []
-                for i in range(0, len(coordinates)):
-                    inProj = Proj(init=f'epsg:{src.crs.to_epsg()}')
-                    outProj = Proj(init='epsg:4326')
-                    x1, y1 = coordinates[i][0], coordinates[i][1]
-                    x2, y2 = transform(inProj, outProj, x1, y1)
-                    geojson.append([x2, y2])
-                geojson = tuple(geojson)
-                conf = confs[n]
-                poly = Polygon(geojson)
-                Contour_AI.objects.create(polygon=poly, percent=conf)
-            # shutil.rmtree('images')
+        try:
+            arrays = results[0].masks.segments
+            confs = results[0].boxes.conf
+            w, h = image.size
+            x = 1 / w
+            y = 1 / h
+            img = Image.fromarray(results[0].orig_img)
+            plt.imshow(img)
+            for i in arrays:
+                df = pd.DataFrame(i)
+                df.loc[len(df)] = ([i[0][0], i[0][1]])
+                plt.plot(df[0] / x, df[1] / y, c="red")
+            plt.axis('off')
+            plt.savefig('media/images/field.png', transparent=True, bbox_inches='tight', pad_inches=0)
+            images = Images_AI.objects.create()
+            images.image.save(os.listdir('media/images/')[0],
+                              open(f"media/images/{os.listdir('media/images')[0]}", 'rb'))
+            with rasterio.open(f'media/cutted_tiff/{file}') as src:
+                for n in range(0, len(arrays)):
+                    coordinates = []
+                    for i in arrays[n]:
+                        coordinates.append(src.xy(i[1] / x, i[0] / y))
+                    coordinates.append(coordinates[0])
+                    geojson = []
+                    for i in range(0, len(coordinates)):
+                        inProj = Proj(init=f'epsg:{src.crs.to_epsg()}')
+                        outProj = Proj(init='epsg:4326')
+                        x1, y1 = coordinates[i][0], coordinates[i][1]
+                        x2, y2 = transform(inProj, outProj, x1, y1)
+                        geojson.append([x2, y2])
+                    geojson = tuple(geojson)
+                    conf = confs[n]
+                    poly = Polygon(geojson)
+                    Contour_AI.objects.create(polygon=poly, percent=conf, images=images)
+        except:
+            print('error')
 
 
 def deleted_files():
