@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ai.utils.predicted_contour import create_rgb, cut_image
+from ai.utils.predicted_contour import create_rgb, cut_rgb_tif, merge_bands, deleted_files, yolo
 import shutil
 import os
 from ai.models import Contour_AI, Images_AI, Yolo
@@ -9,13 +9,15 @@ import rasterio
 from PIL import Image
 from pyproj import Proj, transform
 from django.contrib.gis.geos import Polygon
-from django.core.files.images import ImageFile
 
 
 class CutAPIView(APIView):
-    def post(self, request):
+    def get(self, request):
+        merge_bands()
         create_rgb()
-        cut_image()
+        cut_rgb_tif()
+        deleted_files()
+        # yolo()
         return Response({"message": "ok"})
 
 

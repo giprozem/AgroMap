@@ -129,3 +129,4 @@ xmltodict==0.13.0
 yarl==1.8.1
 zope.event==4.5.0
 zope.interface==5.5.0
+django-solo==1.1.1
