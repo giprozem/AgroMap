@@ -49,11 +49,13 @@ class DataToTrainProductivityAPIView(APIView):
 
 
 class CheckAPIView(APIView):
+    @swagger_auto_schema(
+        operation_summary='do not required for front',
+        operation_description='Productivity prediction'
+    )
     def get(self, request, *args, **kwargs):
         for i in range(1, 5):
             try:
-                # a = Contour_AI.objects.get(id=i)
-                # print(a.productivity)
                 predicting_productivity(i)
             except Exception as e:
                 print(e)
@@ -62,7 +64,12 @@ class CheckAPIView(APIView):
 
 
 class CreatingIndexAPIView(APIView):
+    @swagger_auto_schema(
+        operation_summary='do not required for front',
+        operation_description='creating veg indexes'
+    )
     def post(self, request, *args, **kwargs):
-        creating_veg_indexes()
+        thread_obj = Thread(target=creating_veg_indexes)
+        thread_obj.start()
         return Response('finish', status=200)
 
