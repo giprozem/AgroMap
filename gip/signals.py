@@ -45,6 +45,7 @@ def update(sender, instance, created, **kwargs):
     else:
         geom = Contour.objects.annotate(area_=Area("polygon")).get(id=instance.id)
         with connection.cursor() as cursor:
+
             cursor.execute(f"""
             SELECT subquery.name, subquery.id
             FROM (
@@ -63,3 +64,5 @@ def update(sender, instance, created, **kwargs):
             result_soil_class = rows[0][1] if rows != [] else None
         ha = round(geom.area_.sq_km * 100, 2)
         Contour.objects.filter(id=instance.id).update(area_ha=ha, soil_class_id=result_soil_class)
+
+
