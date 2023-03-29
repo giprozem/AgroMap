@@ -14,3 +14,11 @@ class IndexCreatingReport(models.Model):
     class Meta:
         verbose_name = _("Отчет по индексу")
         verbose_name_plural = _("Отчеты по индексу")
+
+
+class ContourAIIndexCreatingReport(models.Model):
+    contour = models.ForeignKey('ai.Contour_AI', on_delete=models.SET_NULL, null=True)
+    veg_index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.SET_NULL, null=True)
+    satellite_image = models.ForeignKey('indexes.SciHubImageDate', on_delete=models.SET_NULL, null=True)
+    is_processed = models.BooleanField(default=False)
+    process_error = models.TextField()
