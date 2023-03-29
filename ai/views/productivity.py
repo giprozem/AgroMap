@@ -4,8 +4,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ai.productivity_funcs.training import initialize, predict, model_path
+from ai.serializers.productivity import ContourAISerializer
+from ai.utils.productivity import predicting_productivity
 from gip.models.contour import Contour
 from indexes.serializers.statistics_veg_index import ContourStatisticsSerializer
+from ai.models.predicted_contour import Contour_AI
+from threading import Thread
+from ai.utils.productivity import creating_veg_indexes
 
 
 class PredictAIContourProductivity(APIView):
@@ -16,15 +21,13 @@ class PredictAIContourProductivity(APIView):
         contour = self.request.query_params['contour_id']
         response = Contour.objects.get(id=contour)
         serializer = ContourStatisticsSerializer(response)
-        print(serializer.data)
-
-        if response:
-            return_list = serializer.data
-            json_data = JSONRenderer().render(return_list)
-            json_string = json_data.decode('utf-8')
-            predict(model_path, json_string)
-            return Response(serializer.data, status=200)
-        return Response([], status=204)
+        res = [serializer.data]
+        json_data = JSONRenderer().render(res)
+        json_string = json_data.decode('utf-8')
+        result = predict(model_path=model_path, predict_path=json_string)
+        response.productivity = result
+        response.save()
+        return Response(result, status=200)
 
 
 class DataToTrainProductivityAPIView(APIView):
@@ -43,3 +46,23 @@ class DataToTrainProductivityAPIView(APIView):
             initialize(json_string)
             return Response(serializer.data, status=200)
         return Response([], status=204)
+
+
+class CheckAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        for i in range(1, 5):
+            try:
+                # a = Contour_AI.objects.get(id=i)
+                # print(a.productivity)
+                predicting_productivity(i)
+            except Exception as e:
+                print(e)
+                pass
+        return Response('ok', status=200)
+
+
+class CreatingIndexAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        creating_veg_indexes()
+        return Response('finish', status=200)
+

@@ -46,3 +46,22 @@ class IndexMeaning(models.Model):
 
     def __str__(self):
         return f'{self.index} {self.min_index_value} {self.max_index_value}'
+
+
+class PredictedContourVegIndex(models.Model):
+    index_image = models.FileField(upload_to='index_image', blank=True)
+    average_value = models.DecimalField(
+        max_digits=5,
+        decimal_places=3,
+        blank=True
+    )
+    meaning_of_average_value = models.ForeignKey(
+        'indexes.IndexMeaning',
+        on_delete=models.SET_NULL,
+        null=True
+    )
+    index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE)
+    contour = models.ForeignKey('ai.Contour_AI', on_delete=models.CASCADE,
+                                related_name='contour_ai_veg_index')
+    date = models.DateField()
+    history = HistoricalRecords()
