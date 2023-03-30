@@ -231,3 +231,41 @@ def deleted_files():
         file_path = os.path.join(rgb_dir, file_name)
         if os.path.isfile(file_path):
             os.remove(file_path)
+
+def create_dataset():
+    data = []
+    coordinates = Contour_AI.objects.filter(image_id=4)
+    for i in coordinates:
+        data.append(i.polygon.wkt)
+    label = ''
+    for line in data:
+        line = line.replace('POLYGON ', '').removesuffix('))').removeprefix('((')
+        line = line.split(', ')
+        coordinates = []
+        for j in line:
+            j = j.split(' ')
+            coordinates.append([float(j[0]), float(j[1])])
+        image = Image.open('media/cutted_tiff/tile_0_20546084632.tif')
+        w, h = image.size
+        image.save('media/dataset/images/tile_0_20546084632.png')
+        with rasterio.open('media/cutted_tiff/tile_0_20546084632.tif') as src:
+            meters = []
+            for i in range(0, len(coordinates)):
+                inProj = Proj(init='epsg:4326')
+                outProj = Proj(init=f'epsg:{src.crs.to_epsg()}')
+                x1, y1 = coordinates[i][0], coordinates[i][1]
+                x2, y2 = trnsfrm(inProj, outProj, x1, y1)
+                meters.append([x2, y2])
+            xs = []
+            ys = []
+            for i in meters:
+                xs.append(i[0])
+                ys.append(i[1])
+            y, x = rasterio.transform.rowcol(src.transform, xs, ys)
+            txt = '0 '
+            for i in range(0, len(x)):
+                txt += f'{x[i]/w} {y[i]/h} '
+            label += f'{txt}\n'
+
+    with open("media/dataset/labels/tile_0_20546084632.txt", "w") as txt_file:
+        txt_file.write(label)
