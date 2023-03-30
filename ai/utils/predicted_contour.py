@@ -203,26 +203,26 @@ def yolo():
                     #     """)
                     #     inside_contour = cursor.fetchall()[0][0]
                     #     if inside_contour == True:
-                    with connection.cursor() as cursor:
-                        cursor.execute(f"""
-                        SELECT SUM(subquery.percent) as total_percent
-                        FROM (
-                            SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
-                            '{poly}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent
-                            FROM ai_contour_ai as scm
-                        ) as subquery;
-                        """)
-                        # percent = cursor.fetchall()[0][0]
-                        percent = cursor.fetchall()[0][0]
-                        print(percent)
-                    if round(percent) < 30 or percent == None:
                         with connection.cursor() as cursor:
                             cursor.execute(f"""
-                            SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
-                            '{poly}'::geography::geometry);
+                            SELECT SUM(subquery.percent) as total_percent
+                            FROM (
+                                SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
+                                '{poly}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent
+                                FROM ai_contour_ai as scm
+                            ) as subquery;
                             """)
-                            district = cursor.fetchall()[0][0]
-                        Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 1), district_id=district)
+                            # percent = cursor.fetchall()[0][0]
+                            percent = cursor.fetchall()[0][0]
+                            print(percent)
+                        if round(percent) < 30 or percent == None:
+                            with connection.cursor() as cursor:
+                                cursor.execute(f"""
+                                SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
+                                '{poly}'::geography::geometry);
+                                """)
+                                district = cursor.fetchall()[0][0]
+                            Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 1), district_id=district)
             except Exception as e:
                 print(e)
 
