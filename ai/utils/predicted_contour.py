@@ -152,7 +152,7 @@ def yolo():
                 x = 1 / w
                 y = 1 / h
                 img = Image.fromarray(results[0].orig_img)
-                # plt.imshow(img)
+                plt.imshow(img)
                 for i in arrays:
                     df = pd.DataFrame(i)
                     df.loc[len(df)] = ([i[0][0], i[0][1]])
