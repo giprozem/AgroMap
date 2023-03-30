@@ -6,7 +6,7 @@ from django.db import connection
 from osgeo import gdal, osr
 import os
 
-from gip.views.handbook_contour import contour_test_for_ai, contour_Chui
+from gip.views.handbook_contour import contour_test_for_ai, contour_Chui_2
 from indexes.models.satelliteimage import SciHubImageDate
 import rasterio
 import numpy as np
@@ -15,14 +15,15 @@ from ultralytics import YOLO
 from PIL import Image
 from pyproj import Proj, Transformer
 from pyproj.transformer import transform as trnsfrm
-from django.contrib.gis.geos import Polygon, GEOSGeometry
+from django.contrib.gis.geos import GEOSGeometry
 import matplotlib.pyplot as plt
 import pandas as pd
+from shapely.geometry import Polygon
 
 
 def merge_bands():
     # Фильтруем объекты SciHubImageDate по ID и загружаем изображения
-    satellite_images = SciHubImageDate.objects.filter(id__in=[150, 154, 155])
+    satellite_images = SciHubImageDate.objects.filter(id__in=[154, 155])
 
     for image in satellite_images:
         time.sleep(2)
@@ -109,8 +110,8 @@ def cut_rgb_tif():
 
 
 def yolo():
-    file = Yolo.objects.get(id=1)
-    model = YOLO(f'media/{file.ai}')
+    file_yolo = Yolo.objects.get(id=1)
+    model = YOLO(f'media/{file_yolo.ai}')
     cutted_files = os.listdir('media/cutted_tiff')
 
     for file in cutted_files:
@@ -138,12 +139,12 @@ def yolo():
 
         with connection.cursor() as cursor:
             cursor.execute(f"""
-                SELECT ST_Intersects('{contour_Chui}'::geography::geometry, '{GEOSGeometry(f"{geojson}")}'::geography::geometry);
+                SELECT ST_Intersects('{contour_Chui_2}'::geography::geometry, '{GEOSGeometry(f"{geojson}")}'::geography::geometry);
             """)
             inside = cursor.fetchall()
         if inside[0][0] == True:
             image = Image.open(f'media/cutted_tiff/{file}')
-            results = model.predict(source=image, save=False, conf=0.5, hide_labels=True, line_thickness=1)
+            results = model.predict(source=image, save=False, conf=0.05, hide_labels=True, line_thickness=1)
             try:
                 arrays = results[0].masks.segments
                 confs = results[0].boxes.conf
@@ -175,39 +176,53 @@ def yolo():
                             x2, y2 = trnsfrm(inProj, outProj, x1, y1)
                             geojsons.append([x2, y2])
                         conf = confs[n]
+                        coords = np.array(geojsons)
+
+                        # Создать геометрию полигона из столбцов координат
+                        polygon = Polygon(zip(coords[:, 0], coords[:, 1]))
+                        # polygon
+
+                        # Сгладить углы полигона
+                        smooth_polygon = polygon.simplify(0.0001, preserve_topology=True)
+                        # smooth_polygon
+
+                        # Получить координаты полигона
+                        vertices = list(smooth_polygon.exterior.coords)
+                        list_of_values = [list(tuple) for tuple in vertices]
+
+                        print(round(float(conf), 1), '------------------------------')
                         geojson = {
                             "type": "Polygon",
-                            "coordinates": [geojsons]
+                            "coordinates": [list_of_values]
                         }
                         poly = GEOSGeometry(f"{geojson}")
+
+                    # with connection.cursor() as cursor:
+                    #     cursor.execute(f"""
+                    #         SELECT ST_Contains('{contour_Chui_2}'::geography::geometry, '{poly}'::geography::geometry);
+                    #     """)
+                    #     inside_contour = cursor.fetchall()[0][0]
+                    #     if inside_contour == True:
+                    with connection.cursor() as cursor:
+                        cursor.execute(f"""
+                        SELECT SUM(subquery.percent) as total_percent
+                        FROM (
+                            SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
+                            '{poly}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent
+                            FROM ai_contour_ai as scm
+                        ) as subquery;
+                        """)
+                        # percent = cursor.fetchall()[0][0]
+                        percent = cursor.fetchall()[0][0]
+                        print(percent)
+                    if round(percent) < 30 or percent == None:
                         with connection.cursor() as cursor:
                             cursor.execute(f"""
-                                SELECT ST_Contains('{contour_Chui}'::geography::geometry, '{poly}'::geography::geometry);
+                            SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
+                            '{poly}'::geography::geometry);
                             """)
-                            inside_contour = cursor.fetchall()[0][0]
-                            print(inside_contour, '-----------------------------')
-                            print(poly)
-                        if inside_contour == True:
-                            # with connection.cursor() as cursor:
-                            #     cursor.execute(f"""
-                            #     SELECT SUM(subquery.percent) as total_percent
-                            #     FROM (
-                            #         SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
-                            #         '{poly}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent
-                            #         FROM ai_contour_ai as scm
-                            #     ) as subquery;
-                            #     """)
-                            #     # percent = cursor.fetchall()[0][0]
-                            #     percent = cursor.fetchall()[0][0]
-                            #     print(percent)
-                            # if round(percent) < 30 or percent == None:
-                            with connection.cursor() as cursor:
-                                cursor.execute(f"""
-                                SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
-                                '{poly}'::geography::geometry);
-                                """)
-                                district = cursor.fetchall()[0][0]
-                            Contour_AI.objects.create(polygon=poly, percent=conf, district_id=district)
+                            district = cursor.fetchall()[0][0]
+                        Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 1), district_id=district)
             except Exception as e:
                 print(e)
 
