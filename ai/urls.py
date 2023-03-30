@@ -16,3 +16,7 @@ urlpatterns = [
     path('contour-in-screen/', Contour_AIInScreen.as_view()),
     path('', include(router.urls)),
 ]
+
+"""
+dasdassaad
+"""
