@@ -16,11 +16,11 @@ def update(sender, instance, created, **kwargs):
             cursor.execute(f"""
             SELECT subquery.name, subquery.id
             FROM (
-                SELECT ST_Area(ST_Intersection(scm.polygon::geometry, 
+                SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
                 '{geom.polygon}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent,
                     sc.id, sc.name
-                FROM gip_soilclassmap as scm 
-                JOIN gip_soilclass as sc 
+                FROM gip_soilclassmap as scm
+                JOIN gip_soilclass as sc
                 ON sc.id = scm.soil_class_id
             ) as subquery
             WHERE subquery.percent > 1
@@ -49,11 +49,11 @@ def update(sender, instance, created, **kwargs):
             cursor.execute(f"""
             SELECT subquery.name, subquery.id
             FROM (
-                SELECT ST_Area(ST_Intersection(scm.polygon::geometry, 
+                SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
                 '{geom.polygon}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent,
                 sc.id, sc.name
-                FROM gip_soilclassmap as scm 
-                JOIN gip_soilclass as sc 
+                FROM gip_soilclassmap as scm
+                JOIN gip_soilclass as sc
                 ON sc.id = scm.soil_class_id
             ) as subquery
             WHERE subquery.percent > 1
