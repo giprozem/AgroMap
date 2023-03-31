@@ -14,9 +14,9 @@ from rest_framework import status
 
 class CutAPIView(APIView):
     def get(self, request):
-        # merge_bands()
-        # create_rgb()
-        # cut_rgb_tif()
+        merge_bands()
+        create_rgb()
+        cut_rgb_tif()
         # deleted_files()
         yolo()
         return Response({"message": "ok"})
