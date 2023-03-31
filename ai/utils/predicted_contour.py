@@ -402,43 +402,46 @@ def deleted_files():
 
 
 def create_dataset():
-    with rasterio.open('media/cutted_tiff/uz.tiff') as src:
-        bbox_m = src.bounds
-        bbox = warp.transform_bounds(src.crs, {'init': 'EPSG:4326'}, *bbox_m)
-        bboxs = Plgn.from_bbox(bbox)
-        with connection.cursor() as cursor:
-            cursor.execute(f"""
-            SELECT St_AsGeoJSON(cntr.polygon) AS polygon
-            FROM ai_contour_ai AS cntr
-            where ST_ContainsProperly('{bboxs}'::geography::geometry, cntr.polygon::geometry);
-            """)
-            rows = cursor.fetchall()
-            data = []
-            for i in rows:
-                data.append(eval(i[0]))
-            label = ''
-            image = Image.open('media/cutted_tiff/uz.tiff')
-            w, h = image.size
-            image.save('media/dataset/images/uz.png')
-            for c in data:
-                coordinates = c['coordinates'][0]
-                meters = []
-                for i in range(0, len(coordinates)):
-                    inProj = Proj(init='epsg:4326')
-                    outProj = Proj(init=f'epsg:{src.crs.to_epsg()}')
-                    x1, y1 = coordinates[i][0], coordinates[i][1]
-                    x2, y2 = trnsfrm(inProj, outProj, x1, y1)
-                    meters.append([x2, y2])
-                xs = []
-                ys = []
-                for i in meters:
-                    xs.append(i[0])
-                    ys.append(i[1])
-                y, x = rasterio.transform.rowcol(src.transform, xs, ys)
-                txt = '0 '
-                for i in range(0, len(x)):
-                    txt += f'{x[i] / w} {y[i] / h} '
-                label += f'{txt}\n'
+    cutted_files = os.listdir('media/cutted_tiff')
 
-    with open("media/dataset/labels/uz.txt", "w") as txt_file:
-        txt_file.write(label)
+    for file in cutted_files:
+        with rasterio.open(f'media/cutted_tiff/{file}') as src:
+            bbox_m = src.bounds
+            bbox = warp.transform_bounds(src.crs, {'init': 'EPSG:4326'}, *bbox_m)
+            bboxs = Plgn.from_bbox(bbox)
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                SELECT St_AsGeoJSON(cntr.polygon) AS polygon
+                FROM ai_contour_ai AS cntr
+                where ST_ContainsProperly('{bboxs}'::geography::geometry, cntr.polygon::geometry);
+                """)
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append(eval(i[0]))
+                label = ''
+                image = Image.open(f'media/cutted_tiff/{file}')
+                w, h = image.size
+                image.save(f'media/dataset/images/{file[:-4]}.png')
+                for c in data:
+                    coordinates = c['coordinates'][0]
+                    meters = []
+                    for i in range(0, len(coordinates)):
+                        inProj = Proj(init='epsg:4326')
+                        outProj = Proj(init=f'epsg:{src.crs.to_epsg()}')
+                        x1, y1 = coordinates[i][0], coordinates[i][1]
+                        x2, y2 = trnsfrm(inProj, outProj, x1, y1)
+                        meters.append([x2, y2])
+                    xs = []
+                    ys = []
+                    for i in meters:
+                        xs.append(i[0])
+                        ys.append(i[1])
+                    y, x = rasterio.transform.rowcol(src.transform, xs, ys)
+                    txt = '0 '
+                    for i in range(0, len(x)):
+                        txt += f'{x[i] / w} {y[i] / h} '
+                    label += f'{txt}\n'
+
+        with open(f"media/dataset/labels/{file[:-4]}.txt", "w") as txt_file:
+            txt_file.write(label)

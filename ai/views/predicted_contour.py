@@ -1,11 +1,11 @@
 from django.contrib.gis.geos import Polygon
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ai.utils.predicted_contour import create_rgb, cut_rgb_tif, merge_bands, deleted_files, yolo
+from ai.utils.predicted_contour import create_rgb, cut_rgb_tif, merge_bands, deleted_files, yolo, create_dataset
 from rest_framework import viewsets
 from ai.serializers import Contour_AISerializer
 from ai.models.predicted_contour import Contour_AI
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.db import connection
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -17,8 +17,20 @@ class CutAPIView(APIView):
         merge_bands()
         create_rgb()
         cut_rgb_tif()
-        # deleted_files()
         yolo()
+        # deleted_files()
+        return Response({"message": "ok"})
+
+
+class CreateAPIView(APIView):
+    # permission_classes = (IsAdminUser,)
+
+    def get(self, request):
+        #merge_bands()
+        #create_rgb()
+        #cut_rgb_tif()
+        create_dataset()
+        # deleted_files()
         return Response({"message": "ok"})
 
 
