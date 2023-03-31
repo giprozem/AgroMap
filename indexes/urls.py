@@ -1,7 +1,7 @@
 from django.urls import path
 
 from indexes.views import CreatingAverage, ActualIndexesOfContourYear, SatelliteImagesDate, ContourAPIView, \
-    ContourProductivityPredictAPIView, ActualIndexesOfContourAI, PredictedSatelliteImagesDate
+    ContourProductivityPredictAPIView, ActualIndexesOfContourAI, PredictedSatelliteImagesDate, CleaningActualVegIndex
 from indexes.views.generated_indexes import CreatingVegIndexesAPIView
 
 urlpatterns = [
@@ -13,4 +13,5 @@ urlpatterns = [
     path('satellite_dates/<int:index>/<int:contour>/', SatelliteImagesDate.as_view()),
     path('ai-satellite_dates/<int:index>/<int:contour>/', PredictedSatelliteImagesDate.as_view()),
     path('productivity-predict/', ContourProductivityPredictAPIView.as_view()),
+    path('cleaning/', CleaningActualVegIndex.as_view()),
 ]
