@@ -17,7 +17,7 @@ class CutAPIView(APIView):
         # merge_bands()
         # create_rgb()
         # cut_rgb_tif()
-        yolo()
+        # yolo()
         # deleted_files()
         return Response({"message": "ok"})
 
@@ -29,7 +29,7 @@ class CreateAPIView(APIView):
         #merge_bands()
         #create_rgb()
         #cut_rgb_tif()
-        create_dataset()
+        # create_dataset()
         # deleted_files()
         return Response({"message": "ok"})
 
@@ -138,7 +138,8 @@ class Contour_AIInScreen(APIView):
                                SELECT id, conton_id, district_id, culture,
                                St_AsGeoJSON(cntr.polygon) AS polygon
                                FROM ai_contour_ai AS cntr
-                               WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry);
+                               WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry) and 
+                               cntr.id > 11016;
                                """)
                 rows = cursor.fetchall()
                 data = []
