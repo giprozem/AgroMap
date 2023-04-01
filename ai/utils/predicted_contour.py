@@ -214,11 +214,11 @@ def create_rgb():
 
 
 def merge_bands():
-    path = 'cutted/'
+    path = 'cutted/1/'
     files = [
-        path + f"B02.tif",  # Синий
-        path + f"B03.tif",  # Зеленый
-        path + f"B04.tif",  # Красный
+        path + f"2022-06-27-00:00_2022-06-27-23:59_Sentinel-2_L2A_B02_(Raw).tiff",  # Синий
+        path + f"2022-06-27-00:00_2022-06-27-23:59_Sentinel-2_L2A_B03_(Raw).tiff",  # Зеленый
+        path + f"2022-06-27-00:00_2022-06-27-23:59_Sentinel-2_L2A_B04_(Raw).tiff",  # Красный
     ]
 
     # Открываем первый файл из списка для получения метаданных
@@ -228,7 +228,7 @@ def merge_bands():
         meta.update(driver="GTiff")  # Устанавливаем тип драйвера в метаданных
 
     # Создаем выходной файл с помощью метаданных и записываем в него данные из всех файлов
-    output_file = f"media/Merge_Bands/ID=KaraBalta_DATE=1.tif"
+    output_file = f"media/Merge_Bands/ID=MINI_1_DATE=1.tif"
     with rasterio.open(output_file, "w", **meta) as dst:
         for id, layer in enumerate(files, start=1):
             with rasterio.open(layer) as src:
@@ -280,33 +280,33 @@ def create_rgb():
 def cut_rgb_tif():
     time.sleep(8)
     rgb_tif_list = os.listdir('media/RGB')
-    for rgb_tif in rgb_tif_list:
-        input_file = os.path.join('media/RGB', rgb_tif)
+    # for rgb_tif in rgb_tif_list:
+    input_file = os.path.join('media/RGB', 'RGB_ID=MINI_1_DATE=1.tif')
 
-        # Открываем входной файл с помощью GDAL
-        ds = gdal.Open(input_file)
-        if ds is not None:
-            band = ds.GetRasterBand(1)
-            xsize = band.XSize
-            ysize = band.YSize
+    # Открываем входной файл с помощью GDAL
+    ds = gdal.Open(input_file)
+    if ds is not None:
+        band = ds.GetRasterBand(1)
+        xsize = band.XSize
+        ysize = band.YSize
 
-            out_path = 'media/cutted_tiff/'
-            output_filename = f"tile_"
+        out_path = 'media/cutted_tiff/'
+        output_filename = f"tile_"
 
-            tile_size_x = 256
-            tile_size_y = 256
+        tile_size_x = 256
+        tile_size_y = 256
 
-            # Обрезаем изображение на тайлы
-            for i in range(0, xsize, tile_size_x):
-                for j in range(0, ysize, tile_size_y):
-                    output_file = os.path.join(out_path,
-                                               output_filename + str(i) + "_" + f"{random.randint(1, 10000)}" + str(
-                                                   j) + f"{random.randint(1, 10000)}" + ".tif")
-                    com_string = f"gdal_translate -of GTIFF -srcwin {i}, {j}, {tile_size_x}, {tile_size_y} {input_file} {output_file}"
-                    os.system(com_string)
+        # Обрезаем изображение на тайлы
+        for i in range(0, xsize, tile_size_x):
+            for j in range(0, ysize, tile_size_y):
+                output_file = os.path.join(out_path,
+                                           output_filename + str(i) + "_" + f"{random.randint(1, 10000)}" + str(
+                                               j) + f"{random.randint(1, 10000)}" + ".tif")
+                com_string = f"gdal_translate -of GTIFF -srcwin {i}, {j}, {tile_size_x}, {tile_size_y} {input_file} {output_file}"
+                os.system(com_string)
 
-        else:
-            print(f"Не удалось открыть файл: {rgb_tif}")
+    else:
+        print(f"Не удалось открыть файл: RGB_ID=MINI_1_DATE=1.tif")
 
 
 def yolo():
@@ -326,16 +326,18 @@ def yolo():
                     w, h = image.size
                     x = 1 / w
                     y = 1 / h
-                    # img = Image.fromarray(results[0].orig_img)
-                    # plt.imshow(img)
-                    # for i in arrays:
-                    #     df = pd.DataFrame(i)
-                    #     df.loc[len(df)] = ([i[0][0], i[0][1]])
-                    #     plt.plot(df[0] / x, df[1] / y, c="red")
-                    # plt.axis('off')
-                    # plt.savefig(f'media/images/tile_256_2548768212.png', transparent=True, bbox_inches='tight',
-                    # pad_inches=0)
-
+                    img = Image.fromarray(results[0].orig_img)
+                    plt.imshow(img)
+                    for i in arrays:
+                        df = pd.DataFrame(i)
+                        df.loc[len(df)] = ([i[0][0], i[0][1]])
+                        plt.plot(df[0] / x, df[1] / y, c="red")
+                    plt.axis('off')
+                    plt.savefig(f'media/images/tile_256_2548768212.png', transparent=True, bbox_inches='tight',
+                                pad_inches=0)
+                    images = Images_AI.objects.create()
+                    images.image.save(os.listdir('media/images/')[0],
+                                      open(f"media/images/{os.listdir('media/images')[0]}", 'rb'))
                     with rasterio.open(f'media/cutted_tiff/{file}') as src:
                         for n in range(0, len(arrays)):
                             coordinates = []

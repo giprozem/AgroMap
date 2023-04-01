@@ -11,14 +11,15 @@ from decouple import config
 def run():
     with connection.cursor() as cursor:
         cursor.execute(f"""
-                        SELECT cntr.id, cntr.district_id, cntr.percent, St_AsGeoJSON(cntr.polygon) as polygon 
-                        FROM ai_contour_ai as cntr;
+                        SELECT cntr.id, cntr.district_id, cntr.percent, cntr.culture
+                        FROM ai_contour_ai as cntr
+                        WHERE cntr.id > 11016;
                         """
                        )
         rows = cursor.fetchall()
         data = []
         for i in rows:
-            data.append({"type": "Feature", "properties": {'id': i[0], 'dst': i[1], 'prt': i[2]},
+            data.append({"type": "Feature", "properties": {'id': i[0], 'dst': i[1], 'prt': i[2], 'clt': i[3]},
                          "geometry": eval(i[-1])})
 
         geojson_data = {"type": "FeatureCollection", "features": data}
