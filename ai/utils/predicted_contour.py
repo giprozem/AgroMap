@@ -2,13 +2,14 @@ import random
 import time
 from datetime import datetime
 
+import PIL
+import cv2
 from django.db import connection
 from osgeo import gdal, osr
 import os
 
 from gip.views.handbook_contour import contour_test_for_ai, contour_Chui_2
 from indexes.models.satelliteimage import SciHubImageDate
-import rasterio
 from rasterio import warp
 import numpy as np
 from ai.models import Contour_AI, Images_AI, Yolo
@@ -21,6 +22,8 @@ from django.contrib.gis.geos import Polygon as Plgn
 import matplotlib.pyplot as plt
 import pandas as pd
 from shapely.geometry import Polygon
+import numpy as np
+import rasterio
 
 """
 def merge_bands():
@@ -249,6 +252,19 @@ def create_rgb():
             green = np.interp(green, (green.min(), green.max()), (0, 255)).astype('uint8')
             blue = np.interp(blue, (blue.min(), blue.max()), (0, 255)).astype('uint8')
 
+            # Изменяем яркость и насыщенность каждого канала
+            brightness = 50
+            saturation = 1.5
+
+            red = cv2.convertScaleAbs(red, alpha=1, beta=brightness)
+            red = cv2.convertScaleAbs(red, alpha=saturation)
+
+            green = cv2.convertScaleAbs(green, alpha=1, beta=brightness)
+            green = cv2.convertScaleAbs(green, alpha=saturation)
+
+            blue = cv2.convertScaleAbs(blue, alpha=1, beta=brightness)
+            blue = cv2.convertScaleAbs(blue, alpha=saturation)
+
             # Создаем RGB изображение, объединив каналы в одно изображение
             rgb = np.dstack((red, green, blue))
 
@@ -294,7 +310,7 @@ def cut_rgb_tif():
 
 
 def yolo():
-    time.sleep(30)
+    # time.sleep(30)
     file_yolo = Yolo.objects.get(id=1)
     model = YOLO(f'media/{file_yolo.ai}')
     cutted_files = os.listdir('media/cutted_tiff')
@@ -332,7 +348,7 @@ def yolo():
                                 outProj = Proj('EPSG:4326')
                                 x1, y1 = coordinates[i][0], coordinates[i][1]
                                 x2, y2 = trnsfrm(inProj, outProj, x1, y1)
-                                geojsons.append([x2, y2])
+                                geojsons.append([y2, x2])
                             # conf = confs[n]
                             coords = np.array(geojsons)
 
@@ -369,6 +385,7 @@ def yolo():
                                     SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
                                     '{poly}'::geography::geometry);
                                     """)
+                                    # district = cursor.fetchall()[0][0] if cursor.fetchall() != [] else None
                                     district = cursor.fetchall()[0][0]
                                     Contour_AI.objects.create(polygon=poly, percent=percent,
                                                               district_id=district)
