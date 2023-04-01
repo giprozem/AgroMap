@@ -52,7 +52,7 @@ class CulturePredict(APIView):
             except Exception as b11_error:
                 cutting_error.append(f'B11 layer cutting error {b11_error}')
 
-            result = test_model(red=output_path_b04, nir=output_path_b8a, swir=output_path_b11)
+            result = test_model(red=output_path_b8a, nir=output_path_b8a, swir=output_path_b11)
             if result == 0:
                 contour.culture = 'Пшеница'
                 contour.save()
