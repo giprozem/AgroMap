@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 
 from ai.productivity_funcs.training import initialize, predict, model_path
 from ai.serializers.productivity import ContourAISerializer
-from ai.utils.productivity import predicting_productivity
+from ai.utils.productivity import predicting_productivity, creating_veg_indexes_image
 from gip.models.contour import Contour
 from indexes.serializers.statistics_veg_index import ContourStatisticsSerializer
 from ai.models.predicted_contour import Contour_AI
@@ -73,3 +73,15 @@ class CreatingIndexAPIView(APIView):
         thread_obj.start()
         return Response('finish', status=200)
 
+
+class CreatingIndexSatellite(APIView):
+
+    @swagger_auto_schema(
+        operation_summary='do not required for front',
+        operation_description='creating veg indexes in required in given satellite image id'
+    )
+    def get(self, request, *args, **kwargs):
+
+        tread_obj = Thread(target=creating_veg_indexes_image, args=(request.query_params['satellite_id'], ))
+        tread_obj.start()
+        return Response('finish', status=200)
