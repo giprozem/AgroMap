@@ -63,13 +63,13 @@ class CulturePredict(APIView):
                 contour.culture = 'САХАРНАЯ СВЕКЛА'
                 contour.save()
             elif result == 3:
-                contour.culture = 'Картошка'
+                contour.culture = 'ЛУК'
                 contour.save()
             elif result == 4:
                 contour.culture = 'КУКУРУЗА'
                 contour.save()
             elif result == 5:
-                contour.culture = 'СОРГО НА ЗЕРНО'
+                contour.culture = 'Капуста'
                 contour.save()
             elif result == 6:
                 contour.culture = 'ГРЕЧИХА'
