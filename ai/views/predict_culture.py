@@ -25,8 +25,9 @@ class CulturePredict(APIView):
         image_date = image_date[0]
         contours = Contour_AI.objects.filter(polygon__coveredby=image_date.polygon)
         for contour in contours:
+            print(contour)
             polygon = GEOSGeometry(contour.polygon).geojson
-            file_name = f'temporary_culture_{datetime.datetime.now()}'
+            file_name = f'temporary_culture_{contour.id}'
             output_path_b04 = f"./media/B04_{file_name}.tiff"
             output_path_b8a = f"./media/B08a_{file_name}.tiff"
             output_path_b11 = f"./media/B11_{file_name}.tiff"
@@ -52,37 +53,41 @@ class CulturePredict(APIView):
             except Exception as b11_error:
                 cutting_error.append(f'B11 layer cutting error {b11_error}')
 
-            result = test_model(red=output_path_b04, nir=output_path_b8a, swir=output_path_b11)
-            if result == 0:
-                contour.culture = 'Пшеница'
-                contour.save()
-            elif result == 1:
-                contour.culture = 'Картофель'
-                contour.save()
-            elif result == 2:
-                contour.culture = 'Сахарная свекла'
-                contour.save()
-            elif result == 3:
-                contour.culture = 'Лук'
-                contour.save()
-            elif result == 4:
-                contour.culture = 'Кукуруза'
-                contour.save()
-            elif result == 5:
-                contour.culture = 'Капуста'
-                contour.save()
-            elif result == 6:
-                contour.culture = 'Гречиха'
-                contour.save()
-            elif result == 7:
-                contour.culture = 'Подсолнечник'
-                contour.save()
-            elif result == 8:
-                contour.culture = 'Хлопок'
-                contour.save()
-            else:
-                contour.culture = 'Неизвестная культура'
-                contour.save()
+            try:
+                result = test_model(red=output_path_b04, nir=output_path_b8a, swir=output_path_b11)
+                if result == 0:
+                    contour.culture = 'Пшеница'
+                    contour.save()
+                elif result == 1:
+                    contour.culture = 'Картофель'
+                    contour.save()
+                elif result == 2:
+                    contour.culture = 'Сахарная свекла'
+                    contour.save()
+                elif result == 3:
+                    contour.culture = 'Лук'
+                    contour.save()
+                elif result == 4:
+                    contour.culture = 'Кукуруза'
+                    contour.save()
+                elif result == 5:
+                    contour.culture = 'Капуста'
+                    contour.save()
+                elif result == 6:
+                    contour.culture = 'Гречиха'
+                    contour.save()
+                elif result == 7:
+                    contour.culture = 'Подсолнечник'
+                    contour.save()
+                elif result == 8:
+                    contour.culture = 'Хлопок'
+                    contour.save()
+                else:
+                    contour.culture = 'Неизвестная культура'
+                    contour.save()
+            except Exception as e:
+                print(e)
+                pass
 
             # Search files with .tiff extension in current directory
             pattern = "./media/*.tiff"
