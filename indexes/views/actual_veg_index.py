@@ -33,7 +33,7 @@ class ActualIndexesOfContourYear(APIView):
     )
     def get(self, request, *args, **kwargs):
 
-        response = ActualVegIndex.objects.filter(contour=request.query_params['contour_id'])
+        response = ActualVegIndex.objects.filter(contour=request.query_params['contour_id']).order_by('date')
         serializer = ActuaVegIndexSerializer(response, many=True, context={'request': request})
         if response:
             return Response(serializer.data, status=200)
