@@ -7,4 +7,4 @@ from gip.serializers.culture import CultureSerializer
 class CultureViewSet(ModelViewSet):
     queryset = Culture.objects.all()
     serializer_class = CultureSerializer
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)

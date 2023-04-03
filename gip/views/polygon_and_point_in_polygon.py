@@ -206,7 +206,8 @@ class PolygonsInScreen(APIView):
                                culture_id, elevation, productivity, type_id, year,
                                St_AsGeoJSON(cntr.polygon) AS polygon
                                FROM gip_contour AS cntr
-                               WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry);
+                               WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry)
+                                and cntr.is_deleted=False;
                                """)
                 rows = cursor.fetchall()
                 data = []

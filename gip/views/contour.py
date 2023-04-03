@@ -18,7 +18,7 @@ from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializ
 class AuthDetailContourViewSet(viewsets.ModelViewSet):
     queryset = Contour.objects.all().order_by('id').filter(is_deleted=False)
     serializer_class = AuthDetailContourSerializer
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -742,7 +742,6 @@ class MapContourProductivityAPIView(APIView):
         },
 
     )
-    # @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
         year = request.GET.get('year')
