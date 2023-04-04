@@ -6,3 +6,4 @@ POSTGRES_PORT=5432
 SECRET_KEY=some_secret_key
 SCI_HUB_USERNAME=username_for_scihub.copernicus.eu
 SCI_HUB_PASSWORD=password_for_scihub.copernicus.eu
+ALLOWED_HOSTS=localhost
