@@ -210,7 +210,7 @@ class FilterContourAPIView(APIView):
                                 JOIN gip_district AS dst ON dst.id=cntr.district_id
                                 JOIN gip_region AS rgn ON rgn.id=dst.region_id
                                 WHERE rgn.id in ({region}) 
-                                and cntr.type_id in ({land_type}) and cntr.year='{year}' 
+                                and cntr.type_id in ({land_type}) and cntr.year='{year}' and cntr.id > 11016
                                 and cntr.is_deleted=false order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
@@ -276,7 +276,7 @@ class FilterContourAPIView(APIView):
                                 FROM ai_contour_ai AS cntr 
                                 JOIN gip_landtype AS land ON land.id=cntr.type_id
                                 WHERE cntr.district_id in ({district}) and cntr.conton_id in ({conton}) 
-                                and cntr.type_id in ({land_type}) and cntr.year='{year}' 
+                                and cntr.type_id in ({land_type}) and cntr.year='{year}' and cntr.id > 11016
                                 and cntr.is_deleted=false order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
@@ -342,7 +342,7 @@ class FilterContourAPIView(APIView):
                                 FROM ai_contour_ai AS cntr 
                                 JOIN gip_landtype AS land ON land.id=cntr.type_id
                                 WHERE cntr.district_id in ({district}) and cntr.type_id in ({land_type}) 
-                                and cntr.year='{year}' and cntr.is_deleted=false order by cntr.id;
+                                and cntr.year='{year}' and cntr.id > 11016 and cntr.is_deleted=false order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
                 data = []
@@ -407,7 +407,7 @@ class FilterContourAPIView(APIView):
                                 FROM ai_contour_ai AS cntr 
                                 JOIN gip_landtype AS land ON land.id=cntr.type_id
                                 WHERE cntr.conton_id in ({conton}) AND cntr.type_id in ({land_type}) AND cntr.year='{year}' 
-                                AND cntr.is_deleted=false ORDER BY cntr.id;
+                                AND cntr.is_deleted=false and cntr.id > 11016 ORDER BY cntr.id;
                                 """)
                 rows = cursor.fetchall()
                 data = []
@@ -472,7 +472,7 @@ class FilterContourAPIView(APIView):
                                 FROM ai_contour_ai AS cntr 
                                 JOIN gip_landtype AS land ON land.id=cntr.type_id
                                 WHERE cntr.type_id in ({land_type}) and cntr.year='{year}' 
-                                and cntr.is_deleted=false order by cntr.id;
+                                and cntr.is_deleted=false and cntr.id > 11016 order by cntr.id;
                                 """)
                 rows = cursor.fetchall()
                 data = []
