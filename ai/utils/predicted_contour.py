@@ -214,12 +214,8 @@ def create_rgb():
 
 
 def merge_bands():
-    path = 'cutted/1/'
-    files = [
-        path + f"2022-06-27-00:00_2022-06-27-23:59_Sentinel-2_L2A_B02_(Raw).tiff",  # Синий
-        path + f"2022-06-27-00:00_2022-06-27-23:59_Sentinel-2_L2A_B03_(Raw).tiff",  # Зеленый
-        path + f"2022-06-27-00:00_2022-06-27-23:59_Sentinel-2_L2A_B04_(Raw).tiff",  # Красный
-    ]
+    path = 'cutted/tup/'
+    files = [f"{path}2022-07-26-00:00_2022-07-26-23:59_Sentinel-2_L2A_B0{i}_(Raw).tiff" for i in range(2, 5)]
 
     # Открываем первый файл из списка для получения метаданных
     with rasterio.open(files[0]) as src:
@@ -228,7 +224,7 @@ def merge_bands():
         meta.update(driver="GTiff")  # Устанавливаем тип драйвера в метаданных
 
     # Создаем выходной файл с помощью метаданных и записываем в него данные из всех файлов
-    output_file = f"media/Merge_Bands/ID=MINI_1_DATE=1.tif"
+    output_file = f"media/Merge_Bands/ID=MINI_TUP_DATE=1.tif"
     with rasterio.open(output_file, "w", **meta) as dst:
         for id, layer in enumerate(files, start=1):
             with rasterio.open(layer) as src:
@@ -281,7 +277,7 @@ def cut_rgb_tif():
     time.sleep(8)
     rgb_tif_list = os.listdir('media/RGB')
     # for rgb_tif in rgb_tif_list:
-    input_file = os.path.join('media/RGB', 'RGB_ID=MINI_1_DATE=1.tif')
+    input_file = os.path.join('media/RGB', 'RGB_ID=MINI_TUP_DATE=1.tif')
 
     # Открываем входной файл с помощью GDAL
     ds = gdal.Open(input_file)
@@ -291,7 +287,7 @@ def cut_rgb_tif():
         ysize = band.YSize
 
         out_path = 'media/cutted_tiff/'
-        output_filename = f"tile_"
+        output_filename = f"tile_TUP"
 
         tile_size_x = 256
         tile_size_y = 256
@@ -313,7 +309,7 @@ def yolo():
     # time.sleep(30)
     file_yolo = Yolo.objects.get(id=1)
     model = YOLO(f'media/{file_yolo.ai}')
-    cutted_files = os.listdir('media/cutted_tiff')
+    cutted_files = os.listdir('media/cutted_tiff/website')
 
     for file in cutted_files:
         image = Image.open(f'media/cutted_tiff/{file}')

@@ -15,21 +15,19 @@ def update(sender, instance, created, **kwargs):
         geom = Contour_AI.objects.annotate(area_=Area("polygon")).get(id=instance.id)
         with connection.cursor() as cursor:
             cursor.execute(f"""
-            SELECT subquery.name, subquery.id
-            FROM (
-                SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
-                '{geom.polygon}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent,
-                    sc.id, sc.name
-                FROM gip_soilclassmap as scm
-                JOIN gip_soilclass as sc
-                ON sc.id = scm.soil_class_id
-            ) as subquery
-            WHERE subquery.percent > 1
-            ORDER BY subquery.percent DESC
-            LIMIT 1;
-                    """)
+                SELECT subquery.name, subquery.id, subquery.soil_id, subquery.percent
+                FROM (
+                    SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
+                    '{geom.polygon}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent,
+                    sc.id, sc.name, scm.id as soil_id
+                    FROM gip_soilclassmap as scm
+                    JOIN gip_soilclass as sc
+                    ON sc.id = scm.soil_class_id
+                ) as subquery
+                ORDER BY subquery.percent DESC
+                LIMIT 1;
+                     """)
             rows = cursor.fetchall()
-            print(rows)
             result_soil_class = rows[0][1] if rows != [] else None
         instance.soil_class_id = result_soil_class
         center = loads(f"{geom.polygon.centroid}".strip('SRID=4326;'))
@@ -47,21 +45,19 @@ def update(sender, instance, created, **kwargs):
     else:
         geom = Contour_AI.objects.annotate(area_=Area("polygon")).get(id=instance.id)
         with connection.cursor() as cursor:
-
             cursor.execute(f"""
-            SELECT subquery.name, subquery.id
-            FROM (
-                SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
-                '{geom.polygon}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent,
-                sc.id, sc.name
-                FROM gip_soilclassmap as scm
-                JOIN gip_soilclass as sc
-                ON sc.id = scm.soil_class_id
-            ) as subquery
-            WHERE subquery.percent > 1
-            ORDER BY subquery.percent DESC
-            LIMIT 1;
-                        """)
+                SELECT subquery.name, subquery.id, subquery.soil_id, subquery.percent
+                FROM (
+                    SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
+                    '{geom.polygon}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent,
+                    sc.id, sc.name, scm.id as soil_id
+                    FROM gip_soilclassmap as scm
+                    JOIN gip_soilclass as sc
+                    ON sc.id = scm.soil_class_id
+                ) as subquery
+                ORDER BY subquery.percent DESC
+                LIMIT 1;
+                     """)
             rows = cursor.fetchall()
             result_soil_class = rows[0][1] if rows != [] else None
         ha = round(geom.area_.sq_km * 100, 2)

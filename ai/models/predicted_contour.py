@@ -19,7 +19,8 @@ class Contour_AI(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         verbose_name=_("Тип земли"),
-        related_name='ai_contours'
+        related_name='contour_ai',
+        blank=True
     )
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Контур"), blank=True, null=True)
     year = models.CharField(max_length=20, verbose_name=_("Год"), null=True, blank=True)
