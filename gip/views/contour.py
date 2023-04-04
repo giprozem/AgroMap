@@ -111,13 +111,13 @@ class FilterContourAPIView(APIView):
             ),
         },
     )
-    # @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         region = request.GET.get('region')
         year = request.GET.get('year')
         land_type = request.GET.get('land_type')
         district = request.GET.get('district')
         conton = request.GET.get('conton')
+        ai = request.GET.get('ai')
         if region and district and conton and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
@@ -239,6 +239,34 @@ class FilterContourAPIView(APIView):
                                                                       'land_type_en': i[18]},
                                                        "geometry": eval(i[-1])}]}})
                 return Response(data)
+        elif ai and district and conton and land_type and year:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                                SELECT cntr.id AS contour_id, cntr.type_id AS land_type_id, cntr.year, 
+                                cntr.area_ha, cntr.productivity, dst.name, cntn.name, land.name, cntr.is_deleted,  
+                                St_AsGeoJSON(cntr.polygon) as polygon   
+                                FROM ai_contour_ai AS cntr 
+                                LEFT JOIN gip_landtype AS land ON land.id=cntr.type_id
+                                LEFT JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                                LEFT JOIN gip_district AS dst ON dst.id=cntn.district_id
+                                WHERE dst.id in ({district}) and cntn.id in ({conton}) 
+                                and cntr.type_id in ({land_type}) and cntr.year='{year}' 
+                                and cntr.is_deleted=false order by cntr.id;
+                                """)
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({
+                        "contour_year": {"type": "FeatureCollection",
+                                         "features": [{"type": "Feature",
+                                                       "properties": {'contour_id': i[0], 'land_type_id': i[1],
+                                                                      'year': i[2], 'area_ha': i[3],
+                                                                      'productivity': i[4],
+                                                                      'district': i[5],
+                                                                      'conton': i[6],
+                                                                      'land_type': i[7]},
+                                                       "geometry": eval(i[-1])}]}})
+                return Response(data)
         elif district and conton and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
@@ -277,6 +305,33 @@ class FilterContourAPIView(APIView):
                                                                       'conton_en': i[15],
                                                                       'land_type_ru': i[16], 'land_type_ky': i[17],
                                                                       'land_type_en': i[18]},
+                                                       "geometry": eval(i[-1])}]}})
+                return Response(data)
+        elif ai and district and land_type and year:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                                SELECT cntr.id AS contour_id, cntr.type_id AS land_type_id, cntr.year, 
+                                cntr.area_ha, cntr.productivity, dst.name, cntn.name, land.name, cntr.is_deleted,  
+                                St_AsGeoJSON(cntr.polygon) as polygon   
+                                FROM ai_contour_ai AS cntr 
+                                LEFT JOIN gip_landtype AS land ON land.id=cntr.type_id
+                                LEFT JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                                LEFT JOIN gip_district AS dst ON dst.id=cntn.district_id
+                                WHERE dst.id in ({district}) and cntr.type_id in ({land_type}) and cntr.year='{year}' 
+                                and cntr.is_deleted=false order by cntr.id;
+                                """)
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({
+                        "contour_year": {"type": "FeatureCollection",
+                                         "features": [{"type": "Feature",
+                                                       "properties": {'contour_id': i[0], 'land_type_id': i[1],
+                                                                      'year': i[2], 'area_ha': i[3],
+                                                                      'productivity': i[4],
+                                                                      'district': i[5],
+                                                                      'conton': i[6],
+                                                                      'land_type': i[7]},
                                                        "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif district and land_type and year:
@@ -319,6 +374,33 @@ class FilterContourAPIView(APIView):
                                                                       'land_type_en': i[18]},
                                                        "geometry": eval(i[-1])}]}})
                 return Response(data)
+        elif ai and conton and land_type and year:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                                SELECT cntr.id AS contour_id, cntr.type_id AS land_type_id, cntr.year, 
+                                cntr.area_ha, cntr.productivity, dst.name, cntn.name, land.name, cntr.is_deleted,  
+                                St_AsGeoJSON(cntr.polygon) AS polygon   
+                                FROM ai_contour_ai AS cntr 
+                                LEFT JOIN gip_landtype AS land ON land.id=cntr.type_id
+                                LEFT JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                                LEFT JOIN gip_district AS dst ON dst.id=cntn.district_id
+                                WHERE cntn.id in ({conton}) AND cntr.type_id in ({land_type}) AND cntr.year='{year}' 
+                                AND cntr.is_deleted=false ORDER BY cntr.id;
+                                """)
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({
+                        "contour_year": {"type": "FeatureCollection",
+                                         "features": [{"type": "Feature",
+                                                       "properties": {'contour_id': i[0], 'land_type_id': i[1],
+                                                                      'year': i[2], 'area_ha': i[3],
+                                                                      'productivity': i[4],
+                                                                      'district': i[5],
+                                                                      'conton': i[6],
+                                                                      'land_type': i[7]},
+                                                       "geometry": eval(i[-1])}]}})
+                return Response(data)
         elif conton and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""
@@ -357,6 +439,33 @@ class FilterContourAPIView(APIView):
                                                                       'conton_en': i[15],
                                                                       'land_type_ru': i[16], 'land_type_ky': i[17],
                                                                       'land_type_en': i[18]},
+                                                       "geometry": eval(i[-1])}]}})
+                return Response(data)
+        elif ai and land_type and year:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                                SELECT cntr.id AS contour_id, cntr.type_id AS land_type_id, cntr.year, 
+                                cntr.area_ha, cntr.productivity, dst.name, cntn.name, land.name, cntr.is_deleted,  
+                                St_AsGeoJSON(cntr.polygon) as polygon   
+                                FROM ai_contour_ai AS cntr 
+                                LEFT JOIN gip_landtype AS land ON land.id=cntr.type_id
+                                LEFT JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                                LEFT JOIN gip_district AS dst ON dst.id=cntn.district_id
+                                WHERE cntr.type_id in ({land_type}) and cntr.year='{year}' 
+                                and cntr.is_deleted=false order by cntr.id;
+                                """)
+                rows = cursor.fetchall()
+                data = []
+                for i in rows:
+                    data.append({
+                        "contour_year": {"type": "FeatureCollection",
+                                         "features": [{"type": "Feature",
+                                                       "properties": {'contour_id': i[0], 'land_type_id': i[1],
+                                                                      'year': i[2], 'area_ha': i[3],
+                                                                      'productivity': i[4],
+                                                                      'district': i[5],
+                                                                      'conton': i[6],
+                                                                      'land_type': i[7]},
                                                        "geometry": eval(i[-1])}]}})
                 return Response(data)
         elif year and land_type:
