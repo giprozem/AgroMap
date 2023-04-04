@@ -558,7 +558,7 @@ class StatisticsContourProductivityAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'Conton': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                    data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         elif region and district and land_type and year:
@@ -578,7 +578,7 @@ class StatisticsContourProductivityAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'Conton': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                    data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         elif region and land_type and year:
@@ -598,7 +598,7 @@ class StatisticsContourProductivityAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'District': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                    data.append({'name': i[-1], 'type': 'District', 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         elif district and conton and year and land_type:
@@ -617,7 +617,7 @@ class StatisticsContourProductivityAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'Conton': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                    data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         elif district and year and land_type:
@@ -637,7 +637,7 @@ class StatisticsContourProductivityAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'Conton': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                    data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         elif conton and year and land_type:
@@ -657,7 +657,7 @@ class StatisticsContourProductivityAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'Conton': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                    data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         elif year and land_type:
@@ -677,7 +677,7 @@ class StatisticsContourProductivityAPIView(APIView):
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
-                    data.append({'Region': i[-1], 'Productive': {'ha': i[0], 'percent': i[2]},
+                    data.append({'name': i[-1], 'type': 'Region', 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 return Response(data)
         else:
