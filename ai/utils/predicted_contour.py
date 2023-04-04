@@ -114,7 +114,6 @@ def create_rgb():
         else:
             print(f"Не удалось открыть файл: {rgb_tif}")"""
 
-
 # def yolo():
 #     file_yolo = Yolo.objects.get(id=1)
 #     model = YOLO(f'media/{file_yolo.ai}')
@@ -386,7 +385,7 @@ def yolo():
                                     # district = cursor.fetchall()[0][0] if cursor.fetchall() != [] else None
                                     district = cursor.fetchall()[0][0]
                                     Contour_AI.objects.create(polygon=poly, percent=percent,
-                                                              district_id=district)
+                                                              district_id=district, year='2022', type_id=1)
             except Exception as e:
                 print(e)
 

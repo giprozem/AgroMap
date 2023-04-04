@@ -14,10 +14,10 @@ from rest_framework import status
 
 class CutAPIView(APIView):
     def get(self, request):
-        merge_bands()
-        create_rgb()
-        cut_rgb_tif()
-        yolo()
+        # merge_bands()
+        # create_rgb()
+        # cut_rgb_tif()
+        # yolo()
         # deleted_files()
         return Response({"message": "ok"})
 
@@ -35,9 +35,9 @@ class CreateAPIView(APIView):
 
 
 class Contour_AIViewSet(viewsets.ModelViewSet):
-    queryset = Contour_AI.objects.all()
+    queryset = Contour_AI.objects.all().order_by('id').filter(is_deleted=False)
     serializer_class = Contour_AISerializer
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
 
 class Contour_AIInScreen(APIView):

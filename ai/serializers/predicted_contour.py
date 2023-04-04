@@ -5,7 +5,8 @@ from ai.models.predicted_contour import Contour_AI
 class Contour_AISerializer(serializers.ModelSerializer):
     class Meta:
         model = Contour_AI
-        fields = ('culture', 'conton_id', 'district_id', 'polygon' )
+        # fields = ('culture', 'conton_id', 'district_id', 'polygon' )
+        fields = '__all__'
 
     # def is_polygon_inside_Kyrgyzstan(self, request, *args, **kwargs):
     #     with connection.cursor() as cursor:
