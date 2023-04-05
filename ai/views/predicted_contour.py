@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from ai.utils.predicted_contour import create_rgb, cut_rgb_tif, merge_bands, deleted_files, yolo
 from rest_framework import viewsets
-from ai.serializers import Contour_AISerializer
+from ai.serializers import Contour_AISerializer, UpdateContour_AISerializer
 from ai.models.predicted_contour import Contour_AI
 from rest_framework.permissions import IsAuthenticated
 from django.db import connection
@@ -26,6 +26,23 @@ class Contour_AIViewSet(viewsets.ModelViewSet):
     queryset = Contour_AI.objects.all().order_by('id').filter(is_deleted=False)
     serializer_class = Contour_AISerializer
     permission_classes = (IsAuthenticated,)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = UpdateContour_AISerializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_deleted = True
+        instance.save()
+        return Response('Contour is deleted')
 
 
 class Contour_AIInScreen(APIView):

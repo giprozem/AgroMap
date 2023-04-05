@@ -23,7 +23,8 @@ def create_dataset():
                 cursor.execute(f"""
                 SELECT St_AsGeoJSON(cntr.polygon) AS polygon
                 FROM ai_contour_ai AS cntr
-                where ST_ContainsProperly('{bboxs}'::geography::geometry, cntr.polygon::geometry);
+                where cntr.is_deleted=false and 
+                ST_ContainsProperly('{bboxs}'::geography::geometry, cntr.polygon::geometry);
                 """)
                 rows = cursor.fetchall()
                 data = []
