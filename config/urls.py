@@ -7,7 +7,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from schema_graph.views import Schema
 
-from account.views.authenticated import LoginAgromapView
+from account.views.authenticated import LoginAgromapView, UpdateProfileAPIView, ChangePasswordAPIView
 from config import settings
 
 schema_view = get_schema_view(
@@ -28,6 +28,8 @@ urlpatterns = [
     path('login_agromap/', LoginAgromapView.as_view()),
     path('info/', include('culture_model.urls')),
     path('ai/', include('ai.urls')),
+    path('edit_profile/<int:my_user>/', UpdateProfileAPIView.as_view()),
+    path('change_password/<int:pk>/', ChangePasswordAPIView.as_view()),
 ]
 
 urlpatterns += i18n_patterns(

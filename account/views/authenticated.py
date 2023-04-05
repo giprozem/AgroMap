@@ -4,9 +4,12 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import exceptions
-from account.serializers.authetificated import LoginSerializer
+from account.serializers.authetificated import LoginSerializer, ProfileSerializer, ChangePasswordSerializer
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
+from account.models.account import Profile, MyUser
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 
 
 class LoginAgromapView(APIView):
@@ -48,3 +51,16 @@ class LoginAgromapView(APIView):
             'is_superuser': user.is_superuser,
             'is_active': user.is_active,
         })
+
+
+class UpdateProfileAPIView(generics.UpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    lookup_field = 'my_user'
+    permission_classes = (IsAuthenticated,)
+
+
+class ChangePasswordAPIView(generics.UpdateAPIView):
+    queryset = MyUser.objects.all()
+    serializer_class = ChangePasswordSerializer
+    permission_classes = (IsAuthenticated,)
