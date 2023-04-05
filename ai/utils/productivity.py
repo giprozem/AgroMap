@@ -7,49 +7,13 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 from osgeo import gdal
-from rest_framework.renderers import JSONRenderer
 
 from ai.models.predicted_contour import Contour_AI
-from ai.productivity_funcs.training import predict, model_path
-from ai.serializers import ContourAIStatisticsSerializer
 from culture_model.models import VegetationIndex
 from indexes.index_funcs import cutting_tiff, average_ndvi, ndvi_calculator, average_ndmi, ndmi_calculator, \
     average_ndre, ndre_calculator, average_savi, savi_calculator, average_vari, vari_calculator
 from indexes.index_funcs.ndwi_funcs import average_ndwi, ndwi_calculator
 from indexes.models import SciHubImageDate, ContourAIIndexCreatingReport, IndexMeaning, PredictedContourVegIndex
-
-
-def predicting_productivity(contour_ai_id):
-    response = Contour_AI.objects.get(id=contour_ai_id)
-    serializer = ContourAIStatisticsSerializer(response)
-    res = [serializer.data]
-    json_data = JSONRenderer().render(res)
-    json_string = json_data.decode('utf-8')
-    result = predict(model_path=model_path, predict_path=json_string)
-    print(result)
-    if result == 0:
-        response.productivity = '0 - 1.6'
-    elif result == 1:
-        response.productivity = '1.6 - 5'
-    elif result == 2:
-        response.productivity = '5 - 10'
-    elif result == 3:
-        response.productivity = '10 - 15'
-    elif result == 4:
-        response.productivity = '15 - 20'
-    elif result == 5:
-        response.productivity = '25 - 30'
-    elif result == 6:
-        response.productivity = '30 - 35'
-    elif result == 7:
-        response.productivity = '35 - 40'
-    elif result == 8:
-        response.productivity = '40 - 45'
-    elif result == 1:
-        response.productivity = '45 - 50'
-    elif result == 1:
-        response.productivity = '50 - 55'
-    response.save()
 
 
 def creating_veg_indexes():
@@ -219,7 +183,6 @@ def creating_veg_indexes():
 
 
 def creating_veg_indexes_image(satellite_id):
-    start = datetime.datetime.now()
     image_date = SciHubImageDate.objects.filter(id=satellite_id)
     image_date = image_date[0]
     contours = Contour_AI.objects.filter(polygon__coveredby=image_date.polygon)
@@ -383,4 +346,3 @@ def creating_veg_indexes_image(satellite_id):
         # deleting the files with tiff extension
         for file in files:
             os.remove(file)
-    print(datetime.datetime.now() -start)

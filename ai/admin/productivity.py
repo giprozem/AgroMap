@@ -16,7 +16,8 @@ class PredictedContourVegIndexAdmin(admin.ModelAdmin):
     list_display = ('id', 'average_value', 'get_description', 'index', 'contour', 'date', 'get_html_photo', 'get_contour_id',)
     readonly_fields = ('id', 'average_value', 'get_html_photo', 'get_description', 'meaning_of_average_value', 'index_image')
     list_display_links = ('id', 'get_description',)
-    list_filter = ('average_value', 'date', 'contour', 'meaning_of_average_value')
+    list_filter = ('average_value', 'date', 'contour', 'meaning_of_average_value', 'id', 'index',)
+    list_per_page = 20
 
     def get_html_photo(self, obj):
         if obj.index_image:
