@@ -102,8 +102,8 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['region_id'] = instance.conton.district.region.pk if instance.conton.district.region else None
-        representation['district_id'] = instance.conton.district.pk if instance.conton.district else None
+        representation['region'] = instance.conton.district.region.pk if instance.conton.district.region else None
+        representation['district'] = instance.conton.district.pk if instance.conton.district else None
 
         return representation
 
