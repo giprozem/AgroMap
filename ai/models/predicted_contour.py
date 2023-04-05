@@ -45,3 +45,7 @@ class Contour_AI(models.Model):
 
 class Yolo(SingletonModel):
     ai = models.FileField(upload_to='models_ai/')
+
+
+class Dataset(models.Model):
+    zip = models.FileField(upload_to='zip/')

@@ -1,18 +1,16 @@
 import random
 import time
-from datetime import datetime
-
-import PIL
+from datetime import date
+import shutil
 import cv2
 from django.db import connection
 from osgeo import gdal, osr
 import os
-
+from django.core.files import File
 from gip.views.handbook_contour import contour_test_for_ai, contour_Chui_2
 from indexes.models.satelliteimage import SciHubImageDate
 from rasterio import warp
-import numpy as np
-from ai.models import Contour_AI, Images_AI, Yolo
+from ai.models import Contour_AI, Images_AI, Yolo, Dataset
 from ultralytics import YOLO
 from PIL import Image
 from pyproj import Proj, Transformer
@@ -436,7 +434,7 @@ def create_dataset():
                 label = ''
                 image = Image.open(f'media/cutted_tiff/{file}')
                 w, h = image.size
-                image.save(f'media/dataset/images/{file[:-4]}.png')
+                image.save(f'media/dataset/train/images/{file[:-4]}.png')
                 for c in data:
                     coordinates = c['coordinates'][0]
                     meters = []
@@ -456,6 +454,10 @@ def create_dataset():
                     for i in range(0, len(x)):
                         txt += f'{x[i] / w} {y[i] / h} '
                     label += f'{txt}\n'
-
-        with open(f"media/dataset/labels/{file[:-4]}.txt", "w") as txt_file:
+        with open(f"media/dataset/train/labels/{file[:-4]}.txt", "w") as txt_file:
             txt_file.write(label)
+    shutil.make_archive('dataset', 'zip', root_dir='media/dataset')
+    obj = Dataset.objects.create()
+    name = date.today().strftime("%d-%m-%Y")
+    obj.zip.save(name, open('./dataset.zip', 'rb'))
+    os.remove('./dataset.zip')
