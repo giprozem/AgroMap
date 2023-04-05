@@ -55,4 +55,4 @@ class YoloAdmin(admin.ModelAdmin):
 
 @admin.register(Dataset)
 class DatasetAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at')
