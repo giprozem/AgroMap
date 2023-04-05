@@ -719,7 +719,7 @@ class StatisticsContourProductivityAPIView(APIView):
                         "ha": sum([row[1] for row in rows]),
                         "percent": round(sum([row[1] for row in rows]) / total * 100)
                     },
-                    "Districts": data
+                    "Children": data
                 })
         elif region and land_type and year:
             with connection.cursor() as cursor:
@@ -750,7 +750,7 @@ class StatisticsContourProductivityAPIView(APIView):
                         "ha": sum([row[1] for row in rows]),
                         "percent": round(sum([row[1] for row in rows]) / total * 100)
                     },
-                    "Districts": data
+                    "Children": data
                 })
         elif district and conton and year and land_type:
             with connection.cursor() as cursor:
@@ -800,7 +800,7 @@ class StatisticsContourProductivityAPIView(APIView):
                         "ha": sum([row[1] for row in rows]),
                         "percent": round(sum([row[1] for row in rows]) / total * 100)
                     },
-                    "Contons": data
+                    "Children": data
                 })
         elif conton and year and land_type:
             with connection.cursor() as cursor:
