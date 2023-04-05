@@ -168,3 +168,4 @@ cron
 *.pkl
 shp_ai_contour
 cutted
+*.pt
