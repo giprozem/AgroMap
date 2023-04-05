@@ -1,91 +1,88 @@
+import pickle
+
 import numpy as np
 import rasterio
 import torch
 import torch.nn as nn
-from scipy import stats
-from sklearn.preprocessing import MinMaxScaler
+from osgeo import gdal
+
+# Initialize the model, loss function, and optimizer
+device = torch.device("cpu")
 
 
-class EncoderDecoderLSTM(nn.Module):
-    def __init__(self, input_dim, hidden_dim, num_layers, output_dim):
-        super(EncoderDecoderLSTM, self).__init__()
-        self.hidden_dim = hidden_dim
-        self.num_layers = num_layers
+class FeedForwardNN(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim):
+        super(FeedForwardNN, self).__init__()
 
-        self.encoder_lstm = nn.LSTM(input_dim, hidden_dim, num_layers, batch_first=True)
-        self.decoder_lstm = nn.LSTM(hidden_dim, hidden_dim, num_layers, batch_first=True)
-        self.fc = nn.Linear(hidden_dim, output_dim)
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
         self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(hidden_dim, output_dim)
 
     def forward(self, x):
-        h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_dim).to(x.device)
-        c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_dim).to(x.device)
-
-        _, (hn, cn) = self.encoder_lstm(x.unsqueeze(1), (h0, c0))  # Add a dimension for the sequence length
-        out, _ = self.decoder_lstm(hn.transpose(0, 1), (hn, cn))  # Transpose hn to match the expected input shape
-        out = self.fc(out.squeeze(1))  # Squeeze the sequence length dimension
-        out = self.relu(out)  # Apply ReLU activation function to the output of the linear layer
-
-        return out
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        return x
 
 
-def test_model(red, nir, swir, device=torch.device("cpu")):
+# Function to extract features from the bands
+def extract_features_from_bands(red_band, nir_band, swir_band):
+    # Calculate the mean value for each band
+    red_mean = np.mean(red_band)
+    nir_mean = np.mean(nir_band)
+    swir_mean = np.mean(swir_band)
 
-    # Open the TIFF files and extract the data as NumPy arrays
-    with rasterio.open(red) as src:
-        redt = src.read(1)
+    return [red_mean, nir_mean, swir_mean]
 
-    with rasterio.open(nir) as src:
-        nirt = src.read(1)
 
-    with rasterio.open(swir) as src:
-        swirt = src.read(1)
+# Function to predict the class using the features
+def predict_from_features(features, model, scaler):
+    # Normalize the features
+    features = scaler.transform([features])
 
-    # Combine the NumPy arrays for the different bands into a single NumPy array
-
-    data = np.dstack((redt, nirt, swirt))
-    # data[:,:,1].shape
-    float_array = data.astype(np.float32)
-    # float_array = float_array[:-5400, :-5400]
-
-    input_tensor_test = torch.from_numpy(float_array)
-    # print(input_tensor_test.shape)
-    tensor_2d = input_tensor_test.reshape(-1, 3)
-
-    # Print the shape of the reshaped tensor
-    # print(tensor_2d)
-
-    scaler = MinMaxScaler()
-    X2 = scaler.fit_transform(tensor_2d)
-
-    # Move data to CPU
-    X2 = torch.Tensor(X2).to(device)
-
-    input_dim = 3
-    output_dim = 10
-    hidden_dim = 64
-    num_layers = 1
-
-    model = EncoderDecoderLSTM(input_dim, hidden_dim, num_layers, output_dim)
-    # Load the state_dict
-    model.load_state_dict(torch.load('./main_cpu2.pt'))
-
-    # Move the model to the device
-    model = model.to(device)
-
-    # Set the model to evaluation mode
+    # Convert the features to a PyTorch tensor
+    features_tensor = torch.tensor(features, dtype=torch.float32).to(device)
+    # Load the saved scaler
+    scaler_path = "./scalerbest.pkl"
+    with open(scaler_path, "rb") as f:
+        scaler = pickle.load(f)
+    model_path = "./FeedForwardBest.pt"
+    model = FeedForwardNN(input_dim=3, hidden_dim=64, output_dim=9)
+    model.load_state_dict(torch.load(model_path))
+    # Pass the tensor through the model
+    model.to(device)
     model.eval()
-
-    # Predict
     with torch.no_grad():
-        output_tensor = model.forward(X2)
-    argmax_tensor = torch.argmax(output_tensor, dim=1)
-    # print('argmax_tensor shape = ', argmax_tensor.shape)
+        output = model(features_tensor)
 
-    # Convert to numpy
-    tensor_cpu = argmax_tensor.cpu()
-    argmax_array = tensor_cpu.numpy()
+    # Interpret the output
+    _, predicted_class = torch.max(output.data, 1)
+    return predicted_class.item()
 
-    # print('array_2d', (argmax_array))
-    mode = stats.mode(argmax_array, keepdims=True)
-    return int(mode[0])
+
+def predict_from_raster_bands(red_path, nir_path, swir_path):
+    # Read the raster bands as NumPy arrays
+    with rasterio.open(red_path) as r:
+        red_band = r.read()
+    with rasterio.open(nir_path) as n:
+        nir_band = n.read()
+    with rasterio.open(red_path) as s:
+        swir_band = s.read()
+
+    # Extract the features from the bands
+    features = extract_features_from_bands(red_band, nir_band, swir_band)
+
+    # Load the saved scaler
+    scaler_path = "./scalerbest.pkl"
+    with open(scaler_path, "rb") as f:
+        scaler = pickle.load(f)
+
+    # Initialize the model
+    model_path = "./FeedForwardBest.pt"
+    model = FeedForwardNN(input_dim=3, hidden_dim=64, output_dim=9)
+    model.load_state_dict(torch.load(model_path))
+
+    # Predict the class using the features
+    predicted_class = predict_from_features(features, model, scaler)
+
+    return predicted_class
