@@ -675,7 +675,7 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
                     round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
                     round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr .area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, cntn.name
+                    cntr.is_deleted, dst.name, cntn.name
                     FROM gip_contour AS cntr 
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
@@ -683,13 +683,10 @@ class StatisticsContourProductivityAPIView(APIView):
                     where cntr.year='{year}' and cntr.type_id in ({land_type}) and cntn.id in ({conton}) 
                     and rgn.id in ({region}) and dst.id in ({district})
                     and cntr.is_deleted=false
-                    group by cntn.name, cntr.is_deleted;""")
+                    group by dst.name, cntn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
-                data = []
-                for i in rows:
-                    data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
-                                 'Unproductive': {'ha': i[1], 'percent': i[3]}})
-                return Response(data)
+                return Response({'name': rows[0][-1], 'type': 'Conton', 'Productive': {'ha': rows[0][0], 'percent': rows[0][2]},
+                                 'Unproductive': {'ha': rows[0][1], 'percent': rows[0][3]}, 'Children': []})
         elif region and district and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
@@ -759,18 +756,15 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
                     round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
                     round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, cntn.name
+                    cntr.is_deleted, dst.name, cntn.name
                     FROM gip_contour AS cntr 
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     where cntr.year='{year}' and cntr.type_id in ({land_type}) and dst.id in ({district})
-                    and cntn.id in ({conton}) and cntr.is_deleted=false group by cntn.name, cntr.is_deleted;""")
+                    and cntn.id in ({conton}) and cntr.is_deleted=false group by dst.name, cntn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
-                data = []
-                for i in rows:
-                    data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
-                                 'Unproductive': {'ha': i[1], 'percent': i[3]}})
-                return Response(data)
+                return Response({'name': rows[0][-1], 'type': 'Conton', 'Productive': {'ha': rows[0][0], 'percent': rows[0][2]},
+                                 'Unproductive': {'ha': rows[0][1], 'percent': rows[0][3]}, 'Children': []})
         elif district and year and land_type:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
