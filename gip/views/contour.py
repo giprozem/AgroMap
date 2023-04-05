@@ -697,19 +697,30 @@ class StatisticsContourProductivityAPIView(APIView):
                     round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
                     round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
                     round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, cntn.name
+                    cntr.is_deleted, rgn.name, dst.name
                     FROM gip_contour AS cntr 
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
                     where rgn.id in ({region}) and cntr.type_id in ({land_type}) and cntr.year='{year}' and dst.id in ({district})
-                    and cntr.is_deleted=false group by cntn.name, cntr.is_deleted;""")
+                    and cntr.is_deleted=false group by rgn.name, dst.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
+                total = sum([row[0] for row in rows]) + sum([row[1] for row in rows])
                 data = []
                 for i in rows:
-                    data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
+                    data.append({'name': i[-1], 'type': 'District', 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
-                return Response(data)
+                return Response({
+                    "name": rows[0][5],
+                    "type": "Region",
+                    'Productive': {'ha': sum([row[0] for row in rows]),
+                                   'percent': round(sum([row[0] for row in rows]) / total * 100)},
+                    "Unproductive": {
+                        "ha": sum([row[1] for row in rows]),
+                        "percent": round(sum([row[1] for row in rows]) / total * 100)
+                    },
+                    "Districts": data
+                })
         elif region and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
@@ -1429,9 +1440,3 @@ class CoordinatesPolygonAPIView(APIView):
                                  "geometry": eval(i[-1]) if i[-1] else None})
                 return Response({"productive": {"type": "FeatureCollection",
                                                 "features": data}})
-
-
-"""
-
-  33938 |        24864 |             58 |               42 | f          | Иссык-Кульский район
-"""

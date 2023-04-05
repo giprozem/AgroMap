@@ -140,8 +140,8 @@ class Contour_AIInScreen(APIView):
 
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                               SELECT id, conton_id, district_id, culture,
-                               St_AsGeoJSON(cntr.polygon) AS polygon
+                               SELECT id, conton_id, district_id, culture_id, is_deleted, area_ha, elevation,
+                               productivity, type_id, year, St_AsGeoJSON(cntr.polygon) AS polygon
                                FROM ai_contour_ai AS cntr
                                Where cntr.id > 11016;
                                """)
@@ -149,59 +149,11 @@ class Contour_AIInScreen(APIView):
                 data = []
                 for i in rows:
                     data.append({"type": "Feature",
-                                 "properties": {'id': i[0], 'conton_id': i[1],  'district_id': i[2], 'culture': i[3]},
+                                 "properties": {'id': i[0], 'conton_id': i[1],  'district_id': i[2], 'culture_id': i[3],
+                                                'is_deleted': i[4], 'area_ha': i[5], 'elevation': i[6],
+                                                'productivity': i[7], 'land_type': i[8], 'year': i[9]
+                                                },
                                  "geometry": eval(i[4])})
                 return Response({"type": "FeatureCollection", "features": data})
         else:
             return Response(data={"message": "parameter is required"}, status=400)
-
-"""
-        <?xml version="1.0" encoding="UTF-8"?>
-<sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:sld="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" version="1.0.0">
-  <sld:NamedLayer>
-    <sld:Name>style_agromap_ai</sld:Name>
-    <sld:Title>Countries Mapcolor9</sld:Title>
-    <sld:Abstract>Theme using mapcolor9 for ne:countries layer.</sld:Abstract>
-    <sld:UserStyle>
-      <sld:Name />
-      <sld:FeatureTypeStyle>
-        <sld:Rule>
-          <sld:Name>agromap_store_ai</sld:Name>
-        </sld:Rule>
-        <sld:Rule>
-          <sld:PolygonSymbolizer>
-            <sld:Fill>
-              <sld:CssParameter name="fill">
-                <ogc:Function name="Recode">
-                  <ogc:PropertyName>clt</ogc:PropertyName>
-                  <ogc:Literal>Пшеница</ogc:Literal>
-                  <ogc:Literal>#D09959</ogc:Literal>
-                  <ogc:Literal>Картофель</ogc:Literal>
-                  <ogc:Literal>#DABA7A</ogc:Literal>
-                  <ogc:Literal>Сахарная свекла</ogc:Literal>
-                  <ogc:Literal>#F0D6A9</ogc:Literal>
-                  <ogc:Literal>Лук</ogc:Literal>
-                  <ogc:Literal>#EB974B</ogc:Literal>
-                  <ogc:Literal>Кукуруза</ogc:Literal>
-                  <ogc:Literal>#FEE45B</ogc:Literal>
-                  <ogc:Literal>Капуста</ogc:Literal>
-                  <ogc:Literal>#C7DBB3</ogc:Literal>
-                  <ogc:Literal>Гречиха</ogc:Literal>
-                  <ogc:Literal>#5C2214</ogc:Literal>
-                  <ogc:Literal>Подсолнечник</ogc:Literal>
-                  <ogc:Literal>#F2D831</ogc:Literal>
-                  <ogc:Literal>Хлопок</ogc:Literal>
-                  <ogc:Literal>#FFFFFF</ogc:Literal>
-                  <ogc:Literal>Неизвестная культура</ogc:Literal>
-                  <ogc:Literal>#DEDFEA</ogc:Literal>
-                </ogc:Function>
-              </sld:CssParameter>
-            </sld:Fill>
-          </sld:PolygonSymbolizer>
-        </sld:Rule>
-      </sld:FeatureTypeStyle>
-    </sld:UserStyle>
-  </sld:NamedLayer>
-</sld:StyledLayerDescriptor>
-
-        """
