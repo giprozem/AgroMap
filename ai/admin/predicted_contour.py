@@ -3,7 +3,7 @@ from django.contrib.gis import admin
 from django.utils.safestring import mark_safe
 from leaflet.admin import LeafletGeoAdmin
 
-from ai.models import Contour_AI, Images_AI, Yolo
+from ai.models import Contour_AI, Images_AI, Yolo, Dataset
 from indexes.models import PredictedContourVegIndex
 from django.utils.translation import gettext_lazy as _
 
@@ -50,4 +50,9 @@ class Images_AIAdmin(admin.ModelAdmin):
 
 @admin.register(Yolo)
 class YoloAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Dataset)
+class DatasetAdmin(admin.ModelAdmin):
     pass
