@@ -2,7 +2,9 @@ from django.contrib.gis.db import models
 from django.utils.translation import gettext_lazy as _
 from solo.models import SingletonModel
 
-from gip.models import LandType, Culture, SoilClass
+from gip.models.contour import LandType
+from gip.models.culture import Culture
+from gip.models.soil import SoilClass
 from gip.models.conton import Conton
 from gip.models.district import District
 
@@ -27,7 +29,7 @@ class Contour_AI(models.Model):
     productivity = models.CharField(max_length=20, blank=True, verbose_name=_("Продуктивность"))
     area_ha = models.FloatField(blank=True, null=True, verbose_name=_("Площадь в гектарах"))
     is_deleted = models.BooleanField(default=False, verbose_name=_('Удаленный'))
-    culture = models.CharField(max_length=50, blank=True, null=True)
+    culture = models.ForeignKey(Culture, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("Культура"))
     elevation = models.CharField(max_length=25, blank=True, null=True, verbose_name=_('Высота'))
     soil_class = models.ForeignKey(SoilClass, on_delete=models.SET_NULL, blank=True, null=True,
                                    verbose_name='Тип почвы')
@@ -45,7 +47,3 @@ class Contour_AI(models.Model):
 
 class Yolo(SingletonModel):
     ai = models.FileField(upload_to='models_ai/')
-
-
-class Dataset(models.Model):
-    zip = models.FileField(upload_to='zip/')

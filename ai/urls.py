@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from ai.views.predict_culture import CulturePredict
-from ai.views.predicted_contour import CreateAPIView
+from ai.views.create_dataset import CreateAPIView
 from ai.views.predicted_contour import CutAPIView, Contour_AIViewSet, Contour_AIInScreen
 from ai.views.productivity import CheckAPIView, CreatingIndexAPIView, CreatingIndexSatellite
 
