@@ -28,9 +28,9 @@ urlpatterns = [
     path('login_agromap/', LoginAgromapView.as_view()),
     path('info/', include('culture_model.urls')),
     path('ai/', include('ai.urls')),
-    path('edit_profile/<int:my_user>/', UpdateProfileAPIView.as_view()),
-    path('change_password/<int:pk>/', ChangePasswordAPIView.as_view()),
-    path('get_profile/<int:my_user>/', GetProfileAPIView.as_view()),
+    path('edit_profile/', UpdateProfileAPIView.as_view()),
+    path('change_password/', ChangePasswordAPIView.as_view()),
+    path('get_profile/', GetProfileAPIView.as_view()),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
 
