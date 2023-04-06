@@ -6,8 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from schema_graph.views import Schema
-
-from account.views.authenticated import LoginAgromapView, UpdateProfileAPIView, ChangePasswordAPIView
+import notifications.urls
+from account.views.authenticated import LoginAgromapView, UpdateProfileAPIView, ChangePasswordAPIView, GetProfileAPIView
 from config import settings
 
 schema_view = get_schema_view(
@@ -30,6 +30,8 @@ urlpatterns = [
     path('ai/', include('ai.urls')),
     path('edit_profile/<int:my_user>/', UpdateProfileAPIView.as_view()),
     path('change_password/<int:pk>/', ChangePasswordAPIView.as_view()),
+    path('get_profile/<int:my_user>/', GetProfileAPIView.as_view()),
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
 
 urlpatterns += i18n_patterns(
