@@ -153,7 +153,7 @@ class Contour_AIInScreen(APIView):
                                                 'is_deleted': i[4], 'area_ha': i[5], 'elevation': i[6],
                                                 'productivity': i[7], 'land_type': i[8], 'year': i[9]
                                                 },
-                                 "geometry": eval(i[4])})
+                                 "geometry": eval(i[-1])})
                 return Response({"type": "FeatureCollection", "features": data})
         else:
             return Response(data={"message": "parameter is required"}, status=400)
