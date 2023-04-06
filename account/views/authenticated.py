@@ -8,7 +8,7 @@ from account.serializers.authetificated import LoginSerializer, ProfileSerialize
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
 from account.models.account import Profile, MyUser
-from rest_framework import generics
+from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -53,21 +53,32 @@ class LoginAgromapView(APIView):
         })
 
 
-class UpdateProfileAPIView(generics.UpdateAPIView):
-    queryset = Profile.objects.all()
+class UpdateProfileAPIView(GenericAPIView):
     serializer_class = ProfileSerializer
-    lookup_field = 'my_user'
     permission_classes = (IsAuthenticated,)
 
+    def patch(self, request, *args, **kwargs):
+        instance = Profile.objects.get(my_user=self.request.user)
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
-class ChangePasswordAPIView(generics.UpdateAPIView):
-    queryset = MyUser.objects.all()
-    serializer_class = ChangePasswordSerializer
-    permission_classes = (IsAuthenticated,)
+
+class ChangePasswordAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        request.user.set_password(serializer.validated_data['password_confirm'])
+        request.user.save()
+        return Response('Password has changed')
 
 
-class GetProfileAPIView(generics.RetrieveAPIView):
-    queryset = Profile.objects.all()
+class GetProfileAPIView(GenericAPIView):
     serializer_class = ProfileSerializer
-    lookup_field = 'my_user'
     permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        queryset = Profile.objects.get(my_user=request.user)
+        serializer = self.get_serializer(queryset)
+        return Response(serializer.data)
