@@ -64,3 +64,10 @@ class ChangePasswordAPIView(generics.UpdateAPIView):
     queryset = MyUser.objects.all()
     serializer_class = ChangePasswordSerializer
     permission_classes = (IsAuthenticated,)
+
+
+class GetProfileAPIView(generics.RetrieveAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    lookup_field = 'my_user'
+    permission_classes = (IsAuthenticated,)
