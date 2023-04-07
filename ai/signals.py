@@ -7,6 +7,10 @@ import requests
 from django.contrib.gis.geos import Point
 from gip.models import Elevation
 from ai.models.predicted_contour import Contour_AI
+from ai.models.create_dataset import *
+from threading import Thread
+from ai.utils.predicted_contour import create_rgb, cut_rgb_tif, merge_bands, yolo
+from ai.utils.create_dataset import create_dataset
 
 
 @receiver(post_save, sender=Contour_AI)
@@ -62,3 +66,34 @@ def update(sender, instance, created, **kwargs):
             result_soil_class = rows[0][1] if rows != [] else None
         ha = round(geom.area_.sq_km * 100, 2)
         Contour_AI.objects.filter(id=instance.id).update(area_ha=ha, soil_class_id=result_soil_class)
+
+
+@receiver(post_save, sender=Process)
+def merge_bands_handler(sender, instance, created, **kwargs):
+    if created:
+        thread_obj = Thread(target=merge_bands, args=(instance,))
+        thread_obj.start()
+
+
+@receiver(post_save, sender=Merge_Bands)
+def create_RGB_handler(sender, instance, created, **kwargs):
+    if created:
+        thread_obj = Thread(target=create_rgb, args=(instance,))
+        thread_obj.start()
+
+
+@receiver(post_save, sender=Create_RGB)
+def cut_RGB_TIF_handler(sender, instance, created, **kwargs):
+    if created:
+        thread_obj = Thread(target=cut_rgb_tif, args=(instance,))
+        thread_obj.start()
+
+
+@receiver(post_save, sender=Cut_RGB_TIF)
+def choice_handler(sender, instance, created, **kwargs):
+    if created:
+        match instance.type_of_process:
+            case 1:
+                yolo()
+            case 2:
+                create_dataset()

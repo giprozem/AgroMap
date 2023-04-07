@@ -1,25 +1,39 @@
 from django.contrib.gis.geos import Polygon
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ai.utils.predicted_contour import create_rgb, cut_rgb_tif, merge_bands, deleted_files, yolo
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from rest_framework import viewsets
 from ai.serializers import Contour_AISerializer, UpdateContour_AISerializer
 from ai.models.predicted_contour import Contour_AI
-from rest_framework.permissions import IsAuthenticated
+from ai.models.create_dataset import AI_Found, Process
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.db import connection
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
+from notifications.signals import notify
+from ai.utils.predicted_contour import deleted_files
 
 
 class CutAPIView(APIView):
+    permission_classes = (IsAdminUser,)
+
     def get(self, request):
-        # merge_bands()
-        # create_rgb()
-        # cut_rgb_tif()
-        # yolo()
-        # deleted_files()
-        return Response({"message": "ok"})
+        process = Process.objects.get(id=1)
+        if process.is_running:
+            message = "Процесс сейчас идёт"
+        else:
+            user = request.user
+            Process.objects.all().delete()
+            Process.objects.create(is_running=True, type_of_process=1)
+            @receiver(post_save, sender=AI_Found)
+            def my_handler(sender, instance, created, **kwargs):
+                if created:
+                    notify.send(instance, recipient=user, verb='Поиск контуров завершен')
+                    deleted_files()
+            message = "Процесс запущен"
+        return Response({"message": message})
 
 
 class Contour_AIViewSet(viewsets.ModelViewSet):

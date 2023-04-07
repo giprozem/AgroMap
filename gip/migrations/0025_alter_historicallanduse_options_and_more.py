@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='historicalorthophoto',
-            options={'get_latest_by': ('history_date', 'history_id'), 'ordering': ('-history_date', '-history_id'), 'verbose_name': 'historical Satellite image', 'verbose_name_plural': 'historical Satellite images'},
+            options={'get_latest_by': ('history_date', 'history_id'), 'ordering': ('-history_date', '-history_id'), 'verbose_name': 'historical Satellite image', 'verbose_name_plural': 'historical Satellite RGB'},
         ),
         migrations.AlterModelOptions(
             name='landuse',
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='orthophoto',
-            options={'verbose_name': 'Satellite image', 'verbose_name_plural': 'Satellite images'},
+            options={'verbose_name': 'Satellite image', 'verbose_name_plural': 'Satellite RGB'},
         ),
         migrations.AddField(
             model_name='orthophoto',
