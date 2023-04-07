@@ -8,7 +8,7 @@ from account.serializers.authetificated import LoginSerializer, ProfileSerialize
     NotificationsSerializer
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
-from account.models.account import Profile, MyUser
+from account.models.account import Profile
 from rest_framework.generics import GenericAPIView
 from rest_framework.generics import ListAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -103,3 +103,11 @@ class DeleteNotificationAPIView(DestroyAPIView):
         user = self.request.user
         user.notifications.get(pk=pk).delete()
         return Response("Notification is deleted")
+
+
+class LogoutAgromapView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        Token.objects.get(user=request.user).delete()
+        return Response("Token is deleted")
