@@ -4,11 +4,13 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import exceptions
-from account.serializers.authetificated import LoginSerializer, ProfileSerializer, ChangePasswordSerializer
+from account.serializers.authetificated import LoginSerializer, ProfileSerializer, ChangePasswordSerializer, \
+    NotificationsSerializer
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
 from account.models.account import Profile, MyUser
 from rest_framework.generics import GenericAPIView
+from rest_framework.generics import ListAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -82,3 +84,22 @@ class GetProfileAPIView(GenericAPIView):
         queryset = Profile.objects.get(my_user=request.user)
         serializer = self.get_serializer(queryset)
         return Response(serializer.data)
+
+
+class NotificationAPIView(ListAPIView):
+    serializer_class = NotificationsSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = user.notifications.unread()
+        return queryset
+
+
+class DeleteNotificationAPIView(DestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def delete(self, request, pk):
+        user = self.request.user
+        user.notifications.get(pk=pk).delete()
+        return Response("Notification is deleted")

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from account.models.account import Profile
 from rest_framework.exceptions import ValidationError
+from notifications.models import Notification
 
 
 class LoginSerializer(serializers.Serializer):
@@ -28,3 +29,9 @@ class ChangePasswordSerializer(serializers.Serializer):
         if attrs['password'] != attrs['password_confirm']:
             raise ValidationError({'password_confirm': 'Passwords do not match'})
         return attrs
+
+
+class NotificationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ('id', 'recipient', 'actor_object_id', 'verb')

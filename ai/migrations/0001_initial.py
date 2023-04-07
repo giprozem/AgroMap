@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 ('culture', models.CharField(blank=True, max_length=50)),
                 ('productivity', models.CharField(blank=True, max_length=20)),
                 ('canton', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='canton', to='ai.canton')),
-                ('image', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='images', to='ai.images')),
+                ('image', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='RGB', to='ai.RGB')),
             ],
         ),
     ]
