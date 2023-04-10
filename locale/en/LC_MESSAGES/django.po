@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-10 16:41+0600\n"
+"POT-Creation-Date: 2023-04-10 20:21+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,6 +77,10 @@ msgstr "Index value"
 #: gip/admin/contour.py:35 indexes/admin/actual_veg_index.py:23
 msgid "Визуализация NDVI"
 msgstr "Visualization of NDVI"
+
+#: ai/apps.py:8
+msgid "ИИ"
+msgstr "AI"
 
 #: ai/models/create_dataset.py:8 ai/models/create_dataset.py:11
 msgid "Датасет"
@@ -238,7 +242,7 @@ msgstr "Kyrgyz"
 msgid "Английский"
 msgstr "English"
 
-#: config/settings.py:183 config/urls.py:40
+#: config/settings.py:183 config/urls.py:40 hub/apps.py:8
 msgid "Эталонная база данных Гипрозем"
 msgstr "Giprozem reference database"
 
