@@ -49,19 +49,28 @@ class IndexMeaning(models.Model):
 
 
 class PredictedContourVegIndex(models.Model):
-    index_image = models.FileField(upload_to='index_image', blank=True)
+    index_image = models.FileField(upload_to='index_image', blank=True, verbose_name=_('Изображение'))
     average_value = models.DecimalField(
         max_digits=5,
         decimal_places=3,
-        blank=True
+        blank=True,
+        verbose_name=_('Средний показатель индекса')
     )
     meaning_of_average_value = models.ForeignKey(
         'indexes.IndexMeaning',
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
+        verbose_name = _('Значение показателя индекса')
     )
-    index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE)
+    index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name=_('Индекс'))
     contour = models.ForeignKey('ai.Contour_AI', on_delete=models.CASCADE,
-                                related_name='contour_ai_veg_index')
-    date = models.DateField()
-    history = HistoricalRecords()
+                                related_name='contour_ai_veg_index', verbose_name=_('Контур'))
+    date = models.DateField(verbose_name=_('Дата анализа'))
+    history = HistoricalRecords(verbose_name=_("История"))
+
+    class Meta:
+        verbose_name = _('Прогнозируемое значение показателя индекса')
+        verbose_name_plural = _("Прогнозируемые значения показателей индексов")
+
+    def __str__(self):
+        return f'{self.index}'

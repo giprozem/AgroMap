@@ -10,7 +10,11 @@ from gip.models.district import District
 
 
 class Images_AI(models.Model):
-    image = models.ImageField(upload_to='images_ai', blank=True)
+    image = models.ImageField(upload_to='images_ai', blank=True, verbose_name=_('Изображение'))
+
+    class Meta:
+        verbose_name = _("Изображение")
+        verbose_name_plural = _("Изображения")
 
 
 class Contour_AI(models.Model):
@@ -32,18 +36,27 @@ class Contour_AI(models.Model):
     culture = models.ForeignKey(Culture, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("Культура"))
     elevation = models.CharField(max_length=25, blank=True, null=True, verbose_name=_('Высота'))
     soil_class = models.ForeignKey(SoilClass, on_delete=models.SET_NULL, blank=True, null=True,
-                                   verbose_name='Тип почвы')
-    percent = models.FloatField(null=True, blank=True)
-    image = models.ForeignKey(Images_AI, on_delete=models.SET_NULL, related_name='contour_ai', blank=True, null=True)
+                                   verbose_name=_('Тип почвы'))
+    percent = models.FloatField(null=True, blank=True, verbose_name=_("Процент"))
+    image = models.ForeignKey(Images_AI, on_delete=models.SET_NULL, related_name='contour_ai', blank=True, null=True,
+                              verbose_name=_("Изображение"))
 
     district = models.ForeignKey(
         District,
         on_delete=models.SET_NULL,
         related_name='contour_ai',
         null=True,
-        blank=True
+        blank=True,
+        verbose_name=_('Район')
     )
 
+    class Meta:
+        verbose_name = _("Контур найденный ИИ")
+        verbose_name_plural = _("Контуры найденные ИИ")
 
 class Yolo(SingletonModel):
-    ai = models.FileField(upload_to='models_ai/')
+    ai = models.FileField(upload_to='models_ai/', verbose_name=_('Модель'))
+
+    class Meta:
+        verbose_name = _("Модель для поиска контуров")
+        verbose_name_plural = _("Модели для поиска контуров")

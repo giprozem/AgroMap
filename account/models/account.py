@@ -22,7 +22,7 @@ class MyUser(AbstractUser):
 
 class Profile(models.Model):
     my_user = models.OneToOneField(MyUser, on_delete=models.CASCADE, primary_key=True, related_name='profiles',
-                                   verbose_name=_('Мой статус'))
+                                   verbose_name=_('Пользователь'))
     full_name = models.CharField(max_length=55, verbose_name=_('ФИО'))
     phone_number = models.CharField(max_length=14, verbose_name=_('Номер телефона'))
 
