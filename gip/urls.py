@@ -1,7 +1,8 @@
 from django.urls import path, include
 from gip.views.conton import ContonAPIView
 from gip.views.contour import FilterContourAPIView, ContourStatisticsAPIView, StatisticsContourProductivityAPIView, \
-    MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView, AuthDetailContourViewSet
+    MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView, AuthDetailContourViewSet, \
+    CultureStatisticsAPIView
 from gip.views.district import DistrictAPIView
 from gip.views.geoserver import Geoserver
 from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox, PolygonsInScreen
@@ -25,6 +26,7 @@ urlpatterns = [
     path("polygons-in-bbox/", PolygonsInBbox.as_view()),
     path('filter_contour/', FilterContourAPIView.as_view()),
     path('contour-statistics/', ContourStatisticsAPIView.as_view()),
+    path('culture-statistics/', CultureStatisticsAPIView.as_view()),
     path('contour-statistics-productivity/', StatisticsContourProductivityAPIView.as_view()),
     path('contour-map-productivity/', MapContourProductivityAPIView.as_view()),
     path('coordinates-polygon/', CoordinatesPolygonAPIView.as_view()),
