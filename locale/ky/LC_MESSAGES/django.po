@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-10 20:21+0600\n"
+"POT-Creation-Date: 2023-04-12 11:15+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,15 +115,15 @@ msgstr "Спутниктик сүрөт"
 
 #: ai/models/create_dataset.py:37 ai/models/create_dataset.py:38
 msgid "Процесс создание цветных изображений"
-msgstr ""
+msgstr "Түстүү сүрөттөрдү түзүү процесси"
 
 #: ai/models/create_dataset.py:46 ai/models/create_dataset.py:47
 msgid "Процесс обрезания цветных изображений"
-msgstr ""
+msgstr "Түстүү сүрөттөрдү кесүү процесси"
 
 #: ai/models/create_dataset.py:53 ai/models/create_dataset.py:54
 msgid "Процесс поиска контуров"
-msgstr ""
+msgstr "Контурларды табуу процесси"
 
 #: ai/models/predicted_contour.py:13 ai/models/predicted_contour.py:16
 #: ai/models/predicted_contour.py:42 indexes/models/actual_veg_index.py:52
@@ -200,31 +200,31 @@ msgstr "Району"
 
 #: ai/models/predicted_contour.py:54
 msgid "Контур найденный ИИ"
-msgstr ""
+msgstr "ИИ тапкан контр"
 
 #: ai/models/predicted_contour.py:55
 msgid "Контуры найденные ИИ"
-msgstr ""
+msgstr "ИИ тапкан контрлар"
 
 #: ai/models/predicted_contour.py:58 ai/models/productivity.py:7
 msgid "Модель"
-msgstr ""
+msgstr "Модел"
 
 #: ai/models/predicted_contour.py:61
 msgid "Модель для поиска контуров"
-msgstr ""
+msgstr "Контурларды табуу модели"
 
 #: ai/models/predicted_contour.py:62
 msgid "Модели для поиска контуров"
-msgstr ""
+msgstr "Контурларды табуу моделдери"
 
 #: ai/models/productivity.py:10
 msgid "Модель для прогноза продуктивности"
-msgstr ""
+msgstr "Өндүрүмдүүлүктү болжолдоо модели"
 
 #: ai/models/productivity.py:11
 msgid "Модели для прогноза продуктивности"
-msgstr ""
+msgstr "Өндүрүмдүүлүктү болжолдоо моделдер"
 
 #: ai/utils/productivity.py:140 ai/utils/productivity.py:306
 #: indexes/utils.py:144 indexes/utils.py:309
@@ -504,7 +504,7 @@ msgstr "Жер категориясы"
 #: hub/models/document_type_list.py:13 hub/models/document_type_list.py:14
 #: hub/models/land_info.py:21
 msgid "Правоустанавливающие документы"
-msgstr ""
+msgstr "Титулдук документтер"
 
 #: hub/models/land_info.py:10
 msgid "Код ИНК"
@@ -516,7 +516,7 @@ msgstr "ЖИН"
 
 #: hub/models/land_info.py:14
 msgid "Бонитет"
-msgstr ""
+msgstr "Бонитет"
 
 #: hub/models/land_info.py:17
 msgid "Урожайность"
@@ -525,16 +525,16 @@ msgstr "Өндүрүмдүүлүк"
 #: hub/models/land_info.py:19 hub/models/property_type_list.py:13
 #: hub/models/property_type_list.py:14
 msgid "Данные о собственности"
-msgstr ""
+msgstr "Мүлк маалыматтары"
 
 #: hub/models/land_info.py:22
 msgid "Ссылка на документ"
-msgstr ""
+msgstr "Документке шилтеме"
 
 #: hub/models/land_info.py:26 hub/models/land_type_list.py:13
 #: hub/models/land_type_list.py:14
 msgid "Данные по типам угодьев"
-msgstr ""
+msgstr "Жердин түрү боюнча маалыматтары"
 
 #: hub/models/land_info.py:28
 msgid "Фактическая площадь"
@@ -550,7 +550,7 @@ msgstr "Кеңдик"
 
 #: hub/models/land_info.py:32
 msgid "Земля №"
-msgstr ""
+msgstr "Жер №"
 
 #: hub/models/land_info.py:34
 msgid "Административно-территориальное деление"
@@ -558,7 +558,7 @@ msgstr "Административдик-аймактык бөлүнүш"
 
 #: hub/models/land_info.py:36
 msgid "Количество единиц недвижимости"
-msgstr ""
+msgstr "Кыймылсыз мүлк бирдиктеринин саны"
 
 #: hub/models/land_info.py:37
 msgid "Номер контура"
@@ -566,55 +566,55 @@ msgstr "Контурдун номери"
 
 #: hub/models/land_info.py:38
 msgid "Право на документ"
-msgstr ""
+msgstr "Документке укук"
 
 #: hub/models/land_info.py:39
 msgid "Срок пользования (год/лет)"
-msgstr ""
+msgstr "Колдонуу мөөнөтү (жыл)"
 
 #: hub/models/land_info.py:41
 msgid "Удостоверяющий акт (прикрепить файл)"
-msgstr ""
+msgstr "Тастыктоочу акт (файлды тиркөө)"
 
 #: hub/models/land_info.py:42
 msgid "Дата завершения пользования"
-msgstr ""
+msgstr "Колдонуунун аяктоо датасы"
 
 #: hub/models/land_info.py:44
 msgid "Земли сельскохозяйственного назначения"
-msgstr ""
+msgstr "Айыл чарба жерлери"
 
 #: hub/models/land_info.py:46
 msgid "Государственный фонд сельскохозяйственных угодий"
-msgstr ""
+msgstr "Айыл чарба жерлеринин мамлекеттик фондусу"
 
 #: hub/models/land_info.py:47
 msgid "Земли населенных пунктов"
-msgstr ""
+msgstr "Калктуу конуштардын жерлери"
 
 #: hub/models/land_info.py:48
 msgid "Другие виды угодий"
-msgstr ""
+msgstr "Башке жерлер"
 
 #: hub/models/land_info.py:49
 msgid "Земельные угодья"
-msgstr ""
+msgstr "Жер угодиялары"
 
 #: hub/models/land_info.py:51
 msgid "Сельскохозяйственный вид угодий"
-msgstr ""
+msgstr "Айыл чарба жерлери"
 
 #: hub/models/land_info.py:52
 msgid "Описания ограничения"
-msgstr ""
+msgstr "Чектөөнүн сүрөттөмөлөрү"
 
 #: hub/models/land_info.py:53
 msgid "Дата заполнения"
-msgstr ""
+msgstr "Толутуруунун датасы"
 
 #: hub/models/land_info.py:54
 msgid "Многолетние насаждения"
-msgstr ""
+msgstr "Көп жылдык плантациялар"
 
 #: hub/models/land_info.py:55
 msgid "Лесные площади"
@@ -638,15 +638,15 @@ msgstr "Сугат"
 
 #: hub/models/land_info.py:61
 msgid "Богарные"
-msgstr ""
+msgstr "Богардуу"
 
 #: hub/models/land_info.py:63
 msgid "Улучшенные (коренного улучшения)"
-msgstr ""
+msgstr "Жакшыртылган (тамыр жагынан жакшыртылган)"
 
 #: hub/models/land_info.py:65
 msgid "Неиспользуемый из-за труднодоступности"
-msgstr ""
+msgstr "Кол жетпегендиктен пайдаланылбай жаткан"
 
 #: hub/models/land_info.py:66
 msgid "Интенсивное использование"
@@ -654,12 +654,11 @@ msgstr "Интенсивдүү жерди пайдалануу"
 
 #: hub/models/land_info.py:67
 msgid "Пастбище"
-msgstr ""
+msgstr "Жайлоо"
 
 #: hub/models/land_info.py:69
-msgid ""
-"Древесно кустарниковые насаждения, не входящие в государственный лесной фонд"
-msgstr ""
+msgid "Древесно кустарниковые насаждения, не входящие в государственный лесной фонд"
+msgstr "Мамлекеттик токой фондусуна кирбеген бак-дарак плантациялары"
 
 #: hub/models/land_info.py:70
 msgid "Форма собственности"
@@ -675,51 +674,51 @@ msgstr "Жер участоктун номери"
 
 #: hub/models/land_info.py:74
 msgid "Номер элементарного участка"
-msgstr ""
+msgstr "Элементардык участоктун номери"
 
 #: hub/models/land_info.py:76
 msgid "Описание (в случае необходимости)"
-msgstr ""
+msgstr "Сүрөттөмө (эгер керек болсо)"
 
 #: hub/models/land_info.py:77
 msgid "Угодья длительного пользования"
-msgstr ""
+msgstr "Узак мөөнөттүү пайдалануудагы жерлер"
 
 #: hub/models/land_info.py:78
 msgid "Ограничения"
-msgstr ""
+msgstr "Чектөөлөр"
 
 #: hub/models/land_info.py:81
 msgid "Приусадебные земли и служебные наделы граждан"
-msgstr ""
+msgstr "Жарандардын чарбалык жерлери жана тейлее участоктору"
 
 #: hub/models/land_info.py:82
 msgid "Число дворов"
-msgstr ""
+msgstr "Короолордун саны"
 
 #: hub/models/land_info.py:83
 msgid "Число семей"
-msgstr ""
+msgstr "Үй-бүлөөлөрдүн саны"
 
 #: hub/models/land_info.py:84
 msgid "Всего земель"
-msgstr ""
+msgstr "Жалпы жерлер"
 
 #: hub/models/land_info.py:86
 msgid "Создатель"
-msgstr ""
+msgstr "Жаратуучу"
 
 #: hub/models/land_info.py:87
 msgid "Владелец"
-msgstr ""
+msgstr "Ээси"
 
 #: hub/models/land_info.py:88
 msgid "Кем изменено"
-msgstr ""
+msgstr "Ким өзгөрттү"
 
 #: hub/models/land_info.py:91
 msgid "Категории Земли (Зем. Баланс)"
-msgstr ""
+msgstr "Жер категориясы"
 
 #: hub/models/land_info.py:92
 msgid "Статус"
@@ -727,35 +726,35 @@ msgstr "Статусу"
 
 #: hub/models/land_info.py:94
 msgid "ЕНИ Код"
-msgstr ""
+msgstr "ЕНИ Код"
 
 #: hub/models/land_info.py:95
 msgid "Адрес участка (АСР)"
-msgstr ""
+msgstr "Жер бөлүгүнун дареги"
 
 #: hub/models/land_info.py:97
 msgid "Целевое назначение (АСР)"
-msgstr ""
+msgstr "Максаты (АСР)"
 
 #: hub/models/land_info.py:99
 msgid "Фактическая площадь (АСР)"
-msgstr ""
+msgstr "Нагыз аянт (АСР)"
 
 #: hub/models/land_info.py:100
 msgid "Форма использования (АСР)"
-msgstr ""
+msgstr "Колдонуу формасы (АСР)"
 
 #: hub/models/land_info.py:101
 msgid "Юридическая площадь (АСР)"
-msgstr ""
+msgstr "Юридикалык аянт (АСР)"
 
 #: hub/models/land_info.py:102
 msgid "Данные о собственнике (АСР)"
-msgstr ""
+msgstr "Ээсинин дайындары (ACP)"
 
 #: hub/models/land_info.py:105 hub/models/land_info.py:106
 msgid "Главная таблица"
-msgstr ""
+msgstr "Негизги таблица"
 
 #: indexes/apps.py:8
 msgid "Вегатационные индексы"
@@ -804,12 +803,12 @@ msgid "Значение показателей индексов"
 msgstr "Индекс көрсөткүчтөрүнүн мааниси"
 
 #: indexes/models/actual_veg_index.py:72
-msgid "Прогнозируемое значение показателя индекса"
-msgstr ""
+msgid "Значение показателя индекса ИИ"
+msgstr "Индекстин мааниси (Жасалма интеллект)"
 
 #: indexes/models/actual_veg_index.py:73
-msgid "Прогнозируемые значения показателей индексов"
-msgstr ""
+msgid "Значения показателей индексов ИИ"
+msgstr "Индекс көрсөткүчтөрүнүн мааниси (Жасалма интеллект)"
 
 #: indexes/models/actual_veg_index_logs.py:8
 #: indexes/models/actual_veg_index_logs.py:22
@@ -835,15 +834,15 @@ msgstr "Индекстин отчеттору"
 
 #: indexes/models/actual_veg_index_logs.py:25
 msgid "Процесс запущен"
-msgstr ""
+msgstr "Процесс башталды"
 
 #: indexes/models/actual_veg_index_logs.py:29
 msgid "Создание отчета по индексу"
-msgstr ""
+msgstr "Индекс боюнча отчет түзүү"
 
 #: indexes/models/actual_veg_index_logs.py:30
 msgid "Создание отчетов по индексу"
-msgstr ""
+msgstr "Индекс боюнча отчетторду түзүү"
 
 #: indexes/models/pasture.py:15 indexes/models/pasture.py:30
 msgid "Класс продуктивности"

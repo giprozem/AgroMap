@@ -69,8 +69,8 @@ class PredictedContourVegIndex(models.Model):
     history = HistoricalRecords(verbose_name=_("История"))
 
     class Meta:
-        verbose_name = _('Прогнозируемое значение показателя индекса')
-        verbose_name_plural = _("Прогнозируемые значения показателей индексов")
+        verbose_name = _('Значение показателя индекса ИИ')
+        verbose_name_plural = _("Значения показателей индексов ИИ")
 
     def __str__(self):
         return f'{self.index}'

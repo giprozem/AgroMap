@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-10 20:21+0600\n"
+"POT-Creation-Date: 2023-04-12 11:15+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -801,12 +801,12 @@ msgid "Значение показателей индексов"
 msgstr "Index values"
 
 #: indexes/models/actual_veg_index.py:72
-msgid "Прогнозируемое значение показателя индекса"
-msgstr "The predicted value of the index"
+msgid "Значение показателя индекса ИИ"
+msgstr "Index value AI"
 
 #: indexes/models/actual_veg_index.py:73
-msgid "Прогнозируемые значения показателей индексов"
-msgstr "The predicted values of the index"
+msgid "Значения показателей индексов ИИ"
+msgstr "Index values AI"
 
 #: indexes/models/actual_veg_index_logs.py:8
 #: indexes/models/actual_veg_index_logs.py:22
