@@ -70,7 +70,7 @@ class ContonAPIView(APIView):
         district = request.query_params.get('district_id')
         conton = request.query_params.get('id')
         paginator = PageNumberPagination()
-        paginator.page_size = request.query_params.get('page_size')
+        paginator.page_size = request.query_params.get('page_size', 20)
         if polygon:
             if district and conton:
                 query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
