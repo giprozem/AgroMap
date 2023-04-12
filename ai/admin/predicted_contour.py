@@ -38,7 +38,7 @@ class VegIndexTabularInline(TabularInline):
 class Contour_AIAdmin(LeafletGeoAdmin):
     inlines = [VegIndexTabularInline]
     list_display = ('id', 'district', 'culture')
-    list_filter = ('id', )
+    list_filter = ('culture', 'district',)
     search_fields = ('district__name', )
 
 

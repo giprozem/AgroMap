@@ -39,7 +39,7 @@ class ActualVegIndexTabularInline(TabularInline):
 class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     readonly_fields = ('id', 'created_at', 'updated_at', 'elevation')
     list_display = ('id', 'ink', 'code_soato', 'conton', 'farmer', 'elevation')
-    list_filter = ('conton', 'farmer', 'id', 'type')
+    list_filter = ('conton', 'farmer', 'id', 'type', 'culture')
     ordering = ('conton', 'created_at')
     list_per_page = 20
     search_fields = ('conton__name', 'farmer__pin_inn', 'ink', 'id')
