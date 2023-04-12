@@ -15,7 +15,7 @@ class DistrictAPIView(APIView):
                 'page_size',
                 in_=openapi.IN_QUERY,
                 type=openapi.TYPE_INTEGER,
-                description='Page_size is required'
+                description='Page_size is optional'
             ),
             openapi.Parameter(
                 'polygon',
@@ -69,8 +69,6 @@ class DistrictAPIView(APIView):
         polygon = request.query_params.get('polygon')
         region = request.query_params.get('region_id')
         district = request.query_params.get('id')
-        paginator = PageNumberPagination()
-        paginator.page_size = request.query_params.get('page_size', 20)
         if polygon:
             if region and district:
                 query = District.objects.filter(region_id__in=[int(region_id) for region_id in region.split(',')],
@@ -81,9 +79,8 @@ class DistrictAPIView(APIView):
                 query = District.objects.all().filter(id__in=[int(pk) for pk in district.split(',')]).order_by('id')
             else:
                 query = District.objects.all().order_by('id')
-            result = paginator.paginate_queryset(query, request)
-            serializer = DistrictSerializer(result, many=True)
-            return paginator.get_paginated_response(serializer.data)
+            serializer = DistrictSerializer(query, many=True)
+            return Response(serializer.data, status=200)
         else:
             if region and district:
                 query = District.objects.filter(region_id__in=[int(region_id) for region_id in region.split(',')],
@@ -94,6 +91,8 @@ class DistrictAPIView(APIView):
                 query = District.objects.all().filter(id__in=[int(pk) for pk in district.split(',')]).order_by('id')
             else:
                 query = District.objects.all().order_by('id')
+            paginator = PageNumberPagination()
+            paginator.page_size = request.query_params.get('page_size', 20)
             result = paginator.paginate_queryset(query, request)
             serializer = DistrictWithoutPolygonSerializer(result, many=True)
             return paginator.get_paginated_response(serializer.data)

@@ -15,7 +15,7 @@ class ContonAPIView(APIView):
                 'page_size',
                 in_=openapi.IN_QUERY,
                 type=openapi.TYPE_INTEGER,
-                description='Page_size is required'
+                description='Page_size is optional'
             ),
             openapi.Parameter(
                 'polygon',
@@ -69,8 +69,6 @@ class ContonAPIView(APIView):
         polygon = request.query_params.get('polygon')
         district = request.query_params.get('district_id')
         conton = request.query_params.get('id')
-        paginator = PageNumberPagination()
-        paginator.page_size = request.query_params.get('page_size', 20)
         if polygon:
             if district and conton:
                 query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
@@ -81,9 +79,8 @@ class ContonAPIView(APIView):
                 query = Conton.objects.all().filter(id__in=[int(pk) for pk in conton.split(',')])
             else:
                 query = Conton.objects.all()
-            result = paginator.paginate_queryset(query, request)
-            serializer = ContonSerializer(result, many=True)
-            return paginator.get_paginated_response(serializer.data)
+            serializer = ContonSerializer(query, many=True)
+            return Response(serializer.data, status=200)
         else:
             if district and conton:
                 query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
@@ -94,6 +91,8 @@ class ContonAPIView(APIView):
                 query = Conton.objects.all().filter(id__in=[int(pk) for pk in conton.split(',')])
             else:
                 query = Conton.objects.all()
+            paginator = PageNumberPagination()
+            paginator.page_size = request.query_params.get('page_size', 20)
             result = paginator.paginate_queryset(query, request)
             serializer = ContonWithoutPolygonSerializer(result, many=True)
             return paginator.get_paginated_response(serializer.data)
