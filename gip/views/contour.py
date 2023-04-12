@@ -1203,17 +1203,17 @@ class CultureStatisticsAPIView(APIView):
                 data = []
                 for i in rows:
                     if len(i) > 4:
-                        data.append({"properties": {'culture_name_ru': i[0], 'culture_name_ky': i[1],
+                        data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1],
                                                     "culture_name_en": i[2], 'area_ha': i[3],
                                                     "territory_ru": i[-3], "territory_ky": i[-2],
                                                     "territory_en": i[-1]
-                                                    }})
+                                                    })
                     else:
-                        data.append({"properties": {'culture_name_ru': i[0], 'culture_name_ky': i[1],
+                        data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1],
                                                     "culture_name_en": i[2], 'area_ha': i[3],
                                                     "territory_ru": 'Кыргызстан', "territory_ky": 'Кыргызстан',
                                                     "territory_en": 'Kyrgyzstan'
-                                                    }})
+                                                    })
                 return Response(data)
         else:
             return Response(data={"message": "parameter 'year or land_type' is required"}, status=400)
