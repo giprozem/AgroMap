@@ -16,7 +16,7 @@ from notifications.signals import notify
 from ai.utils.predicted_contour import deleted_files
 
 
-class CutAPIView(APIView):
+class SearchAPIView(APIView):
     permission_classes = (IsAdminUser,)
 
     def get(self, request):

@@ -27,8 +27,8 @@ class CreatingAverage(APIView):
         for i in range(int(start), int(end)):
             try:
                 contour = Contour.objects.get(id=i)
-                pruductivity = ProductivityClass.objects.get(id=1)
-                ContourAverageIndex.objects.create(contour=contour, productivity_class=pruductivity)
+                productivity = ProductivityClass.objects.get(id=1)
+                ContourAverageIndex.objects.create(contour=contour, productivity_class=productivity)
             except Exception as e:
                 with open(f'reportCreatingAverage.txt', 'a') as file:
                     file.write(f"{i}' = f'{e}")

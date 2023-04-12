@@ -52,7 +52,7 @@ class SatelliteImagesDate(APIView):
                 schema=ActuaVegIndexSerializer(many=True)
             )
         },
-        operation_summary='required contour_id return all indexes and values of required conrour'
+        operation_summary='required contour_id return all indexes and values of required contour'
     )
     def get(self, request, *args, **kwargs):
         index = kwargs['index']
