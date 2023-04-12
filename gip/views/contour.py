@@ -38,16 +38,8 @@ class AuthDetailContourViewSet(viewsets.ModelViewSet):
         return Response('Contour is deleted')
 
 
-class SearchContourViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Contour.objects.all()
-    serializer_class = ContourSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['ink', 'conton']
-    pagination_class = SearchContourPagination
-
-
 class ContourSearchAPIView(ListAPIView):
-    queryset = Contour.objects.all()
+    queryset = Contour.objects.filter(is_deleted=False)
     serializer_class = ContourSerializer
     pagination_class = SearchContourPagination
     filter_backends = [filters.SearchFilter]
@@ -250,7 +242,7 @@ class ContourStatisticsAPIView(APIView):
                   on cy.contour_id = cntr.id
                   left join gip_culture as cl
                   on cy.culture_id = cl.id
-                  where rgn.id in ({region}) and cntr.type_id=1 and (cl.id in ({culture}))) as temp
+                  where rgn.id in ({region}) and cntr.type_id=1 and cntr.is_deleted=false and (cl.id in ({culture}))) as temp
                         where culture_rank=1
                         group by culture_name, region_name;""")
                 rows = cursor.fetchall()
@@ -281,7 +273,7 @@ class ContourStatisticsAPIView(APIView):
                   on cy.contour_id = cntr.id
                   left join gip_culture as cl
                   on cy.culture_id = cl.id
-                  where rgn.id in ({region}) and cntr.type_id=1) as temp
+                  where rgn.id in ({region}) and cntr.is_deleted=false and cntr.type_id=1) as temp
                         where culture_rank=1
                         group by culture_name, region_name;""")
                 rows = cursor.fetchall()
@@ -376,8 +368,11 @@ class StatisticsContourProductivityAPIView(APIView):
                     and cntr.is_deleted=false
                     group by dst.name, cntn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
-                return Response({'name': rows[0][-1], 'type': 'Conton', 'Productive': {'ha': rows[0][0], 'percent': rows[0][2]},
+                if rows:
+                    return Response({'name': rows[0][-1], 'type': 'Conton', 'Productive': {'ha': rows[0][0], 'percent': rows[0][2]},
                                  'Unproductive': {'ha': rows[0][1], 'percent': rows[0][3]}, 'Children': []})
+                else:
+                    return Response({'message': 'no data'})
         elif region and district and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
@@ -398,17 +393,20 @@ class StatisticsContourProductivityAPIView(APIView):
                 for i in rows:
                     data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
-                return Response({
-                    "name": rows[0][5],
-                    "type": "District",
-                    'Productive': {'ha': sum([row[0] for row in rows]),
-                                   'percent': round(sum([row[0] for row in rows]) / total * 100)},
-                    "Unproductive": {
-                        "ha": sum([row[1] for row in rows]),
-                        "percent": round(sum([row[1] for row in rows]) / total * 100)
-                    },
-                    "Children": data
-                })
+                if rows:
+                    return Response({
+                        "name": rows[0][5],
+                        "type": "District",
+                        'Productive': {'ha': sum([row[0] for row in rows]),
+                                       'percent': round(sum([row[0] for row in rows]) / total * 100)},
+                        "Unproductive": {
+                            "ha": sum([row[1] for row in rows]),
+                            "percent": round(sum([row[1] for row in rows]) / total * 100)
+                        },
+                        "Children": data
+                    })
+                else:
+                    return Response({'message': 'no data'})
         elif region and land_type and year:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
@@ -429,17 +427,20 @@ class StatisticsContourProductivityAPIView(APIView):
                 for i in rows:
                     data.append({'name': i[-1], 'type': 'District', 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
-                return Response({
-                    "name": rows[0][5],
-                    "type": "Region",
-                    'Productive': {'ha': sum([row[0] for row in rows]),
-                                   'percent': round(sum([row[0] for row in rows]) / total * 100)},
-                    "Unproductive": {
-                        "ha": sum([row[1] for row in rows]),
-                        "percent": round(sum([row[1] for row in rows]) / total * 100)
-                    },
-                    "Children": data
-                })
+                if rows:
+                    return Response({
+                        "name": rows[0][5],
+                        "type": "Region",
+                        'Productive': {'ha': sum([row[0] for row in rows]),
+                                       'percent': round(sum([row[0] for row in rows]) / total * 100)},
+                        "Unproductive": {
+                            "ha": sum([row[1] for row in rows]),
+                            "percent": round(sum([row[1] for row in rows]) / total * 100)
+                        },
+                        "Children": data
+                    })
+                else:
+                    return Response({'message': 'no data'})
         elif district and conton and year and land_type:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
@@ -454,8 +455,11 @@ class StatisticsContourProductivityAPIView(APIView):
                     where cntr.year='{year}' and cntr.type_id in ({land_type}) and dst.id in ({district})
                     and cntn.id in ({conton}) and cntr.is_deleted=false group by dst.name, cntn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
-                return Response({'name': rows[0][-1], 'type': 'Conton', 'Productive': {'ha': rows[0][0], 'percent': rows[0][2]},
-                                 'Unproductive': {'ha': rows[0][1], 'percent': rows[0][3]}, 'Children': []})
+                if rows:
+                    return Response({'name': rows[0][-1], 'type': 'Conton', 'Productive': {'ha': rows[0][0], 'percent': rows[0][2]},
+                                     'Unproductive': {'ha': rows[0][1], 'percent': rows[0][3]}, 'Children': []})
+                else:
+                    return Response({'message': 'no data'})
         elif district and year and land_type:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
@@ -468,7 +472,7 @@ class StatisticsContourProductivityAPIView(APIView):
                     JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
                     JOIN gip_district AS dst ON dst.id=cntn.district_id
                     JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where cntr.year='2022' and cntr.type_id in (2) and dst.id in (8)
+                    where cntr.year='{year}' and cntr.type_id in ({land_type}) and dst.id in ({district})
                     and cntr.is_deleted=false group by dst.name, cntn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
                 total = sum([row[0] for row in rows]) + sum([row[1] for row in rows])
@@ -476,17 +480,20 @@ class StatisticsContourProductivityAPIView(APIView):
                 for i in rows:
                     data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
-                return Response({
-                    "name": rows[0][5],
-                    "type": "District",
-                    'Productive': {'ha': sum([row[0] for row in rows]),
-                                   'percent': round(sum([row[0] for row in rows]) / total * 100)},
-                    "Unproductive": {
-                        "ha": sum([row[1] for row in rows]),
-                        "percent": round(sum([row[1] for row in rows]) / total * 100)
-                    },
-                    "Children": data
-                })
+                if rows:
+                    return Response({
+                        "name": rows[0][5],
+                        "type": "District",
+                        'Productive': {'ha': sum([row[0] for row in rows]),
+                                       'percent': round(sum([row[0] for row in rows]) / total * 100)},
+                        "Unproductive": {
+                            "ha": sum([row[1] for row in rows]),
+                            "percent": round(sum([row[1] for row in rows]) / total * 100)
+                        },
+                        "Children": data
+                    })
+                else:
+                    return Response({'message': 'no data'})
         elif conton and year and land_type:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
@@ -502,10 +509,12 @@ class StatisticsContourProductivityAPIView(APIView):
                     where cntr.year='{year}' and cntr.type_id in ({land_type}) and cntn.id in ({conton})
                     and cntr.is_deleted=false group by cntn.name, cntr.is_deleted;""")
                 rows = cursor.fetchall()
-                print(rows[0])
-                return Response({'name': rows[0][-1], 'type': 'Conton', 'Productive': {'ha': rows[0][0], 'percent': rows[0][2]},
-                                 'Unproductive': {'ha': rows[0][1], 'percent': rows[0][3]}, 'Children': []}
-                                )
+                if rows:
+                    return Response({'name': rows[0][-1], 'type': 'Conton', 'Productive': {'ha': rows[0][0], 'percent': rows[0][2]},
+                                     'Unproductive': {'ha': rows[0][1], 'percent': rows[0][3]}, 'Children': []}
+                                    )
+                else:
+                    return Response({'message': 'no data'})
         elif year and land_type:
             with connection.cursor() as cursor:
                 cursor.execute(f"""SELECT 
@@ -604,7 +613,6 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted,
                     St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_landtype AS land ON land.id=cntr.type_id
@@ -663,8 +671,7 @@ class MapContourProductivityAPIView(APIView):
                     rgn.name_ru, rgn.name_ky, rgn.name_en,
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
-                    land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted,
+                    land.name_ru, land.name_ky, land.name_en
                     St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_landtype AS land ON land.id=cntr.type_id
@@ -723,7 +730,6 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted,
                     St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_landtype AS land ON land.id=cntr.type_id
@@ -782,7 +788,6 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted,
                     St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_landtype AS land ON land.id=cntr.type_id
@@ -842,7 +847,6 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted,
                     St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_landtype AS land ON land.id=cntr.type_id
@@ -901,7 +905,6 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted,
                     St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_landtype AS land ON land.id=cntr.type_id
@@ -960,7 +963,6 @@ class MapContourProductivityAPIView(APIView):
                     dst.name_ru, dst.name_ky, dst.name_en,
                     cntn.name_ru, cntn.name_ky, cntn.name_en,
                     land.name_ru, land.name_ky, land.name_en,
-                    cntr.is_deleted,
                     St_AsGeoJSON(cntr.polygon) as polygon
                     FROM gip_contour AS cntr
                     JOIN gip_landtype AS land ON land.id=cntr.type_id
@@ -1027,7 +1029,7 @@ class CoordinatesPolygonAPIView(APIView):
                                FROM gip_conton AS cntn
                                JOIN gip_district AS dst ON dst.id=cntn.district_id 
                                JOIN gip_region AS rgn ON rgn.id=dst.region_id  
-                               WHERE rgn.id IN ({region}) AND dst.id IN ({district}) AND cntn.id IN ({conton})
+                               WHERE rgn.id IN ({region}) AND dst.id IN ({district}) AND cntn.id IN ({conton}) 
                                GROUP BY cntn.id
                                ORDER BY cntn.id;""")
                 rows = cursor.fetchall()
@@ -1203,17 +1205,14 @@ class CultureStatisticsAPIView(APIView):
                 data = []
                 for i in rows:
                     if len(i) > 4:
-                        data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1],
-                                                    "culture_name_en": i[2], 'area_ha': i[3],
-                                                    "territory_ru": i[-3], "territory_ky": i[-2],
-                                                    "territory_en": i[-1]
-                                                    })
+                        data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1], "culture_name_en": i[2],
+                                     'area_ha': i[3],
+                                     "territory_ru": i[-3], "territory_ky": i[-2], "territory_en": i[-1]})
                     else:
-                        data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1],
-                                                    "culture_name_en": i[2], 'area_ha': i[3],
-                                                    "territory_ru": 'Кыргызстан', "territory_ky": 'Кыргызстан',
-                                                    "territory_en": 'Kyrgyzstan'
-                                                    })
+                        data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1], "culture_name_en": i[2],
+                                     'area_ha': i[3],
+                                     "territory_ru": 'Кыргызстан', "territory_ky": 'Кыргызстан',
+                                     "territory_en": 'Kyrgyzstan'})
                 return Response(data)
         else:
             return Response(data={"message": "parameter 'year or land_type' is required"}, status=400)
