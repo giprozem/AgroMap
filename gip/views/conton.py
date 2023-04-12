@@ -2,7 +2,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from rest_framework.pagination import PageNumberPagination
 from gip.models import Conton
 from gip.serializers.conton import ContonSerializer, ContonWithoutPolygonSerializer
 
@@ -11,6 +11,12 @@ class ContonAPIView(APIView):
 
     @swagger_auto_schema(
         manual_parameters=[
+            openapi.Parameter(
+                'page_size',
+                in_=openapi.IN_QUERY,
+                type=openapi.TYPE_INTEGER,
+                description='Page_size is required'
+            ),
             openapi.Parameter(
                 'polygon',
                 in_=openapi.IN_QUERY,
@@ -62,26 +68,32 @@ class ContonAPIView(APIView):
     def get(self, request, *args, **kwargs):
         polygon = request.query_params.get('polygon')
         district = request.query_params.get('district_id')
-        id = request.query_params.get('ids')
-        if polygon and id:
-            query = Conton.objects.all().filter(id__in=[int(id) for id in id.split(',')])
-            serializer = ContonSerializer(query, many=True)
-            return Response(serializer.data, status=200)
-        elif id and polygon and district:
-            query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
-                                          id__in=[int(id) for id in id.split(',')])
-            serializer = ContonSerializer(query, many=True)
-            return Response(serializer.data, status=200)
-        elif id:
-            query = Conton.objects.all().filter(id__in=[int(id) for id in id.split(',')])
-            serializer = ContonWithoutPolygonSerializer(query, many=True)
-            return Response(serializer.data, status=200)
-        elif district:
-            query = Conton.objects.filter(district__in=[int(district_id) for district_id in district.split(',')])
-            serializer = ContonWithoutPolygonSerializer(query, many=True)
-            return Response(serializer.data, status=200)
+        conton = request.query_params.get('id')
+        paginator = PageNumberPagination()
+        paginator.page_size = request.query_params.get('page_size')
+        if polygon:
+            if district and conton:
+                query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
+                                                id__in=[int(pk) for pk in conton.split(',')])
+            elif district:
+                query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')])
+            elif conton:
+                query = Conton.objects.all().filter(id__in=[int(pk) for pk in conton.split(',')])
+            else:
+                query = Conton.objects.all()
+            result = paginator.paginate_queryset(query, request)
+            serializer = ContonSerializer(result, many=True)
+            return paginator.get_paginated_response(serializer.data)
         else:
-            query = Conton.objects.all()
-            serializer = ContonSerializer(query, many=True)
-            return Response(serializer.data, status=200)
-
+            if district and conton:
+                query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
+                                                id__in=[int(pk) for pk in conton.split(',')])
+            elif district:
+                query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')])
+            elif conton:
+                query = Conton.objects.all().filter(id__in=[int(pk) for pk in conton.split(',')])
+            else:
+                query = Conton.objects.all()
+            result = paginator.paginate_queryset(query, request)
+            serializer = ContonWithoutPolygonSerializer(result, many=True)
+            return paginator.get_paginated_response(serializer.data)
