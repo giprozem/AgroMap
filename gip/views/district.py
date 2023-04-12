@@ -70,7 +70,7 @@ class DistrictAPIView(APIView):
         region = request.query_params.get('region_id')
         district = request.query_params.get('id')
         paginator = PageNumberPagination()
-        paginator.page_size = request.query_params.get('page_size')
+        paginator.page_size = request.query_params.get('page_size', 20)
         if polygon:
             if region and district:
                 query = District.objects.filter(region_id__in=[int(region_id) for region_id in region.split(',')],
