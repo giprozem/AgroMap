@@ -86,7 +86,7 @@ class ActualIndexesOfContourAI(APIView):
     )
     def get(self, request, *args, **kwargs):
 
-        response = PredictedContourVegIndex.objects.filter(contour=request.query_params['contour_id'])
+        response = PredictedContourVegIndex.objects.filter(contour=request.query_params['contour_id']).order_by('date')
         serializer = PredictedContourActuaVegIndexSerializer(response, many=True, context={'request': request})
         if response:
             return Response(serializer.data, status=200)
@@ -109,7 +109,7 @@ class PredictedSatelliteImagesDate(APIView):
     def get(self, request, *args, **kwargs):
         index = kwargs['index']
         contour = kwargs['contour']
-        result = PredictedContourVegIndex.objects.filter(index=index).filter(contour=contour)
+        result = PredictedContourVegIndex.objects.filter(index=index).filter(contour=contour).order_by('date')
         serializer = PredictedContourActuaVegIndexSerializer(result, many=True)
         return Response(serializer.data, status=200)
 
