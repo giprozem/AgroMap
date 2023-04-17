@@ -6,6 +6,8 @@ from rest_framework import serializers
 from gip.models import CropYield
 from gip.models.conton import Conton
 from gip.models.contour import Contour, LandType
+from gip.serializers.conton import ContonWithoutPolygonSerializer
+from gip.serializers.region import RegionWithoutPolygonSerializer
 from gip.views.handbook_contour import contour_Kyrgyzstan
 from rest_framework.validators import UniqueValidator
 from rest_framework.exceptions import APIException
@@ -81,6 +83,7 @@ class UpdateAuthDetailContourSerializer(serializers.ModelSerializer):
 
 
 class AuthDetailContourSerializer(serializers.ModelSerializer):
+    conton = ContonWithoutPolygonSerializer()
     year = serializers.IntegerField(required=True)
     code_soato = serializers.CharField(
         max_length=30, required=False,
@@ -102,8 +105,21 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['region'] = instance.conton.district.region.pk if instance.conton.district.region else None
-        representation['district'] = instance.conton.district.pk if instance.conton.district else None
+        representation['region'] = {
+            'id': instance.conton.district.region.pk if instance.conton.district.region else None,
+            'name_ru': instance.conton.district.region.name_ru if instance.conton.district.region else None,
+            'name_ky': instance.conton.district.region.name_ky if instance.conton.district.region else None,
+            'name_en': instance.conton.district.region.name_en if instance.conton.district.region else None,
+            'code_soato': instance.conton.district.region.code_soato if instance.conton.district.region else None,
+
+        }
+        representation['district'] = {
+            'id': instance.conton.district.pk if instance.conton.district else None,
+            'name_ru': instance.conton.district.name_ru if instance.conton.district else None,
+            'name_ky': instance.conton.district.name_ky if instance.conton.district else None,
+            'name_en': instance.conton.district.name_en if instance.conton.district else None,
+            'code_soato': instance.conton.district.code_soato if instance.conton.district else None,
+        }
 
         return representation
 
