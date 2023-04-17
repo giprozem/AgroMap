@@ -2,12 +2,17 @@ import datetime
 from rest_framework import serializers
 from django.db import connection
 from ai.models.predicted_contour import Contour_AI
-from gip.models.conton import Conton
+from gip.models import Conton, Region
 from gip.views.handbook_contour import contour_Kyrgyzstan
 from rest_framework.exceptions import APIException
 
 
 class Contour_AISerializer(serializers.ModelSerializer):
+    region = serializers.SerializerMethodField()
+
+    def get_region(self, obj):
+        region = Region.objects.get(name=obj.district.region)
+        return region.pk
 
     class Meta:
         model = Contour_AI
