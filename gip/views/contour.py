@@ -1137,6 +1137,7 @@ class CultureStatisticsAPIView(APIView):
             openapi.Parameter('district', openapi.IN_QUERY, description="District", type=openapi.TYPE_INTEGER),
             openapi.Parameter('conton', openapi.IN_QUERY, description="Conton", type=openapi.TYPE_INTEGER),
             openapi.Parameter('culture', openapi.IN_QUERY, description="Culture", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('ai', openapi.IN_QUERY, description="Culture", type=openapi.TYPE_BOOLEAN),
         ],
         responses={
             status.HTTP_200_OK: openapi.Schema(
@@ -1145,7 +1146,8 @@ class CultureStatisticsAPIView(APIView):
                     'culture_name_ru': openapi.Schema(type=openapi.TYPE_STRING),
                     'culture_name_ky': openapi.Schema(type=openapi.TYPE_STRING),
                     'culture_name_en': openapi.Schema(type=openapi.TYPE_STRING),
-                    'area_ha': openapi.Schema(type=openapi.TYPE_INTEGER),
+                    'area_ha': openapi.Schema(type=openapi.TYPE_NUMBER),
+                    'productivity': openapi.Schema(type=openapi.TYPE_NUMBER),
                     'territory_ru': openapi.Schema(type=openapi.TYPE_STRING),
                     'territory_ky': openapi.Schema(type=openapi.TYPE_STRING),
                     'territory_en': openapi.Schema(type=openapi.TYPE_STRING),
@@ -1160,59 +1162,107 @@ class CultureStatisticsAPIView(APIView):
         region = request.GET.get('region')
         district = request.GET.get('district')
         conton = request.GET.get('conton')
+        ai = request.GET.get('ai')
         if land_type and year:
-            start = 'select culture_name_ru, culture_name_ky, culture_name_en, sum(area_ha) as total_area_ha'
-            middle= f""" from (
-                  select clt.name_ru as culture_name_ru,
-                  clt.name_ky as culture_name_ky,
-                  clt.name_en as culture_name_en,
-                  area_ha, 
-                  rgn.name_ru as region_name_ru,
-                  rgn.name_ky as region_name_ky,
-                  rgn.name_en as region_name_en,
-                  dst.name_ru as district_name_ru,
-                  dst.name_ky as district_name_ky,
-                  dst.name_en as district_name_en,
-                  cntn.name_ru as conton_name_ru,
-                  cntn.name_ky as conton_name_ky,
-                  cntn.name_en as conton_name_en 
-                  from gip_contour as cntr
-                  join gip_culture as clt on clt.id=cntr.culture_id
-                  JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                  JOIN gip_district AS dst ON dst.id=cntn.district_id
-                  JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                  where cntr.type_id in ({land_type}) and cntr.year='{year}' and cntr.is_deleted=false
-                  """
-            end = ') as temp group by culture_name_ru, culture_name_ky, culture_name_en'
-            if culture:
-                middle += f' and clt.id={culture}'
-            if region:
-                start += ', region_name_ru, region_name_ky, region_name_en'
-                middle += f' and rgn.id in ({region})'
-                end += ', region_name_ru, region_name_ky, region_name_en'
-            if district:
-                start += ', district_name_ru, district_name_ky, district_name_en'
-                middle += f' and dst.id in ({district})'
-                end += ', district_name_ru, district_name_ky, district_name_en'
-            if conton:
-                start += ', conton_name_ru, conton_name_ky, conton_name_en'
-                middle += f' and cntn.id in ({conton})'
-                end += ', conton_name_ru, conton_name_ky, conton_name_en'
-            sql = start + middle + end + ';'
-            with connection.cursor() as cursor:
-                cursor.execute(sql)
-                rows = cursor.fetchall()
-                data = []
-                for i in rows:
-                    if len(i) > 4:
-                        data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1], "culture_name_en": i[2],
-                                     'area_ha': i[3],
-                                     "territory_ru": i[-3], "territory_ky": i[-2], "territory_en": i[-1]})
-                    else:
-                        data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1], "culture_name_en": i[2],
-                                     'area_ha': i[3],
-                                     "territory_ru": 'Кыргызстан', "territory_ky": 'Кыргызстан',
-                                     "territory_en": 'Kyrgyzstan'})
-                return Response(data)
+            if ai:
+                start = 'select culture_name_ru, culture_name_ky, culture_name_en, sum(area_ha) as total_area_ha, c'
+                middle = f""" from (
+                                      select clt.name_ru as culture_name_ru,
+                                      clt.name_ky as culture_name_ky,
+                                      clt.name_en as culture_name_en,
+                                      area_ha, clt.coefficient_crop as c,
+                                      rgn.name_ru as region_name_ru,
+                                      rgn.name_ky as region_name_ky,
+                                      rgn.name_en as region_name_en,
+                                      dst.name_ru as district_name_ru,
+                                      dst.name_ky as district_name_ky,
+                                      dst.name_en as district_name_en
+                                      from ai_contour_ai as cntr
+                                      join gip_culture as clt on clt.id=cntr.culture_id
+                                      JOIN gip_district AS dst ON dst.id=cntr.district_id
+                                      JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                                      where cntr.type_id in ({land_type}) and cntr.year='{year}' and cntr.is_deleted=false
+                                      """
+                end = ') as temp group by culture_name_ru, culture_name_ky, culture_name_en , c'
+                if culture:
+                    middle += f' and clt.id={culture}'
+                if region:
+                    start += ', region_name_ru, region_name_ky, region_name_en'
+                    middle += f' and rgn.id in ({region})'
+                    end += ', region_name_ru, region_name_ky, region_name_en'
+                if district:
+                    start += ', district_name_ru, district_name_ky, district_name_en'
+                    middle += f' and dst.id in ({district})'
+                    end += ', district_name_ru, district_name_ky, district_name_en'
+                sql = start + middle + end + ';'
+                with connection.cursor() as cursor:
+                    cursor.execute(sql)
+                    rows = cursor.fetchall()
+                    data = []
+                    for i in rows:
+                        if len(i) > 5:
+                            data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1], "culture_name_en": i[2],
+                                         'area_ha': i[3], 'productivity': i[4] * i[3],
+                                         "territory_ru": i[-3], "territory_ky": i[-2], "territory_en": i[-1]})
+                        else:
+                            data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1], "culture_name_en": i[2],
+                                         'area_ha': i[3], 'productivity': i[4],
+                                         "territory_ru": 'Кыргызстан', "territory_ky": 'Кыргызстан',
+                                         "territory_en": 'Kyrgyzstan'})
+                    return Response(data)
+            else:
+                start = 'select culture_name_ru, culture_name_ky, culture_name_en, sum(area_ha) as total_area_ha, c'
+                middle= f""" from (
+                      select clt.name_ru as culture_name_ru,
+                      clt.name_ky as culture_name_ky,
+                      clt.name_en as culture_name_en,
+                      area_ha, clt.coefficient_crop as c,
+                      rgn.name_ru as region_name_ru,
+                      rgn.name_ky as region_name_ky,
+                      rgn.name_en as region_name_en,
+                      dst.name_ru as district_name_ru,
+                      dst.name_ky as district_name_ky,
+                      dst.name_en as district_name_en,
+                      cntn.name_ru as conton_name_ru,
+                      cntn.name_ky as conton_name_ky,
+                      cntn.name_en as conton_name_en 
+                      from gip_contour as cntr
+                      join gip_culture as clt on clt.id=cntr.culture_id
+                      JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                      JOIN gip_district AS dst ON dst.id=cntn.district_id
+                      JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                      where cntr.type_id in ({land_type}) and cntr.year='{year}' and cntr.is_deleted=false
+                      """
+                end = ') as temp group by culture_name_ru, culture_name_ky, culture_name_en, c'
+                if culture:
+                    middle += f' and clt.id={culture}'
+                if region:
+                    start += ', region_name_ru, region_name_ky, region_name_en'
+                    middle += f' and rgn.id in ({region})'
+                    end += ', region_name_ru, region_name_ky, region_name_en'
+                if district:
+                    start += ', district_name_ru, district_name_ky, district_name_en'
+                    middle += f' and dst.id in ({district})'
+                    end += ', district_name_ru, district_name_ky, district_name_en'
+                if conton:
+                    start += ', conton_name_ru, conton_name_ky, conton_name_en'
+                    middle += f' and cntn.id in ({conton})'
+                    end += ', conton_name_ru, conton_name_ky, conton_name_en'
+                sql = start + middle + end + ';'
+                with connection.cursor() as cursor:
+                    cursor.execute(sql)
+                    rows = cursor.fetchall()
+                    data = []
+                    for i in rows:
+                        if len(i) > 5:
+                            data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1], "culture_name_en": i[2],
+                                         'area_ha': i[3], 'productivity': i[4] * i[3],
+                                         "territory_ru": i[-3], "territory_ky": i[-2], "territory_en": i[-1]})
+                        else:
+                            data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1], "culture_name_en": i[2],
+                                         'area_ha': i[3], 'productivity': i[4] * i[3],
+                                         "territory_ru": 'Кыргызстан', "territory_ky": 'Кыргызстан',
+                                         "territory_en": 'Kyrgyzstan'})
+                    return Response(data)
         else:
             return Response(data={"message": "parameter 'year or land_type' is required"}, status=400)
