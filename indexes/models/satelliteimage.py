@@ -57,8 +57,10 @@ class SciHubAreaInterest(models.Model):
 
 class SciHubImageDate(models.Model):
     area_interest = models.ForeignKey(SciHubAreaInterest, on_delete=models.CASCADE, related_name='image_date',
-                                      verbose_name=_("Область интереса"))
-    date = models.DateTimeField(verbose_name=_('Дата снимков'))
+                                      verbose_name=_("Область интереса"), blank=True, null=True)
+    no_image = models.BooleanField(default=False, blank=True, null=True)  # todo: Translate
+    note = models.CharField(max_length=1000, blank=True, null=True)  # todo: Translate
+    date = models.DateTimeField(verbose_name=_('Дата снимков'), blank=True, null=True)
     B01 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B01'), help_text='Coastal aerosol',
                            blank=True, null=True)
     B02 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B02'), help_text='Blue', blank=True,
@@ -77,14 +79,17 @@ class SciHubImageDate(models.Model):
                            null=True)
     B8A = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B8A'), help_text='Narrow NIR', blank=True,
                            null=True)
-    B09 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B09'), help_text='Water vapour', blank=True,
+    B09 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B09'), help_text='Water vapour',
+                           blank=True,
                            null=True)
-    B10 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B10'), help_text='SWIR – Cirrus', blank=True,
+    B10 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B10'), help_text='SWIR – Cirrus',
+                           blank=True,
                            null=True)
     B11 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B11'), help_text='SWIR – 1', blank=True,
                            null=True)
     B12 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B12'), help_text='SWIR - 2', blank=True,
                            null=True)
+    image_png = models.FileField(upload_to='satellite_images_to_png', blank=True, null=True)  # todo: Translate
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Координаты снимка"), blank=True, null=True)
     history = HistoricalRecords(verbose_name=_("История"))
 

@@ -1,11 +1,12 @@
+import io
 import os
 import re
 import shutil
 import time
 from datetime import datetime
-from osgeo import osr
 
-from django.contrib.gis.geos import GEOSGeometry
+from PIL import Image
+import rasterio
 from rest_framework.response import Response
 from sentinelsat import SentinelAPI
 from zipfile import ZipFile
@@ -19,9 +20,8 @@ from decouple import config
 */10 * * * * docker exec plot_web_1 ./manage.py runscript cron_download_S2_Copernicus -v3
 """
 
-
-SCI_HUB_USERNAME = config('SCI_HUB_USERNAME').split(',')
-SCI_HUB_PASSWORD = config('SCI_HUB_PASSWORD').split(',')
+SCI_HUB_USERNAME = config('SCI_HUB_USERNAME')
+SCI_HUB_PASSWORD = config('SCI_HUB_PASSWORD')
 
 
 def run():
@@ -34,8 +34,8 @@ def run():
     api = SentinelAPI(SCI_HUB_USERNAME, SCI_HUB_PASSWORD, 'https://scihub.copernicus.eu/dhus')
 
     # Define a list of footprints
-    footprints = [sci_hub_area_interest.polygon.wkt for sci_hub_area_interest in
-                  SciHubAreaInterest.objects.filter(id=1)]
+    footprints = [sci_hub_area_interest for sci_hub_area_interest in
+                  SciHubAreaInterest.objects.all()]
 
     for footprint in footprints:
         print(current_date.strftime("%Y%m%d"))
@@ -46,11 +46,21 @@ def run():
                              processinglevel='Level-2A',
                              cloudcoverpercentage=(0, 20))
 
-        if len(products) >= 1:
-            product_id = list(products.keys())[0]  # Получаем идентификатор продукта
-            api.download(product_id, directory_path=output)
+        if len(products) > 1:
+            tiff_coords = []
+            for i in products.keys():
+                metadata_product = api.get_product_odata(i)
+                check_len_coordinates = len(metadata_product['footprint'].strip("POLYGON((").strip("))").split(","))
+                if check_len_coordinates == 5:
+                    tiff_coords.append(metadata_product['footprint'])
+                    api.download(products[i]['uuid'], directory_path=output)
+                    break
         else:
-            print("Не удалось получить ни один продукт")
+            SciHubImageDate.objects.create(area_interest_id=footprint.pk, no_image=True,
+                                           note=f'Не удалось получить ни один продукт '
+                                                f'({first_day_of_previous_month.strftime("%Y.%m.%d")}-'
+                                                f'{current_date.strftime("%Y.%m.%d")})')
+            continue
 
         # Разархивируем файлы
         time.sleep(10)
@@ -73,10 +83,10 @@ def run():
                                     jp2_path = os.path.join(img_data_path, filename)
                                     tiff_path = os.path.join(img_data_path, filename[:-3] + 'tif')
                                     gdal.Translate(tiff_path, jp2_path, format='GTiff')
-                time.sleep(50)
+
                 # Tiff сохраняем в базу данных
                 img_date = datetime.strptime(os.path.basename(folder)[11:19], '%Y%m%d')
-                sci_hub_image_date = SciHubImageDate(date=img_date, area_interest_id=1)
+                sci_hub_image_date = SciHubImageDate(date=img_date, area_interest_id=footprint.pk)
                 if folder.endswith('.SAFE'):
                     for file in os.listdir(os.path.join(output, folder, 'GRANULE')):
                         if file.startswith('L2A_'):
@@ -86,35 +96,30 @@ def run():
                                     sci_hub_image_date.B01.save('B01.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B02.*.tif", filename):
-                                    # Открываем файл в режиме чтения
-                                    ds = gdal.Open(f"{img_data_path}/{filename}", gdal.GA_ReadOnly)
+                                    print(f"{img_data_path}/{filename}")
+                                    with rasterio.open(f"{img_data_path}/{filename}") as geotiff_image:
+                                        # Считываем данные о масштабе и размерах изображения
+                                        scale = geotiff_image.read(1).max()
 
-                                    # Получаем преобразование координат между проекцией изображения и WGS84
-                                    proj = osr.SpatialReference(wkt=ds.GetProjection())
-                                    proj_wgs84 = osr.SpatialReference()
-                                    proj_wgs84.ImportFromEPSG(4326)  # код EPSG для WGS84
-                                    transform = osr.CoordinateTransformation(proj, proj_wgs84)
+                                        # Читаем изображение в массив numpy
+                                        image_array = geotiff_image.read(1)
 
-                                    # Получаем границы изображения в координатах проекции
-                                    ulx, xres, xskew, uly, yskew, yres = ds.GetGeoTransform()
-                                    lrx = ulx + (ds.RasterXSize * xres)
-                                    lry = uly + (ds.RasterYSize * yres)
+                                        # Нормализуем значения пикселей до диапазона 0-255
+                                        image_array = (image_array / scale * 255).astype('uint8')
 
-                                    # Преобразуем границы изображения в координаты WGS84
-                                    ul_lon, ul_lat, _ = transform.TransformPoint(ulx, uly)
-                                    lr_lon, lr_lat, _ = transform.TransformPoint(lrx, lry)
+                                        # Создаем изображение PIL из массива numpy
+                                        png_image = Image.fromarray(image_array, 'L')
 
-                                    # Создаем объект границ изображения в формате GeoJSON
-                                    coords = [
-                                        [[ul_lat, ul_lon, ], [ul_lat, lr_lon], [lr_lat, lr_lon], [lr_lat, ul_lon],
-                                         [ul_lat, ul_lon]]]
-                                    geojson = {
-                                        "type": "Polygon",
-                                        "coordinates": coords
-                                    }
-                                    sci_hub_image_date.polygon = GEOSGeometry(f"{geojson}")
+                                        # Преобразуем изображение в байты
+                                        img_bytes = io.BytesIO()
+                                        png_image.save(img_bytes, format='PNG')
+                                        img_bytes.seek(0)
+
+                                        # Создаем экземпляр модели изображения
+                                    sci_hub_image_date.polygon = tiff_coords[0]
                                     sci_hub_image_date.B02.save('B02.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
+                                    sci_hub_image_date.image_png.save('image.png', img_bytes, save=True)
                                 elif re.search(".*B03.*.tif", filename):
                                     sci_hub_image_date.B03.save('B03.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))

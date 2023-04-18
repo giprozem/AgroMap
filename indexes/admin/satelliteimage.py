@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.admin.options import TabularInline
 from django.contrib.admin.widgets import AdminFileWidget
-from django.db import models
-from django.forms import FileInput
+from django.utils.safestring import mark_safe
+
 from leaflet.admin import LeafletGeoAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
@@ -40,7 +40,6 @@ class AdminImageWidget(AdminFileWidget):
 #     extra = 0
 
 
-
 @admin.register(SciHubAreaInterest)
 class SciHubAreaInterestAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     inlines = [SciHubImageDateInline]
@@ -48,5 +47,10 @@ class SciHubAreaInterestAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 
 @admin.register(SciHubImageDate)
 class SciHubImageDateAdmin(LeafletGeoAdmin, SimpleHistoryAdmin, admin.ModelAdmin):
-    list_display = ('id', 'date', 'area_interest')
+    list_display = ('id', 'date', 'area_interest', 'no_image')
     list_display_links = ('id', 'date', 'area_interest')
+    readonly_fields = ('get_html_photo',)
+
+    def get_html_photo(self, obj):
+        if obj.image_png:
+            return mark_safe(f"<img src='{obj.image_png.url}' width=710, height=600>")
