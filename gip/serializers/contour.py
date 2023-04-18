@@ -125,7 +125,6 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
             'name_en': instance.conton.district.name_en if instance.conton.district else None,
             'code_soato': instance.conton.district.code_soato if instance.conton.district else None,
         }
-        print(instance.soil_class.name)
 
         return representation
 
