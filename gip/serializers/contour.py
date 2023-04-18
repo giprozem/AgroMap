@@ -7,7 +7,9 @@ from gip.models import CropYield
 from gip.models.conton import Conton
 from gip.models.contour import Contour, LandType
 from gip.serializers.conton import ContonWithoutPolygonSerializer
+from gip.serializers.culture import CultureSerializer
 from gip.serializers.region import RegionWithoutPolygonSerializer
+from gip.serializers.soil import SoilClassSerializer
 from gip.views.handbook_contour import contour_Kyrgyzstan
 from rest_framework.validators import UniqueValidator
 from rest_framework.exceptions import APIException
@@ -98,6 +100,9 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
                                     message=(
                                         "C таким Идентификационный номер контура уже существует в базе"))]
     )
+    soil_class = SoilClassSerializer()
+    type = LandTypeSerializer()
+    culture = CultureSerializer()
 
     class Meta:
         model = Contour
@@ -120,6 +125,7 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
             'name_en': instance.conton.district.name_en if instance.conton.district else None,
             'code_soato': instance.conton.district.code_soato if instance.conton.district else None,
         }
+        print(instance.soil_class.name)
 
         return representation
 
