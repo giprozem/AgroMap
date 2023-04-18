@@ -5,7 +5,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, filters, status
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -17,7 +17,15 @@ from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializ
 class AuthDetailContourViewSet(viewsets.ModelViewSet):
     queryset = Contour.objects.all().order_by('id').filter(is_deleted=False)
     serializer_class = AuthDetailContourSerializer
-    permission_classes = (IsAuthenticated,)
+
+    def get_permissions(self):
+        if self.action == 'update' or self.action == 'partial_update' or self.action == 'destroy':
+            permission_classes = [IsAdminUser]
+        elif self.action == 'create':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)

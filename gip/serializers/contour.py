@@ -2,17 +2,17 @@ import datetime
 
 from django.db import connection
 from rest_framework import serializers
+from rest_framework.exceptions import APIException
+from rest_framework.validators import UniqueValidator
 
 from gip.models import CropYield
 from gip.models.conton import Conton
-from gip.models.contour import Contour, LandType
+from gip.models.contour import Contour
 from gip.serializers.conton import ContonWithoutPolygonSerializer
 from gip.serializers.culture import CultureSerializer
-from gip.serializers.region import RegionWithoutPolygonSerializer
+from gip.serializers.landtype import LandTypeSerializer
 from gip.serializers.soil import SoilClassSerializer
 from gip.views.handbook_contour import contour_Kyrgyzstan
-from rest_framework.validators import UniqueValidator
-from rest_framework.exceptions import APIException
 
 
 class ContonSerializer(serializers.ModelSerializer):
@@ -48,12 +48,6 @@ class ContourSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contour
         fields = '__all__'
-
-
-class LandTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = LandType
-        exclude = ('name',)
 
 
 class UpdateAuthDetailContourSerializer(serializers.ModelSerializer):
