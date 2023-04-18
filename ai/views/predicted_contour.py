@@ -7,7 +7,7 @@ from rest_framework import viewsets
 from ai.serializers import Contour_AISerializer, UpdateContour_AISerializer
 from ai.models.predicted_contour import Contour_AI
 from ai.models.create_dataset import AI_Found, Process
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django.db import connection
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -39,7 +39,17 @@ class SearchAPIView(APIView):
 class Contour_AIViewSet(viewsets.ModelViewSet):
     queryset = Contour_AI.objects.all().order_by('id').filter(is_deleted=False)
     serializer_class = Contour_AISerializer
-    permission_classes = (IsAuthenticated,)
+
+    def get_permissions(self):
+        if self.action == 'update' or self.action == 'partial_update' or self.action == 'destroy':
+            permission_classes = [IsAdminUser]
+        elif self.action == 'create':
+            permission_classes = [IsAuthenticated]
+        elif self.action == 'get':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
