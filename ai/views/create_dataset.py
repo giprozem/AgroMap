@@ -3,9 +3,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from ai.models.create_dataset import Dataset, Process
+from ai.models.create_dataset import Dataset, Process, CreateDescription
 from notifications.signals import notify
+
+from ai.serializers import CreateDescriptionSerializer
 from ai.utils.predicted_contour import deleted_files
+
 
 class CreateAPIView(APIView):
     permission_classes = (IsAdminUser,)
@@ -25,3 +28,12 @@ class CreateAPIView(APIView):
                     deleted_files()
             message = "Процесс запущен"
         return Response({"message": message})
+
+
+class CreateDescriptionAPIView(APIView):
+    permission_classes = (IsAdminUser,)
+
+    def get(self, *args, **kwargs):
+        query = CreateDescription.objects.all()
+        serializer = CreateDescriptionSerializer(query, many=True)
+        return Response(serializer.data, status=200)
