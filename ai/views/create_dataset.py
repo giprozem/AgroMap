@@ -1,3 +1,4 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -33,6 +34,10 @@ class CreateAPIView(APIView):
 class CreateDescriptionAPIView(APIView):
     permission_classes = (IsAdminUser,)
 
+    @swagger_auto_schema(
+        responses={200: CreateDescriptionSerializer(many=True)},
+        operation_summary='return instruction of creating dataset required adminuser'
+    )
     def get(self, *args, **kwargs):
         query = CreateDescription.objects.all()
         serializer = CreateDescriptionSerializer(query, many=True)
