@@ -1,7 +1,8 @@
-from gip.models.base import BaseModel
 from django.contrib.gis.db import models
-from solo.models import SingletonModel
 from django.utils.translation import gettext_lazy as _
+from solo.models import SingletonModel
+
+from gip.models.base import BaseModel
 
 
 class Dataset(BaseModel):
@@ -52,3 +53,11 @@ class AI_Found(SingletonModel):
     class Meta:
         verbose_name = _("Процесс поиска контуров")
         verbose_name_plural = _("Процесс поиска контуров")
+
+
+class CreateDescription(SingletonModel):
+    description = models.TextField(verbose_name=_('Описание'))
+
+    class Meta:
+        verbose_name = _("Инструкция создания датасета")
+        verbose_name_plural = _("Инструкция создания датасета")

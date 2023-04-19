@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-12 11:15+0600\n"
+"POT-Creation-Date: 2023-04-19 13:09+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,13 +68,13 @@ msgid "“Логин или пароль введен неверно. Попро
 msgstr ""
 "“Логин же пароль туура эмес киргизилген. Дагы бир жолу аракет кылыныз.”"
 
-#: ai/admin/predicted_contour.py:22 ai/admin/productivity.py:34
+#: ai/admin/predicted_contour.py:21 ai/admin/productivity.py:34
 #: culture_model/models/index_plan.py:15 gip/admin/contour.py:23
 #: indexes/admin/actual_veg_index.py:31
 msgid "Значение индекса"
 msgstr "Индекстик маани"
 
-#: ai/admin/predicted_contour.py:34 ai/admin/productivity.py:26
+#: ai/admin/predicted_contour.py:33 ai/admin/productivity.py:26
 #: gip/admin/contour.py:35 indexes/admin/actual_veg_index.py:23
 msgid "Визуализация NDVI"
 msgstr "NDVI-дын мааниси"
@@ -83,47 +83,58 @@ msgstr "NDVI-дын мааниси"
 msgid "ИИ"
 msgstr "Жасалма интеллект"
 
-#: ai/models/create_dataset.py:8 ai/models/create_dataset.py:11
+#: ai/models/create_dataset.py:9 ai/models/create_dataset.py:12
 msgid "Датасет"
 msgstr "Датасети"
 
-#: ai/models/create_dataset.py:12
+#: ai/models/create_dataset.py:13
 msgid "Датасеты"
 msgstr "Датасеттер"
 
-#: ai/models/create_dataset.py:16
+#: ai/models/create_dataset.py:17
 msgid "Выполняется"
 msgstr "Колдонулайт"
 
-#: ai/models/create_dataset.py:17 ai/models/create_dataset.py:26
-#: ai/models/create_dataset.py:34 ai/models/create_dataset.py:43
+#: ai/models/create_dataset.py:18 ai/models/create_dataset.py:27
+#: ai/models/create_dataset.py:35 ai/models/create_dataset.py:44
 msgid "Номер процесса"
 msgstr "Процесстин номери"
 
-#: ai/models/create_dataset.py:20 ai/models/create_dataset.py:21
+#: ai/models/create_dataset.py:21 ai/models/create_dataset.py:22
 msgid "Процесс"
 msgstr "Процесси"
 
-#: ai/models/create_dataset.py:25 ai/models/create_dataset.py:33
-#: ai/models/create_dataset.py:42 ai/models/create_dataset.py:50
+#: ai/models/create_dataset.py:26 ai/models/create_dataset.py:34
+#: ai/models/create_dataset.py:43 ai/models/create_dataset.py:51
 msgid "Завершен"
 msgstr "Бүттү"
 
-#: ai/models/create_dataset.py:29 ai/models/create_dataset.py:30
+#: ai/models/create_dataset.py:30 ai/models/create_dataset.py:31
 msgid "Процесс сбора изображений"
 msgstr "Спутниктик сүрөт"
 
-#: ai/models/create_dataset.py:37 ai/models/create_dataset.py:38
+#: ai/models/create_dataset.py:38 ai/models/create_dataset.py:39
 msgid "Процесс создание цветных изображений"
 msgstr "Түстүү сүрөттөрдү түзүү процесси"
 
-#: ai/models/create_dataset.py:46 ai/models/create_dataset.py:47
+#: ai/models/create_dataset.py:47 ai/models/create_dataset.py:48
 msgid "Процесс обрезания цветных изображений"
 msgstr "Түстүү сүрөттөрдү кесүү процесси"
 
-#: ai/models/create_dataset.py:53 ai/models/create_dataset.py:54
+#: ai/models/create_dataset.py:54 ai/models/create_dataset.py:55
 msgid "Процесс поиска контуров"
 msgstr "Контурларды табуу процесси"
+
+#: ai/models/create_dataset.py:59 culture_model/models/vegetation_index.py:7
+#: gip/models/soil.py:10 hub/models/land_info.py:90
+#: indexes/models/actual_veg_index.py:41 indexes/models/pasture.py:9
+#: indexes/models/satelliteimage.py:8
+msgid "Описание"
+msgstr "Баяндоо"
+
+#: ai/models/create_dataset.py:62 ai/models/create_dataset.py:63
+msgid "Инструкция создания датасета"
+msgstr "Датасет даярдоо нускамасы"
 
 #: ai/models/predicted_contour.py:13 ai/models/predicted_contour.py:16
 #: ai/models/predicted_contour.py:42 indexes/models/actual_veg_index.py:52
@@ -309,12 +320,6 @@ msgstr "Өнүгүү фазасы"
 msgid "Фазы развития"
 msgstr "Өнүгүү фазалар"
 
-#: culture_model/models/vegetation_index.py:7 gip/models/soil.py:10
-#: hub/models/land_info.py:90 indexes/models/actual_veg_index.py:41
-#: indexes/models/pasture.py:9 indexes/models/satelliteimage.py:8
-msgid "Описание"
-msgstr "Баяндоо"
-
 #: culture_model/models/vegetation_index.py:11
 msgid "Индексы"
 msgstr "Индекстер"
@@ -354,7 +359,7 @@ msgstr "Контурдун идентификациялык номер"
 
 #: gip/models/contour.py:42 hub/models/land_info.py:9
 #: indexes/models/actual_veg_index.py:25 indexes/models/actual_veg_index.py:69
-#: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:89
+#: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:94
 msgid "История"
 msgstr "Тарых"
 
@@ -657,7 +662,8 @@ msgid "Пастбище"
 msgstr "Жайлоо"
 
 #: hub/models/land_info.py:69
-msgid "Древесно кустарниковые насаждения, не входящие в государственный лесной фонд"
+msgid ""
+"Древесно кустарниковые насаждения, не входящие в государственный лесной фонд"
 msgstr "Мамлекеттик токой фондусуна кирбеген бак-дарак плантациялары"
 
 #: hub/models/land_info.py:70
@@ -920,71 +926,71 @@ msgstr "Спутниктен тартылган сүрөт кызыгуу чөй
 msgid "Области интереса спутникового снимка"
 msgstr "Спутниктен тартылган сүрөт кызыгуу чөйрөлөрү"
 
-#: indexes/models/satelliteimage.py:61
+#: indexes/models/satelliteimage.py:63
 msgid "Дата снимков"
 msgstr "Тартылган сүрөттөрдүн датасы"
 
-#: indexes/models/satelliteimage.py:62
+#: indexes/models/satelliteimage.py:64
 msgid "Слой B01"
 msgstr "B01 катмары"
 
-#: indexes/models/satelliteimage.py:64
+#: indexes/models/satelliteimage.py:66
 msgid "Слой B02"
 msgstr "B02 катмары"
 
-#: indexes/models/satelliteimage.py:66
+#: indexes/models/satelliteimage.py:68
 msgid "Слой B03"
 msgstr "B03 катмары"
 
-#: indexes/models/satelliteimage.py:68
+#: indexes/models/satelliteimage.py:70
 msgid "Слой B04"
 msgstr "B04 катмары"
 
-#: indexes/models/satelliteimage.py:70
+#: indexes/models/satelliteimage.py:72
 msgid "Слой B05"
 msgstr "B05 катмары"
 
-#: indexes/models/satelliteimage.py:72
+#: indexes/models/satelliteimage.py:74
 msgid "Слой B06"
 msgstr "B06 катмары"
 
-#: indexes/models/satelliteimage.py:74
+#: indexes/models/satelliteimage.py:76
 msgid "Слой B07"
 msgstr "B07 катмары"
 
-#: indexes/models/satelliteimage.py:76
+#: indexes/models/satelliteimage.py:78
 msgid "Слой B08"
 msgstr "B08 катмары"
 
-#: indexes/models/satelliteimage.py:78
+#: indexes/models/satelliteimage.py:80
 msgid "Слой B8A"
 msgstr "B8A катмары"
 
-#: indexes/models/satelliteimage.py:80
+#: indexes/models/satelliteimage.py:82
 msgid "Слой B09"
 msgstr "B09 катмары"
 
-#: indexes/models/satelliteimage.py:82
+#: indexes/models/satelliteimage.py:85
 msgid "Слой B10"
 msgstr "B10 катмары"
 
-#: indexes/models/satelliteimage.py:84
+#: indexes/models/satelliteimage.py:88
 msgid "Слой B11"
 msgstr "B11 катмары"
 
-#: indexes/models/satelliteimage.py:86
+#: indexes/models/satelliteimage.py:90
 msgid "Слой B12"
 msgstr "B12 катмары"
 
-#: indexes/models/satelliteimage.py:88
+#: indexes/models/satelliteimage.py:93
 msgid "Координаты снимка"
 msgstr "Сүрөттүн координаттары"
 
-#: indexes/models/satelliteimage.py:92
+#: indexes/models/satelliteimage.py:97
 msgid "Спутниковый снимок Sentinel -2"
 msgstr "Спутниктен тартылган cүрөт Sentinel -2"
 
-#: indexes/models/satelliteimage.py:93
+#: indexes/models/satelliteimage.py:98
 msgid "Спутниковые снимки Sentinel -2"
 msgstr "Спутниктен тартылган cүрөт Sentinel -2"
 
