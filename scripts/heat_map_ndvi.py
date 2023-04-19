@@ -1,3 +1,4 @@
+import datetime
 import glob
 import os
 from itertools import product
@@ -10,14 +11,7 @@ from pyproj import Proj, transform
 from rasterio import windows
 
 from indexes.index_funcs.ndvi_funcs import get_ndvi, get_region_of_interest
-from indexes.models.satelliteimage import SciHubImageDate
-from gip.views.handbook_contour import contour_Kyrgyzstan
-from indexes.index_funcs.common_funcs import cutting_tiff
-
-import json
-from shapely.geometry import GeometryCollection, Point, LineString, Polygon
-from shapely.geometry import mapping
-from shapely import wkt
+from indexes.models.satelliteimage import SciHubImageDate, SciHubAreaInterest
 
 
 def get_tiles(ds, width=50, height=50):
@@ -30,7 +24,7 @@ def get_tiles(ds, width=50, height=50):
         yield window, transform
 
 
-def cropping(in_path, out_path, output_filename):
+def cropping(in_path, out_path, output_filename, date):
     with rio.open(os.path.join(in_path)) as inds:
         tile_width, tile_height = 50, 50
 
@@ -39,7 +33,7 @@ def cropping(in_path, out_path, output_filename):
         for window, transform in get_tiles(inds):
             meta['transform'] = transform
             meta['width'], meta['height'] = window.width, window.height
-            outpath = os.path.join(out_path, output_filename.format(int(window.col_off), int(window.row_off)))
+            outpath = os.path.join(out_path, output_filename.format(int(window.col_off), int(window.row_off), date))
             with rio.open(outpath, 'w', **meta) as outds:
                 outds.write(inds.read(window=window))
 
@@ -98,8 +92,7 @@ def response_convert_shape_file(response_in_json, output_file_name, output_path)
     return f'{output_file_name}.shp'
 
 
-def convert_shape_to_tif(shapesile_name, output_path):
-    print(f'shapesile_name === {shapesile_name}')
+def convert_shape_to_tif(shapesile_name, output_path, output_file_name):
     pts = ogr.Open(f"{shapesile_name}", 0)
     layer = pts.GetLayer()
     # set the desired output size to 1000 x 1000 pixels
@@ -107,7 +100,7 @@ def convert_shape_to_tif(shapesile_name, output_path):
     height = 11000
 
     pts = layer = None
-    nn = gdal.Grid(f'./{output_path}/first.tif', f'{shapesile_name}', zfield='ndvi',
+    nn = gdal.Grid(f'./{output_path}/{output_file_name}.tif', f'{shapesile_name}', zfield='ndvi',
                    algorithm='invdist',
                    outputType=gdal.GDT_Float32,
                    width=width,
@@ -116,68 +109,97 @@ def convert_shape_to_tif(shapesile_name, output_path):
     nn = None
 
 
+def creating_folder(creating_folder_name):
+    try:
+        if not os.path.exists(f'./media/{creating_folder_name}'):
+            os.makedirs(f'./media/{creating_folder_name}')
+        return f'{creating_folder_name}'
+    except:
+        return f'{creating_folder_name}'
+
+
 def run():
-    # Create the directory if it doesn't already exist
-    temporary_folder = 'heat-map'
-    if not os.path.exists(f'./media/{temporary_folder}'):
-        os.makedirs(f'./media/{temporary_folder}')
+    start = datetime.datetime.now()
+    areas_interested = SciHubAreaInterest.objects.all()
 
-    images = SciHubImageDate.objects.all()
-    for image in images:
-        out_path = f'./media/{temporary_folder}'
-
-        satellite_image_b04 = f'./media/{image.B04}'
-        output_filename_b04 = 'tile_{}-{}_B04.tif'
-
-        satellite_image_b8a = f'./media/{image.B8A}'
-        output_filename_b8a = 'tile_{}-{}_B8A.tif'
-
-        try:
-            cropping(in_path=satellite_image_b04, out_path=out_path, output_filename=output_filename_b04)
-        except Exception as e:
-            print(f'error == {e}')
-
-        try:
-            cropping(in_path=satellite_image_b8a, out_path=out_path, output_filename=output_filename_b8a)
-        except Exception as e:
-            print(f'error == {e}')
-
-        B8A = []
-        B04 = []
-
-        # Loop through the files in folder1
-        for filename in os.listdir(out_path):
-            full_path = os.path.join(out_path, filename)
-            if 'B8A' in filename:
-                B8A.append(filename)
-            elif 'B04' in filename:
-                B04.append(filename)
-
-        B8A.sort()
-        B04.sort()
-
+    for area_interested in areas_interested:
         out = []
-        for i in range(len(B8A)):
-            fn_nir = B8A[i]
-            fn_red = B04[i]
-            fn_nir = f'{out_path}/{fn_nir}'
-            fn_red = f'{out_path}/{fn_red}'
+        current_year = datetime.datetime.now().year
+        filtered = SciHubImageDate.objects.filter(
+            area_interest=area_interested
+        ).filter(
+            date__range=(f'{current_year}-04-01 00:00:00', f'{current_year}-10-10 00:00:00')
+        )
+        temporary_folder = 'heat-map'
+        if filtered:
+            for i in filtered:
+                image_dir = f'{str(i.date)[:10]}-{area_interested.id}'
+                creating_folder(f'{temporary_folder}/{image_dir}')
+                satellite_image = f'./media/{temporary_folder}/{image_dir}'
 
-            response = get_region_of_interest(get_ndvi(red_file=fn_red, nir_file=fn_nir))
-            response = {'ndvi': response}
-            point = get_center_point(fn_red)
-            point.update(response)
-            out.append(point)
+                try:
+                    cropping(
+                        in_path=f'./media/{str(i.B04)}',
+                        out_path=satellite_image,
+                        output_filename='tile_{}-{}_B04.tif',
+                        date=image_dir
+                    )
+                except Exception as e:
+                    print(f'error == {e}')
 
-        # Search files with .tiff extension in current directory
-        pattern = f"./media/{temporary_folder}/*.tif"
-        files = glob.glob(pattern)
+                try:
+                    cropping(
+                        in_path=f'./media/{str(i.B8A)}',
+                        out_path=satellite_image,
+                        output_filename='tile_{}-{}_B8A.tif',
+                        date=image_dir
+                    )
+                except Exception as e:
+                    print(f'error == {e}')
 
-        # deleting the files with tiff extension
-        for file in files:
-            os.remove(file)
+                B8A = []
+                B04 = []
 
-        response_convert_shape_file(response_in_json=out, output_file_name='./media/heat-map', output_path='ndvi')
-        convert_shape_to_tif(shapesile_name='./media/heat-map/ndvi.shp', output_path='./media/heat-map/')
+                # Loop through the files in folder1
+                for filename in os.listdir(satellite_image):
+                    if 'B8A' in filename:
+                        B8A.append(filename)
+                    elif 'B04' in filename:
+                        B04.append(filename)
 
-    return ''
+                B04.sort()
+                B8A.sort()
+
+                for j in range(len(B8A)):
+                    fn_nir = B8A[j]
+                    fn_red = B04[j]
+                    fn_nir = f'{satellite_image}/{fn_nir}'
+                    fn_red = f'{satellite_image}/{fn_red}'
+                    response = get_region_of_interest(get_ndvi(red_file=fn_red, nir_file=fn_nir))
+                    response = {'ndvi': response}
+                    point = get_center_point(fn_red)
+                    point.update(response)
+                    out.append(point)
+
+                # Search files with .tiff extension in current directory
+                # pattern = f"./media/{temporary_folder}/{image_dir}"
+                pattern = f"./media/{temporary_folder}/{image_dir}/*.tif"
+                files = glob.glob(pattern)
+
+                # deleting the files with tiff extension
+                for file in files:
+                    os.remove(file)
+
+                response_convert_shape_file(
+                    response_in_json=out,
+                    output_file_name=f'{image_dir}-{str(area_interested.id)}',
+                    output_path=f'./media/heat-map/{image_dir}'
+                )
+                convert_shape_to_tif(
+                    shapesile_name=f'./media/heat-map/{image_dir}/{image_dir}-{str(area_interested.id)}.shp',
+                    output_path=f'./media/heat-map/{image_dir}',
+                    output_file_name=image_dir + str(area_interested.id)
+                )
+        # shutil.rmtree(f"./media/{temporary_folder}")
+
+    return out
