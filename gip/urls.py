@@ -7,7 +7,7 @@ from gip.views.district import DistrictAPIView
 from gip.views.geoserver import Geoserver
 from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox, PolygonsInScreen
 from gip.views.region import RegionAPIView
-from gip.views.soil import SoilAPIView
+from gip.views.soil import SoilAPIView, SoilClassAPIView
 from gip.views.statistics import GraphicTablesAPIView, CulturePercentAPIView
 from gip.views.culture import CultureViewSet
 from gip.views.landtype import LandTypeAPIView
@@ -38,4 +38,5 @@ urlpatterns = [
     path('land-type/', LandTypeAPIView.as_view()),
     path('geoserver/', Geoserver.as_view()),
     path('', include(router.urls)),
+    path('soil-class/', SoilClassAPIView.as_view()),
 ]
