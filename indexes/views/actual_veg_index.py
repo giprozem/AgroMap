@@ -57,7 +57,7 @@ class SatelliteImagesDate(APIView):
     def get(self, request, *args, **kwargs):
         index = kwargs['index']
         contour = kwargs['contour']
-        result = ActualVegIndex.objects.filter(index=index).filter(contour=contour)
+        result = ActualVegIndex.objects.filter(index=index).filter(contour=contour).order_by('date')
         serializer = ActuaVegIndexSerializer(result, many=True)
         return Response(serializer.data, status=200)
 
