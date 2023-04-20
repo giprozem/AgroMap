@@ -47,7 +47,7 @@ class SciHubAreaInterestAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 
 @admin.register(SciHubImageDate)
 class SciHubImageDateAdmin(LeafletGeoAdmin, SimpleHistoryAdmin, admin.ModelAdmin):
-    list_display = ('id', 'date', 'area_interest', 'no_image')
+    list_display = ('id', 'date', 'area_interest', 'created_at', 'name_product', 'no_image')
     list_display_links = ('id', 'date', 'area_interest')
     readonly_fields = ('get_html_photo',)
 

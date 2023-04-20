@@ -56,7 +56,8 @@ class SciHubAreaInterest(models.Model):
 
 
 class SciHubImageDate(models.Model):
-    area_interest = models.ForeignKey(SciHubAreaInterest, on_delete=models.CASCADE, related_name='image_date',
+    name_product = models.CharField(max_length=255, blank=True, null=True)
+    area_interest = models.ForeignKey(SciHubAreaInterest, on_delete=models.SET_NULL, related_name='image_date',
                                       verbose_name=_("Область интереса"), blank=True, null=True)
     no_image = models.BooleanField(default=False, blank=True, null=True)  # todo: Translate
     note = models.CharField(max_length=1000, blank=True, null=True)  # todo: Translate
@@ -91,6 +92,7 @@ class SciHubImageDate(models.Model):
                            null=True)
     image_png = models.FileField(upload_to='satellite_images_to_png', blank=True, null=True)  # todo: Translate
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Координаты снимка"), blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     history = HistoricalRecords(verbose_name=_("История"))
 
     class Meta:
