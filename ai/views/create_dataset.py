@@ -35,10 +35,10 @@ class CreateDescriptionAPIView(APIView):
     permission_classes = (IsAdminUser,)
 
     @swagger_auto_schema(
-        responses={200: CreateDescriptionSerializer(many=True)},
+        responses={200: CreateDescriptionSerializer(many=False)},
         operation_summary='return instruction of creating dataset required adminuser'
     )
     def get(self, *args, **kwargs):
-        query = CreateDescription.objects.all()
+        query = CreateDescription.objects.first()
         serializer = CreateDescriptionSerializer(query, many=False)
         return Response(serializer.data, status=200)
