@@ -422,7 +422,8 @@ class StatisticsContourProductivityAPIView(APIView):
                         responce = {
                             'name_ru': i[-3], 'name_ky': i[-2], 'name_en': i[-1],
                             'type': child, 'Productive': {'ha': i[0], 'percent': i[2]},
-                            'Unproductive': {'ha': i[1], 'percent': i[3]}
+                            'Unproductive': {'ha': i[1], 'percent': i[3]},
+                            "Children": []
                         }
                     else:
                         responce = {
