@@ -440,7 +440,7 @@ class StatisticsContourProductivityAPIView(APIView):
                         }
                     return Response(responce)
                 else:
-                    return Response({'message': 'no data'})
+                    return Response({})
         else:
             return Response(data={"message": "parameter 'year and land_type' is required"}, status=400)
 
@@ -1043,7 +1043,7 @@ class CultureStatisticsAPIView(APIView):
             openapi.Parameter('district', openapi.IN_QUERY, description="District", type=openapi.TYPE_INTEGER),
             openapi.Parameter('conton', openapi.IN_QUERY, description="Conton", type=openapi.TYPE_INTEGER),
             openapi.Parameter('culture', openapi.IN_QUERY, description="Culture", type=openapi.TYPE_INTEGER),
-            openapi.Parameter('ai', openapi.IN_QUERY, description="Culture", type=openapi.TYPE_BOOLEAN),
+            openapi.Parameter('ai', openapi.IN_QUERY, description="AI", type=openapi.TYPE_BOOLEAN),
         ],
         responses={
             status.HTTP_200_OK: openapi.Schema(
