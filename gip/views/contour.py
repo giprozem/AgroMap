@@ -358,190 +358,89 @@ class StatisticsContourProductivityAPIView(APIView):
         land_type = request.GET.get('land_type')
         district = request.GET.get('district')
         conton = request.GET.get('conton')
-        if region and district and conton and land_type and year:
+        if year and land_type:
+            start = f"""SELECT
+            round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
+            round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
+            round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
+            round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr .area_ha) * 100) as "unproductive_pct",
+            cntr.is_deleted, rgn.name_ru, rgn.name_ky, rgn.name_en
+            """
+            middle = f"""FROM gip_contour AS cntr
+            JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+            JOIN gip_district AS dst ON dst.id=cntn.district_id
+            JOIN gip_region AS rgn ON rgn.id=dst.region_id
+            where cntr.is_deleted=false and cntr.year='{year}' and cntr.type_id={land_type}
+            """
+            end = 'group by cntr.is_deleted, rgn.name_ru, rgn.name_ky, rgn.name_en'
+            parent = 'Country'
+            child = 'Region'
+            if region:
+                start += ', dst.name_ru, dst.name_ky, dst.name_en '
+                middle += f' and rgn.id in ({region})'
+                end += ', dst.name_ru, dst.name_ky, dst.name_en'
+                parent = 'Region'
+                child = 'District'
+            if district:
+                start += ', dst.name_ru, dst.name_ky, dst.name_en, cntn.name_ru, cntn.name_ky, cntn.name_en '
+                middle += f' and dst.id in ({district})'
+                end += ', dst.name_ru, dst.name_ky, dst.name_en, cntn.name_ru, cntn.name_ky, cntn.name_en'
+                parent = 'District'
+                child = 'Conton'
+            if conton:
+                start += ', cntn.name_ru, cntn.name_ky, cntn.name_en '
+                middle += f' and cntn.id in ({conton})'
+                end += ', cntn.name_ru, cntn.name_ky, cntn.name_en'
+                parent = 'Conton'
+                child = 'Conton'
+            sql = start + middle + end + ';'
             with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT 
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr .area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, dst.name, cntn.name
-                    FROM gip_contour AS cntr 
-                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                    JOIN gip_district AS dst ON dst.id=cntn.district_id
-                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where cntr.year='{year}' and cntr.type_id in ({land_type}) and cntn.id in ({conton}) 
-                    and rgn.id in ({region}) and dst.id in ({district})
-                    and cntr.is_deleted=false
-                    group by dst.name, cntn.name, cntr.is_deleted;""")
-                rows = cursor.fetchall()
-                if rows:
-                    return Response({'name': rows[0][-1], 'type': 'Conton', 'Productive': {'ha': rows[0][0], 'percent': rows[0][2]},
-                                 'Unproductive': {'ha': rows[0][1], 'percent': rows[0][3]}, 'Children': []})
-                else:
-                    return Response({'message': 'no data'})
-        elif region and district and land_type and year:
-            with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT 
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, dst.name, cntn.name
-                    FROM gip_contour AS cntr 
-                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                    JOIN gip_district AS dst ON dst.id=cntn.district_id
-                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where rgn.id in ({region}) and cntr.type_id in ({land_type}) and cntr.year='{year}' and dst.id in ({district})
-                    and cntr.is_deleted=false group by dst.name, cntn.name, cntr.is_deleted;""")
-                rows = cursor.fetchall()
-                total = sum([row[0] for row in rows]) + sum([row[1] for row in rows])
-                data = []
-                for i in rows:
-                    data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
-                                 'Unproductive': {'ha': i[1], 'percent': i[3]}})
-                if rows:
-                    return Response({
-                        "name": rows[0][5],
-                        "type": "District",
-                        'Productive': {'ha': sum([row[0] for row in rows]),
-                                       'percent': round(sum([row[0] for row in rows]) / total * 100)},
-                        "Unproductive": {
-                            "ha": sum([row[1] for row in rows]),
-                            "percent": round(sum([row[1] for row in rows]) / total * 100)
-                        },
-                        "Children": data
-                    })
-                else:
-                    return Response({'message': 'no data'})
-        elif region and land_type and year:
-            with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT 
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, rgn.name, dst.name
-                    FROM gip_contour AS cntr 
-                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                    JOIN gip_district AS dst ON dst.id=cntn.district_id
-                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where rgn.id in ({region}) and cntr.type_id in ({land_type}) and cntr.year='{year}'
-                    and cntr.is_deleted=false group by rgn.name, dst.name, cntr.is_deleted;""")
+                cursor.execute(sql)
                 rows = cursor.fetchall()
                 total = sum([row[0] for row in rows]) + sum([row[1] for row in rows])
                 data = []
                 for i in rows:
-                    data.append({'name': i[-1], 'type': 'District', 'Productive': {'ha': i[0], 'percent': i[2]},
+                    data.append({'name_ru': i[-3], 'name_ky': i[-2], 'name_en': i[-1],
+                                 'type': child, 'Productive': {'ha': i[0], 'percent': i[2]},
                                  'Unproductive': {'ha': i[1], 'percent': i[3]}})
                 if rows:
-                    return Response({
-                        "name": rows[0][5],
-                        "type": "Region",
-                        'Productive': {'ha': sum([row[0] for row in rows]),
-                                       'percent': round(sum([row[0] for row in rows]) / total * 100)},
-                        "Unproductive": {
-                            "ha": sum([row[1] for row in rows]),
-                            "percent": round(sum([row[1] for row in rows]) / total * 100)
-                        },
-                        "Children": data
-                    })
+                    if parent == 'Country':
+                        responce = {
+                            "name_ru": 'Кыргызстан',
+                            "name_ky": 'Кыргызстан',
+                            "name_en": 'Kyrgyzstan',
+                            "type": parent,
+                            'Productive': {'ha': sum([row[0] for row in rows]),
+                                           'percent': round(sum([row[0] for row in rows]) / total * 100)},
+                            "Unproductive": {
+                                "ha": sum([row[1] for row in rows]),
+                                "percent": round(sum([row[1] for row in rows]) / total * 100)
+                            },
+                            "Children": data
+                        }
+                    elif parent == child:
+                        responce = {
+                            'name_ru': i[-3], 'name_ky': i[-2], 'name_en': i[-1],
+                            'type': child, 'Productive': {'ha': i[0], 'percent': i[2]},
+                            'Unproductive': {'ha': i[1], 'percent': i[3]}
+                        }
+                    else:
+                        responce = {
+                            "name_ru": rows[0][5],
+                            "name_ky": rows[0][6],
+                            "name_en": rows[0][7],
+                            "type": parent,
+                            'Productive': {'ha': sum([row[0] for row in rows]),
+                                           'percent': round(sum([row[0] for row in rows]) / total * 100)},
+                            "Unproductive": {
+                                "ha": sum([row[1] for row in rows]),
+                                "percent": round(sum([row[1] for row in rows]) / total * 100)
+                            },
+                            "Children": data
+                        }
+                    return Response(responce)
                 else:
                     return Response({'message': 'no data'})
-        elif district and conton and year and land_type:
-            with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT 
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, dst.name, cntn.name
-                    FROM gip_contour AS cntr 
-                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                    JOIN gip_district AS dst ON dst.id=cntn.district_id
-                    where cntr.year='{year}' and cntr.type_id in ({land_type}) and dst.id in ({district})
-                    and cntn.id in ({conton}) and cntr.is_deleted=false group by dst.name, cntn.name, cntr.is_deleted;""")
-                rows = cursor.fetchall()
-                if rows:
-                    return Response({'name': rows[0][-1], 'type': 'Conton', 'Productive': {'ha': rows[0][0], 'percent': rows[0][2]},
-                                     'Unproductive': {'ha': rows[0][1], 'percent': rows[0][3]}, 'Children': []})
-                else:
-                    return Response({'message': 'no data'})
-        elif district and year and land_type:
-            with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT 
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, dst.name, cntn.name
-                    FROM gip_contour AS cntr 
-                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                    JOIN gip_district AS dst ON dst.id=cntn.district_id
-                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where cntr.year='{year}' and cntr.type_id in ({land_type}) and dst.id in ({district})
-                    and cntr.is_deleted=false group by dst.name, cntn.name, cntr.is_deleted;""")
-                rows = cursor.fetchall()
-                total = sum([row[0] for row in rows]) + sum([row[1] for row in rows])
-                data = []
-                for i in rows:
-                    data.append({'name': i[-1], 'type': 'Conton', 'Productive': {'ha': i[0], 'percent': i[2]},
-                                 'Unproductive': {'ha': i[1], 'percent': i[3]}})
-                if rows:
-                    return Response({
-                        "name": rows[0][5],
-                        "type": "District",
-                        'Productive': {'ha': sum([row[0] for row in rows]),
-                                       'percent': round(sum([row[0] for row in rows]) / total * 100)},
-                        "Unproductive": {
-                            "ha": sum([row[1] for row in rows]),
-                            "percent": round(sum([row[1] for row in rows]) / total * 100)
-                        },
-                        "Children": data
-                    })
-                else:
-                    return Response({'message': 'no data'})
-        elif conton and year and land_type:
-            with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT 
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, cntn.name 
-                    FROM gip_contour AS cntr 
-                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                    JOIN gip_district AS dst ON dst.id=cntn.district_id
-                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where cntr.year='{year}' and cntr.type_id in ({land_type}) and cntn.id in ({conton})
-                    and cntr.is_deleted=false group by cntn.name, cntr.is_deleted;""")
-                rows = cursor.fetchall()
-                if rows:
-                    return Response({'name': rows[0][-1], 'type': 'Conton', 'Productive': {'ha': rows[0][0], 'percent': rows[0][2]},
-                                     'Unproductive': {'ha': rows[0][1], 'percent': rows[0][3]}, 'Children': []}
-                                    )
-                else:
-                    return Response({'message': 'no data'})
-        elif year and land_type:
-            with connection.cursor() as cursor:
-                cursor.execute(f"""SELECT 
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end)) as "Productive",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end)) as "Unproductive",
-                    round(sum(case when (cntr.productivity)::float >= 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "productive_pct",
-                    round(sum(case when (cntr.productivity)::float < 1.6 then cntr.area_ha else 0 end) / sum(cntr.area_ha) * 100) as "unproductive_pct",
-                    cntr.is_deleted, rgn.name 
-                    FROM gip_contour AS cntr  
-                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-                    JOIN gip_district AS dst ON dst.id=cntn.district_id
-                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
-                    where cntr.year='{year}' and cntr.type_id in ({land_type})
-                    and cntr.is_deleted=false group by rgn.name, cntr.is_deleted;""")
-                rows = cursor.fetchall()
-                data = []
-                for i in rows:
-                    data.append({'name': i[-1], 'type': 'Region', 'Productive': {'ha': i[0], 'percent': i[2]},
-                                 'Unproductive': {'ha': i[1], 'percent': i[3]}})
-                return Response(data)
         else:
             return Response(data={"message": "parameter 'year and land_type' is required"}, status=400)
 
