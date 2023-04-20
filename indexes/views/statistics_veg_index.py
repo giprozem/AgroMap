@@ -1,3 +1,4 @@
+from drf_yasg import openapi
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -12,7 +13,20 @@ class ContourAPIView(APIView):
         operation_summary='do not required for front'
     )
     def get(self, request, *args, **kwargs):
-        queryset = Contour.objects.all()
+        """
+               Retrieve contours statistics filtered by start and end dates.
+               collect DS
+        """
+        start = request.query_params['start']
+        end = request.query_params['end']
+        queryset = Contour.objects.all().filter(
+            is_deleted=False
+        ).filter(
+            productivity__isnull=False).filter(
+            actual_veg_index__date__range=(
+                start, end
+            )
+        )
         serializer_class = ContourStatisticsSerializer(queryset, many=True)
         return Response(serializer_class.data, status=200)
 
