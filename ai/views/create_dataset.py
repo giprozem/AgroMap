@@ -40,5 +40,5 @@ class CreateDescriptionAPIView(APIView):
     )
     def get(self, *args, **kwargs):
         query = CreateDescription.objects.all()
-        serializer = CreateDescriptionSerializer(query, many=True)
+        serializer = CreateDescriptionSerializer(query, many=False)
         return Response(serializer.data, status=200)
