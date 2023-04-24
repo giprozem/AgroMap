@@ -205,7 +205,7 @@ class PolygonsInScreen(APIView):
                                elevation, productivity, type_id, year, clt.id, clt.name_ru, clt.name_ky, clt.name_en,
                                St_AsGeoJSON(cntr.polygon) AS polygon
                                FROM gip_contour AS cntr
-                               JOIN gip_culture AS clt ON clt.id=cntr.culture_id
+                               left JOIN gip_culture AS clt ON clt.id=cntr.culture_id
                                WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry)
                                and cntr.is_deleted=False;
                                """)
