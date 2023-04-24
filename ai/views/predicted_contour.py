@@ -164,18 +164,21 @@ class Contour_AIInScreen(APIView):
 
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                               SELECT id, conton_id, district_id, culture_id, is_deleted, area_ha, elevation,
-                               productivity, type_id, year, St_AsGeoJSON(cntr.polygon) AS polygon
+                               SELECT cntr.id, conton_id, district_id, is_deleted, area_ha, elevation,
+                               productivity, type_id, year, clt.id, clt.name_ru, clt.name_ky, clt.name_en, 
+                               St_AsGeoJSON(cntr.polygon) AS polygon
                                FROM ai_contour_ai AS cntr
-                               Where cntr.id > 11016;
+                               JOIN gip_culture AS clt ON clt.id=cntr.culture_id
+                               Where cntr.id > 11016 and cntr.is_deleted=false;
                                """)
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
                     data.append({"type": "Feature",
-                                 "properties": {'id': i[0], 'conton_id': i[1],  'district_id': i[2], 'culture_id': i[3],
-                                                'is_deleted': i[4], 'area_ha': i[5], 'elevation': i[6],
-                                                'productivity': i[7], 'land_type': i[8], 'year': i[9]
+                                 "properties": {'id': i[0], 'conton_id': i[1],  'district_id': i[2],
+                                                'is_deleted': i[3], 'area_ha': i[4], 'elevation': i[5],
+                                                'productivity': i[6], 'land_type': i[7], 'year': i[8],
+                                                'culture': {'id': i[9], 'name_ru': i[10], 'name_ky': i[11], 'name_en': i[12]}
                                                 },
                                  "geometry": eval(i[-1])})
                 return Response({"type": "FeatureCollection", "features": data})
