@@ -161,7 +161,6 @@ class Contour_AIInScreen(APIView):
         if request.data:
             bboxs = Polygon.from_bbox((request.data['_southWest']['lng'], request.data['_southWest']['lat'],
                                        request.data['_northEast']['lng'], request.data['_northEast']['lat']))
-
             with connection.cursor() as cursor:
                 cursor.execute(f"""
                                SELECT cntr.id, conton_id, district_id, is_deleted, area_ha, elevation,
@@ -169,7 +168,8 @@ class Contour_AIInScreen(APIView):
                                St_AsGeoJSON(cntr.polygon) AS polygon
                                FROM ai_contour_ai AS cntr
                                JOIN gip_culture AS clt ON clt.id=cntr.culture_id
-                               Where cntr.id > 11016 and cntr.is_deleted=false;
+                               WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry)
+                               and cntr.is_deleted=false and cntr.id > 11016;
                                """)
                 rows = cursor.fetchall()
                 data = []

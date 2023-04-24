@@ -199,15 +199,15 @@ class PolygonsInScreen(APIView):
         if request.data:
             bboxs = Polygon.from_bbox((request.data['_southWest']['lng'], request.data['_southWest']['lat'],
                                        request.data['_northEast']['lng'], request.data['_northEast']['lat']))
-
             with connection.cursor() as cursor:
                 cursor.execute(f"""
-                               SELECT id, conton_id, farmer_id, ink, is_rounded, code_soato, is_deleted, area_ha,
-                               culture_id, elevation, productivity, type_id, year,
+                               SELECT cntr.id, conton_id, farmer_id, ink, is_rounded, code_soato, is_deleted, area_ha,
+                               elevation, productivity, type_id, year, clt.id, clt.name_ru, clt.name_ky, clt.name_en,
                                St_AsGeoJSON(cntr.polygon) AS polygon
                                FROM gip_contour AS cntr
+                               JOIN gip_culture AS clt ON clt.id=cntr.culture_id
                                WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry)
-                                and cntr.is_deleted=False;
+                               and cntr.is_deleted=False;
                                """)
                 rows = cursor.fetchall()
                 data = []
@@ -215,9 +215,12 @@ class PolygonsInScreen(APIView):
                     data.append({"type": "Feature",
                                  "properties": {'id': i[0], 'conton_id': i[1],  'farmer_id': i[2], 'ink': i[3],
                                                 'is_rounded': i[4], 'code_soato': i[5], 'is_deleted': i[6],
-                                                'area_ha': i[7], 'culture_id': i[8], 'elevation': i[9],
-                                                'productivity': i[10], 'land_type': i[11], 'year': i[12]},
-                                 "geometry": eval(i[13])})
+                                                'area_ha': i[7], 'elevation': i[8], 'productivity': i[9],
+                                                'land_type': i[10], 'year': i[11],
+                                                'culture': {'id': i[12], 'name_ru': i[13],
+                                                            'name_ky': i[14], 'name_en': i[15]}
+                                                },
+                                 "geometry": eval(i[-1])})
                 return Response({"type": "FeatureCollection", "features": data})
         else:
             return Response(data={"message": "parameter is required"}, status=400)
