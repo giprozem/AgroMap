@@ -129,6 +129,7 @@ class PolygonsInScreen(APIView):
                     },
                     required=['lat', 'lng']
                 ),
+                'culture': openapi.Schema(type=openapi.TYPE_NUMBER),
             },
             required=['_southWest', '_northEast']
         ),
@@ -192,23 +193,28 @@ class PolygonsInScreen(APIView):
             "_northEast": {
                 "lat": 42.71093250783867,
                 "lng": 78.4042846475467
-            }
+            },
+            "culture": 1
             }
         """
 
         if request.data:
             bboxs = Polygon.from_bbox((request.data['_southWest']['lng'], request.data['_southWest']['lat'],
                                        request.data['_northEast']['lng'], request.data['_northEast']['lat']))
+            sql = f"""
+            SELECT cntr.id, conton_id, farmer_id, ink, is_rounded, code_soato, is_deleted, area_ha,
+            elevation, productivity, type_id, year, clt.id, clt.name_ru, clt.name_ky, clt.name_en,
+            St_AsGeoJSON(cntr.polygon) AS polygon
+            FROM gip_contour AS cntr
+            left JOIN gip_culture AS clt ON clt.id=cntr.culture_id
+            WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry)
+            and cntr.is_deleted=False
+            """
+            culture = request.data.get("culture")
+            if culture:
+                sql += f'and cntr.culture_id in ({culture})'
             with connection.cursor() as cursor:
-                cursor.execute(f"""
-                               SELECT cntr.id, conton_id, farmer_id, ink, is_rounded, code_soato, is_deleted, area_ha,
-                               elevation, productivity, type_id, year, clt.id, clt.name_ru, clt.name_ky, clt.name_en,
-                               St_AsGeoJSON(cntr.polygon) AS polygon
-                               FROM gip_contour AS cntr
-                               left JOIN gip_culture AS clt ON clt.id=cntr.culture_id
-                               WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry)
-                               and cntr.is_deleted=False;
-                               """)
+                cursor.execute(sql)
                 rows = cursor.fetchall()
                 data = []
                 for i in rows:
