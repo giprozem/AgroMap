@@ -733,27 +733,27 @@ msgstr "Real estate unit code"
 
 #: hub/models/land_info.py:95
 msgid "Адрес участка (АСР)"
-msgstr "Plot address (ERW)"
+msgstr "Plot address (ARS)"
 
 #: hub/models/land_info.py:97
 msgid "Целевое назначение (АСР)"
-msgstr "Purpose (ERW)"
+msgstr "Purpose (ARS)"
 
 #: hub/models/land_info.py:99
 msgid "Фактическая площадь (АСР)"
-msgstr "Actual area (ERW)"
+msgstr "Actual area (ARS)"
 
 #: hub/models/land_info.py:100
 msgid "Форма использования (АСР)"
-msgstr "Type of land use (ERW)"
+msgstr "Type of land use (ARS)"
 
 #: hub/models/land_info.py:101
 msgid "Юридическая площадь (АСР)"
-msgstr "Legal area (ERW)"
+msgstr "Legal area (ARS)"
 
 #: hub/models/land_info.py:102
 msgid "Данные о собственнике (АСР)"
-msgstr "Data about owner (ERW)"
+msgstr "Data about owner (ARS)"
 
 #: hub/models/land_info.py:105 hub/models/land_info.py:106
 msgid "Главная таблица"
