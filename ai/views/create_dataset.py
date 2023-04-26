@@ -31,7 +31,7 @@ class CreateAPIView(APIView):
                 if created:
                     text = f'Датасет №{instance.pk} создан'
                     text_ky = f'Датасет №{instance.pk} түзүлгөн'
-                    text_en = f'Dataset №{instance.pk} created'
+                    text_en = f'Dataset №{instance.pk} was created'
                     Notifications.objects.create(user=user, text=text, text_ky=text_ky, text_en=text_en)
                     deleted_files()
             message = {

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-19 13:09+0600\n"
+"POT-Creation-Date: 2023-04-26 13:49+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,6 +40,7 @@ msgid "Руководитель"
 msgstr "Жетекчи"
 
 #: account/models/account.py:16 account/models/account.py:25
+#: account/models/account.py:39
 msgid "Пользователь"
 msgstr "Пайдалануучу"
 
@@ -63,7 +64,23 @@ msgstr "Профиль"
 msgid "Профили"
 msgstr "Профильдер"
 
-#: account/views/authenticated.py:46
+#: account/models/account.py:40 gip/models/base.py:6 hub/models/base.py:6
+msgid "Дата создания"
+msgstr "Түзүлгөн датасы"
+
+#: account/models/account.py:41
+msgid "Текст уведомления"
+msgstr "Билдирүү тексти"
+
+#: account/models/account.py:44
+msgid "Уведомление"
+msgstr "Билдирүү"
+
+#: account/models/account.py:45
+msgid "Уведомления"
+msgstr "Билдирүүлөр"
+
+#: account/views/authenticated.py:47
 msgid "“Логин или пароль введен неверно. Попробуйте снова.”"
 msgstr ""
 "“Логин же пароль туура эмес киргизилген. Дагы бир жолу аракет кылыныз.”"
@@ -157,7 +174,7 @@ msgstr "Жер түрү"
 
 #: ai/models/predicted_contour.py:31 gip/models/conton.py:12
 #: gip/models/contour.py:29 gip/models/contour.py:57 gip/models/district.py:12
-#: gip/models/region.py:13 gip/models/soil.py:23 gip/models/soil.py:41
+#: gip/models/region.py:13 gip/models/soil.py:24 gip/models/soil.py:42
 #: gip/models/village.py:11 hub/models/land_info.py:11
 #: indexes/models/actual_veg_index.py:67
 #: indexes/models/actual_veg_index_logs.py:6
@@ -195,8 +212,8 @@ msgstr "Өсүмдүк"
 msgid "Высота"
 msgstr "Бийиктик"
 
-#: ai/models/predicted_contour.py:39 gip/models/soil.py:9 gip/models/soil.py:16
-#: gip/models/soil.py:22
+#: ai/models/predicted_contour.py:39 gip/models/soil.py:9 gip/models/soil.py:17
+#: gip/models/soil.py:23
 msgid "Тип почвы"
 msgstr "Топурак түрү"
 
@@ -244,19 +261,19 @@ msgstr ""
 "Өсүмдүктөрдүн вегетациондук индексин түзүүдө ката кетти, индекстин аттарын "
 "текшериңиз"
 
-#: config/settings.py:124
+#: config/settings.py:123
 msgid "Русский"
 msgstr "Орус"
 
-#: config/settings.py:125
+#: config/settings.py:124
 msgid "Кыргызский"
 msgstr "Кыргыз"
 
-#: config/settings.py:126
+#: config/settings.py:125
 msgid "Английский"
 msgstr "Англис"
 
-#: config/settings.py:183 config/urls.py:40 hub/apps.py:8
+#: config/settings.py:182 config/urls.py:40 hub/apps.py:8
 msgid "Эталонная база данных Гипрозем"
 msgstr "Гипроземдин эталондук маалымат базасы"
 
@@ -328,10 +345,6 @@ msgstr "Индекстер"
 msgid "АгроМап"
 msgstr "АгроМап"
 
-#: gip/models/base.py:6 hub/models/base.py:6
-msgid "Дата создания"
-msgstr "Түзүлгөн датасы"
-
 #: gip/models/base.py:7 hub/models/base.py:7
 msgid "Дата обновления"
 msgstr "Жаңыртуу датасы"
@@ -359,7 +372,7 @@ msgstr "Контурдун идентификациялык номер"
 
 #: gip/models/contour.py:42 hub/models/land_info.py:9
 #: indexes/models/actual_veg_index.py:25 indexes/models/actual_veg_index.py:69
-#: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:94
+#: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:96
 msgid "История"
 msgstr "Тарых"
 
@@ -465,31 +478,35 @@ msgstr "Жыштыгы"
 msgid "Области"
 msgstr "Облустар"
 
-#: gip/models/soil.py:17
+#: gip/models/soil.py:11
+msgid "Цвет"
+msgstr "Түрү"
+
+#: gip/models/soil.py:18
 msgid "Типы почвы"
 msgstr "Топурак түрлөрү"
 
-#: gip/models/soil.py:26
+#: gip/models/soil.py:27
 msgid "Контур типа почвы"
 msgstr "Топурак контурлору"
 
-#: gip/models/soil.py:27
+#: gip/models/soil.py:28
 msgid "Контуры типа почвы"
 msgstr "Топурак контурлору"
 
-#: gip/models/soil.py:31 gip/models/soil.py:34
+#: gip/models/soil.py:32 gip/models/soil.py:35
 msgid "Продуктивность почвы"
 msgstr "Топурактын өндүрүмдүүлүгү"
 
-#: gip/models/soil.py:35
+#: gip/models/soil.py:36
 msgid "Продуктивность почв"
 msgstr "Топурактардын өндүрүмдүүлүгү"
 
-#: gip/models/soil.py:40 gip/models/soil.py:44
+#: gip/models/soil.py:41 gip/models/soil.py:45
 msgid "Плодородие почвы"
 msgstr "Топурактын асылдуулугу"
 
-#: gip/models/soil.py:45
+#: gip/models/soil.py:46
 msgid "Плодородие почв"
 msgstr "Топурактардын асылдуулугу"
 
@@ -914,7 +931,7 @@ msgstr "Спутниктен тартылган сүрөт катмары"
 msgid "Слои спутниковых снимков"
 msgstr "Спутниктен тартылган катмарлары"
 
-#: indexes/models/satelliteimage.py:51 indexes/models/satelliteimage.py:60
+#: indexes/models/satelliteimage.py:51 indexes/models/satelliteimage.py:61
 msgid "Область интереса"
 msgstr "Кызыгуу чөйрөсү"
 
@@ -926,71 +943,71 @@ msgstr "Спутниктен тартылган сүрөт кызыгуу чөй
 msgid "Области интереса спутникового снимка"
 msgstr "Спутниктен тартылган сүрөт кызыгуу чөйрөлөрү"
 
-#: indexes/models/satelliteimage.py:63
+#: indexes/models/satelliteimage.py:64
 msgid "Дата снимков"
 msgstr "Тартылган сүрөттөрдүн датасы"
 
-#: indexes/models/satelliteimage.py:64
+#: indexes/models/satelliteimage.py:65
 msgid "Слой B01"
 msgstr "B01 катмары"
 
-#: indexes/models/satelliteimage.py:66
+#: indexes/models/satelliteimage.py:67
 msgid "Слой B02"
 msgstr "B02 катмары"
 
-#: indexes/models/satelliteimage.py:68
+#: indexes/models/satelliteimage.py:69
 msgid "Слой B03"
 msgstr "B03 катмары"
 
-#: indexes/models/satelliteimage.py:70
+#: indexes/models/satelliteimage.py:71
 msgid "Слой B04"
 msgstr "B04 катмары"
 
-#: indexes/models/satelliteimage.py:72
+#: indexes/models/satelliteimage.py:73
 msgid "Слой B05"
 msgstr "B05 катмары"
 
-#: indexes/models/satelliteimage.py:74
+#: indexes/models/satelliteimage.py:75
 msgid "Слой B06"
 msgstr "B06 катмары"
 
-#: indexes/models/satelliteimage.py:76
+#: indexes/models/satelliteimage.py:77
 msgid "Слой B07"
 msgstr "B07 катмары"
 
-#: indexes/models/satelliteimage.py:78
+#: indexes/models/satelliteimage.py:79
 msgid "Слой B08"
 msgstr "B08 катмары"
 
-#: indexes/models/satelliteimage.py:80
+#: indexes/models/satelliteimage.py:81
 msgid "Слой B8A"
 msgstr "B8A катмары"
 
-#: indexes/models/satelliteimage.py:82
+#: indexes/models/satelliteimage.py:83
 msgid "Слой B09"
 msgstr "B09 катмары"
 
-#: indexes/models/satelliteimage.py:85
+#: indexes/models/satelliteimage.py:86
 msgid "Слой B10"
 msgstr "B10 катмары"
 
-#: indexes/models/satelliteimage.py:88
+#: indexes/models/satelliteimage.py:89
 msgid "Слой B11"
 msgstr "B11 катмары"
 
-#: indexes/models/satelliteimage.py:90
+#: indexes/models/satelliteimage.py:91
 msgid "Слой B12"
 msgstr "B12 катмары"
 
-#: indexes/models/satelliteimage.py:93
+#: indexes/models/satelliteimage.py:94
 msgid "Координаты снимка"
 msgstr "Сүрөттүн координаттары"
 
-#: indexes/models/satelliteimage.py:97
+#: indexes/models/satelliteimage.py:99
 msgid "Спутниковый снимок Sentinel -2"
 msgstr "Спутниктен тартылган cүрөт Sentinel -2"
 
-#: indexes/models/satelliteimage.py:98
+#: indexes/models/satelliteimage.py:100
 msgid "Спутниковые снимки Sentinel -2"
 msgstr "Спутниктен тартылган cүрөт Sentinel -2"
 

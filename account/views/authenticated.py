@@ -74,7 +74,12 @@ class ChangePasswordAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         request.user.set_password(serializer.validated_data['password_confirm'])
         request.user.save()
-        return Response('Password has changed')
+        message = {
+            "ru": "Пароль изменен",
+            "ky": "Сырсөз өзгөртүлдү",
+            "en": "Password was changed"
+        }
+        return Response({"message": message})
 
 
 class GetProfileAPIView(GenericAPIView):
@@ -105,8 +110,8 @@ class DeleteNotificationAPIView(DestroyAPIView):
         Notifications.objects.get(user=user, pk=pk).delete()
         message = {
             "ru": "Уведомление удалено",
-            "ky": "Билдирүү алынып салынды",
-            "en": "Notification is deleted"
+            "ky": "Билдирүү өчүрүлдү",
+            "en": "Notification was deleted"
         }
         return Response({"message": message})
 

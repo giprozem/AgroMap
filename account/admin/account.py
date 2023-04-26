@@ -74,5 +74,5 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Notifications)
 class NotificationsAdmin(TranslationAdmin):
-    list_display = ['user', ]
-    list_filter = ['user', ]
+    list_display = ('user', )
+    list_filter = ('user', )
