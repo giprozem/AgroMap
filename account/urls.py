@@ -1,6 +1,6 @@
 from django.urls import path
 from account.views.authenticated import LoginAgromapView, UpdateProfileAPIView, ChangePasswordAPIView, \
-    GetProfileAPIView, NotificationAPIView, DeleteNotificationAPIView, LogoutAgromapView
+    GetProfileAPIView, NotificationsAPIView, DeleteNotificationAPIView, LogoutAgromapView
 
 
 urlpatterns = [
@@ -9,6 +9,6 @@ urlpatterns = [
     path('edit_profile/', UpdateProfileAPIView.as_view()),
     path('change_password/', ChangePasswordAPIView.as_view()),
     path('get_profile/', GetProfileAPIView.as_view()),
-    path('notifications/', NotificationAPIView.as_view()),
+    path('notifications/', NotificationsAPIView.as_view()),
     path('delete_notifications/<int:pk>/',DeleteNotificationAPIView.as_view()),
 ]

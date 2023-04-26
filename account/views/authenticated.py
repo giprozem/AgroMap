@@ -12,6 +12,7 @@ from account.models.account import Profile
 from rest_framework.generics import GenericAPIView
 from rest_framework.generics import ListAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
+from account.models.account import Notifications
 
 
 class LoginAgromapView(APIView):
@@ -86,13 +87,13 @@ class GetProfileAPIView(GenericAPIView):
         return Response(serializer.data)
 
 
-class NotificationAPIView(ListAPIView):
+class NotificationsAPIView(ListAPIView):
     serializer_class = NotificationsSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         user = self.request.user
-        queryset = user.notifications.unread()
+        queryset = Notifications.objects.filter(user=user)
         return queryset
 
 
@@ -101,8 +102,13 @@ class DeleteNotificationAPIView(DestroyAPIView):
 
     def delete(self, request, pk):
         user = self.request.user
-        user.notifications.get(pk=pk).delete()
-        return Response("Notification is deleted")
+        Notifications.objects.get(user=user, pk=pk).delete()
+        message = {
+            "ru": "Уведомление удалено",
+            "ky": "Билдирүү алынып салынды",
+            "en": "Notification is deleted"
+        }
+        return Response({"message": message})
 
 
 class LogoutAgromapView(APIView):

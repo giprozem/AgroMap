@@ -2,8 +2,8 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-
-from account.models import MyUser, Profile
+from modeltranslation.admin import TranslationAdmin
+from account.models import MyUser, Profile, Notifications
 
 
 class UserCreationForm(forms.ModelForm):
@@ -70,3 +70,9 @@ class MyUserAdmin(BaseUserAdmin):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['my_user', 'full_name']
+
+
+@admin.register(Notifications)
+class NotificationsAdmin(TranslationAdmin):
+    list_display = ['user', ]
+    list_filter = ['user', ]

@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     'leaflet',
     'simple_history',
     'django_extensions',
-    'notifications',
     'schema_graph',
     'gip',
     'indexes',

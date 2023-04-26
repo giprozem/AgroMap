@@ -12,8 +12,8 @@ from django.db import connection
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from notifications.signals import notify
 from ai.utils.predicted_contour import deleted_files
+from account.models.account import Notifications
 
 
 class SearchAPIView(APIView):
@@ -22,7 +22,11 @@ class SearchAPIView(APIView):
     def get(self, request):
         process = Process.objects.get(id=1)
         if process.is_running:
-            message = "Процесс сейчас идёт"
+            message = {
+                "ru": "Процесс сейчас идёт",
+                "ky": "Процесс азыр жүрүп жатат",
+                "en": "The process is underway"
+            }
         else:
             user = request.user
             Process.objects.all().delete()
@@ -30,9 +34,16 @@ class SearchAPIView(APIView):
             @receiver(post_save, sender=AI_Found)
             def my_handler(sender, instance, created, **kwargs):
                 if created:
-                    notify.send(instance, recipient=user, verb='Поиск контуров завершен')
+                    text = 'Поиск контуров завершен'
+                    text_ky = 'Контурдук издөө аяктады'
+                    text_en = 'Contour search completed'
+                    Notifications.objects.create(user=user, text=text, text_ky=text_ky, text_en=text_en)
                     deleted_files()
-            message = "Процесс запущен"
+            message = {
+                "ru": "Процесс запущен",
+                "ky": "Процесс башталды",
+                "en": "Process started"
+            }
         return Response({"message": message})
 
 
