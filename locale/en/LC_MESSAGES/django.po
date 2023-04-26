@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-19 13:09+0600\n"
+"POT-Creation-Date: 2023-04-26 13:49+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,6 +40,7 @@ msgid "Руководитель"
 msgstr "Supervisor"
 
 #: account/models/account.py:16 account/models/account.py:25
+#: account/models/account.py:39
 msgid "Пользователь"
 msgstr "User"
 
@@ -63,7 +64,23 @@ msgstr "Profile"
 msgid "Профили"
 msgstr "Profiles"
 
-#: account/views/authenticated.py:46
+#: account/models/account.py:40 gip/models/base.py:6 hub/models/base.py:6
+msgid "Дата создания"
+msgstr "Date of creation"
+
+#: account/models/account.py:41
+msgid "Текст уведомления"
+msgstr "Notification text"
+
+#: account/models/account.py:44
+msgid "Уведомление"
+msgstr "Notification"
+
+#: account/models/account.py:45
+msgid "Уведомления"
+msgstr "Notifications"
+
+#: account/views/authenticated.py:47
 msgid "“Логин или пароль введен неверно. Попробуйте снова.”"
 msgstr "“Your username or password is incorrect. Try again.”"
 
@@ -156,7 +173,7 @@ msgstr "Land type"
 
 #: ai/models/predicted_contour.py:31 gip/models/conton.py:12
 #: gip/models/contour.py:29 gip/models/contour.py:57 gip/models/district.py:12
-#: gip/models/region.py:13 gip/models/soil.py:23 gip/models/soil.py:41
+#: gip/models/region.py:13 gip/models/soil.py:24 gip/models/soil.py:42
 #: gip/models/village.py:11 hub/models/land_info.py:11
 #: indexes/models/actual_veg_index.py:67
 #: indexes/models/actual_veg_index_logs.py:6
@@ -194,8 +211,8 @@ msgstr "Culture"
 msgid "Высота"
 msgstr "Elevation"
 
-#: ai/models/predicted_contour.py:39 gip/models/soil.py:9 gip/models/soil.py:16
-#: gip/models/soil.py:22
+#: ai/models/predicted_contour.py:39 gip/models/soil.py:9 gip/models/soil.py:17
+#: gip/models/soil.py:23
 msgid "Тип почвы"
 msgstr "Soil type"
 
@@ -241,19 +258,19 @@ msgstr "Models for predicting productivity"
 msgid "Ошибка создания индекса растительности, проверьте имена индексов"
 msgstr "Creating vegetation index error, Check the indexes name"
 
-#: config/settings.py:124
+#: config/settings.py:123
 msgid "Русский"
 msgstr "Russian"
 
-#: config/settings.py:125
+#: config/settings.py:124
 msgid "Кыргызский"
 msgstr "Kyrgyz"
 
-#: config/settings.py:126
+#: config/settings.py:125
 msgid "Английский"
 msgstr "English"
 
-#: config/settings.py:183 config/urls.py:40 hub/apps.py:8
+#: config/settings.py:182 config/urls.py:40 hub/apps.py:8
 msgid "Эталонная база данных Гипрозем"
 msgstr "Giprozem reference database"
 
@@ -325,10 +342,6 @@ msgstr "Indexes"
 msgid "АгроМап"
 msgstr "AgroMap"
 
-#: gip/models/base.py:6 hub/models/base.py:6
-msgid "Дата создания"
-msgstr "Date of creation"
-
 #: gip/models/base.py:7 hub/models/base.py:7
 msgid "Дата обновления"
 msgstr "Update date"
@@ -356,7 +369,7 @@ msgstr "Identification number of contour"
 
 #: gip/models/contour.py:42 hub/models/land_info.py:9
 #: indexes/models/actual_veg_index.py:25 indexes/models/actual_veg_index.py:69
-#: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:94
+#: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:96
 msgid "История"
 msgstr "History"
 
@@ -462,31 +475,35 @@ msgstr "Density"
 msgid "Области"
 msgstr "Regions"
 
-#: gip/models/soil.py:17
+#: gip/models/soil.py:11
+msgid "Цвет"
+msgstr "Color"
+
+#: gip/models/soil.py:18
 msgid "Типы почвы"
 msgstr "Soil types"
 
-#: gip/models/soil.py:26
+#: gip/models/soil.py:27
 msgid "Контур типа почвы"
 msgstr "Soil type polygon"
 
-#: gip/models/soil.py:27
+#: gip/models/soil.py:28
 msgid "Контуры типа почвы"
 msgstr "Soil type polygons"
 
-#: gip/models/soil.py:31 gip/models/soil.py:34
+#: gip/models/soil.py:32 gip/models/soil.py:35
 msgid "Продуктивность почвы"
 msgstr "Soil productivity"
 
-#: gip/models/soil.py:35
+#: gip/models/soil.py:36
 msgid "Продуктивность почв"
 msgstr "Soil productivity"
 
-#: gip/models/soil.py:40 gip/models/soil.py:44
+#: gip/models/soil.py:41 gip/models/soil.py:45
 msgid "Плодородие почвы"
 msgstr "Soil fertility"
 
-#: gip/models/soil.py:45
+#: gip/models/soil.py:46
 msgid "Плодородие почв"
 msgstr "Soil fertility"
 
@@ -911,7 +928,7 @@ msgstr "Satellite image layer"
 msgid "Слои спутниковых снимков"
 msgstr "Satellite image layers"
 
-#: indexes/models/satelliteimage.py:51 indexes/models/satelliteimage.py:60
+#: indexes/models/satelliteimage.py:51 indexes/models/satelliteimage.py:61
 msgid "Область интереса"
 msgstr "Area of interest"
 
@@ -923,70 +940,70 @@ msgstr "Area of interest on satellite image"
 msgid "Области интереса спутникового снимка"
 msgstr "Areas of interest on satellite image"
 
-#: indexes/models/satelliteimage.py:63
+#: indexes/models/satelliteimage.py:64
 msgid "Дата снимков"
 msgstr "Date of pictures"
 
-#: indexes/models/satelliteimage.py:64
+#: indexes/models/satelliteimage.py:65
 msgid "Слой B01"
 msgstr "Layer B01"
 
-#: indexes/models/satelliteimage.py:66
+#: indexes/models/satelliteimage.py:67
 msgid "Слой B02"
 msgstr "Layer B02"
 
-#: indexes/models/satelliteimage.py:68
+#: indexes/models/satelliteimage.py:69
 msgid "Слой B03"
 msgstr "Layer B03"
 
-#: indexes/models/satelliteimage.py:70
+#: indexes/models/satelliteimage.py:71
 msgid "Слой B04"
 msgstr "Layer B04"
 
-#: indexes/models/satelliteimage.py:72
+#: indexes/models/satelliteimage.py:73
 msgid "Слой B05"
 msgstr "Layer B05"
 
-#: indexes/models/satelliteimage.py:74
+#: indexes/models/satelliteimage.py:75
 msgid "Слой B06"
 msgstr "Layer B06"
 
-#: indexes/models/satelliteimage.py:76
+#: indexes/models/satelliteimage.py:77
 msgid "Слой B07"
 msgstr "Layer B07"
 
-#: indexes/models/satelliteimage.py:78
+#: indexes/models/satelliteimage.py:79
 msgid "Слой B08"
 msgstr "Layer B08"
 
-#: indexes/models/satelliteimage.py:80
+#: indexes/models/satelliteimage.py:81
 msgid "Слой B8A"
 msgstr "Layer B8A"
 
-#: indexes/models/satelliteimage.py:82
+#: indexes/models/satelliteimage.py:83
 msgid "Слой B09"
 msgstr "Layer B09"
 
-#: indexes/models/satelliteimage.py:85
+#: indexes/models/satelliteimage.py:86
 msgid "Слой B10"
 msgstr "Layer B10"
 
-#: indexes/models/satelliteimage.py:88
+#: indexes/models/satelliteimage.py:89
 msgid "Слой B11"
 msgstr "Layer B11"
 
-#: indexes/models/satelliteimage.py:90
+#: indexes/models/satelliteimage.py:91
 msgid "Слой B12"
 msgstr "Layer B12"
 
-#: indexes/models/satelliteimage.py:93
+#: indexes/models/satelliteimage.py:94
 msgid "Координаты снимка"
 msgstr "Image coordinates"
 
-#: indexes/models/satelliteimage.py:97
+#: indexes/models/satelliteimage.py:99
 msgid "Спутниковый снимок Sentinel -2"
 msgstr "Satellite image Sentinel -2"
 
-#: indexes/models/satelliteimage.py:98
+#: indexes/models/satelliteimage.py:100
 msgid "Спутниковые снимки Sentinel -2"
 msgstr "Satellite images Sentinel -2"

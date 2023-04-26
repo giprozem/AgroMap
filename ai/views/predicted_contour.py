@@ -36,7 +36,7 @@ class SearchAPIView(APIView):
                 if created:
                     text = 'Поиск контуров завершен'
                     text_ky = 'Контурдук издөө аяктады'
-                    text_en = 'Contour search completed'
+                    text_en = 'Contour search was completed'
                     Notifications.objects.create(user=user, text=text, text_ky=text_ky, text_en=text_en)
                     deleted_files()
             message = {
