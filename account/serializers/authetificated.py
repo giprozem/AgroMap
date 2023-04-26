@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from account.models.account import Profile
 from rest_framework.exceptions import ValidationError
-from notifications.models import Notification
+from account.models.account import Notifications
 
 
 class LoginSerializer(serializers.Serializer):
@@ -33,5 +33,5 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class NotificationsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Notification
-        fields = ('id', 'recipient', 'actor_object_id', 'verb')
+        model = Notifications
+        exclude = ('text',)

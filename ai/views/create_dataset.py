@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from ai.models.create_dataset import Dataset, Process, CreateDescription
-from notifications.signals import notify
+from account.models.account import Notifications
 
 from ai.serializers import CreateDescriptionSerializer
 from ai.utils.predicted_contour import deleted_files
@@ -17,7 +17,11 @@ class CreateAPIView(APIView):
     def get(self, request):
         process = Process.objects.get(id=1)
         if process.is_running:
-            message = "Процесс сейчас идёт"
+            message = {
+                "ru": "Процесс сейчас идёт",
+                "ky": "Процесс азыр жүрүп жатат",
+                "en": "The process is underway"
+            }
         else:
             user = request.user
             Process.objects.all().delete()
@@ -25,9 +29,16 @@ class CreateAPIView(APIView):
             @receiver(post_save, sender=Dataset)
             def my_handler(sender, instance, created, **kwargs):
                 if created:
-                    notify.send(instance, recipient=user, verb=f'Датасет №{instance.pk} создан')
+                    text = f'Датасет №{instance.pk} создан'
+                    text_ky = f'Датасет №{instance.pk} түзүлгөн'
+                    text_en = f'Dataset №{instance.pk} created'
+                    Notifications.objects.create(user=user, text=text, text_ky=text_ky, text_en=text_en)
                     deleted_files()
-            message = "Процесс запущен"
+            message = {
+                "ru": "Процесс запущен",
+                "ky": "Процесс башталды",
+                "en": "Process started"
+            }
         return Response({"message": message})
 
 

@@ -32,3 +32,17 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.my_user.username
+
+
+class Notifications(models.Model):
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='notification',
+                             verbose_name=_('Пользователь'))
+    date = models.DateTimeField(auto_now=True, verbose_name=_('Дата создания'))
+    text = models.CharField(max_length=100, verbose_name=_('Текст уведомления'))
+
+    class Meta:
+        verbose_name = _('Уведомление')
+        verbose_name_plural = _('Уведомления')
+
+    def __str__(self):
+        return self.text

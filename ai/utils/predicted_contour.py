@@ -225,6 +225,7 @@ def merge_bands(instance):
     Merge_Bands.objects.all().delete()
     Merge_Bands.objects.create(is_passed=True, type_of_process=instance.type_of_process)
 
+
 def create_rgb(instance):
     time.sleep(8)
     merge_bands_list = os.listdir('media/Merge_Bands')
@@ -268,6 +269,7 @@ def create_rgb(instance):
     Create_RGB.objects.all().delete()
     Create_RGB.objects.create(is_passed=True, type_of_process=instance.type_of_process)
 
+
 def cut_rgb_tif(instance):
     time.sleep(8)
     rgb_tif_list = os.listdir('media/RGB')
@@ -301,8 +303,9 @@ def cut_rgb_tif(instance):
     Cut_RGB_TIF.objects.all().delete()
     Cut_RGB_TIF.objects.create(is_passed=True, type_of_process=instance.type_of_process)
 
+
 def yolo():
-    # time.sleep(30)
+    time.sleep(30)
     file_yolo = Yolo.objects.get(id=1)
     model = YOLO(f'media/{file_yolo.ai}')
     cutted_files = os.listdir('media/cutted_tiff/website')
@@ -387,6 +390,7 @@ def yolo():
                 print(e)
     AI_Found.objects.all().delete()
     AI_Found.objects.create(is_passed=True)
+
 
 def deleted_files():
     time.sleep(8)
