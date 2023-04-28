@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 # Копируем все файлы приложения в рабочую директорию в контейнере
 WORKDIR /usr/src/app
-ADD . /usr/src/app
+COPY requirements.txt ./
 RUN python3 -m pip install --upgrade --no-cache-dir setuptools==58.0
 RUN pip install -r requirements.txt
+COPY . .
