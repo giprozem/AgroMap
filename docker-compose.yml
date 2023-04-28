@@ -26,6 +26,8 @@ services:
       - postgis
     restart: always
 
+volumes:
+  media:
 
 networks:
   default:
