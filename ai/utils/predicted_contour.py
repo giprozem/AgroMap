@@ -1,209 +1,22 @@
-import random
 import time
+
 import cv2
 from django.db import connection
-from osgeo import gdal, osr
+from osgeo import gdal
 import os
-from gip.views.handbook_contour import contour_test_for_ai, contour_Chui_2
-from indexes.models.satelliteimage import SciHubImageDate
-from ai.models import Contour_AI, Images_AI, Yolo, Dataset
+
+from django.contrib.gis.geos import GEOSGeometry
+from shapely import geometry as shp
+from ai.models import Yolo, Contour_AI
 from ultralytics import YOLO
 from PIL import Image
 from pyproj import Proj, Transformer
-from pyproj.transformer import transform as trnsfrm
-from django.contrib.gis.geos import GEOSGeometry
 import matplotlib.pyplot as plt
 import pandas as pd
-from shapely.geometry import Polygon
 import numpy as np
 import rasterio
 from ai.models.create_dataset import *
-
-"""
-def merge_bands():
-    # Фильтруем объекты SciHubImageDate по ID и загружаем изображения
-    satellite_images = SciHubImageDate.objects.filter(id__in=[154, 155])
-
-    for image in satellite_images:
-        time.sleep(2)
-        path = 'media/'
-        files = [
-            path + f"{image.B02}",  # Синий
-            path + f"{image.B03}",  # Зеленый
-            path + f"{image.B04}",  # Красный
-        ]
-
-        # Открываем первый файл из списка для получения метаданных
-        with rasterio.open(files[0]) as src:
-            meta = src.meta
-            meta.update(count=len(files))  # Устанавливаем количество каналов в метаданных
-            meta.update(driver="GTiff")  # Устанавливаем тип драйвера в метаданных
-
-        # Создаем выходной файл с помощью метаданных и записываем в него данные из всех файлов
-        output_file = f"media/Merge_Bands/ID={image.pk}_DATE={datetime.fromisoformat(str(image.date)).strftime('%Y-%m-%d')}.tif"
-        with rasterio.open(output_file, "w", **meta) as dst:
-            for id, layer in enumerate(files, start=1):
-                with rasterio.open(layer) as src:
-                    dst.write(src.read(1), id)
-                    """
-
-"""
-def create_rgb():
-    time.sleep(8)
-    merge_bands_list = os.listdir('media/Merge_Bands')
-
-    for band_rgb in merge_bands_list:
-        # Открываем входной файл с помощью Rasterio
-        with rasterio.open(f'media/Merge_Bands/{band_rgb}') as src:
-            # Читаем каналы красного, зеленого и синего цветов
-            red = src.read(3)
-            green = src.read(2)
-            blue = src.read(1)
-
-            # Масштабируем значения пикселей до диапазона от 0 до 255
-            red = np.interp(red, (red.min(), red.max()), (0, 255)).astype('uint8')
-            green = np.interp(green, (green.min(), green.max()), (0, 255)).astype('uint8')
-            blue = np.interp(blue, (blue.min(), blue.max()), (0, 255)).astype('uint8')
-
-            # Создаем RGB изображение, объединив каналы в одно изображение
-            rgb = np.dstack((red, green, blue))
-
-            # Получаем метаданные из исходного файла и обновляем количество каналов и тип данных
-            meta = src.meta.copy()
-            meta.update(count=3, dtype='uint8')
-
-            # Записываем RGB изображение в новый файл в формате GeoTIFF
-            with rasterio.open(f"media/RGB/RGB_{band_rgb}", 'w', **meta) as dst:
-                dst.write(rgb.transpose(2, 0, 1))
-                """
-
-"""def cut_rgb_tif():
-    time.sleep(8)
-    rgb_tif_list = os.listdir('media/RGB')
-    for rgb_tif in rgb_tif_list:
-        input_file = os.path.join('media/RGB', rgb_tif)
-
-        # Открываем входной файл с помощью GDAL
-        ds = gdal.Open(input_file)
-        if ds is not None:
-            band = ds.GetRasterBand(1)
-            xsize = band.XSize
-            ysize = band.YSize
-
-            out_path = 'media/cutted_tiff/'
-            output_filename = f"tile_"
-
-            tile_size_x = 256
-            tile_size_y = 256
-
-            # Обрезаем изображение на тайлы
-            for i in range(0, xsize, tile_size_x):
-                for j in range(0, ysize, tile_size_y):
-                    output_file = os.path.join(out_path,
-                                               output_filename + str(i) + "_" + f"{random.randint(1, 10000)}" + str(
-                                                   j) + f"{random.randint(1, 10000)}" + ".tif")
-                    com_string = f"gdal_translate -of GTIFF -srcwin {i}, {j}, {tile_size_x}, {tile_size_y} {input_file} {output_file}"
-                    os.system(com_string)
-
-        else:
-            print(f"Не удалось открыть файл: {rgb_tif}")"""
-
-# def yolo():
-#     file_yolo = Yolo.objects.get(id=1)
-#     model = YOLO(f'media/{file_yolo.ai}')
-#     cutted_files = os.listdir('media/cutted_tiff')
-#
-#     for file in cutted_files:
-#         ds = gdal.Open(f"media/cutted_tiff/{file}", gdal.GA_ReadOnly)
-#
-#         proj = osr.SpatialReference(wkt=ds.GetProjection())
-#         proj_wgs84 = osr.SpatialReference()
-#         proj_wgs84.ImportFromEPSG(4326)
-#         transform = osr.CoordinateTransformation(proj, proj_wgs84)
-#
-#         ulx, xres, xskew, uly, yskew, yres = ds.GetGeoTransform()
-#         lrx = ulx + (ds.RasterXSize * xres)
-#         lry = uly + (ds.RasterYSize * yres)
-#
-#         ul_lon, ul_lat, _ = transform.TransformPoint(ulx, uly)
-#         lr_lon, lr_lat, _ = transform.TransformPoint(lrx, lry)
-#
-#         coords = [
-#             [[ul_lat, ul_lon, ], [ul_lat, lr_lon], [lr_lat, lr_lon], [lr_lat, ul_lon],
-#              [ul_lat, ul_lon]]]
-#         geojson = {
-#             "type": "Polygon",
-#             "coordinates": coords
-#         }
-#
-#         with connection.cursor() as cursor:
-#             cursor.execute(f"""
-#                 SELECT ST_Intersects('{contour_Chui_2}'::geography::geometry, '{GEOSGeometry(f"{geojson}")}'::geography::geometry);
-#             """)
-#             inside = cursor.fetchall()
-#         if inside[0][0] == True:
-#             image = Image.open(f'media/cutted_tiff/{file}')
-#             results = model.predict(source=image, save=False, conf=0.05, hide_labels=True, line_thickness=1)
-#             try:
-#                 arrays = results[0].masks.segments
-#                 confs = results[0].boxes.conf
-#                 w, h = image.size
-#                 x = 1 / w
-#                 y = 1 / h
-#                 img = Image.fromarray(results[0].orig_img)
-#                 plt.imshow(img)
-#                 for i in arrays:
-#                     df = pd.DataFrame(i)
-#                     df.loc[len(df)] = ([i[0][0], i[0][1]])
-#                     plt.plot(df[0] / x, df[1] / y, c="red")
-#                 plt.axis('off')
-#                 plt.savefig(f'media/RGB/{file[:-4]}.png', transparent=True, bbox_inches='tight', pad_inches=0)
-#                 RGB = Images_AI.objects.create()
-#                 RGB.image.save(os.listdir('media/RGB/')[0],
-#                                   open(f"media/RGB/{os.listdir('media/RGB')[0]}", 'rb'))
-#                 with rasterio.open(f'media/cutted_tiff/{file}') as src:
-#                     for n in range(0, len(arrays)):
-#                         coordinates = []
-#                         for i in arrays[n]:
-#                             coordinates.append(src.xy(i[1] / x, i[0] / y))
-#                         coordinates.append(coordinates[0])
-#                         geojsons = []
-#                         for i in range(0, len(coordinates)):
-#                             inProj = Proj(init=f'epsg:{src.crs.to_epsg()}')
-#                             outProj = Proj(init='epsg:4326')
-#                             x1, y1 = coordinates[i][0], coordinates[i][1]
-#                             x2, y2 = trnsfrm(inProj, outProj, x1, y1)
-#                             geojsons.append([x2, y2])
-#                         conf = confs[n]
-#                         coords = np.array(geojsons)
-#
-#                         # Создать геометрию полигона из столбцов координат
-#                         polygon = Polygon(zip(coords[:, 0], coords[:, 1]))
-#                         # polygon
-#
-#                         # Сгладить углы полигона
-#                         smooth_polygon = polygon.simplify(0.0001, preserve_topology=True)
-#                         # smooth_polygon
-#
-#                         # Получить координаты полигона
-#                         vertices = list(smooth_polygon.exterior.coords)
-#                         list_of_values = [list(tuple) for tuple in vertices]
-#
-#                         print(round(float(conf), 1), '------------------------------')
-#                         geojson = {
-#                             "type": "Polygon",
-#                             "coordinates": [list_of_values]
-#                         }
-#                         poly = GEOSGeometry(f"{geojson}")
-#                         with connection.cursor() as cursor:
-#                             cursor.execute(f"""
-#                             SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
-#                             '{poly}'::geography::geometry);
-#                             """)
-#                             district = cursor.fetchall()[0][0]
-#                         Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 1), district_id=district)
-#             except Exception as e:
-#                 print(e)
+from gip.models import Region
 
 
 def merge_bands(instance):
@@ -270,11 +83,11 @@ def create_rgb(instance):
     Create_RGB.objects.create(is_passed=True, type_of_process=instance.type_of_process)
 
 
-def cut_rgb_tif(instance):
+def cut_rgb_tif():
     time.sleep(8)
     rgb_tif_list = os.listdir('media/RGB')
-    # for rgb_tif in rgb_tif_list:
-    input_file = os.path.join('media/RGB', 'RGB_ID=MINI_TUP_DATE=1.tif')
+    input_file = os.path.join('media/RGB', 'Bishkek.tif')
+    os.makedirs('test_yolo/test', exist_ok=True)
 
     # Открываем входной файл с помощью GDAL
     ds = gdal.Open(input_file)
@@ -283,57 +96,210 @@ def cut_rgb_tif(instance):
         xsize = band.XSize
         ysize = band.YSize
 
-        out_path = 'media/cutted_tiff/'
-        output_filename = f"tile_TUP"
+        out_path = 'test_yolo/640_Bishkek'
+        output_filename = 'KG_'
+        num = 1  # Переменная для хранения номера файла
 
-        tile_size_x = 256
-        tile_size_y = 256
+        tile_size_x = 640
+        tile_size_y = 640
 
-        # Обрезаем изображение на тайлы
+        # Обрезаем изображение сначала так, чтобы содержать первые верхние тайлы 320px
         for i in range(0, xsize, tile_size_x):
             for j in range(0, ysize, tile_size_y):
-                output_file = os.path.join(out_path,
-                                           output_filename + str(i) + "_" + f"{random.randint(1, 10000)}" + str(
-                                               j) + f"{random.randint(1, 10000)}" + ".tif")
-                com_string = f"gdal_translate -of GTIFF -srcwin {i}, {j}, {tile_size_x}, {tile_size_y} {input_file} {output_file}"
-                os.system(com_string)
+                # Определяем границы области, которую надо вырезать
+                # left = i
+                # top = j
+                # width = tile_size_x
+                # height = tile_size_y
+                #
+                # # Проверяем, не выходим ли мы за границы изображения
+                # if left + width > xsize:
+                #     width = xsize - left
+                # if top + height > ysize:
+                #     height = ysize - top
 
+                output_file = os.path.join(out_path, output_filename + str(num) + "_CENTER.tif")
+                num += 1  # Увеличиваем номер файла
+
+                # Обрезаем изображение
+                dst = gdal.Translate(output_file, ds, srcWin=[i, j, tile_size_x, tile_size_y])
+
+        # Обрезаем изображение затем так, чтобы не содержать первые верхние тайлы 320px
+        for i in range(0, xsize, tile_size_x):
+            for j in range(320, ysize, tile_size_y):
+                # # Определяем границы области, которую надо вырезать
+                # left = i
+                # top = j
+                # width = tile_size_x
+                # height = tile_size_y
+                #
+                # # Проверяем, не выходим ли мы за границы изображения
+                # if left + width > xsize:
+                #     width = xsize - left
+                # if top + height > ysize:
+                #     height = ysize - top
+
+                output_file = os.path.join(out_path, output_filename + str(num) + "_TOP.tif")
+                num += 1  # Увеличиваем номер файла
+
+                # Обрезаем изображение
+                dst = gdal.Translate(output_file, ds, srcWin=[i, j, tile_size_x, tile_size_y])
+
+            # Обрезаем изображение слева на право, чтобы не содержать первые левые тайлы 320px
+        for i in range(320, xsize, tile_size_x):
+            for j in range(0, ysize, tile_size_y):
+                # # Определяем границы области, которую надо вырезать
+                # left = i
+                # top = j
+                # width = tile_size_x
+                # height = tile_size_y
+                #
+                # # Проверяем, не выходим ли мы за границы изображения
+                # if left + width > xsize:
+                #     width = xsize - left
+                # if top + height > ysize:
+                #     height = ysize - top
+
+                output_file = os.path.join(out_path, output_filename + str(num) + "_LEFT.tif")
+                num += 1  # Увеличиваем номер файла
+
+                # Обрезаем изображение
+                dst = gdal.Translate(output_file, ds, srcWin=[i, j, tile_size_x, tile_size_y])
+
+        # Освобождаем ресурсы
+        ds = None
+        dst = None
     else:
-        print(f"Не удалось открыть файл: RGB_ID=MINI_1_DATE=1.tif")
-    Cut_RGB_TIF.objects.all().delete()
-    Cut_RGB_TIF.objects.create(is_passed=True, type_of_process=instance.type_of_process)
+        print(f"Не удалось открыть файл: Bishkek.tif")
 
 
 def yolo():
-    time.sleep(30)
+    # from datetime import date
+    # year = date.today().strftime("%Y")
+    time.sleep(15)
     file_yolo = Yolo.objects.get(id=1)
     model = YOLO(f'media/{file_yolo.ai}')
-    cutted_files = os.listdir('media/cutted_tiff/website')
+    cutted_files = sorted(os.listdir('media/CHUI_TCI/'),
+                          key=lambda x: int(x.split('_')[1].split('.')[0].replace('KG_', '')))
 
     for file in cutted_files:
-        image = Image.open(f'media/cutted_tiff/{file}')
-        percents_yolo = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]
-        for percent in percents_yolo:
-            results = model.predict(source=image, save=False, conf=percent, hide_labels=True, line_thickness=1)
+        print(file, '--------------------')
+        image = Image.open(f'media/CHUI_TCI/{file}')
+        results = model.predict(source=image, half=False,
+                                save=False,
+                                conf=0.01,
+                                boxes=False,
+                                show_labels=False,
+                                agnostic_nms=True,
+                                retina_masks=True,
+                                max_det=10000,
+                                iou=0.3,
+                                imgsz=640,
+                                classes=1)
+
+        try:
+            arrays = results[0].masks.xyn
+            confs = results[0].boxes.conf
+            if arrays is not None:
+                w, h = image.size
+                x = 1 / w
+                y = 1 / h
+                # img = Image.fromarray(results[0].orig_img)
+                # plt.imshow(img)
+                for i in arrays:
+                    df = pd.DataFrame(i)
+                    df.loc[len(df)] = ([i[0][0], i[0][1]])
+                    plt.plot(df[0] / x, df[1] / y, c="red")
+                plt.axis('off')
+                with rasterio.open(f'media/CHUI_TCI/{file}') as src:
+                    for n in range(0, len(arrays)):
+                        coordinates = []
+                        for i in arrays[n]:
+                            coordinates.append(src.xy(i[1] / x, i[0] / y))
+                        coordinates.append(coordinates[0])
+                        geojsons = []
+                        for i in range(0, len(coordinates)):
+                            inProj = Proj(f'EPSG:{src.crs.to_epsg()}')
+                            outProj = Proj('EPSG:4326')
+                            x1, y1 = coordinates[i][0], coordinates[i][1]
+                            transformer = Transformer.from_proj(inProj, outProj)
+                            x2, y2 = transformer.transform(x1, y1)
+                            geojsons.append([x2, y2])
+                        conf = confs[n]
+                        coords = np.array(geojsons)
+                        # Создать геометрию полигона из столбцов координат
+                        polygon = shp.Polygon(zip(coords[:, 1], coords[:, 0]))
+                        # polygon
+
+                        # Сгладить углы полигона
+                        smooth_polygon = polygon.simplify(0.0001, preserve_topology=True)
+                        # smooth_polygon
+
+                        # Получить координаты полигона
+                        vertices = list(smooth_polygon.exterior.coords)
+                        list_of_values = [list(tuple) for tuple in vertices]
+                        geojson = {
+                            "type": "Polygon",
+                            "coordinates": [list_of_values]
+                        }
+                        try:
+                            poly = GEOSGeometry(f"{geojson}")
+                            time.sleep(0.2)
+                            with connection.cursor() as cursor:
+                                cursor.execute(f"""
+                                SELECT SUM(subquery.percent) as total_percent
+                                FROM (
+                                    SELECT ST_Area(ST_Intersection(scm.polygon::geometry, '{poly}'::geography::geometry)) /
+                                           NULLIF(ST_Area(scm.polygon::geometry), 0) * 100 as percent
+                                    FROM ai_contour_ai as scm
+                                    WHERE ST_Area(scm.polygon::geometry) <> 0
+                                ) as subquery;
+                                """)
+                                percent_contour = cursor.fetchall()[0][0]
+                            if int(percent_contour) < 30:
+                                try:
+                                    time.sleep(0.2)
+                                    Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 2), year='2022',
+                                                              type_id=1)
+                                except Exception as e:
+                                    print(e, '------------ Save contour')
+                        except Exception as e:
+                            print(e, '--------------Intesection')
+                            try:
+                                time.sleep(0.2)
+                                Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 2), year='2022',
+                                                          type_id=1)
+                            except Exception as e:
+                                print(e, '=============== Exept Exception')
+        except Exception as e:
+            print(e)
+            print(file, '=======================')
             try:
-                arrays = results[0].masks.segments
+                image = Image.open(f'media/CHUI_BANDS/{file}')
+                results = model.predict(source=image, half=False,
+                                        save=False,
+                                        conf=0.01,
+                                        boxes=False,
+                                        show_labels=False,
+                                        agnostic_nms=True,
+                                        retina_masks=True,
+                                        max_det=10000,
+                                        iou=0.3,
+                                        imgsz=640,
+                                        classes=1)
+                arrays = results[0].masks.xyn
                 if arrays is not None:
                     w, h = image.size
                     x = 1 / w
                     y = 1 / h
                     img = Image.fromarray(results[0].orig_img)
-                    plt.imshow(img)
+                    # plt.imshow(img)
                     for i in arrays:
                         df = pd.DataFrame(i)
                         df.loc[len(df)] = ([i[0][0], i[0][1]])
                         plt.plot(df[0] / x, df[1] / y, c="red")
                     plt.axis('off')
-                    plt.savefig(f'media/RGB/tile_256_2548768212.png', transparent=True, bbox_inches='tight',
-                                pad_inches=0)
-                    RGB = Images_AI.objects.create()
-                    RGB.image.save(os.listdir('media/RGB/')[0],
-                                      open(f"media/RGB/{os.listdir('media/RGB')[0]}", 'rb'))
-                    with rasterio.open(f'media/cutted_tiff/{file}') as src:
+                    with rasterio.open(f'media/CHUI_BANDS/{file}') as src:
                         for n in range(0, len(arrays)):
                             coordinates = []
                             for i in arrays[n]:
@@ -344,13 +310,13 @@ def yolo():
                                 inProj = Proj(f'EPSG:{src.crs.to_epsg()}')
                                 outProj = Proj('EPSG:4326')
                                 x1, y1 = coordinates[i][0], coordinates[i][1]
-                                x2, y2 = trnsfrm(inProj, outProj, x1, y1)
-                                geojsons.append([y2, x2])
-                            # conf = confs[n]
+                                transformer = Transformer.from_proj(inProj, outProj)
+                                x2, y2 = transformer.transform(x1, y1)
+                                geojsons.append([x2, y2])
+                            conf = confs[n]
                             coords = np.array(geojsons)
-
                             # Создать геометрию полигона из столбцов координат
-                            polygon = Polygon(zip(coords[:, 1], coords[:, 0]))
+                            polygon = shp.Polygon(zip(coords[:, 1], coords[:, 0]))
                             # polygon
 
                             # Сгладить углы полигона
@@ -360,36 +326,91 @@ def yolo():
                             # Получить координаты полигона
                             vertices = list(smooth_polygon.exterior.coords)
                             list_of_values = [list(tuple) for tuple in vertices]
-
                             geojson = {
                                 "type": "Polygon",
                                 "coordinates": [list_of_values]
                             }
-                            poly = GEOSGeometry(f"{geojson}")
-                            with connection.cursor() as cursor:
-                                cursor.execute(f"""
-                                SELECT SUM(subquery.percent) as total_percent
-                                FROM (
-                                    SELECT ST_Area(ST_Intersection(scm.polygon::geometry,
-                                    '{poly}'::geography::geometry)) / ST_Area(scm.polygon::geometry) * 100 as percent
-                                    FROM ai_contour_ai as scm
-                                ) as subquery;
-                                """)
-                                percent_contour = cursor.fetchall()[0][0]
-                            if int(percent_contour) < 30:
+                            try:
+                                poly = GEOSGeometry(f"{geojson}")
+                                time.sleep(0.2)
+
                                 with connection.cursor() as cursor:
                                     cursor.execute(f"""
-                                    SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
-                                    '{poly}'::geography::geometry);
+                                    SELECT SUM(subquery.percent) as total_percent
+                                    FROM (
+                                        SELECT ST_Area(ST_Intersection(scm.polygon::geometry, '{poly}'::geography::geometry)) /
+                                               NULLIF(ST_Area(scm.polygon::geometry), 0) * 100 as percent
+                                        FROM ai_contour_ai as scm
+                                        WHERE ST_Area(scm.polygon::geometry) <> 0
+                                    ) as subquery;
                                     """)
-                                    # district = cursor.fetchall()[0][0] if cursor.fetchall() != [] else None
-                                    district = cursor.fetchall()[0][0]
-                                    Contour_AI.objects.create(polygon=poly, percent=percent,
-                                                              district_id=district, year='2022', type_id=1)
+                                    percent_contour = cursor.fetchall()[0][0]
+                                if int(percent_contour) < 30:
+                                    try:
+                                        time.sleep(0.2)
+                                        Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 2),
+                                                                  year='2022',
+                                                                  type_id=1)
+                                    except Exception as e:
+                                        print(e, '------------ Save contour')
+                            except Exception as e:
+                                print(e, '--------------Intesection')
+                                try:
+                                    time.sleep(0.2)
+                                    Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 2), year='2022',
+                                                              type_id=1)
+                                except Exception as e:
+                                    print(e, '=============== Exept Exception')
             except Exception as e:
                 print(e)
-    AI_Found.objects.all().delete()
-    AI_Found.objects.create(is_passed=True)
+
+
+def clean_contour_and_create_district():
+    # features = []
+    # collection = {"type": "FeatureCollection", "features": features}
+    # for i in Contour_AI.objects.all():
+    #     features.append({"type": "Feature", "properties": {}, "geometry": eval(i.polygon.geojson)})
+    #
+    # with open('GEOJSON/apr_29__11:33.geojson', 'w') as f:
+    #     json.dump(collection, f)
+    # print(len(features))
+
+    for i in Region.objects.filter(id=10):
+        print(i.polygon)
+    model_contour = Contour_AI.objects.all().order_by('id')
+    for i in model_contour:
+        id_contour = i.id
+        area_ha = i.area_ha
+        polygon = i.polygon
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                SELECT dst.id
+                FROM gip_district AS dst
+                WHERE ST_Intersects(dst.polygon::geography::geometry,
+                                    '{polygon}'::geography::geometry) LiMIT 1;
+                """)
+                district = cursor.fetchall()[0][0]
+                Contour_AI.objects.filter(id=id_contour).update(district_id=district)
+        except Exception as e:
+            print(id_contour)
+            with connection.cursor() as cursor:
+                cursor.execute(f"""
+                SELECT dst.id
+                            FROM gip_district AS dst
+                            WHERE ST_Intersects(
+                                ST_MakeValid(dst.polygon::geometry),
+                                ST_MakeValid(ST_GeomFromText('{polygon}'))
+                            ) LIMIT 1;
+                """)
+                district = cursor.fetchall()[0][0]
+                Contour_AI.objects.filter(id=id_contour).update(district_id=district)
+
+        if area_ha is None:
+            ha = round(polygon.area / 10 ** (-6), 2)
+            Contour_AI.objects.filter(id=id_contour).update(area_ha=float(ha))  # 73544
+        if area_ha < 1.0:
+            Contour_AI.objects.filter(id=id_contour).delete()
 
 
 def deleted_files():
