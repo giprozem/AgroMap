@@ -224,7 +224,7 @@ def yolo():
                             x1, y1 = coordinates[i][0], coordinates[i][1]
                             transformer = Transformer.from_proj(inProj, outProj)
                             x2, y2 = transformer.transform(x1, y1)
-                            geojsons.append([x2, y2])
+                            geojsons.append([y2, x2])
                         conf = confs[n]
                         coords = np.array(geojsons)
                         # Создать геометрию полигона из столбцов координат
