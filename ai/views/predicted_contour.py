@@ -1,3 +1,5 @@
+from threading import Thread
+
 from django.contrib.gis.geos import Polygon
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -20,7 +22,8 @@ from ai.utils.predicted_contour import deleted_files, yolo, cut_rgb_tif
 
 class TestYolo(APIView):
     def get(self, request):
-        yolo()
+        thread_object = Thread(target=yolo)
+        thread_object.start()
         # clean_contour_and_create_district()
         return Response('OK')
 
