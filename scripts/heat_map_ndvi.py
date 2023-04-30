@@ -1,14 +1,17 @@
 import datetime
-import glob
 import os
+import shutil
+from glob import glob
 from itertools import product
 
 import geojson
-import geopandas as gpd
+import pandas as pd
 import rasterio as rio
+from geopandas import GeoDataFrame
 from osgeo import gdal, osr, ogr
 from pyproj import Proj, transform
 from rasterio import windows
+from shapely.geometry import Point
 
 from indexes.index_funcs.ndvi_funcs import get_ndvi, get_region_of_interest
 from indexes.models.satelliteimage import SciHubImageDate, SciHubAreaInterest
@@ -63,7 +66,6 @@ def get_center_point(file_path):
     x1, y1 = centerX, centerY
     x2, y2 = transform(inProj, outProj, x1, y1)
 
-    # return centerX, centerY
     return {'longitude': x2, 'latitude': y2}
 
 
@@ -86,11 +88,6 @@ def response_convert_shape_file(response_in_json, output_file_name, output_path)
     with open(f'./{output_path}/{output_file_name}.geojson', 'w') as f:
         geojson.dump(my_geojson, f)
 
-    # Kонвертация GeoJson в Shpfile
-    gdf = gpd.read_file(f'./{output_path}/{output_file_name}.geojson')
-    gdf.to_file(f'./{output_path}/{output_file_name}.shp')
-    return f'{output_file_name}.shp'
-
 
 def convert_shape_to_tif(shapesile_name, output_path, output_file_name):
     pts = ogr.Open(f"{shapesile_name}", 0)
@@ -99,9 +96,11 @@ def convert_shape_to_tif(shapesile_name, output_path, output_file_name):
     width = 11000
     height = 11000
 
+    algorithm_options = 'invdist:smoothing=0.01'
+
     pts = layer = None
     nn = gdal.Grid(f'./{output_path}/{output_file_name}.tif', f'{shapesile_name}', zfield='ndvi',
-                   algorithm='invdist',
+                   algorithm=algorithm_options,
                    outputType=gdal.GDT_Float32,
                    width=width,
                    height=height
@@ -118,23 +117,34 @@ def creating_folder(creating_folder_name):
         return f'{creating_folder_name}'
 
 
-def run():
-    start = datetime.datetime.now()
+def merge_df(links):
+    dataframes = []
+
+    for i, link in enumerate(links):
+        df = pd.read_csv(link)
+        dataframes.append(df)
+
+    merged_df = pd.concat(dataframes)
+    return merged_df
+
+
+def run(year=datetime.datetime.now().year):
     areas_interested = SciHubAreaInterest.objects.all()
 
     for area_interested in areas_interested:
-        out = []
-        current_year = datetime.datetime.now().year
+
         filtered = SciHubImageDate.objects.filter(
             area_interest=area_interested
         ).filter(
-            date__range=(f'{current_year}-04-01 00:00:00', f'{current_year}-10-10 00:00:00')
+            date__range=(f'{year}-04-01 00:00:00', f'{year}-10-10 00:00:00')
         )
         temporary_folder = 'heat-map'
         if filtered:
             for i in filtered:
+                out = []
                 image_dir = f'{str(i.date)[:10]}-{area_interested.id}'
                 creating_folder(f'{temporary_folder}/{image_dir}')
+                creating_folder(f'{temporary_folder}/csv')
                 satellite_image = f'./media/{temporary_folder}/{image_dir}'
 
                 try:
@@ -181,25 +191,23 @@ def run():
                     point.update(response)
                     out.append(point)
 
-                # Search files with .tiff extension in current directory
-                # pattern = f"./media/{temporary_folder}/{image_dir}"
-                pattern = f"./media/{temporary_folder}/{image_dir}/*.tif"
-                files = glob.glob(pattern)
+                shutil.rmtree(f"./media/{temporary_folder}/{image_dir}")
 
-                # deleting the files with tiff extension
-                for file in files:
-                    os.remove(file)
+                df = pd.DataFrame(out)
+                df.to_csv(f"./media/{temporary_folder}/csv/{area_interested.id}{image_dir}.csv")
+    input_files = sorted(glob("./media/heat-map/csv/*.csv"))
+    df = merge_df(input_files)
+    df = df.drop(columns=['Unnamed: 0'])
 
-                response_convert_shape_file(
-                    response_in_json=out,
-                    output_file_name=f'{image_dir}-{str(area_interested.id)}',
-                    output_path=f'./media/heat-map/{image_dir}'
-                )
-                convert_shape_to_tif(
-                    shapesile_name=f'./media/heat-map/{image_dir}/{image_dir}-{str(area_interested.id)}.shp',
-                    output_path=f'./media/heat-map/{image_dir}',
-                    output_file_name=image_dir + str(area_interested.id)
-                )
-        # shutil.rmtree(f"./media/{temporary_folder}")
+    mean_ndvi = df.groupby(['longitude', 'latitude'])['ndvi'].mean().reset_index()
+    mean_ndvi.to_csv('./media/heat-map/csv/grouped.csv')
 
-    return out
+    # Create a GeoDataFrame from the DataFrame
+    geometry = [Point(xyz) for xyz in zip(mean_ndvi.longitude, mean_ndvi.latitude, mean_ndvi.ndvi)]
+    gdf = GeoDataFrame(mean_ndvi, geometry=geometry)
+    gdf.to_file('./media/heat-map/csv/result.geojson')
+
+    # Convert geojson to tif
+    convert_shape_to_tif(shapesile_name='./media/heat-map/ex/result.geojson',
+                         output_path='./media/heat-map/csv/',
+                         output_file_name='result')
