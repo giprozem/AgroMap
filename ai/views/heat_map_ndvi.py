@@ -14,4 +14,5 @@ class HeatMapAPIView(APIView):
     def get(self, request, *args, **kwargs):
         thread_object = Thread(target=run)
         thread_object.start()
-        return Response('process is started', status=200)
+
+        return Response('started', status=200)
