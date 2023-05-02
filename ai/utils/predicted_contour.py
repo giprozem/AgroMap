@@ -366,17 +366,6 @@ def yolo():
 
 
 def clean_contour_and_create_district():
-    # features = []
-    # collection = {"type": "FeatureCollection", "features": features}
-    # for i in Contour_AI.objects.all():
-    #     features.append({"type": "Feature", "properties": {}, "geometry": eval(i.polygon.geojson)})
-    #
-    # with open('GEOJSON/apr_29__11:33.geojson', 'w') as f:
-    #     json.dump(collection, f)
-    # print(len(features))
-
-    for i in Region.objects.filter(id=10):
-        print(i.polygon)
     model_contour = Contour_AI.objects.all().order_by('id')
     for i in model_contour:
         id_contour = i.id
