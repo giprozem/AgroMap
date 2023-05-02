@@ -312,7 +312,7 @@ def yolo():
                                 x1, y1 = coordinates[i][0], coordinates[i][1]
                                 transformer = Transformer.from_proj(inProj, outProj)
                                 x2, y2 = transformer.transform(x1, y1)
-                                geojsons.append([x2, y2])
+                                geojsons.append([y2, x2])
                             conf = confs[n]
                             coords = np.array(geojsons)
                             # Создать геометрию полигона из столбцов координат
@@ -372,6 +372,7 @@ def clean_contour_and_create_district():
         area_ha = i.area_ha
         polygon = i.polygon
         try:
+            print(id_contour, '---------------')
             with connection.cursor() as cursor:
                 cursor.execute(f"""
                 SELECT dst.id
@@ -382,7 +383,8 @@ def clean_contour_and_create_district():
                 district = cursor.fetchall()[0][0]
                 Contour_AI.objects.filter(id=id_contour).update(district_id=district)
         except Exception as e:
-            print(id_contour)
+            print(id_contour, '================')
+            print(polygon)
             with connection.cursor() as cursor:
                 cursor.execute(f"""
                 SELECT dst.id
@@ -392,14 +394,20 @@ def clean_contour_and_create_district():
                                 ST_MakeValid(ST_GeomFromText('{polygon}'))
                             ) LIMIT 1;
                 """)
-                district = cursor.fetchall()[0][0]
+                district = cursor.fetchall()[0][0] if cursor.fetchall() else None
+                print(district)
                 Contour_AI.objects.filter(id=id_contour).update(district_id=district)
 
-        if area_ha is None:
-            ha = round(polygon.area / 10 ** (-6), 2)
-            Contour_AI.objects.filter(id=id_contour).update(area_ha=float(ha))  # 73544
-        if area_ha < 1.0:
-            Contour_AI.objects.filter(id=id_contour).delete()
+        try:
+            if area_ha is None:
+                print(area_ha, 'area_ha is NONE')
+                ha = round(polygon.area / 10 ** (-6), 2)
+                Contour_AI.objects.filter(id=id_contour).update(area_ha=float(ha))  # 73544
+            if area_ha < 1.0:
+                print(area_ha, 'area_ha DELETE')
+                Contour_AI.objects.filter(id=id_contour).delete()
+        except Exception as e:
+            print(e)
 
 
 def deleted_files():
