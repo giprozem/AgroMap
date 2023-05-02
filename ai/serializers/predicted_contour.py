@@ -2,7 +2,7 @@ import datetime
 from rest_framework import serializers
 from django.db import connection
 from ai.models.predicted_contour import Contour_AI
-from gip.models import Conton, Region
+from gip.models import Conton
 from gip.serializers.culture import CultureSerializer
 from gip.serializers.landtype import LandTypeSerializer
 from gip.serializers.soil import SoilClassSerializer
@@ -11,14 +11,9 @@ from rest_framework.exceptions import APIException
 
 
 class Contour_AISerializer(serializers.ModelSerializer):
-    region = serializers.SerializerMethodField()
     soil_class = SoilClassSerializer()
     type = LandTypeSerializer()
     culture = CultureSerializer()
-
-    def get_region(self, obj):
-        region = Region.objects.get(name=obj.district.region)
-        return region.pk
 
     class Meta:
         model = Contour_AI
@@ -28,11 +23,11 @@ class Contour_AISerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
 
         representation['region'] = {
-            'id': instance.district.region.pk if instance.district.region else None,
-            'name_ru': instance.district.region.name_ru if instance.district.region else None,
-            'name_ky': instance.district.region.name_ky if instance.district.region else None,
-            'name_en': instance.district.region.name_en if instance.district.region else None,
-            'code_soato': instance.district.region.code_soato if instance.district.region else None,
+            'id': instance.district.region.pk if instance.district else None,
+            'name_ru': instance.district.region.name_ru if instance.district else None,
+            'name_ky': instance.district.region.name_ky if instance.district else None,
+            'name_en': instance.district.region.name_en if instance.district else None,
+            'code_soato': instance.district.region.code_soato if instance.district else None,
 
         }
 
@@ -48,7 +43,6 @@ class Contour_AISerializer(serializers.ModelSerializer):
 
 
 class UpdateContour_AISerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Contour_AI
         fields = '__all__'
