@@ -24,7 +24,13 @@ class TestYolo(APIView):
     def get(self, request):
         thread_object = Thread(target=yolo)
         thread_object.start()
-        # clean_contour_and_create_district()
+        return Response('OK')
+
+
+class CleanContourCreateDistrictView(APIView):
+    def get(self, request):
+        thread_object = Thread(target=clean_contour_and_create_district)
+        thread_object.start()
         return Response('OK')
 
 
