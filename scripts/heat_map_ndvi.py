@@ -208,6 +208,6 @@ def run(year=datetime.datetime.now().year):
     gdf.to_file('./media/heat-map/csv/result.geojson')
 
     # Convert geojson to tif
-    convert_shape_to_tif(shapesile_name='./media/heat-map/ex/result.geojson',
+    convert_shape_to_tif(shapesile_name='./media/heat-map/csv/result.geojson',
                          output_path='./media/heat-map/csv/',
                          output_file_name='result')
