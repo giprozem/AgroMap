@@ -1,4 +1,7 @@
+import rasterio
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import Polygon
+from rasterio import warp
 from simple_history.models import HistoricalRecords
 from django.utils.translation import gettext_lazy as _
 
@@ -98,3 +101,11 @@ class SciHubImageDate(models.Model):
     class Meta:
         verbose_name = _('Спутниковый снимок Sentinel -2')
         verbose_name_plural = _("Спутниковые снимки Sentinel -2")
+
+    def save(self, *args, **kwargs):
+        with rasterio.open(self.B04) as src:
+            bbox_m = src.bounds
+            bbox = warp.transform_bounds(src.crs, {'init': 'EPSG:4326'}, *bbox_m)
+            bboxs = Polygon.from_bbox(bbox)
+        self.polygon = bboxs
+        super(SciHubImageDate, self).save(*args, **kwargs)
