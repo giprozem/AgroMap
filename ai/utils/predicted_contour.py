@@ -383,20 +383,25 @@ def clean_contour_and_create_district():
                 district = cursor.fetchall()[0][0]
                 Contour_AI.objects.filter(id=id_contour).update(district_id=district)
         except Exception as e:
-            print(id_contour, '================')
-            print(polygon)
-            with connection.cursor() as cursor:
-                cursor.execute(f"""
-                SELECT dst.id
-                            FROM gip_district AS dst
-                            WHERE ST_Intersects(
-                                ST_MakeValid(dst.polygon::geometry),
-                                ST_MakeValid(ST_GeomFromText('{polygon}'))
-                            ) LIMIT 1;
-                """)
-                district = cursor.fetchall()[0][0] if cursor.fetchall() else None
-                print(district)
-                Contour_AI.objects.filter(id=id_contour).update(district_id=district)
+
+            try:
+                print(id_contour, '================')
+                print(polygon)
+                with connection.cursor() as cursor:
+                    cursor.execute(f"""
+                    SELECT dst.id
+                                FROM gip_district AS dst
+                                WHERE ST_Intersects(
+                                    ST_MakeValid(dst.polygon::geometry),
+                                    ST_MakeValid(ST_GeomFromText('{polygon}'))
+                                ) LIMIT 1;
+                    """)
+                    district = cursor.fetchall()[0][0] if cursor.fetchall() else None
+                    print(cursor.fetchall())
+                    print(district)
+                    Contour_AI.objects.filter(id=id_contour).update(district_id=district)
+            except Exception as e:
+                print(e, 'TOPOLOGY')
 
         try:
             if area_ha is None:
