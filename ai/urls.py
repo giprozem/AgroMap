@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from ai.views.heat_map_ndvi import HeatMapAPIView
-from ai.views.predict_culture import CulturePredict
+from ai.views.predict_culture import CulturePredict, PredictCulture
 from ai.views.create_dataset import CreateAPIView, CreateDescriptionAPIView
 from ai.views.predicted_contour import SearchAPIView, Contour_AIViewSet, Contour_AIInScreen, TestYolo, \
     CleanContourCreateDistrictView
@@ -18,6 +18,7 @@ urlpatterns = [
     path('create-dataset/', CreateAPIView.as_view()),
     path('', include(router.urls)),
     path('culture-predict/', CulturePredict.as_view()),
+    path('predict_culture/', PredictCulture.as_view()), #todo: rename
     path('index-satelite/', CreatingIndexSatellite.as_view()),
     path('predict-productivity/', PredictingProductivityAPIVie.as_view()),
     path('heat-map/', HeatMapAPIView.as_view()),
