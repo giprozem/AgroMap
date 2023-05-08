@@ -32,7 +32,7 @@ class PivotTableCulture(APIView):
                 MAX(CASE WHEN cmv.name = 'NDWI' THEN ipc.average_value END) as ndwi_max, MIN(CASE WHEN cmv.name = 'NDWI' THEN ipc.average_value END) as ndwi_min,
                 MAX(CASE WHEN cmv.name = 'NDRE' THEN ipc.average_value END) as ndre_max, MIN(CASE WHEN cmv.name = 'NDRE' THEN ipc.average_value END) as ndre_min,
                 MAX(CASE WHEN cmv.name = 'SAVI' THEN ipc.average_value END) as savi_max, MIN(CASE WHEN cmv.name = 'SAVI' THEN ipc.average_value END) as savi_min,
-                dst.name
+                dst.name_en, dst.name_ru, dst.name_ky
                 FROM ai_contour_ai as aic
                 LEFT JOIN gip_district as dst ON dst.id=aic.district_id
                 LEFT JOIN indexes_predictedcontourvegindex as ipc ON aic.id=ipc.contour_id
@@ -48,7 +48,8 @@ class PivotTableCulture(APIView):
                      'ndvi_max': i[4],
                      'ndvi_min': i[5], 'vari_max': i[6], 'vari_min': i[7], 'ndwi_max': i[8], 'ndwi_min': i[9],
                      'ndre_max': i[10],
-                     'ndre_min': i[11], 'savi_max': i[12], 'savi_min': i[13], 'district_name': i[14], 'year': '2022'}
+                     'ndre_min': i[11], 'savi_max': i[12], 'savi_min': i[13], 'district_name_en': i[14],
+                     'district_name_ru': i[15], 'district_name_kg': i[16], 'year': '2022'}
                 )
             return Response(data)
         else:
