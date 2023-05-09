@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-26 13:49+0600\n"
+"POT-Creation-Date: 2023-05-09 12:19+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: account/admin/account.py:13 account/admin/account.py:42
+msgid "Пароль"
+msgstr "Password"
+
+#: account/admin/account.py:14
+msgid "Подтвердите пароль"
+msgstr "Confirm password"
+
+#: account/admin/account.py:25
+msgid "Пароли не совпадают"
+msgstr "Password mismatch"
+
+#: account/admin/account.py:43
+msgid "Изменить пароль можно <a href=\"../password/\">здесь</a>."
+msgstr "Password can be changed <a href=\"../password/\">here</a>."
+
+#: account/admin/account.py:64
+msgid "Доступы"
+msgstr "Permissions"
 
 #: account/apps.py:8
 msgid "Аккаунты"
@@ -144,7 +164,7 @@ msgstr "Process of searching for contours"
 #: ai/models/create_dataset.py:59 culture_model/models/vegetation_index.py:7
 #: gip/models/soil.py:10 hub/models/land_info.py:90
 #: indexes/models/actual_veg_index.py:41 indexes/models/pasture.py:9
-#: indexes/models/satelliteimage.py:8
+#: indexes/models/satelliteimage.py:11
 msgid "Описание"
 msgstr "Description"
 
@@ -322,7 +342,7 @@ msgstr "Planned index values"
 #: gip/models/contour.py:13 hub/models/category_type_list.py:7
 #: hub/models/document_type_list.py:7 hub/models/land_type_list.py:7
 #: hub/models/property_type_list.py:7 indexes/models/pasture.py:8
-#: indexes/models/satelliteimage.py:7
+#: indexes/models/satelliteimage.py:10
 msgid "Название"
 msgstr "Name"
 
@@ -369,7 +389,7 @@ msgstr "Identification number of contour"
 
 #: gip/models/contour.py:42 hub/models/land_info.py:9
 #: indexes/models/actual_veg_index.py:25 indexes/models/actual_veg_index.py:69
-#: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:96
+#: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:99
 msgid "История"
 msgstr "History"
 
@@ -892,118 +912,118 @@ msgstr "Average contour index"
 msgid "Средние индексы контуров"
 msgstr "Average contour indexes"
 
-#: indexes/models/satelliteimage.py:14 indexes/models/satelliteimage.py:35
+#: indexes/models/satelliteimage.py:17 indexes/models/satelliteimage.py:38
 msgid "Источник спутниковых снимков"
 msgstr "Satellite image source"
 
-#: indexes/models/satelliteimage.py:15
+#: indexes/models/satelliteimage.py:18
 msgid "Источники спутниковых снимков"
 msgstr "Satellite image sources"
 
-#: indexes/models/satelliteimage.py:19
+#: indexes/models/satelliteimage.py:22
 msgid "Название диапазона спутникового снимка"
 msgstr "Satellite image range name"
 
-#: indexes/models/satelliteimage.py:20
+#: indexes/models/satelliteimage.py:23
 msgid "Описание диапазона спутникового снимка"
 msgstr "Satellite image range description"
 
-#: indexes/models/satelliteimage.py:23 indexes/models/satelliteimage.py:41
+#: indexes/models/satelliteimage.py:26 indexes/models/satelliteimage.py:44
 msgid "Диапазон спутникового снимка"
 msgstr "Satellite image range"
 
-#: indexes/models/satelliteimage.py:24
+#: indexes/models/satelliteimage.py:27
 msgid "Диапазоны спутникового снимка"
 msgstr "Satellite image ranges"
 
-#: indexes/models/satelliteimage.py:31
+#: indexes/models/satelliteimage.py:34
 msgid "Снимок"
 msgstr "Image"
 
-#: indexes/models/satelliteimage.py:46
+#: indexes/models/satelliteimage.py:49
 msgid "Слой спутникового снимка"
 msgstr "Satellite image layer"
 
-#: indexes/models/satelliteimage.py:47
+#: indexes/models/satelliteimage.py:50
 msgid "Слои спутниковых снимков"
 msgstr "Satellite image layers"
 
-#: indexes/models/satelliteimage.py:51 indexes/models/satelliteimage.py:61
+#: indexes/models/satelliteimage.py:54 indexes/models/satelliteimage.py:64
 msgid "Область интереса"
 msgstr "Area of interest"
 
-#: indexes/models/satelliteimage.py:54
+#: indexes/models/satelliteimage.py:57
 msgid "Область интереса спутникового снимка"
 msgstr "Area of interest on satellite image"
 
-#: indexes/models/satelliteimage.py:55
+#: indexes/models/satelliteimage.py:58
 msgid "Области интереса спутникового снимка"
 msgstr "Areas of interest on satellite image"
 
-#: indexes/models/satelliteimage.py:64
+#: indexes/models/satelliteimage.py:67
 msgid "Дата снимков"
 msgstr "Date of pictures"
 
-#: indexes/models/satelliteimage.py:65
+#: indexes/models/satelliteimage.py:68
 msgid "Слой B01"
 msgstr "Layer B01"
 
-#: indexes/models/satelliteimage.py:67
+#: indexes/models/satelliteimage.py:70
 msgid "Слой B02"
 msgstr "Layer B02"
 
-#: indexes/models/satelliteimage.py:69
+#: indexes/models/satelliteimage.py:72
 msgid "Слой B03"
 msgstr "Layer B03"
 
-#: indexes/models/satelliteimage.py:71
+#: indexes/models/satelliteimage.py:74
 msgid "Слой B04"
 msgstr "Layer B04"
 
-#: indexes/models/satelliteimage.py:73
+#: indexes/models/satelliteimage.py:76
 msgid "Слой B05"
 msgstr "Layer B05"
 
-#: indexes/models/satelliteimage.py:75
+#: indexes/models/satelliteimage.py:78
 msgid "Слой B06"
 msgstr "Layer B06"
 
-#: indexes/models/satelliteimage.py:77
+#: indexes/models/satelliteimage.py:80
 msgid "Слой B07"
 msgstr "Layer B07"
 
-#: indexes/models/satelliteimage.py:79
+#: indexes/models/satelliteimage.py:82
 msgid "Слой B08"
 msgstr "Layer B08"
 
-#: indexes/models/satelliteimage.py:81
+#: indexes/models/satelliteimage.py:84
 msgid "Слой B8A"
 msgstr "Layer B8A"
 
-#: indexes/models/satelliteimage.py:83
+#: indexes/models/satelliteimage.py:86
 msgid "Слой B09"
 msgstr "Layer B09"
 
-#: indexes/models/satelliteimage.py:86
+#: indexes/models/satelliteimage.py:89
 msgid "Слой B10"
 msgstr "Layer B10"
 
-#: indexes/models/satelliteimage.py:89
+#: indexes/models/satelliteimage.py:92
 msgid "Слой B11"
 msgstr "Layer B11"
 
-#: indexes/models/satelliteimage.py:91
+#: indexes/models/satelliteimage.py:94
 msgid "Слой B12"
 msgstr "Layer B12"
 
-#: indexes/models/satelliteimage.py:94
+#: indexes/models/satelliteimage.py:97
 msgid "Координаты снимка"
 msgstr "Image coordinates"
 
-#: indexes/models/satelliteimage.py:99
+#: indexes/models/satelliteimage.py:102
 msgid "Спутниковый снимок Sentinel -2"
 msgstr "Satellite image Sentinel -2"
 
-#: indexes/models/satelliteimage.py:100
+#: indexes/models/satelliteimage.py:103
 msgid "Спутниковые снимки Sentinel -2"
 msgstr "Satellite images Sentinel -2"

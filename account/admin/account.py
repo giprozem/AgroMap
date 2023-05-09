@@ -4,13 +4,14 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from modeltranslation.admin import TranslationAdmin
 from account.models import MyUser, Profile, Notifications
+from django.utils.translation import gettext_lazy as _
 
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-    confirm_password = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    password = forms.CharField(label=_('Пароль'), widget=forms.PasswordInput)
+    confirm_password = forms.CharField(label=_('Подтвердите пароль'), widget=forms.PasswordInput)
 
     class Meta:
         model = MyUser
@@ -21,7 +22,7 @@ class UserCreationForm(forms.ModelForm):
         password = self.cleaned_data.get("password1")
         confirm_password = self.cleaned_data.get("password2")
         if password and confirm_password and password != confirm_password:
-            raise forms.ValidationError("Passwords don't match")
+            raise forms.ValidationError(_("Пароли не совпадают"))
         return confirm_password
 
     def save(self, commit=True):
@@ -38,7 +39,8 @@ class UserChangeForm(forms.ModelForm):
     the user, but replaces the password field with admin's
     password hash display field.
     """
-    password = ReadOnlyPasswordHashField()
+    password = ReadOnlyPasswordHashField(label=_("Пароль"),
+        help_text=_("Изменить пароль можно <a href=\"../password/\">здесь</a>."))
 
     class Meta:
         model = MyUser
@@ -51,15 +53,15 @@ class UserChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 
-
 @admin.register(MyUser)
 class MyUserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ['id', 'username', 'email']
+    list_display = ('id', 'username',)
+    list_display_links = ('username', )
     fieldsets = ((None, {'fields': ('username', 'password')}),
-                 ('Permissions', {'fields': ('is_staff', 'is_superuser', 'is_supervisor', 'is_active', 'is_farmer',
+                 (_('Доступы'), {'fields': ('is_staff', 'is_superuser', 'is_supervisor', 'is_active', 'is_farmer',
                                              'is_employee', 'groups')}))
 
     add_fieldsets = (
@@ -69,7 +71,8 @@ class MyUserAdmin(BaseUserAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['my_user', 'full_name']
+    list_display = ('my_user', 'full_name')
+    search_fields = ('my_user', 'full_name')
 
 
 @admin.register(Notifications)
