@@ -72,7 +72,7 @@ class MyUserAdmin(BaseUserAdmin):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('my_user', 'full_name')
-    search_fields = ('my_user', 'full_name')
+    search_fields = ('full_name', 'my_user__username')
 
 
 @admin.register(Notifications)
