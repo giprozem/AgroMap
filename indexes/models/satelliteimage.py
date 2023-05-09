@@ -93,6 +93,8 @@ class SciHubImageDate(models.Model):
                            null=True)
     B12 = models.FileField(upload_to='satellite_images', verbose_name=_('Слой B12'), help_text='SWIR - 2', blank=True,
                            null=True)
+    TCI = models.FileField(upload_to='satellite_images', verbose_name='Слой TCI', help_text='RGB', blank=True,
+                           null=True)  # todo: Translate
     image_png = models.FileField(upload_to='satellite_images_to_png', blank=True, null=True)  # todo: Translate
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Координаты снимка"), blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -102,10 +104,10 @@ class SciHubImageDate(models.Model):
         verbose_name = _('Спутниковый снимок Sentinel -2')
         verbose_name_plural = _("Спутниковые снимки Sentinel -2")
 
-    def save(self, *args, **kwargs):
-        with rasterio.open(self.B04) as src:
-            bbox_m = src.bounds
-            bbox = warp.transform_bounds(src.crs, {'init': 'EPSG:4326'}, *bbox_m)
-            bboxs = Polygon.from_bbox(bbox)
-        self.polygon = bboxs
-        super(SciHubImageDate, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     with rasterio.open(self.B04) as src:
+    #         bbox_m = src.bounds
+    #         bbox = warp.transform_bounds(src.crs, {'init': 'EPSG:4326'}, *bbox_m)
+    #         bboxs = Polygon.from_bbox(bbox)
+    #     self.polygon = bboxs
+    #     super(SciHubImageDate, self).save(*args, **kwargs)
