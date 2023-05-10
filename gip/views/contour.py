@@ -3,18 +3,23 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import viewsets, filters, status
+from rest_framework import filters, status, mixins
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
 from gip.models.contour import Contour
 from gip.pagination.contour_pagination import SearchContourPagination
 from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializer, UpdateAuthDetailContourSerializer
 
 
-class AuthDetailContourViewSet(viewsets.ModelViewSet):
+class AuthDetailContourViewSet(mixins.CreateModelMixin,
+                               mixins.RetrieveModelMixin,
+                               mixins.UpdateModelMixin,
+                               mixins.DestroyModelMixin,
+                               GenericViewSet):
     queryset = Contour.objects.all().order_by('id').filter(is_deleted=False)
     serializer_class = AuthDetailContourSerializer
 
@@ -1119,7 +1124,7 @@ class CultureStatisticsAPIView(APIView):
                     return Response(data)
             else:
                 start = 'select culture_name_ru, culture_name_ky, culture_name_en, sum(area_ha) as total_area_ha, c'
-                middle= f""" from (
+                middle = f""" from (
                       select clt.name_ru as culture_name_ru,
                       clt.name_ky as culture_name_ky,
                       clt.name_en as culture_name_en,
