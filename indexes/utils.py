@@ -384,6 +384,7 @@ def download_satellite_images_v2():
                  '2022-04-01, 2022-04-30', '2022-05-01, 2022-05-30', '2022-06-01, 2022-06-30', '2022-07-01, 2022-07-30',
                  '2022-08-01, 2022-08-30', '2022-09-01, 2022-09-30', '2022-10-01, 2022-10-30',
                  ]
+        time.sleep(15)
         for date in dates:
             os.makedirs(output, exist_ok=True)
 
@@ -538,6 +539,7 @@ def download_satellite_images_v2():
                                         sci_hub_image_date.B12.save(f'B12_area_interest_id-{footprint.pk}.tif',
                                                                     open(f"{img_data_path}/{filename}", 'rb'))
                                     sci_hub_image_date.save()
+                time.sleep(15)
                 shutil.rmtree(output)
             except Exception as e:
                 print(e)

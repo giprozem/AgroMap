@@ -79,7 +79,6 @@ class UpdateAuthDetailContourSerializer(serializers.ModelSerializer):
 
 
 class AuthDetailContourSerializer(serializers.ModelSerializer):
-    conton = ContonWithoutPolygonSerializer()
     year = serializers.IntegerField(required=True)
     code_soato = serializers.CharField(
         max_length=30, required=False,
@@ -94,9 +93,6 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
                                     message=(
                                         "C таким Идентификационный номер контура уже существует в базе"))]
     )
-    soil_class = SoilClassSerializer()
-    type = LandTypeSerializer()
-    culture = CultureSerializer()
 
     class Meta:
         model = Contour
@@ -109,17 +105,46 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
             'name_ru': instance.conton.district.region.name_ru if instance.conton.district.region else None,
             'name_ky': instance.conton.district.region.name_ky if instance.conton.district.region else None,
             'name_en': instance.conton.district.region.name_en if instance.conton.district.region else None,
-            'code_soato': instance.conton.district.region.code_soato if instance.conton.district.region else None,
-
+            'code_soato': instance.conton.district.region.code_soato if instance.conton.district.region else None
         }
         representation['district'] = {
             'id': instance.conton.district.pk if instance.conton.district else None,
             'name_ru': instance.conton.district.name_ru if instance.conton.district else None,
             'name_ky': instance.conton.district.name_ky if instance.conton.district else None,
             'name_en': instance.conton.district.name_en if instance.conton.district else None,
-            'code_soato': instance.conton.district.code_soato if instance.conton.district else None,
+            'code_soato': instance.conton.district.code_soato if instance.conton.district else None
         }
-
+        representation['conton'] = {
+            'id': instance.conton.pk if instance.conton else None,
+            'name_ru': instance.conton.name_ru if instance.conton else None,
+            'name_ky': instance.conton.name_ky if instance.conton else None,
+            'name_en': instance.conton.name_en if instance.conton else None,
+            'code_soato': instance.conton.code_soato if instance.conton.district else None
+        }
+        representation['soil_class'] = {
+            'id': instance.soil_class.pk if instance.soil_class else None,
+            'ID': instance.soil_class.ID if instance.soil_class else None,
+            'name_ru': instance.soil_class.name_ru if instance.soil_class else None,
+            'name_ky': instance.soil_class.name_ky if instance.soil_class else None,
+            'name_en': instance.soil_class.name_en if instance.soil_class else None,
+            'description_ru': instance.soil_class.description_ru if instance.soil_class else None,
+            'description_ky': instance.soil_class.description_ky if instance.soil_class else None,
+            'description_en': instance.soil_class.description_en if instance.soil_class else None,
+            'color': instance.soil_class.color if instance.soil_class else None
+        }
+        representation['type'] = {
+            'id': instance.type.pk if instance.type else None,
+            'name_ru': instance.type.name_ru if instance.type else None,
+            'name_ky': instance.type.name_ky if instance.type else None,
+            'name_en': instance.type.name_en if instance.type else None
+        }
+        representation['culture'] = {
+            'id': instance.culture.pk if instance.culture else None,
+            'name_ru': instance.culture.name_ru if instance.culture else None,
+            'name_ky': instance.culture.name_ky if instance.culture else None,
+            'name_en': instance.culture.name_en if instance.culture else None,
+            'coefficient_crop': instance.culture.coefficient_crop if instance.culture else None
+        }
         return representation
 
     def is_polygon_inside_Kyrgyzstan(self, request, *args, **kwargs):

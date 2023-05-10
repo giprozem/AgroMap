@@ -17,7 +17,6 @@ router = DefaultRouter()
 router.register('contour', AuthDetailContourViewSet)
 router.register('culture', CultureViewSet)
 
-
 urlpatterns = [
     path('soil-creating/', SoilAPIView.as_view()),
     path("occurrence-check/", OccurrenceCheckAPIView.as_view()),
