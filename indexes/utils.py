@@ -423,8 +423,6 @@ def download_satellite_images_v2():
             }
 
             products = requests.get(url, params=params).json()['value']
-            # print(footprint.polygon.wkt)
-            # print(date)
             if len(products) > 1:
                 # Получаем координаты TIFF-файла
                 tiff_coords = []
@@ -440,6 +438,7 @@ def download_satellite_images_v2():
                             f.write(response_download.content)
                         break
                     elif not check_online_true and check_len_coordinates != 5:
+                        print(date[:10], date[12:], '-------------------', footprint.pk)
                         SciHubImageDate.objects.create(area_interest_id=footprint.pk, no_image=True,
                                                        polygon=product['Footprint'].strip("geography'"),
                                                        note=f'Не удалось получить ни один продукт ({date})')
@@ -509,7 +508,7 @@ def download_satellite_images_v2():
                                             img_bytes = io.BytesIO()
                                             png_image.save(img_bytes, format='PNG')
                                             img_bytes.seek(0)
-                                        sci_hub_image_date.B01.save(f'TCI_area_interest_id-{footprint.pk}.tif',
+                                        sci_hub_image_date.TCI.save(f'TCI_area_interest_id-{footprint.pk}.tif',
                                                                     open(f"{img_data_path}/{filename}", 'rb'))
                                         sci_hub_image_date.image_png.save('image.png', img_bytes, save=True)
                                     elif re.search(".*B03.*.tif", filename):
