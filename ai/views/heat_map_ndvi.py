@@ -12,7 +12,7 @@ class HeatMapAPIView(APIView):
         operation_summary='do not required for front'
     )
     def get(self, request, *args, **kwargs):
-        thread_object = Thread(target=run)
+        thread_object = Thread(target=run, args=(request.query_params['year'], ))
         thread_object.start()
 
         return Response('started', status=200)

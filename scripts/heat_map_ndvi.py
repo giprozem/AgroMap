@@ -15,6 +15,7 @@ from shapely.geometry import Point
 
 from indexes.index_funcs.ndvi_funcs import get_ndvi, get_region_of_interest
 from indexes.models.satelliteimage import SciHubImageDate, SciHubAreaInterest
+from indexes.index_funcs.common_funcs import cutting_tiff
 
 
 def get_tiles(ds, width=50, height=50):
@@ -211,3 +212,8 @@ def run(year=datetime.datetime.now().year):
     convert_shape_to_tif(shapesile_name='./media/heat-map/csv/result.geojson',
                          output_path='./media/heat-map/csv/',
                          output_file_name='result')
+    cutting_tiff(
+        outputpath='./media/heat-map/csv/',
+        inputpath='./media/heat-map/csv/result.tif',
+        polygon='KyrgyzstanContour.geojson'
+    )
