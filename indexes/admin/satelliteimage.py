@@ -1,9 +1,11 @@
+import rasterio
 from django.contrib import admin
 from django.contrib.admin.options import TabularInline
 from django.contrib.admin.widgets import AdminFileWidget
 from django.utils.safestring import mark_safe
-
+from django.contrib.gis.geos import Polygon
 from leaflet.admin import LeafletGeoAdmin
+from rasterio import warp
 from simple_history.admin import SimpleHistoryAdmin
 
 from indexes.models.satelliteimage import SciHubAreaInterest, SciHubImageDate
@@ -54,3 +56,12 @@ class SciHubImageDateAdmin(LeafletGeoAdmin, SimpleHistoryAdmin, admin.ModelAdmin
     def get_html_photo(self, obj):
         if obj.image_png:
             return mark_safe(f"<img src='{obj.image_png.url}' width=710, height=600>")
+
+    def save_model(self, request, obj, form, change):
+        if obj.B01:
+            with rasterio.open(obj.B01) as src:
+                bbox_m = src.bounds
+                bbox = warp.transform_bounds(src.crs, {'init': 'EPSG:4326'}, *bbox_m)
+                bboxs = Polygon.from_bbox(bbox)
+                obj.polygon = bboxs
+                obj.save()
