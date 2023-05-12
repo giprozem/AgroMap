@@ -1,3 +1,5 @@
+from threading import Thread
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -10,5 +12,6 @@ class CreatingVegIndexesAPIView(APIView):
         operation_summary='do not required for front'
     )
     def get(self, request):
-        create_veg_indexes()
+        thread_object = Thread(target=create_veg_indexes)
+        thread_object.start()
         return Response('Ok')
