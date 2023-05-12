@@ -6,8 +6,6 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from gip.models import Contour
-
 
 class OccurrenceCheckAPIView(APIView):
     def get(self, request, *args, **kwargs):
@@ -76,7 +74,8 @@ class PolygonsInBbox(APIView):
                 data = []
                 for i in rows:
                     data.append({"type": "Feature",
-                                 "properties": {'contour_id': i[0],'contour_ink': i[1],'conton_id': i[2],'farmer_id': i[3],
+                                 "properties": {'contour_id': i[0], 'contour_ink': i[1], 'conton_id': i[2],
+                                                'farmer_id': i[3],
                                                 'contour_year_id': i[4], 'productivity': i[5], 'land_type': i[6]},
                                  "geometry": eval(i[-1])})
                 return Response({"type": "FeatureCollection", "features": data})
@@ -197,8 +196,8 @@ class PolygonsInScreen(APIView):
             "culture": 1
             }
         """
-
-        if request.data:
+        land_type = request.GET.get('land_type')
+        if request.data and land_type:
             bboxs = Polygon.from_bbox((request.data['_southWest']['lng'], request.data['_southWest']['lat'],
                                        request.data['_northEast']['lng'], request.data['_northEast']['lat']))
             sql = f"""
@@ -208,7 +207,7 @@ class PolygonsInScreen(APIView):
             FROM gip_contour AS cntr
             left JOIN gip_culture AS clt ON clt.id=cntr.culture_id
             WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry)
-            and cntr.is_deleted=False
+            and cntr.is_deleted=False and cntr.type_id in ({land_type})
             """
             culture = request.data.get("culture")
             if culture:
@@ -219,7 +218,7 @@ class PolygonsInScreen(APIView):
                 data = []
                 for i in rows:
                     data.append({"type": "Feature",
-                                 "properties": {'id': i[0], 'conton_id': i[1],  'farmer_id': i[2], 'ink': i[3],
+                                 "properties": {'id': i[0], 'conton_id': i[1], 'farmer_id': i[2], 'ink': i[3],
                                                 'is_rounded': i[4], 'code_soato': i[5], 'is_deleted': i[6],
                                                 'area_ha': i[7], 'elevation': i[8], 'productivity': i[9],
                                                 'land_type': i[10], 'year': i[11],
