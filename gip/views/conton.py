@@ -30,6 +30,13 @@ class ContonAPIView(APIView):
                 type=openapi.TYPE_INTEGER,
                 description='If `polygon` is set, this parameter can be used to filter districts by district ID.'
             ),
+            openapi.Parameter(
+                'pagination',
+                in_=openapi.IN_QUERY,
+                type=openapi.TYPE_BOOLEAN,
+                description='If set, returns the serialized data with pagination. '
+                            'If doesnot set, returns only the district data without pagination.'
+            ),
         ],
         responses={
             200: openapi.Response(
@@ -69,6 +76,7 @@ class ContonAPIView(APIView):
         polygon = request.query_params.get('polygon')
         district = request.query_params.get('district_id')
         conton = request.query_params.get('id')
+        pagination = request.query_params.get('pagination')
         if polygon:
             if district and conton:
                 query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
@@ -82,17 +90,21 @@ class ContonAPIView(APIView):
             serializer = ContonSerializer(query, many=True)
             return Response(serializer.data, status=200)
         else:
-            if district and conton:
-                query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
-                                                id__in=[int(pk) for pk in conton.split(',')])
-            elif district:
-                query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')])
-            elif conton:
-                query = Conton.objects.all().filter(id__in=[int(pk) for pk in conton.split(',')])
+            if pagination:
+                if district and conton:
+                    query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
+                                                    id__in=[int(pk) for pk in conton.split(',')])
+                elif district:
+                    query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')])
+                elif conton:
+                    query = Conton.objects.all().filter(id__in=[int(pk) for pk in conton.split(',')])
+                else:
+                    query = Conton.objects.all()
+                paginator = PageNumberPagination()
+                paginator.page_size = request.query_params.get('page_size', 20)
+                result = paginator.paginate_queryset(query, request)
+                serializer = ContonWithoutPolygonSerializer(result, many=True)
+                return paginator.get_paginated_response(serializer.data)
             else:
-                query = Conton.objects.all()
-            paginator = PageNumberPagination()
-            paginator.page_size = request.query_params.get('page_size', 20)
-            result = paginator.paginate_queryset(query, request)
-            serializer = ContonWithoutPolygonSerializer(result, many=True)
-            return paginator.get_paginated_response(serializer.data)
+                serializer = ContonWithoutPolygonSerializer(Conton.objects.all(), many=True)
+                return Response(serializer.data, status=200)
