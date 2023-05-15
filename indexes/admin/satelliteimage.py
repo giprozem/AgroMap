@@ -64,4 +64,4 @@ class SciHubImageDateAdmin(LeafletGeoAdmin, SimpleHistoryAdmin, admin.ModelAdmin
                 bbox = warp.transform_bounds(src.crs, {'init': 'EPSG:4326'}, *bbox_m)
                 bboxs = Polygon.from_bbox(bbox)
                 obj.polygon = bboxs
-                obj.save()
+        obj.save()

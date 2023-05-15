@@ -1,7 +1,7 @@
 from osgeo import gdal
 
 
-def cutting_tiff(outputpath, inputpath, polygon):
+def cutting_tiff(outputpath: object, inputpath: object, polygon: object) -> object:
 
     cutted_image = gdal.Warp(destNameOrDestDS=outputpath,
                              srcDSOrSrcDSTab=inputpath,
