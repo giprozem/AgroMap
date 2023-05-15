@@ -21,22 +21,21 @@ class LandType(models.Model):
 
 
 class Contour(BaseModel):
-    code_soato = models.CharField(max_length=30, null=True, blank=True,
-                                  verbose_name=_("Код СОАТО"))  # todo: API unique and required
+    code_soato = models.CharField(max_length=30, null=True, blank=True, verbose_name=_("Код СОАТО"))
     conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='contours', verbose_name=_("Округ"))
     type = models.ForeignKey(LandType, on_delete=models.SET_NULL, null=True, verbose_name=_("Тип земли"),
                              related_name='contours')
-    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Контур"), blank=True,
-                                   null=True)  # todo: API required
-    year = models.CharField(max_length=20, verbose_name=_("Год"), null=True, blank=True)  # todo: API required
+    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Контур"), blank=True, null=True)
+    year = models.CharField(max_length=20, verbose_name=_("Год"), null=True, blank=True)
     productivity = models.CharField(max_length=20, blank=True, null=True, verbose_name=_("Продуктивность"))
+    predicted_productivity = models.CharField(max_length=20, blank=True, null=True,
+                                              verbose_name='')  # todo: Translate verbose_name
     area_ha = models.FloatField(blank=True, null=True, verbose_name=_("Площадь в гектарах"))
     is_deleted = models.BooleanField(default=False, verbose_name=_('Удаленный'))
     culture = models.ForeignKey(Culture, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Культура'))
     elevation = models.CharField(max_length=25, blank=True, null=True, verbose_name=_('Высота'))
-    ink = models.CharField(max_length=100, verbose_name=_("ИНК"),
-                           help_text=_('Идентификационный номер контура'),
-                           null=True, blank=True)  # todo: API unique and required
+    ink = models.CharField(max_length=100, verbose_name=_("ИНК"), help_text=_('Идентификационный номер контура'),
+                           null=True, blank=True)
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='contours', verbose_name=_('Фермер'),
                                blank=True, null=True)
     history = HistoricalRecords(verbose_name=_("История"))
