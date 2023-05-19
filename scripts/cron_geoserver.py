@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import time
 import requests
 from django.db import connection
@@ -9,6 +10,9 @@ from decouple import config
 
 
 def run():
+    output = 'shp_contour/'
+    os.makedirs(output, exist_ok=True)
+
     with connection.cursor() as cursor:
         cursor.execute(f"""SELECT CASE WHEN (cntr.productivity)::float >= 1.6 THEN 1 ELSE 0 END AS "Type productivity",
         cntr.id AS contour_year_id, rgn.id as rgn, dst.id as dst, cntn.id as cntn, coalesce(cl.id, NULL) AS cl_id,
@@ -38,7 +42,7 @@ def run():
 
         # Kонвертация GeoJson в Shpfile
         gdf = gpd.read_file('agromap_store.geojson')
-        gdf.to_file('shp/agromap_store.shp')
+        gdf.to_file(f'{output}/agromap_store.shp')
 
         time.sleep(5)
         # GeoServer REST API
@@ -107,5 +111,6 @@ def run():
                           'srs': 'EPSG:4326',
                           'type': 'ESRI Shapefile'
                       }})
+        shutil.rmtree(output)
 
     return Response('OK')
