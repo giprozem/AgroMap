@@ -33,12 +33,12 @@ def run():
         geojson_data = {"type": "FeatureCollection", "features": data}
 
         # Сохранение в geojson
-        with open('polygons.geojson', 'w') as f:
+        with open('agromap_store.geojson', 'w') as f:
             json.dump(geojson_data, f)
 
         # Kонвертация GeoJson в Shpfile
-        gdf = gpd.read_file('polygons.geojson')
-        gdf.to_file('shp/polygons.shp')
+        gdf = gpd.read_file('agromap_store.geojson')
+        gdf.to_file('shp/agromap_store.shp')
 
         time.sleep(5)
         # GeoServer REST API
