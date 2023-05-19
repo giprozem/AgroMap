@@ -6,7 +6,6 @@ from django.db.models import Avg
 def run():
     # Получаем среднее значение average_value для каждого контура
     contours = Contour.objects.filter(
-        conton__district_id=3,
         type_id=2,
         actual_veg_index__index_id=1,
         actual_veg_index__date__range=('2022-04-01', '2022-11-01')
@@ -16,8 +15,12 @@ def run():
         model = pickle.load(f)
 
     for contour in contours:
+        avg_value = contour.avg_value if contour.avg_value is not None else 0  # or some default value
+        elevation = contour.elevation if contour.elevation is not None else 0  # or some default value
+        soil_class_id = contour.soil_class_id if contour.soil_class_id is not None else 0  # or some default value
+
         Contour.objects.filter(id=contour.id).update(
             predicted_productivity=round(
-                model.predict([[contour.avg_value, contour.elevation, contour.soil_class_id]])[0], 2
+                model.predict([[avg_value, elevation, soil_class_id]])[0], 2
             ),
         )
