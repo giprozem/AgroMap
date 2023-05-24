@@ -55,7 +55,7 @@ class SciHubImageDateAdmin(LeafletGeoAdmin, SimpleHistoryAdmin, admin.ModelAdmin
 
     def get_html_photo(self, obj):
         if obj.image_png:
-            return mark_safe(f"<img src='{obj.image_png.url}' width=710, height=600>")
+            return mark_safe(f"<img src='{obj.image_png.url}'")
 
     def save_model(self, request, obj, form, change):
         if obj.B01:
