@@ -120,6 +120,10 @@ class DownloadSatelliteImagesV2(APIView):
                                 img_date = datetime.strptime(os.path.basename(folder)[11:19], '%Y%m%d')
                                 sci_hub_image_date = SciHubImageDate(date=img_date, area_interest_id=footprint.pk)
                                 sci_hub_image_date.name_product = folder
+                                for file in os.listdir(os.path.join(output, folder)):
+                                    if file.endswith(".jpg"):
+                                        with open(os.path.join(output, folder, file), 'rb') as f:
+                                            sci_hub_image_date.image_png.save(f'{file}', f, save=True)
                                 for file in os.listdir(os.path.join(output, folder, 'GRANULE')):
                                     if file.startswith('L2A_'):
                                         img_data_path = os.path.join(output, folder, 'GRANULE', file, 'IMG_DATA',
@@ -131,26 +135,8 @@ class DownloadSatelliteImagesV2(APIView):
                                                 sci_hub_image_date.B02.save(f'B02_area_interest_id-{footprint.pk}.tif',
                                                                             open(f"{img_data_path}/{filename}", 'rb'))
                                             elif re.search(".*TCI.*.tif", filename):
-                                                with rasterio.open(f"{img_data_path}/{filename}") as geotiff_image:
-                                                    # Считываем данные о масштабе и размерах изображения
-                                                    scale = geotiff_image.read(1).max()
-
-                                                    # Читаем изображение в массив numpy
-                                                    image_array = geotiff_image.read(1)
-
-                                                    # Нормализуем значения пикселей до диапазона 0-255
-                                                    image_array = (image_array / scale * 255).astype('uint8')
-
-                                                    # Создаем изображение PIL из массива numpy
-                                                    png_image = Image.fromarray(image_array, 'L')
-
-                                                    # Преобразуем изображение в байты
-                                                    img_bytes = io.BytesIO()
-                                                    png_image.save(img_bytes, format='PNG')
-                                                    img_bytes.seek(0)
                                                 sci_hub_image_date.TCI.save(f'TCI_area_interest_id-{footprint.pk}.tif',
                                                                             open(f"{img_data_path}/{filename}", 'rb'))
-                                                sci_hub_image_date.image_png.save('image.png', img_bytes, save=True)
                                             elif re.search(".*B03.*.tif", filename):
                                                 sci_hub_image_date.B03.save(f'B03_area_interest_id-{footprint.pk}.tif',
                                                                             open(f"{img_data_path}/{filename}", 'rb'))

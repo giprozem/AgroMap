@@ -1,11 +1,8 @@
-import io
 import os
 import re
 import shutil
 import time
 from datetime import datetime
-import rasterio
-from PIL import Image
 from rest_framework.response import Response
 from sentinelsat import SentinelAPI
 from zipfile import ZipFile
@@ -85,9 +82,14 @@ def run():
                 if folder.endswith('.SAFE'):
                     for file in os.listdir(os.path.join(output, folder, 'GRANULE')):
                         if file.startswith('L2A_'):
-                            img_data_path = os.path.join(output, folder, 'GRANULE', file, 'IMG_DATA', 'R20m')
+                            img_data_path = os.path.join(output, folder, 'GRANULE', file, 'IMG_DATA',
+                                                         'R10m')
                             for filename in os.listdir(img_data_path):
                                 if re.search(".*B.*", filename):
+                                    jp2_path = os.path.join(img_data_path, filename)
+                                    tiff_path = os.path.join(img_data_path, filename[:-3] + 'tif')
+                                    gdal.Translate(tiff_path, jp2_path, format='GTiff')
+                                elif re.search(".*TCI.*", filename):
                                     jp2_path = os.path.join(img_data_path, filename)
                                     tiff_path = os.path.join(img_data_path, filename[:-3] + 'tif')
                                     gdal.Translate(tiff_path, jp2_path, format='GTiff')
@@ -97,71 +99,35 @@ def run():
                     img_date = datetime.strptime(os.path.basename(folder)[11:19], '%Y%m%d')
                     sci_hub_image_date = SciHubImageDate(date=img_date, area_interest_id=footprint.pk)
                     sci_hub_image_date.name_product = folder
+                    for file in os.listdir(os.path.join(output, folder)):
+                        if file.endswith(".jpg"):
+                            with open(os.path.join(output, folder, file), 'rb') as f:
+                                sci_hub_image_date.image_png.save(f'{file}', f, save=True)
                     for file in os.listdir(os.path.join(output, folder, 'GRANULE')):
                         if file.startswith('L2A_'):
-                            img_data_path = os.path.join(output, folder, 'GRANULE', file, 'IMG_DATA', 'R20m')
+                            img_data_path = os.path.join(output, folder, 'GRANULE', file, 'IMG_DATA',
+                                                         'R10m')
                             for filename in os.listdir(img_data_path):
-                                if re.search(".*B01.*.tif", filename):
-                                    sci_hub_image_date.B01.save(f'B01_area_interest_id-{footprint.pk}.tif',
-                                                                open(f"{img_data_path}/{filename}", 'rb'))
-                                elif re.search(".*B02.*.tif", filename):
-                                    with rasterio.open(f"{img_data_path}/{filename}") as geotiff_image:
-                                        # Считываем данные о масштабе и размерах изображения
-                                        scale = geotiff_image.read(1).max()
-
-                                        # Читаем изображение в массив numpy
-                                        image_array = geotiff_image.read(1)
-
-                                        # Нормализуем значения пикселей до диапазона 0-255
-                                        image_array = (image_array / scale * 255).astype('uint8')
-
-                                        # Создаем изображение PIL из массива numpy
-                                        png_image = Image.fromarray(image_array, 'L')
-
-                                        # Преобразуем изображение в байты
-                                        img_bytes = io.BytesIO()
-                                        png_image.save(img_bytes, format='PNG')
-                                        img_bytes.seek(0)
-
-                                        # Создаем экземпляр модели изображения
+                                if re.search(".*B02.*.tif", filename):
+                                    # Создаем экземпляр модели изображения
                                     sci_hub_image_date.polygon = tiff_coords[0]
                                     sci_hub_image_date.B02.save(f'B02_area_interest_id-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
-                                    sci_hub_image_date.image_png.save('image.png', img_bytes, save=True)
+                                elif re.search(".*TCI.*.tif", filename):
+                                    sci_hub_image_date.TCI.save(f'TCI_area_interest_id-{footprint.pk}.tif',
+                                                                open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B03.*.tif", filename):
                                     sci_hub_image_date.B03.save(f'B03_area_interest_id-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B04.*.tif", filename):
                                     sci_hub_image_date.B04.save(f'B04_area_interest_id-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
-                                elif re.search(".*B05.*.tif", filename):
-                                    sci_hub_image_date.B05.save(f'B05_area_interest_id-{footprint.pk}.tif',
-                                                                open(f"{img_data_path}/{filename}", 'rb'))
-                                elif re.search(".*B06.*.tif", filename):
-                                    sci_hub_image_date.B06.save(f'B06_area_interest_id-{footprint.pk}.tif',
-                                                                open(f"{img_data_path}/{filename}", 'rb'))
-                                elif re.search(".*B07.*.tif", filename):
-                                    sci_hub_image_date.B07.save(f'B07_area_interest_id-{footprint.pk}.tif',
-                                                                open(f"{img_data_path}/{filename}", 'rb'))
+
                                 elif re.search(".*B08.*.tif", filename):
-                                    sci_hub_image_date.B08.save(f'B08_area_interest_id-{footprint.pk}.tif',
-                                                                open(f"{img_data_path}/{filename}", 'rb'))
-                                elif re.search(".*B8A.*.tif", filename):
-                                    sci_hub_image_date.B8A.save(f'B8A_area_interest_id-{footprint.pk}.tif',
-                                                                open(f"{img_data_path}/{filename}", 'rb'))
-                                elif re.search(".*B09.*.tif", filename):
-                                    sci_hub_image_date.B09.save(f'B09_area_interest_id-{footprint.pk}.tif',
-                                                                open(f"{img_data_path}/{filename}", 'rb'))
-                                elif re.search(".*B10.*.tif", filename):
-                                    sci_hub_image_date.B10.save(f'B10_area_interest_id-{footprint.pk}.tif',
-                                                                open(f"{img_data_path}/{filename}", 'rb'))
-                                elif re.search(".*B11.*.tif", filename):
-                                    sci_hub_image_date.B11.save(f'B11_area_interest_id-{footprint.pk}.tif',
-                                                                open(f"{img_data_path}/{filename}", 'rb'))
-                                elif re.search(".*B12.*.tif", filename):
-                                    sci_hub_image_date.B12.save(f'B12_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B8A.save(f'B08_area_interest_id-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 sci_hub_image_date.save()
+            time.sleep(15)
             shutil.rmtree(output)
         except Exception as e:
             print(e)

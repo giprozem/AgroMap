@@ -16,7 +16,6 @@ import pandas as pd
 import numpy as np
 import rasterio
 from ai.models.create_dataset import *
-from gip.models import Region
 
 
 def merge_bands(instance):
@@ -179,12 +178,12 @@ def yolo():
     time.sleep(15)
     file_yolo = Yolo.objects.get(id=1)
     model = YOLO(f'media/{file_yolo.ai}')
-    cutted_files = sorted(os.listdir('media/CHUI_TCI/'),
+    cutted_files = sorted(os.listdir('media/TCI/'),
                           key=lambda x: int(x.split('_')[1].split('.')[0].replace('KG_', '')))
 
     for file in cutted_files:
         print(file, '--------------------')
-        image = Image.open(f'media/CHUI_TCI/{file}')
+        image = Image.open(f'media/TCI/{file}')
         results = model.predict(source=image, half=False,
                                 save=False,
                                 conf=0.01,
@@ -211,7 +210,7 @@ def yolo():
                     df.loc[len(df)] = ([i[0][0], i[0][1]])
                     plt.plot(df[0] / x, df[1] / y, c="red")
                 plt.axis('off')
-                with rasterio.open(f'media/CHUI_TCI/{file}') as src:
+                with rasterio.open(f'media/TCI/{file}') as src:
                     for n in range(0, len(arrays)):
                         coordinates = []
                         for i in arrays[n]:
@@ -275,7 +274,7 @@ def yolo():
             print(e)
             print(file, '=======================')
             try:
-                image = Image.open(f'media/CHUI_BANDS/{file}')
+                image = Image.open(f'media/BANDS/{file}')
                 results = model.predict(source=image, half=False,
                                         save=False,
                                         conf=0.01,
@@ -299,7 +298,7 @@ def yolo():
                         df.loc[len(df)] = ([i[0][0], i[0][1]])
                         plt.plot(df[0] / x, df[1] / y, c="red")
                     plt.axis('off')
-                    with rasterio.open(f'media/CHUI_BANDS/{file}') as src:
+                    with rasterio.open(f'media/BANDS/{file}') as src:
                         for n in range(0, len(arrays)):
                             coordinates = []
                             for i in arrays[n]:
@@ -409,6 +408,9 @@ def clean_contour_and_create_district():
                 ha = round(polygon.area / 10 ** (-6), 2)
                 Contour_AI.objects.filter(id=id_contour).update(area_ha=float(ha))  # 73544
             if area_ha < 1.0:
+                print(area_ha, 'area_ha DELETE')
+                Contour_AI.objects.filter(id=id_contour).delete()
+            if area_ha > 70.0:
                 print(area_ha, 'area_ha DELETE')
                 Contour_AI.objects.filter(id=id_contour).delete()
         except Exception as e:

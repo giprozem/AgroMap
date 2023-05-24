@@ -1,4 +1,3 @@
-import io
 import os
 import re
 import shutil
@@ -6,9 +5,7 @@ import time
 from datetime import datetime
 from zipfile import ZipFile
 
-import rasterio
 import requests
-from PIL import Image
 from decouple import config
 from osgeo import gdal
 from rest_framework.response import Response
@@ -26,13 +23,16 @@ def run():
     footprints = [sci_hub_area_interest for sci_hub_area_interest in SciHubAreaInterest.objects.all().order_by('id')]
 
     for footprint in footprints:
-        dates = ['2020-04-01, 2020-04-30', '2020-05-01, 2020-05-30', '2020-06-01, 2020-06-30', '2020-07-01, 2020-07-30',
-                 '2020-08-01, 2020-08-30', '2020-09-01, 2020-09-30', '2020-10-01, 2020-10-30',
-                 '2021-04-01, 2021-04-30', '2021-05-01, 2021-05-30', '2021-06-01, 2021-06-30', '2021-07-01, 2021-07-30',
-                 '2021-08-01, 2021-08-30', '2021-09-01, 2021-09-30', '2021-10-01, 2021-10-30',
-                 '2022-04-01, 2022-04-30', '2022-05-01, 2022-05-30', '2022-06-01, 2022-06-30', '2022-07-01, 2022-07-30',
-                 '2022-08-01, 2022-08-30', '2022-09-01, 2022-09-30', '2022-10-01, 2022-10-30',
-                 ]
+        dates = ['2020-01-01, 2020-01-30', '2020-02-01, 2020-02-25', '2020-03-01, 2020-03-30', '2020-04-01, 2020-04-30',
+                 '2020-05-01, 2020-05-30', '2020-06-01, 2020-06-30', '2020-07-01, 2020-07-30', '2020-08-01, 2020-08-30',
+                 '2020-09-01, 2020-09-30', '2020-10-01, 2020-10-30', '2020-11-01, 2020-11-30', '2020-12-01, 2020-12-30',
+                 '2021-01-01, 2021-01-30', '2021-02-01, 2021-02-25', '2021-03-01, 2021-03-30', '2021-04-01, 2021-04-30',
+                 '2021-05-01, 2021-05-30', '2021-06-01, 2021-06-30', '2021-07-01, 2021-07-30', '2021-08-01, 2021-08-30',
+                 '2021-09-01, 2021-09-30', '2021-10-01, 2021-10-30', '2021-11-01, 2021-11-30', '2021-12-01, 2021-12-30',
+                 '2022-01-01, 2022-01-30', '2022-02-01, 2022-02-25', '2022-03-01, 2022-03-30', '2022-04-01, 2022-04-30',
+                 '2022-05-01, 2022-05-30', '2022-06-01, 2022-06-30', '2022-07-01, 2022-07-30', '2022-08-01, 2022-08-30',
+                 '2022-09-01, 2022-09-30', '2022-10-01, 2022-10-30', '2022-11-01, 2022-11-30', '2022-12-01, 2022-12-30',
+                 '2023-01-01, 2023-01-30', '2023-02-01, 2023-02-25', '2023-03-01, 2023-03-30', '2023-04-01, 2023-04-30']
         time.sleep(15)
         for date in dates:
             os.makedirs(output, exist_ok=True)
@@ -118,6 +118,10 @@ def run():
                         img_date = datetime.strptime(os.path.basename(folder)[11:19], '%Y%m%d')
                         sci_hub_image_date = SciHubImageDate(date=img_date, area_interest_id=footprint.pk)
                         sci_hub_image_date.name_product = folder
+                        for file in os.listdir(os.path.join(output, folder)):
+                            if file.endswith(".jpg"):
+                                with open(os.path.join(output, folder, file), 'rb') as f:
+                                    sci_hub_image_date.image_png.save(f'{file}', f, save=True)
                         for file in os.listdir(os.path.join(output, folder, 'GRANULE')):
                             if file.startswith('L2A_'):
                                 img_data_path = os.path.join(output, folder, 'GRANULE', file, 'IMG_DATA',
@@ -129,26 +133,8 @@ def run():
                                         sci_hub_image_date.B02.save(f'B02_area_interest_id-{footprint.pk}.tif',
                                                                     open(f"{img_data_path}/{filename}", 'rb'))
                                     elif re.search(".*TCI.*.tif", filename):
-                                        with rasterio.open(f"{img_data_path}/{filename}") as geotiff_image:
-                                            # Считываем данные о масштабе и размерах изображения
-                                            scale = geotiff_image.read(1).max()
-
-                                            # Читаем изображение в массив numpy
-                                            image_array = geotiff_image.read(1)
-
-                                            # Нормализуем значения пикселей до диапазона 0-255
-                                            image_array = (image_array / scale * 255).astype('uint8')
-
-                                            # Создаем изображение PIL из массива numpy
-                                            png_image = Image.fromarray(image_array, 'L')
-
-                                            # Преобразуем изображение в байты
-                                            img_bytes = io.BytesIO()
-                                            png_image.save(img_bytes, format='PNG')
-                                            img_bytes.seek(0)
                                         sci_hub_image_date.TCI.save(f'TCI_area_interest_id-{footprint.pk}.tif',
                                                                     open(f"{img_data_path}/{filename}", 'rb'))
-                                        sci_hub_image_date.image_png.save('image.png', img_bytes, save=True)
                                     elif re.search(".*B03.*.tif", filename):
                                         sci_hub_image_date.B03.save(f'B03_area_interest_id-{footprint.pk}.tif',
                                                                     open(f"{img_data_path}/{filename}", 'rb'))
