@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 
+from culture_model.models.pasture_culture import PastureCulture
 from gip.models.soil import SoilClass
 from gip.models.base import BaseModel
 from gip.models.conton import Conton
@@ -33,6 +34,13 @@ class Contour(BaseModel):
     area_ha = models.FloatField(blank=True, null=True, verbose_name=_("Площадь в гектарах"))
     is_deleted = models.BooleanField(default=False, verbose_name=_('Удаленный'))
     culture = models.ForeignKey(Culture, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Культура'))
+    pasture_culture = models.ManyToManyField(
+        PastureCulture,
+        blank=True,
+        default=None,
+        help_text='Required if land type is pasture'
+
+    )  # todo: Translate verbose_name
     elevation = models.CharField(max_length=25, blank=True, null=True, verbose_name=_('Высота'))
     ink = models.CharField(max_length=100, verbose_name=_("ИНК"), help_text=_('Идентификационный номер контура'),
                            null=True, blank=True)
