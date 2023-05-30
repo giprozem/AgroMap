@@ -1,18 +1,14 @@
-from decouple import config
 from django.contrib.gis.db.models.functions import Area
 from django.db import connection
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from elevation.data import elevation
 from shapely.wkt import loads
-import requests
-from django.contrib.gis.geos import Point
-from gip.models import Elevation
 from ai.models.predicted_contour import Contour_AI
 from ai.models.create_dataset import *
 from threading import Thread
 from ai.utils.predicted_contour import create_rgb, cut_rgb_tif, merge_bands, yolo
 from ai.utils.create_dataset import create_dataset
-import xarray as xr
 
 
 @receiver(post_save, sender=Contour_AI)
@@ -38,11 +34,9 @@ def update(sender, instance, created, **kwargs):
         instance.soil_class_id = result_soil_class
         center = loads(f"{geom.polygon.centroid}".strip('SRID=4326;'))
         x, y = center.x, center.y
-        data = xr.open_dataset(config('ELEVATION'))
-        closest_point = data.sel(lat=y, lon=x, method='nearest')
-        elevation = closest_point.elevation.values
+        elevation_result = elevation(latitude=y, longitude=x)
         ha = round(geom.area_.sq_km * 100, 2)
-        instance.elevation = elevation
+        instance.elevation = elevation_result
         instance.area_ha = ha
         instance.save()
     else:
@@ -65,12 +59,10 @@ def update(sender, instance, created, **kwargs):
             result_soil_class = rows[0][1] if rows != [] else None
         center = loads(f"{geom.polygon.centroid}".strip('SRID=4326;'))
         x, y = center.x, center.y
-        data = xr.open_dataset(config('ELEVATION'))
-        closest_point = data.sel(lat=y, lon=x, method='nearest')
-        elevation = closest_point.elevation.values
+        elevation_result = elevation(latitude=y, longitude=x)
         ha = round(geom.area_.sq_km * 100, 2)
         Contour_AI.objects.filter(id=instance.id).update(area_ha=ha, soil_class_id=result_soil_class,
-                                                         elevation=elevation)
+                                                         elevation=elevation_result)
 
 
 @receiver(post_save, sender=Process)

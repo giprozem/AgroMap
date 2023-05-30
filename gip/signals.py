@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from shapely.wkt import loads
 from gip.models import Contour
 import xarray as xr
+from elevation.data import elevation
 
 
 @receiver(post_save, sender=Contour)
@@ -31,11 +32,9 @@ def update(sender, instance, created, **kwargs):
         instance.soil_class_id = result_soil_class
         center = loads(f"{geom.polygon.centroid}".strip('SRID=4326;'))
         x, y = center.x, center.y
-        data = xr.open_dataset(config('ELEVATION'))
-        closest_point = data.sel(lat=y, lon=x, method='nearest')
-        elevation = closest_point.elevation.values
+        elevation_result = elevation(latitude=y, longitude=x)
         ha = round(geom.area_.sq_km * 100, 2)
-        instance.elevation = elevation
+        instance.elevation = elevation_result
         instance.area_ha = ha
         instance.save()
     else:
@@ -58,8 +57,7 @@ def update(sender, instance, created, **kwargs):
             result_soil_class = rows[0][1] if rows != [] else None
         center = loads(f"{geom.polygon.centroid}".strip('SRID=4326;'))
         x, y = center.x, center.y
-        data = xr.open_dataset(config('ELEVATION'))
-        closest_point = data.sel(lat=y, lon=x, method='nearest')
-        elevation = closest_point.elevation.values
+        elevation_result = elevation(latitude=y, longitude=x)
         ha = round(geom.area_.sq_km * 100, 2)
-        Contour.objects.filter(id=instance.id).update(area_ha=ha, soil_class_id=result_soil_class, elevation=elevation)
+        Contour.objects.filter(id=instance.id).update(area_ha=ha, soil_class_id=result_soil_class,
+                                                      elevation=elevation_result)
