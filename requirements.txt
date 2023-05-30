@@ -133,7 +133,6 @@ ultralytics==8.0.86
 uritemplate==4.1.1
 urllib3==1.26.12
 utm==0.7.0
-xarray==2023.5.0
 xmltodict==0.13.0
 yarl==1.8.1
 zope.event==4.5.0

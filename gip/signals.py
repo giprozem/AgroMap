@@ -1,11 +1,9 @@
-from decouple import config
 from django.contrib.gis.db.models.functions import Area
 from django.db import connection
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from shapely.wkt import loads
 from gip.models import Contour
-import xarray as xr
 from elevation.data import elevation
 
 
