@@ -8,7 +8,7 @@
 
 ## Architecture
 #### The backend architecture as per ORM and caching can be summarized as follows:
-![img.png](img.png)
+![db.png](db.png)
 
 ### Data model (ORM)
 Leverages Django ORM to manage the data model. Objects are created as Python classes that inherit from the Django's [Model](https://docs.djangoproject.com/en/3.2/ref/models/base/#model-inheritance) class, and define any number of fields required for the business logic. They are then mapped to the database using the [Django ORM](https://docs.djangoproject.com/en/3.2/topics/db/models/#model-api), through migrations. The migrations are defined in `**/migrations/` folders.
