@@ -2,6 +2,7 @@ from django.contrib.gis.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from simple_history.models import HistoricalRecords
 from django.utils.translation import gettext_lazy as _
+from indexes.models.satelliteimage import SciHubImageDate
 
 
 class ActualVegIndex(models.Model):
@@ -23,6 +24,7 @@ class ActualVegIndex(models.Model):
                                 related_name='actual_veg_index')
     date = models.DateField(verbose_name=_('Дата анализа'), help_text=_('Введите дату космо снимка из которого будет высчитан индекс'))
     history = HistoricalRecords(verbose_name=_("История"))
+    satellite_image = models.ForeignKey(SciHubImageDate, on_delete=models.SET_NULL, null=True)  # TODO Required translate
 
     def __str__(self):
         return f'{self.index} {self.contour}'
@@ -30,6 +32,13 @@ class ActualVegIndex(models.Model):
     class Meta:
         verbose_name = _('Фактический Индекс')
         verbose_name_plural = _("Фактические Индексы")
+        unique_together = (
+            'average_value',
+            'meaning_of_average_value',
+            'index',
+            'contour',
+            'date'
+        )
 
 
 class IndexMeaning(models.Model):

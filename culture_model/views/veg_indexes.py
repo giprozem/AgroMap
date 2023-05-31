@@ -17,7 +17,7 @@ class VegIndexAPIView(APIView):
         }
     )
     def get(self, request, *args, **kwargs):
-        query = VegetationIndex.objects.all()
+        query = VegetationIndex.objects.all().order_by('id')
         if len(query) <= 0:
             return Response('Have no vegetation indexes', status=400)
         serializer = IndexSerializer(query, many=True)
