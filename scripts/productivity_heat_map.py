@@ -3,8 +3,7 @@ import os
 import shutil
 from glob import glob
 from itertools import product
-import xarray as xr
-
+from elevation.data import elevation
 import geojson
 import pandas as pd
 import rasterio as rio
@@ -175,9 +174,7 @@ def run(year='2022'):
 
                     try:
                         print({point['latitude']}, {point['longitude']})
-                        data = xr.open_dataset(config('ELEVATION'))
-                        closest_point = data.sel(lat=point['latitude'], lon=point['longitude'], method='nearest')
-                        elevation = closest_point.elevation.values
+                        elevation_result = elevation(latitude=point['latitude'], longitude=point['longitude'])
 
                         with connection.cursor() as cursor:
                             cursor.execute(f"""
@@ -193,7 +190,7 @@ def run(year='2022'):
 
                         if soil_id is not None:
                             response = {'ndvi': get_region_of_interest(get_ndvi(red_file=fn_red, nir_file=fn_nir)),
-                                        'elevation': elevation, 'soil_id': soil_id}
+                                        'elevation': elevation_result, 'soil_id': soil_id}
                             point.update(response)
                             out.append(point)
 
