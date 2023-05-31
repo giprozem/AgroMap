@@ -4,12 +4,12 @@ from culture_model.models.pasture_culture import Classes, Subclass, GroupType, R
 
 @admin.register(Classes)
 class ClassesAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'name', )
 
 
 @admin.register(Subclass)
 class SubclassAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'name', )
 
 
 @admin.register(GroupType)

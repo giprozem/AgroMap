@@ -14,7 +14,7 @@ class IndexFactAdmin(SimpleHistoryAdmin):
     list_display = ('id', 'average_value', 'get_description', 'index', 'contour', 'date', 'get_html_photo', 'get_contour_id', )
     readonly_fields = ('id', 'average_value', 'get_html_photo', 'get_description', 'meaning_of_average_value', 'index_image')
     list_display_links = ('id', 'get_description', )
-    list_filter = ('average_value', 'date', 'contour', 'meaning_of_average_value')
+    list_filter = ('average_value', 'date', 'contour', 'meaning_of_average_value', 'contour__id', )
 
     def get_html_photo(self, obj):
         if obj.index_image:
@@ -44,4 +44,4 @@ class IndexCreatingReportAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'contour', 'veg_index', 'satellite_image', 'is_processed', 'process_error', )
     list_display = ('id', 'contour', 'veg_index', 'is_processed', 'process_error', )
     list_display_links = ('id', 'contour', )
-    list_filter = ('contour', 'veg_index', 'satellite_image', 'is_processed', 'process_error',)
+    list_filter = ('contour', 'veg_index', 'satellite_image', 'is_processed', 'process_error', 'contour__id',)
