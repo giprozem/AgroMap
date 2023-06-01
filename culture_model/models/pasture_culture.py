@@ -1,14 +1,12 @@
 from django.contrib.gis.db import models
-
+from django.utils.translation import gettext_lazy as _
 from gip.models import District
 from gip.models.base import BaseModel
 
-# TODO Translation required
-
 
 class Classes(BaseModel):
-    name = models.CharField(max_length=20)
-    description = models.TextField()
+    name = models.CharField(max_length=20, verbose_name=_('Название'))
+    description = models.TextField(verbose_name=_('Описание'))
 
     def __str__(self):
         return self.name
@@ -18,12 +16,14 @@ class Classes(BaseModel):
             'name',
             'description'
         )
+        verbose_name = _('Класс')
+        verbose_name_plural = _('Классы')
 
 
 class Subclass(BaseModel):
-    classes = models.ForeignKey(Classes, on_delete=models.SET_NULL, null=True, related_name='subclasses')
-    name = models.CharField(max_length=20)
-    description = models.TextField()
+    classes = models.ForeignKey(Classes, on_delete=models.SET_NULL, null=True, related_name='subclasses', verbose_name=_('Класс'))
+    name = models.CharField(max_length=20, verbose_name=_('Название'))
+    description = models.TextField(verbose_name=_('Описание'))
 
     def __str__(self):
         return self.name
@@ -34,12 +34,14 @@ class Subclass(BaseModel):
             'description',
             'classes',
         )
+        verbose_name = _('Подкласс')
+        verbose_name_plural = _('Подклассы')
 
 
 class GroupType(BaseModel):
-    subclass = models.ForeignKey(Subclass, on_delete=models.SET_NULL, null=True, related_name='group_type')
-    name = models.CharField(max_length=20)
-    description = models.TextField()
+    subclass = models.ForeignKey(Subclass, on_delete=models.SET_NULL, null=True, related_name='group_type', verbose_name=_('Подкласс'))
+    name = models.CharField(max_length=20, verbose_name=_('Название'))
+    description = models.TextField(verbose_name=_('Описание'))
 
     def __str__(self):
         return self.name
@@ -50,12 +52,14 @@ class GroupType(BaseModel):
             'description',
             'subclass',
         )
+        verbose_name = _('Тип группы')
+        verbose_name_plural = _('Типы группы')
 
 
 class RepublicanType(BaseModel):
-    type_group = models.ForeignKey(GroupType, on_delete=models.SET_NULL, null=True, related_name='republican_type')
-    name = models.CharField(max_length=20)
-    description = models.TextField()
+    type_group = models.ForeignKey(GroupType, on_delete=models.SET_NULL, null=True, related_name='republican_type', verbose_name=_('Тип группы'))
+    name = models.CharField(max_length=20, verbose_name=_('Название'))
+    description = models.TextField(verbose_name=_('Описание'))
 
     def __str__(self):
         return self.name
@@ -66,13 +70,15 @@ class RepublicanType(BaseModel):
             'description',
             'type_group',
         )
+        verbose_name = _('Тип растительности')
+        verbose_name_plural = _('Типы растительностей')
 
 
 class DistrictType(BaseModel):
-    type_group = models.ForeignKey(RepublicanType, on_delete=models.SET_NULL, null=True, related_name='district_type')
-    name = models.CharField(max_length=20)
-    description = models.TextField()
-    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
+    type_group = models.ForeignKey(RepublicanType, on_delete=models.SET_NULL, null=True, related_name='district_type', verbose_name=_('Тип растительности'))
+    name = models.CharField(max_length=20, verbose_name=_('Название'))
+    description = models.TextField(verbose_name=_('Описание'))
+    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True, verbose_name=_('Район'))
 
     def __str__(self):
         return self.name
@@ -84,13 +90,15 @@ class DistrictType(BaseModel):
             'description',
             'district'
         )
+        verbose_name = _('Тип района')
+        verbose_name_plural = _('Типы районов')
 
 
 class PastureCulture(BaseModel):
-    district_type = models.ForeignKey(DistrictType, on_delete=models.SET_NULL, related_name='pasture_culture', null=True)
-    name = models.CharField(max_length=255)
-    coefficient_to_productivity = models.DecimalField(max_digits=4, decimal_places=2)
-    content_of_feed = models.DecimalField(max_digits=4, decimal_places=2)
+    district_type = models.ForeignKey(DistrictType, on_delete=models.SET_NULL, related_name='pasture_culture', null=True, verbose_name=_('Тип района'))
+    name = models.CharField(max_length=255, verbose_name=_('Название'))
+    coefficient_to_productivity = models.DecimalField(max_digits=4, decimal_places=2, verbose_name=_('Коэффициент продуктивности'))
+    content_of_feed = models.DecimalField(max_digits=4, decimal_places=2, verbose_name=_('Содержание корма'))
     
     def __str__(self):
         return self.name
@@ -102,3 +110,5 @@ class PastureCulture(BaseModel):
             'coefficient_to_productivity',
             'content_of_feed'
         )
+        verbose_name = _('Культура пастбища')
+        verbose_name_plural = _('Культуры пастбищ')
