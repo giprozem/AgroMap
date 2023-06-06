@@ -103,24 +103,24 @@ class UpdateAuthDetailContourSerializer(serializers.ModelSerializer):
         db_district = self.get_db_district(attrs)
         if district != db_district:
             raise APIException({
-                "district": f"Ваш контур выходит за пределы <{attrs['conton']}>"
+                "district": [f"Ваш контур выходит за пределы <{attrs['conton']}>"]
             })
 
     def is_valid_year(self, attrs):
         if int(attrs['year']) > datetime.date.today().year:
-            raise APIException({"year": "Год не может быть больше текущего года"})
+            raise APIException({"year": ["Год не может быть больше текущего года"]})
         elif int(attrs['year']) < 2010:
-            raise APIException({"year": "Год должен быть не менее 2010 года"})
+            raise APIException({"year": ["Год должен быть не менее 2010 года"]})
 
     def is_polygon_intersect(self, attrs):
         intersect = Contour.objects.filter(
             polygon__intersects=attrs['polygon'], is_deleted=False, year=attrs['year'])
         if intersect:
-            raise APIException({"polygon": "Пересекаются поля"})
+            raise APIException({"polygon": ["Пересекаются поля"]})
 
     def validate(self, attrs):
         if not self.is_polygon_inside_Kyrgyzstan(attrs['polygon']):
-            raise APIException({"polygon": "Создайте поле внутри Кыргызстана"})
+            raise APIException({"polygon": ["Создайте поле внутри Кыргызстана"]})
 
         self.validate_district(attrs)
 
@@ -226,24 +226,24 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
         db_district = self.get_db_district(attrs)
         if district != db_district:
             raise APIException({
-                "district": f"Ваш контур выходит за пределы <{attrs['conton']}>"
+                "district": [f"Ваш контур выходит за пределы <{attrs['conton']}>"]
             })
 
     def is_valid_year(self, attrs):
         if int(attrs['year']) > datetime.date.today().year:
-            raise APIException({"year": "Год не может быть больше текущего года"})
+            raise APIException({"year": ["Год не может быть больше текущего года"]})
         elif int(attrs['year']) < 2010:
-            raise APIException({"year": "Год должен быть не менее 2010 года"})
+            raise APIException({"year": ["Год должен быть не менее 2010 года"]})
 
     def is_polygon_intersect(self, attrs):
         intersect = Contour.objects.filter(
             polygon__intersects=attrs['polygon'], is_deleted=False, year=attrs['year'])
         if intersect:
-            raise APIException({"polygon": "Пересекаются поля"})
+            raise APIException({"polygon": ["Пересекаются поля"]})
 
     def validate(self, attrs):
         if not self.is_polygon_inside_Kyrgyzstan(attrs['polygon']):
-            raise APIException({"polygon": "Создайте поле внутри Кыргызстана"})
+            raise APIException({"polygon": ["Создайте поле внутри Кыргызстана"]})
 
         self.validate_district(attrs)
 
