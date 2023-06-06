@@ -1,7 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 
-from gip.models.contour import Contour
+from ai.models.predicted_contour import Contour_AI
 from indexes.models import PredictedContourVegIndex, ContourAIIndexCreatingReport
 from indexes.models.satelliteimage import SciHubImageDate
 from indexes.utils import veg_index_creating
@@ -12,7 +12,7 @@ def run():
 
     veg_index_creating_preset = partial(
         veg_index_creating,
-        contour_obj=Contour,
+        contour_obj=Contour_AI,
         creating_report_obj=ContourAIIndexCreatingReport,
         veg_index_obj=PredictedContourVegIndex
     )
