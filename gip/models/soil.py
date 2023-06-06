@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class SoilClass(BaseModel):
-    ID = models.BigIntegerField(verbose_name='ID')
+    id_soil = models.BigIntegerField(verbose_name='ID')
     name = models.CharField(max_length=255, verbose_name=_('Тип почвы'))
     description = models.TextField(verbose_name=_('Описание'), null=True, blank=True)
     color = models.CharField(max_length=20, null=True, verbose_name=_('Цвет'))
