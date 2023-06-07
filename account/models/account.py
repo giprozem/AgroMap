@@ -39,6 +39,7 @@ class Notifications(models.Model):
                              verbose_name=_('Пользователь'))
     date = models.DateTimeField(auto_now=True, verbose_name=_('Дата создания'))
     text = models.CharField(max_length=100, verbose_name=_('Текст уведомления'))
+    is_read = models.BooleanField(default=False, verbose_name=_('Прочитано'))
 
     class Meta:
         verbose_name = _('Уведомление')
