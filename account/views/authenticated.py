@@ -98,7 +98,7 @@ class NotificationsAPIView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = Notifications.objects.filter(user=user)
+        queryset = Notifications.objects.filter(user=user, is_read=False)
         return queryset
 
 
@@ -107,28 +107,21 @@ class ReadNotificationAPIView(GenericAPIView):
 
     def patch(self, request, pk):
         user = self.request.user
-        notification = Notifications.objects.get(user=user, pk=pk)
-        notification.is_read = True
-        notification.save()
-        message = {
-            "ru": "Уведомление прочитано",
-            "ky": "Билдирүү окулган",
-            "en": "Notification was read"
-        }
-        return Response({"message": message})
-
-
-class DeleteNotificationAPIView(DestroyAPIView):
-    permission_classes = (IsAuthenticated,)
-
-    def delete(self, request, pk):
-        user = self.request.user
-        Notifications.objects.get(user=user, pk=pk).delete()
-        message = {
-            "ru": "Уведомление удалено",
-            "ky": "Билдирүү өчүрүлдү",
-            "en": "Notification was deleted"
-        }
+        try:
+            notification = Notifications.objects.get(user=user, pk=pk)
+            notification.is_read = True
+            notification.save()
+            message = {
+                "ru": "Уведомление прочитано",
+                "ky": "Билдирүү окулган",
+                "en": "Notification was read"
+            }
+        except:
+            message = {
+                "ru": "Токен не найден",
+                "ky": "Токен табылган жок",
+                "en": "Token wasnot found"
+            }
         return Response({"message": message})
 
 
