@@ -102,6 +102,22 @@ class NotificationsAPIView(ListAPIView):
         return queryset
 
 
+class ReadNotificationAPIView(GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def patch(self, request, pk):
+        user = self.request.user
+        notification = Notifications.objects.get(user=user, pk=pk)
+        notification.is_read = True
+        notification.save()
+        message = {
+            "ru": "Уведомление прочитано",
+            "ky": "Билдирүү окулган",
+            "en": "Notification was read"
+        }
+        return Response({"message": message})
+
+
 class DeleteNotificationAPIView(DestroyAPIView):
     permission_classes = (IsAuthenticated,)
 
