@@ -2,6 +2,7 @@ from django.contrib.gis.db import models
 from django.utils.translation import gettext_lazy as _
 from gip.models import District
 from gip.models.base import BaseModel
+from culture_model.models.phase import Phase
 
 
 class Classes(BaseModel):
@@ -96,10 +97,13 @@ class DistrictType(BaseModel):
 
 class PastureCulture(BaseModel):
     district_type = models.ForeignKey(DistrictType, on_delete=models.SET_NULL, related_name='pasture_culture', null=True, verbose_name=_('Тип района'))
+    culture_ID = models.CharField(max_length=20)  # TODO translate
     name = models.CharField(max_length=255, verbose_name=_('Название'))
     coefficient_to_productivity = models.DecimalField(max_digits=4, decimal_places=2, verbose_name=_('Коэффициент продуктивности'))
     content_of_feed = models.DecimalField(max_digits=4, decimal_places=2, verbose_name=_('Содержание корма'))
-    
+    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)  # TODO translate
+    veg_period = models.ForeignKey(Phase, on_delete=models.SET_NULL, null=True)  # TODO translate
+
     def __str__(self):
         return self.name
 
@@ -108,7 +112,8 @@ class PastureCulture(BaseModel):
             'district_type',
             'name',
             'coefficient_to_productivity',
-            'content_of_feed'
+            'content_of_feed',
+            'district'
         )
         verbose_name = _('Культура пастбища')
         verbose_name_plural = _('Культуры пастбищ')
