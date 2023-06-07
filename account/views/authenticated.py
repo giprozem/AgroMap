@@ -69,6 +69,8 @@ class UpdateProfileAPIView(GenericAPIView):
 
 
 class ChangePasswordAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request, *args, **kwargs):
         serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
