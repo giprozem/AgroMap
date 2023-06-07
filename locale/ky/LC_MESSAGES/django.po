@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-01 12:20+0600\n"
+"POT-Creation-Date: 2023-06-07 12:00+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,11 +92,15 @@ msgstr "Түзүлгөн датасы"
 msgid "Текст уведомления"
 msgstr "Билдирүү тексти"
 
-#: account/models/account.py:44
+#: account/models/account.py:42
+msgid "Прочитано"
+msgstr "Окуган"
+
+#: account/models/account.py:45
 msgid "Уведомление"
 msgstr "Билдирүү"
 
-#: account/models/account.py:45
+#: account/models/account.py:46
 msgid "Уведомления"
 msgstr "Билдирүүлөр"
 
@@ -1098,7 +1102,7 @@ msgstr "Спутниктен тартылган cүрөт Sentinel -2"
 msgid "Спутниковые снимки Sentinel -2"
 msgstr "Спутниктен тартылган cүрөт Sentinel -2"
 
-#: indexes/utils.py:145
+#: indexes/utils.py:145 scripts/create_veg_indexes_ai.py:132
 msgid "Ошибка создания индекса растительности, проверьте имена индексов"
 msgstr ""
 "Өсүмдүктөрдүн вегетациондук индексин түзүүдө ката кетти, индекстин аттарын "
