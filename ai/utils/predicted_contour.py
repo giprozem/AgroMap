@@ -175,7 +175,6 @@ def cut_rgb_tif():
 def yolo():
     # from datetime import date
     # year = date.today().strftime("%Y")
-    time.sleep(15)
     file_yolo = Yolo.objects.get(id=1)
     model = YOLO(f'media/{file_yolo.ai}')
     cutted_files = sorted(os.listdir('media/TCI/'),
@@ -243,7 +242,6 @@ def yolo():
                         }
                         try:
                             poly = GEOSGeometry(f"{geojson}")
-                            time.sleep(0.2)
                             with connection.cursor() as cursor:
                                 cursor.execute(f"""
                                 SELECT SUM(subquery.percent) as total_percent
@@ -257,7 +255,6 @@ def yolo():
                                 percent_contour = cursor.fetchall()[0][0]
                             if int(percent_contour) < 30:
                                 try:
-                                    time.sleep(0.2)
                                     Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 2), year='2022',
                                                               type_id=1)
                                 except Exception as e:
@@ -265,7 +262,6 @@ def yolo():
                         except Exception as e:
                             print(e, '--------------Intesection')
                             try:
-                                time.sleep(0.2)
                                 Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 2), year='2022',
                                                           type_id=1)
                             except Exception as e:
@@ -331,7 +327,6 @@ def yolo():
                             }
                             try:
                                 poly = GEOSGeometry(f"{geojson}")
-                                time.sleep(0.2)
 
                                 with connection.cursor() as cursor:
                                     cursor.execute(f"""
@@ -346,7 +341,6 @@ def yolo():
                                     percent_contour = cursor.fetchall()[0][0]
                                 if int(percent_contour) < 30:
                                     try:
-                                        time.sleep(0.2)
                                         Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 2),
                                                                   year='2022',
                                                                   type_id=1)
@@ -355,7 +349,6 @@ def yolo():
                             except Exception as e:
                                 print(e, '--------------Intesection')
                                 try:
-                                    time.sleep(0.2)
                                     Contour_AI.objects.create(polygon=poly, percent=round(float(conf), 2), year='2022',
                                                               type_id=1)
                                 except Exception as e:
