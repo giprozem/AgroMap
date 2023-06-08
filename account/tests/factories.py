@@ -11,7 +11,7 @@ class MyUserFactory(DjangoModelFactory):
 
     username = 'test_1_user'
     password = PostGenerationMethodCall('set_password', 'test_1_password')
-    profiles = RelatedFactory('account.factories.ProfileFactory', factory_related_name='my_user')
+    profiles = RelatedFactory('account.tests.factories.ProfileFactory', factory_related_name='my_user')
 
 
 class ProfileFactory(DjangoModelFactory):

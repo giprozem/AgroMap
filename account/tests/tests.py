@@ -1,6 +1,6 @@
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
 from rest_framework.test import APITestCase
-from account.factories import MyUserFactory, ProfileFactory, NotificationsFactory, TokenFactory
+from account.tests.factories import MyUserFactory, TokenFactory
 from django.test import Client
 
 
