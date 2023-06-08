@@ -50,11 +50,11 @@ docker-compose exec web ./manage.py createsuperuser
 ```
 
 # Start unit test --------------------------------
-sudo docker-compose exec web python manage.py test
+sudo docker-compose exec web coverage run manage.py test
 
 
 # Start django test coverage ---------------------
-sudo docker-compose exec web coverage report
+sudo docker-compose exec web coverage report -i
 
 ```
 
