@@ -1,7 +1,6 @@
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.test import APITestCase
 from culture_model.tests.factories import VegetationIndexFactory
-from django.test import Client
 
 
 class TestCulture(APITestCase):

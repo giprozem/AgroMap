@@ -37,3 +37,19 @@ class TokenFactory(DjangoModelFactory):
         model = Token
 
     user = SubFactory(MyUserFactory)
+
+
+class AdminUserFactory(DjangoModelFactory):
+    class Meta:
+        model = MyUser
+
+    username = 'admin_user'
+    password = PostGenerationMethodCall('set_password', 'admin_password')
+    is_staff = True
+
+
+class AdminTokenFactory(DjangoModelFactory):
+    class Meta:
+        model = Token
+
+    user = SubFactory(AdminUserFactory)
