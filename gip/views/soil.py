@@ -17,7 +17,7 @@ class SoilAPIView(APIView):
             result = json.load(f)
 
         for i, j in result.items():
-            SoilClass.objects.create(ID=i, name=j, name_ky=j, name_en=j)
+            SoilClass.objects.create(id_soil=i, name=j, name_ky=j, name_en=j)
         return Response('it is ok', status=200)
 
 

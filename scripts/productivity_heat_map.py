@@ -178,7 +178,7 @@ def run(year='2022'):
 
                         with connection.cursor() as cursor:
                             cursor.execute(f"""
-                                        SELECT sc.name, sc.ID as soil_class_id
+                                        SELECT sc.name, sc.id_soil as soil_class_id
                                         FROM gip_soilclassmap AS scm
                                         JOIN gip_soilclass AS sc ON sc.id = scm.soil_class_id
                                         WHERE ST_Contains(scm.polygon::geometry,
