@@ -31,6 +31,6 @@ class SoilClassAPIView(APIView):
         """
             Retrieve all soil classes.
         """
-        query = SoilClass.objects.all().order_by('ID')
+        query = SoilClass.objects.all().order_by('id_soil')
         serializer = SoilClassSerializer(query, many=True)
         return Response(serializer.data, status=200)

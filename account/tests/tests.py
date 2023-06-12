@@ -1,7 +1,6 @@
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
 from rest_framework.test import APITestCase
-from account.tests.factories import MyUserFactory, TokenFactory
-from django.test import Client
+from account.tests.factories import MyUserFactory, TokenFactory, AdminUserFactory
 
 
 class TestUser(APITestCase):
@@ -51,3 +50,8 @@ class TestUser(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
         response = self.client.patch(f'/account/notifications/1/')
         self.assertEqual(response.status_code, HTTP_200_OK)
+
+    def test_admin(self):
+        password = 'admin_password'
+        self.user = AdminUserFactory(password=password)
+        self.assertTrue(self.client.login(username=self.user.username, password=password))

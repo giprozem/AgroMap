@@ -176,7 +176,7 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
         }
         representation['soil_class'] = {
             'id': instance.soil_class.pk if instance.soil_class else None,
-            'ID': instance.soil_class.id_soil if instance.soil_class else None,
+            'id_soil': instance.soil_class.id_soil if instance.soil_class else None,
             'name_ru': instance.soil_class.name_ru if instance.soil_class else None,
             'name_ky': instance.soil_class.name_ky if instance.soil_class else None,
             'name_en': instance.soil_class.name_en if instance.soil_class else None,
