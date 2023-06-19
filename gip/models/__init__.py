@@ -4,10 +4,6 @@ from gip.models.crop_yield import *
 from gip.models.culture import *
 from gip.models.district import *
 from gip.models.farmer import *
-from gip.models.fertility import *
-from gip.models.landuse import *
-from gip.models.orthophoto import *
 from gip.models.region import *
 from gip.models.soil import *
-from gip.models.village import *
 from gip.models.base import *

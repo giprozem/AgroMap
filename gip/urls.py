@@ -4,7 +4,6 @@ from gip.views.contour import FilterContourAPIView, ContourStatisticsAPIView, St
     MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView, AuthDetailContourViewSet, \
     CultureStatisticsAPIView
 from gip.views.district import DistrictAPIView
-from gip.views.geoserver import Geoserver
 from gip.views.polygon_and_point_in_polygon import OccurrenceCheckAPIView, PolygonsInBbox, PolygonsInScreen
 from gip.views.region import RegionAPIView
 from gip.views.soil import SoilAPIView, SoilClassAPIView
