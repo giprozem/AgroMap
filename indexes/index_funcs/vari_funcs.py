@@ -7,8 +7,7 @@ import rasterio
 from django.core.files.base import ContentFile
 
 
-def get_region_of_interest(vari, multiplier=1/2):
-
+def get_region_of_interest(vari, multiplier=1 / 2):
     # undo the background adjustment
     region = np.where(vari == -255, 0, vari)
 
@@ -33,13 +32,13 @@ def get_vari(red_file, green_file, blue_file):
 
     np.seterr(divide='ignore', invalid='ignore')
     # vari calculation, empty cells or nodata cells are reported as 0
-    vari = np.where((green == 0.) | (red == 0.) | (blue == 0.), -255, np.where((green - red - blue) == 0., 0, (green - red) / (green + red - blue)))
+    vari = np.where((green == 0.) | (red == 0.) | (blue == 0.), -255,
+                    np.where((green - red - blue) == 0., 0, (green - red) / (green + red - blue)))
 
     return vari
 
 
-def vari_calculator(B02, B03, B04,  saving_file_name):
-
+def vari_calculator(B02, B03, B04, saving_file_name):
     with rasterio.open(f'{B02}') as blue:
         band_blue = blue.read(1)
 

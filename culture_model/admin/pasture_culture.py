@@ -1,15 +1,16 @@
 from django.contrib import admin
-from culture_model.models.pasture_culture import Classes, Subclass, GroupType, RepublicanType, DistrictType, PastureCulture
+from culture_model.models.pasture_culture import Classes, Subclass, GroupType, RepublicanType, DistrictType, \
+    PastureCulture
 
 
 @admin.register(Classes)
 class ClassesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', )
+    list_display = ('id', 'name',)
 
 
 @admin.register(Subclass)
 class SubclassAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', )
+    list_display = ('id', 'name',)
 
 
 @admin.register(GroupType)

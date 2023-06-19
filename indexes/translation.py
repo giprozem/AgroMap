@@ -8,21 +8,26 @@ from .models.satelliteimage import SatelliteImageSource, SatelliteImageBand
 
 @register(IndexMeaning)
 class IndexMeaningTranslationOptions(TranslationOptions):
-    fields = ('description', )
+    fields = ('description',)
+
 
 @register(IndexCreatingReport)
 class IndexCreatingReportTranslationOptions(TranslationOptions):
-    fields = ('process_error', )
+    fields = ('process_error',)
+
 
 @register(ProductivityClass)
 class ProductivityClassTranslationOptions(TranslationOptions):
     fields = ('name', 'description')
 
+
 simple_history.register(ProductivityClass, inherit=True)
+
 
 @register(SatelliteImageSource)
 class SatelliteImageSourceTranslationOptions(TranslationOptions):
     fields = ('name', 'description')
+
 
 @register(SatelliteImageBand)
 class SatelliteImageBandTranslationOptions(TranslationOptions):

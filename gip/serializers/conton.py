@@ -11,7 +11,7 @@ class ContonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Conton
-        exclude = ('name', )
+        exclude = ('name',)
 
 
 class ContonWithoutPolygonSerializer(serializers.ModelSerializer):

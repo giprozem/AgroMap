@@ -8,10 +8,6 @@ from rest_framework.validators import UniqueValidator
 from gip.models import CropYield
 from gip.models.conton import Conton
 from gip.models.contour import Contour
-from gip.serializers.conton import ContonWithoutPolygonSerializer
-from gip.serializers.culture import CultureSerializer
-from gip.serializers.landtype import LandTypeSerializer
-from gip.serializers.soil import SoilClassSerializer
 from gip.views.handbook_contour import contour_Kyrgyzstan
 
 

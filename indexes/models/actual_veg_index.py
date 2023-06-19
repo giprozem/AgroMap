@@ -22,9 +22,11 @@ class ActualVegIndex(models.Model):
     index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name=_('Индекс'))
     contour = models.ForeignKey('gip.Contour', on_delete=models.CASCADE, verbose_name=_('Контуры поля'),
                                 related_name='actual_veg_index')
-    date = models.DateField(verbose_name=_('Дата анализа'), help_text=_('Введите дату космо снимка из которого будет высчитан индекс'))
+    date = models.DateField(verbose_name=_('Дата анализа'),
+                            help_text=_('Введите дату космо снимка из которого будет высчитан индекс'))
     history = HistoricalRecords(verbose_name=_("История"))
-    satellite_image = models.ForeignKey(SciHubImageDate, on_delete=models.SET_NULL, null=True)  # TODO Required translate
+    satellite_image = models.ForeignKey(SciHubImageDate, on_delete=models.SET_NULL,
+                                        null=True)
 
     def __str__(self):
         return f'{self.index} {self.contour}'
@@ -69,7 +71,7 @@ class PredictedContourVegIndex(models.Model):
         'indexes.IndexMeaning',
         on_delete=models.SET_NULL,
         null=True,
-        verbose_name = _('Значение показателя индекса')
+        verbose_name=_('Значение показателя индекса')
     )
     index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name=_('Индекс'))
     contour = models.ForeignKey('ai.Contour_AI', on_delete=models.CASCADE,

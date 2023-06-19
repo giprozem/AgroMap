@@ -12,4 +12,4 @@ class RegionSerializer(serializers.ModelSerializer):
 class RegionWithoutPolygonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Region
-        exclude = ('polygon', 'name', 'created_at', 'updated_at', )
+        exclude = ('polygon', 'name', 'created_at', 'updated_at',)

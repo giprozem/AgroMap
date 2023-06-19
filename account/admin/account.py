@@ -7,26 +7,29 @@ from account.models import MyUser, Profile, Notifications
 from django.utils.translation import gettext_lazy as _
 
 
+# This form is used to create a new user.
 class UserCreationForm(forms.ModelForm):
-    """A form for creating new users. Includes all the required
-    fields, plus a repeated password."""
-    password = forms.CharField(label=_('Пароль'), widget=forms.PasswordInput)
-    confirm_password = forms.CharField(label=_('Подтвердите пароль'), widget=forms.PasswordInput)
+    # Password is a required field
+    password = forms.CharField(label=_('Password'), widget=forms.PasswordInput)
+    # Password confirmation is also a required field
+    confirm_password = forms.CharField(label=_('Confirm password'), widget=forms.PasswordInput)
 
     class Meta:
+        # The model used for this form is MyUser.
         model = MyUser
+        # Include all fields from the model in the form.
         fields = '__all__'
 
     def clean_password2(self):
-        # Check that the two password entries match
+        # Ensure that the password and its confirmation match.
         password = self.cleaned_data.get("password1")
         confirm_password = self.cleaned_data.get("password2")
         if password and confirm_password and password != confirm_password:
-            raise forms.ValidationError(_("Пароли не совпадают"))
+            raise forms.ValidationError(_("Passwords do not match"))
         return confirm_password
 
     def save(self, commit=True):
-        # Save the provided password in hashed format
+        # Save the password in a hashed format.
         user = super(UserCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["confirm_password"])
         if commit:
@@ -34,48 +37,51 @@ class UserCreationForm(forms.ModelForm):
         return user
 
 
+# This form is used to update existing users.
 class UserChangeForm(forms.ModelForm):
-    """A form for updating users. Includes all the fields on
-    the user, but replaces the password field with admin's
-    password hash display field.
-    """
-    password = ReadOnlyPasswordHashField(label=_("Пароль"),
-        help_text=_("Изменить пароль можно <a href=\"../password/\">здесь</a>."))
+    password = ReadOnlyPasswordHashField(label=_("Password"),
+                                         help_text=_("Passwords can be changed <a href=\"../password/\">here</a>."))
 
     class Meta:
         model = MyUser
         fields = '__all__'
 
     def clean_password(self):
-        # Regardless of what the user provides, return the initial value.
-        # This is done here, rather than on the field, because the
-        # field does not have access to the initial value
+        # Ignore any input for the password field and return the initial value instead.
         return self.initial["password"]
 
 
+# MyUserAdmin is a class that provides administrative options for the MyUser model.
 @admin.register(MyUser)
 class MyUserAdmin(BaseUserAdmin):
+    # When changing a user, use the UserChangeForm.
     form = UserChangeForm
+    # When adding a user, use the UserCreationForm.
     add_form = UserCreationForm
 
+    # Define which fields to display in the user list.
     list_display = ('id', 'username',)
-    list_display_links = ('username', )
-    fieldsets = ((None, {'fields': ('username', 'password')}),
-                 (_('Доступы'), {'fields': ('is_staff', 'is_superuser', 'is_supervisor', 'is_active', 'is_farmer',
-                                             'is_employee', 'groups')}))
+    list_display_links = ('username',)
 
+    # Define the layout for the change user form.
+    fieldsets = ((None, {'fields': ('username', 'password')}),
+                 (_('Permissions'), {'fields': ('is_staff', 'is_superuser', 'is_supervisor', 'is_active', 'is_farmer',
+                                                'is_employee', 'groups')}))
+    # Define the layout for the add user form.
     add_fieldsets = (
         (None, {'fields': ('username', 'password', 'confirm_password', 'is_staff', 'is_superuser', 'is_supervisor',
                            'is_farmer', 'is_employee', 'groups')}),)
 
 
+# Register the Profile model with the admin site.
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('my_user', 'full_name')
     search_fields = ('full_name', 'my_user__username')
 
 
+# Register the Notifications model with the admin site.
 @admin.register(Notifications)
 class NotificationsAdmin(TranslationAdmin):
-    list_display = ('user', )
-    list_filter = ('user', )
+    list_display = ('user',)
+    list_filter = ('user',)

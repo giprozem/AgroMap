@@ -40,4 +40,3 @@ class ContourProductivityPredictAPIView(APIView):
         query = Contour.objects.get(id=contour)
         serializer = ContourStatisticsSerializer(query)
         return Response(serializer.data, status=200)
-    

@@ -125,7 +125,7 @@ class FilterContourAPIView(APIView):  # todo remove cntr.id
         conton = request.GET.get('conton')
         ai = request.GET.get('ai')
         culture = request.GET.get('culture')
-        if land_type and year: # todo check if is num
+        if land_type and year:  # todo check if is num
             if ai:
                 sql = f"""
                 SELECT cntr.id AS contour_id, cntr.type_id AS land_type_id, cntr.year, 

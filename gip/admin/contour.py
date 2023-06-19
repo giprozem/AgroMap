@@ -12,9 +12,9 @@ from indexes.models import ActualVegIndex
 
 class ActualVegIndexTabularInline(TabularInline):
     model = ActualVegIndex
-    readonly_fields = ('id', 'get_html_photo', 'index_image', 'average_value', 'get_description', )
-    fields = ('average_value', 'get_description', 'get_html_photo', 'index', 'contour', 'date', )
-    show_change_link = ('index', )
+    readonly_fields = ('id', 'get_html_photo', 'index_image', 'average_value', 'get_description',)
+    fields = ('average_value', 'get_description', 'get_html_photo', 'index', 'contour', 'date',)
+    show_change_link = ('index',)
     extra = 0
 
     def get_description(self, obj):
@@ -44,13 +44,13 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     list_per_page = 20
     search_fields = ('conton__name', 'farmer__pin_inn', 'ink', 'id')
     date_hierarchy = 'created_at'
-    list_display_links = ('id', 'ink', )
+    list_display_links = ('id', 'ink',)
     inlines = [ActualVegIndexTabularInline]
 
 
 @admin.register(LandType)
 class LandTypeAdmin(TranslationAdmin):
-    list_display = ('id', 'name' )
+    list_display = ('id', 'name')
 
 
 @admin.register(Elevation)

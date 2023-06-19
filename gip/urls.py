@@ -35,7 +35,6 @@ urlpatterns = [
     path('district/', DistrictAPIView.as_view()),
     path('conton/', ContonAPIView.as_view()),
     path('land-type/', LandTypeAPIView.as_view()),
-    path('geoserver/', Geoserver.as_view()),
     path('', include(router.urls)),
     path('soil-class/', SoilClassAPIView.as_view()),
 ]

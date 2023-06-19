@@ -45,7 +45,6 @@ class GraphicTablesAPIView(APIView):
                     data = list(i)[2:]
                     datas.append({"region_name": name, "source": data})
 
-
                 formated_data = [{
                     "years": list(dict.fromkeys([row[1] for row in rows])),
                     "sources": [col_lst],
