@@ -13,7 +13,8 @@ def run():
                         FROM ai_contour_ai as cntr
                         LEFT JOIN gip_landtype AS land ON land.id=cntr.type_id
                         LEFT JOIN gip_district AS dst ON dst.id=cntr.district_id
-                        LEFT JOIN gip_region AS rgn ON rgn.id=dst.region_id;
+                        LEFT JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                        WHERE cntr.is_deleted=False;
                         """
                        )
         rows = cursor.fetchall()
