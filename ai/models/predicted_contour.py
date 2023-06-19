@@ -54,6 +54,7 @@ class Contour_AI(models.Model):
         verbose_name = _("Контур найденный ИИ")
         verbose_name_plural = _("Контуры найденные ИИ")
 
+
 class Yolo(SingletonModel):
     ai = models.FileField(upload_to='models_ai/', verbose_name=_('Модель'))
 

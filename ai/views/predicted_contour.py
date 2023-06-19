@@ -14,15 +14,13 @@ from django.db import connection
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from ai.utils.predicted_contour import deleted_files, clean_contour_and_create_district
+from ai.utils.predicted_contour import clean_contour_and_create_district, predicted_contour
 from account.models.account import Notifications
-from notifications.signals import notify
-from ai.utils.predicted_contour import deleted_files, yolo, cut_rgb_tif
 
 
-class TestYolo(APIView):
+class PredictedContourAPIView(APIView):
     def get(self, request):
-        thread_object = Thread(target=yolo)
+        thread_object = Thread(target=predicted_contour)
         thread_object.start()
         return Response('OK')
 
@@ -57,7 +55,6 @@ class SearchAPIView(APIView):
                     text_ky = 'Контурдук издөө аяктады'
                     text_en = 'Contour search was completed'
                     Notifications.objects.create(user=user, text=text, text_ky=text_ky, text_en=text_en)
-                    deleted_files()
 
             message = {
                 "ru": "Процесс запущен",

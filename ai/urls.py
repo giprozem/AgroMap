@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from ai.views.heat_map_ndvi import HeatMapAPIView
 from ai.views.predict_culture import PivotTableCulture
 from ai.views.create_dataset import CreateAPIView, CreateDescriptionAPIView
-from ai.views.predicted_contour import SearchAPIView, Contour_AIViewSet, Contour_AIInScreen, TestYolo, \
+from ai.views.predicted_contour import SearchAPIView, Contour_AIViewSet, Contour_AIInScreen, PredictedContourAPIView, \
     CleanContourCreateDistrictView
 from ai.views.productivity import PredictingProductivityAPIVie
 
@@ -20,6 +20,6 @@ urlpatterns = [
     path('predict-productivity/', PredictingProductivityAPIVie.as_view()),
     path('heat-map/', HeatMapAPIView.as_view()),
     path('instruction/', CreateDescriptionAPIView.as_view()),
-    path('test_yolo/', TestYolo.as_view()),
+    path('predicted_contour/', PredictedContourAPIView.as_view()),
     path('clean/', CleanContourCreateDistrictView.as_view()),
 ]

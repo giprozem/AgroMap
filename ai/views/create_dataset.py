@@ -8,7 +8,6 @@ from ai.models.create_dataset import Dataset, Process, CreateDescription
 from account.models.account import Notifications
 
 from ai.serializers import CreateDescriptionSerializer
-from ai.utils.predicted_contour import deleted_files
 
 
 class CreateAPIView(APIView):
@@ -26,6 +25,7 @@ class CreateAPIView(APIView):
             user = request.user
             Process.objects.all().delete()
             Process.objects.create(is_running=True, type_of_process=2)
+
             @receiver(post_save, sender=Dataset)
             def my_handler(sender, instance, created, **kwargs):
                 if created:
@@ -33,7 +33,7 @@ class CreateAPIView(APIView):
                     text_ky = f'Датасет №{instance.pk} түзүлгөн'
                     text_en = f'Dataset №{instance.pk} was created'
                     Notifications.objects.create(user=user, text=text, text_ky=text_ky, text_en=text_en)
-                    deleted_files()
+
             message = {
                 "ru": "Процесс запущен",
                 "ky": "Процесс башталды",
