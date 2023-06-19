@@ -74,7 +74,8 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                                 polygon=polygon
                             )
                         except Exception as b03_error:
-                            cutting_error.append(f'B03 layer cutting error cutting error {b03_error}, ')  # TODO Required translate
+                            cutting_error.append(
+                                f'B03 layer cutting error cutting error {b03_error}, ')  # TODO Required translate
                         try:
                             cutting_tiff(
                                 outputpath=output_path_b04,
@@ -175,7 +176,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                                         satellite_image_id=satellite_image.id,
                                         is_processed=False,
                                         process_error=f'{e}, {cutting_error}'
-                                )
+                                    )
                 except Exception as e:
                     creating_report_obj.objects.create(
                         contour_id=contour.id,

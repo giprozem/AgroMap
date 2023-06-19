@@ -74,7 +74,8 @@ class DistrictAPIView(APIView):
                 query = District.objects.filter(region_id__in=[int(region_id) for region_id in region.split(',')],
                                                 id__in=[int(pk) for pk in district.split(',')]).order_by('id')
             elif region:
-                query = District.objects.filter(region_id__in=[int(region_id) for region_id in region.split(',')]).order_by('id')
+                query = District.objects.filter(
+                    region_id__in=[int(region_id) for region_id in region.split(',')]).order_by('id')
             elif district:
                 query = District.objects.all().filter(id__in=[int(pk) for pk in district.split(',')]).order_by('id')
             else:
@@ -86,7 +87,8 @@ class DistrictAPIView(APIView):
                 query = District.objects.filter(region_id__in=[int(region_id) for region_id in region.split(',')],
                                                 id__in=[int(pk) for pk in district.split(',')]).order_by('id')
             elif region:
-                query = District.objects.filter(region_id__in=[int(region_id) for region_id in region.split(',')]).order_by('id')
+                query = District.objects.filter(
+                    region_id__in=[int(region_id) for region_id in region.split(',')]).order_by('id')
             elif district:
                 query = District.objects.all().filter(id__in=[int(pk) for pk in district.split(',')]).order_by('id')
             else:

@@ -6,7 +6,7 @@ from gip.models.base import BaseModel
 
 
 class Dataset(BaseModel):
-    zip = models.FileField(upload_to='zip/',  verbose_name=_('Датасет'))
+    zip = models.FileField(upload_to='zip/', verbose_name=_('Датасет'))
 
     class Meta:
         verbose_name = _("Датасет")
@@ -30,6 +30,7 @@ class Merge_Bands(SingletonModel):
         verbose_name = _("Процесс сбора изображений")
         verbose_name_plural = _("Процесс сбора изображений")
 
+
 class Create_RGB(SingletonModel):
     is_passed = models.BooleanField(verbose_name=_('Завершен'))
     type_of_process = models.IntegerField(verbose_name=_('Номер процесса'))
@@ -46,6 +47,7 @@ class Cut_RGB_TIF(SingletonModel):
     class Meta:
         verbose_name = _("Процесс обрезания цветных изображений")
         verbose_name_plural = _("Процесс обрезания цветных изображений")
+
 
 class AI_Found(SingletonModel):
     is_passed = models.BooleanField(verbose_name=_('Завершен'))

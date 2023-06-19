@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 
 from decouple import config
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY').split(',')
@@ -43,7 +42,6 @@ INSTALLED_APPS = [
     'ai',
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -77,7 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -88,7 +85,6 @@ DATABASES = {
         'PORT': config('POSTGRES_PORT', cast=int),
     }
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -104,7 +100,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 LANGUAGE_CODE = 'ru'
 
@@ -132,7 +127,6 @@ AUTH_USER_MODEL = 'account.MyUser'
 STATIC_URL = '/staticfiles/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-
 MEDIA_URL = '/mediafiles/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -155,7 +149,7 @@ LEAFLET_CONFIG = {
     "SCALE": 'both',
 
     'TILES': [('Google', 'http://{s}.google.com/vt/lyrs=s,m,p&x={x}&y={y}&z={z}',
-               {'maxZoom': 20,'subdomains':['mt0','mt1','mt2','mt3']}),
+               {'maxZoom': 20, 'subdomains': ['mt0', 'mt1', 'mt2', 'mt3']}),
               ('OSM', 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                {'attribution': '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}),
               ]
@@ -170,7 +164,6 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
 }
-
 
 JAZZMIN_SETTINGS = {
     "site_title": "AgroMap",

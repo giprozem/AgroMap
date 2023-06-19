@@ -12,7 +12,8 @@ class LandUseSerializer(GeoFeatureModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['properties'] = {'created_at': instance.created_at, 'updated_at': instance.updated_at,
-                                        'ink': instance.ink, 'area_ha': instance.area_ha, 'conton': instance.conton.name,
+                                        'ink': instance.ink, 'area_ha': instance.area_ha,
+                                        'conton': instance.conton.name,
                                         'farmer': instance.farmer.pin_inn,
                                         }
 

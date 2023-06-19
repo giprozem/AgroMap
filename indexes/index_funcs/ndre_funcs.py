@@ -7,8 +7,7 @@ import rasterio
 from django.core.files.base import ContentFile
 
 
-def get_region_of_interest(ndre, multiplier=1/2):
-
+def get_region_of_interest(ndre, multiplier=1 / 2):
     # undo the background adjustment
     region = np.where(ndre == -255, 0, ndre)
 
@@ -30,13 +29,12 @@ def get_ndre(red_file, nir_file):
 
     np.seterr(divide='ignore', invalid='ignore')
     # ndre calculation, empty cells or nodata cells are reported as 0
-    ndre = np.where((nir == 0.) | (red == 0.), -255, np.where((nir + red) == 0., 0, (nir-red) / (nir+red)))
+    ndre = np.where((nir == 0.) | (red == 0.), -255, np.where((nir + red) == 0., 0, (nir - red) / (nir + red)))
 
     return ndre
 
 
 def ndre_calculator(B07, B8A, saving_file_name):
-
     with rasterio.open(f'{B07}') as src:
         band_red = src.read(1)
 

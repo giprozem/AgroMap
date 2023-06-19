@@ -8,7 +8,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class CropYield(BaseModel):
-    culture = models.ForeignKey(Culture, on_delete=models.CASCADE, related_name='crop_yields', verbose_name=_("Культура"))
+    culture = models.ForeignKey(Culture, on_delete=models.CASCADE, related_name='crop_yields',
+                                verbose_name=_("Культура"))
     contour = models.ForeignKey(Contour, on_delete=models.CASCADE, related_name='crop_yields', verbose_name=_("Поле"))
     weight = models.FloatField(help_text=_("Измеряется в центнерах"), verbose_name=_("Продуктивность"))
     year = models.IntegerField(verbose_name=_("Год"))

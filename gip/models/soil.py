@@ -34,13 +34,3 @@ class SoilProductivity(BaseModel):
     class Meta:
         verbose_name = _('Продуктивность почвы')
         verbose_name_plural = _('Продуктивность почв')
-
-
-class SoilFertility(BaseModel):
-    soil_productivity = models.ForeignKey(SoilProductivity, on_delete=models.CASCADE, related_name='soil_fertility',
-                                          verbose_name=_('Плодородие почвы'))
-    polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_('Контур'))
-
-    class Meta:
-        verbose_name = _('Плодородие почвы')
-        verbose_name_plural = _('Плодородие почв')

@@ -30,7 +30,6 @@ class ActualIndexesOfContourYear(APIView):
         operation_summary='required contour_id return all indexes and values of required contour'
     )
     def get(self, request, *args, **kwargs):
-
         response = ActualVegIndex.objects.filter(contour=request.query_params['contour_id']).order_by('date')
         serializer = ActuaVegIndexSerializer(response, many=True, context={'request': request})
         if response:
@@ -83,7 +82,6 @@ class ActualIndexesOfContourAI(APIView):
         operation_summary='required contourAI_id return all indexes and values of required contour'
     )
     def get(self, request, *args, **kwargs):
-
         response = PredictedContourVegIndex.objects.filter(contour=request.query_params['contour_id']).order_by('date')
         serializer = PredictedContourActuaVegIndexSerializer(response, many=True, context={'request': request})
         if response:

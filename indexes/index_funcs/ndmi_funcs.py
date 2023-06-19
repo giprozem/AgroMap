@@ -7,8 +7,7 @@ import rasterio
 from django.core.files.base import ContentFile
 
 
-def get_region_of_interest(ndmi, multiplier=1/2):
-
+def get_region_of_interest(ndmi, multiplier=1 / 2):
     # undo the background adjustment
     region = np.where(ndmi == -255, 0, ndmi)
 
@@ -29,13 +28,12 @@ def get_ndmi(swir_file, nir_file):
 
     np.seterr(divide='ignore', invalid='ignore')
     # ndwi calculation, empty cells or nodata cells are reported as 0
-    ndmi = np.where((nir == 0.) | (swir == 0.), -255, np.where((nir+swir) == 0., 0, (nir - swir)/(nir + swir)))
+    ndmi = np.where((nir == 0.) | (swir == 0.), -255, np.where((nir + swir) == 0., 0, (nir - swir) / (nir + swir)))
 
     return ndmi
 
 
 def ndmi_calculator(B08, B11, saving_file_name):
-
     with rasterio.open(f'{B11}') as src:
         band_swir = src.read(1)
 

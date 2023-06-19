@@ -7,8 +7,7 @@ import rasterio
 from django.core.files.base import ContentFile
 
 
-def get_region_of_interest(savi, multiplier=1/2):
-
+def get_region_of_interest(savi, multiplier=1 / 2):
     # undo the background adjustment
     region = np.where(savi == -255, 0, savi)
 
@@ -30,13 +29,13 @@ def get_savi(red_file, nir_file, L=0.5):
 
     np.seterr(divide='ignore', invalid='ignore')
     # savi calculation, empty cells or nodata cells are reported as 0
-    savi = np.where((nir == 0.) | (red == 0.), -255, np.where((nir - red) == 0., 0, (nir - red) / (nir + red + L)) * (1 + L))
+    savi = np.where((nir == 0.) | (red == 0.), -255,
+                    np.where((nir - red) == 0., 0, (nir - red) / (nir + red + L)) * (1 + L))
 
     return savi
 
 
 def savi_calculator(B04, B08, saving_file_name, L=0):
-
     with rasterio.open(f'{B04}') as src:
         band_red = src.read(1)
 

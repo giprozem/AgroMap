@@ -80,7 +80,7 @@ class ContonAPIView(APIView):
         if polygon:
             if district and conton:
                 query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
-                                                id__in=[int(pk) for pk in conton.split(',')])
+                                              id__in=[int(pk) for pk in conton.split(',')])
             elif district:
                 query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')])
             elif conton:
@@ -92,10 +92,12 @@ class ContonAPIView(APIView):
         else:
             if pagination:
                 if district and conton:
-                    query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')],
-                                                    id__in=[int(pk) for pk in conton.split(',')])
+                    query = Conton.objects.filter(
+                        district_id__in=[int(district_id) for district_id in district.split(',')],
+                        id__in=[int(pk) for pk in conton.split(',')])
                 elif district:
-                    query = Conton.objects.filter(district_id__in=[int(district_id) for district_id in district.split(',')])
+                    query = Conton.objects.filter(
+                        district_id__in=[int(district_id) for district_id in district.split(',')])
                 elif conton:
                     query = Conton.objects.all().filter(id__in=[int(pk) for pk in conton.split(',')])
                 else:

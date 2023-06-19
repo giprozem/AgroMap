@@ -4,7 +4,6 @@ from indexes.views import CreatingAverage, ActualIndexesOfContourYear, Satellite
     ContourProductivityPredictAPIView, ActualIndexesOfContourAI, PredictedSatelliteImagesDate
 from indexes.views.download_satellite_images import DownloadSatelliteImagesV2
 
-
 urlpatterns = [
     path('average/', CreatingAverage.as_view()),
     path('actual-veg-indexes/', ActualIndexesOfContourYear.as_view()),

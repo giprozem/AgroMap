@@ -13,7 +13,7 @@ class ContourAISerializer(serializers.ModelSerializer):
 class ContourAIStatisticsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contour_AI
-        exclude = ('polygon', )
+        exclude = ('polygon',)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

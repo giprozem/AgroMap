@@ -58,7 +58,7 @@ class ContourSearchAPIView(ListAPIView):
     search_fields = ['ink']
 
 
-class FilterContourAPIView(APIView):  # todo remove cntr.id
+class FilterContourAPIView(APIView):
     @swagger_auto_schema(
         manual_parameters=[
             openapi.Parameter('year', openapi.IN_QUERY, description="Year", type=openapi.TYPE_INTEGER),
@@ -125,7 +125,7 @@ class FilterContourAPIView(APIView):  # todo remove cntr.id
         conton = request.GET.get('conton')
         ai = request.GET.get('ai')
         culture = request.GET.get('culture')
-        if land_type and year: # todo check if is num
+        if land_type and year:
             if ai:
                 sql = f"""
                 SELECT cntr.id AS contour_id, cntr.type_id AS land_type_id, cntr.year, 

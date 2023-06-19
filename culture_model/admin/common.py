@@ -23,7 +23,5 @@ class IndexPlanAdmin(SimpleHistoryAdmin):
 
 @admin.register(Phase)
 class PhaseAdmin(SimpleHistoryAdmin, TranslationAdmin):
-    list_display = ('id', 'name', )
-    list_display_links = ('id', 'name', )
-
-
+    list_display = ('id', 'name',)
+    list_display_links = ('id', 'name',)

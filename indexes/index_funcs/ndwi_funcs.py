@@ -7,8 +7,7 @@ import rasterio
 from django.core.files.base import ContentFile
 
 
-def get_region_of_interest(ndwi, multiplier=1/2):
-
+def get_region_of_interest(ndwi, multiplier=1 / 2):
     # undo the background adjustment
     region = np.where(ndwi == -255, 0, ndwi)
 
@@ -36,7 +35,6 @@ def get_ndwi(green_file, nir_file):
 
 
 def ndwi_calculator(B03, B08, saving_file_name):
-
     with rasterio.open(f'{B03}') as src:
         band_green = src.read(1)
 

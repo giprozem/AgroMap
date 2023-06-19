@@ -10,9 +10,9 @@ from indexes.models import PredictedContourVegIndex
 
 class VegIndexTabularInline(TabularInline):
     model = PredictedContourVegIndex
-    readonly_fields = ('id', 'get_html_photo', 'index_image', 'average_value', 'get_description', )
-    fields = ('average_value', 'get_description', 'get_html_photo', 'index', 'contour', 'date', )
-    show_change_link = ('index', )
+    readonly_fields = ('id', 'get_html_photo', 'index_image', 'average_value', 'get_description',)
+    fields = ('average_value', 'get_description', 'get_html_photo', 'index', 'contour', 'date',)
+    show_change_link = ('index',)
     extra = 0
 
     def get_description(self, obj):
@@ -43,7 +43,6 @@ class Contour_AIAdmin(LeafletGeoAdmin):
 
 @admin.register(Images_AI)
 class Images_AIAdmin(admin.ModelAdmin):
-
     readonly_fields = ('get_html_photo',)
 
     def get_html_photo(self, obj):

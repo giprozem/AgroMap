@@ -4,7 +4,6 @@ from account.tests.factories import TokenFactory, AdminTokenFactory
 from gip.tests.factories import RegionFactory, DistrictFactory, ContonFactory, LandTypeFactory, \
     SoilFactory, CultureFactory, ContourFactory
 from rest_framework_gis.fields import GeoJsonDict
-import numpy as np
 
 
 class TestGip(APITestCase):
@@ -215,7 +214,7 @@ class TestGis(APITestCase):
                 "name_ky": None,
                 "name_en": None,
                 "code_soato": contour.conton.district.region.code_soato
-                },
+            },
             "district": {
                 "id": contour.conton.district.id,
                 "name_ru": contour.conton.district.name,
