@@ -4,7 +4,6 @@ from django.db.models import Avg
 
 
 def run():
-    # Получаем среднее значение average_value для каждого контура
     contours = Contour.objects.filter(
         type_id=2,
         actual_veg_index__index_id=1,
