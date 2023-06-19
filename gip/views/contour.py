@@ -1097,7 +1097,7 @@ class CultureStatisticsAPIView(APIView):
                                       """
                 end = ') as temp group by culture_name_ru, culture_name_ky, culture_name_en , c'
                 if culture:
-                    middle += f' and clt.id={culture}'
+                    middle += f' and clt.id in ({culture})'
                 if region:
                     start += ', region_name_ru, region_name_ky, region_name_en'
                     middle += f' and rgn.id in ({region})'
@@ -1147,7 +1147,7 @@ class CultureStatisticsAPIView(APIView):
                       """
                 end = ') as temp group by culture_name_ru, culture_name_ky, culture_name_en, c'
                 if culture:
-                    middle += f' and clt.id={culture}'
+                    middle += f' and clt.id in ({culture})'
                 if region:
                     start += ', region_name_ru, region_name_ky, region_name_en'
                     middle += f' and rgn.id in ({region})'
