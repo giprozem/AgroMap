@@ -1,64 +1,83 @@
-# Plot Service: It is the data storage of the farmer's plot.
+# Backend
 
-#### The web backend is built using the Django framework, and manages mainly:
+## Introduction
 
-- the core data model: the models are defined in `**/models.py` files (see [Models](https://docs.djangoproject.com/en/4.0/topics/db/models/))
-- the Administration Portal, built around the [Django Admin](https://docs.djangoproject.com/en/4.0/ref/contrib/admin/) framework.
+This project is designed for the identification of contours, crops, and crop yield of land plots.
 
+## Key Features
 
-## Architecture
-#### The backend architecture as per ORM and caching can be summarized as follows:
-![db.png](db.png)
+- Identification of contours, crops, and crop yield.
+- Downloading of satellite images using sentinel2_downloader.
+- Calculation of indices for contours using satellite images.
+- Determination of the elevation above sea level in Kyrgyzstan using elevation-Kyrgyzstan.
+- Management of data by regions, districts, and land plots.
+- Reporting.
 
-### Data model (ORM)
-Leverages Django ORM to manage the data model. Objects are created as Python classes that inherit from the Django's [Model](https://docs.djangoproject.com/en/3.2/ref/models/base/#model-inheritance) class, and define any number of fields required for the business logic. They are then mapped to the database using the [Django ORM](https://docs.djangoproject.com/en/3.2/topics/db/models/#model-api), through migrations. The migrations are defined in `**/migrations/` folders.
+## Technologies
 
-## Development setup
-### Prerequisites
+- Django: The primary web application framework.
+- Python3.10: The main programming language.
+- GDAL: A library for processing geospatial data.
+- Docker/Docker Compose: For containerizing the application and its dependencies.
+- PyTorch/YOLOv8: For training and applying machine learning models for the identification of contours, crops, and crop
+  yield.
+- sentinel2_downloader: For downloading satellite images.
+- elevation-Kyrgyzstan: For determining the elevation above sea level in Kyrgyzstan.
 
-- Python 3.10
-- Docker
+## Usage
 
-### Environment variables
+Please refer to the [USAGE.md](USAGE.md) file for detailed information on usage.
 
-The web backend expects the following environment variables to be set:
-- `POSTGRES_DB`
-- `POSTGRES_PASSWORD`
-- `POSTGRES_USER`
-- `POSTGRES_HOST`
-- `POSTGRES_PORT`
-- `SECRET_KEY`
-- `SCI_HUB_USERNAME`
-- `SCI_HUB_PASSWORD`
+## For Developers
 
+For more detailed information about key components of the project and scripts used in development,
+see [here](DEVELOPER.md).
 
-### Setup
+## Authors
 
-```
-git clone -b main git@gitlab.com:gip-python/plot.git
-```
+### Main Developers
 
-```
-docker-compose up -d --build
-```
-
-```
-docker-compose exec web ./manage.py createsuperuser
-```
-
-## Tests
-```
-
-# Start unit test --------------------------------
-sudo docker-compose exec web coverage run manage.py test
+- **Azimkozho**
+    * GitHub: [Azim-Kenzh](https://github.com/Azim-Kenzh)
+    * Email: <azimkozho.developer@gmail.com>
 
 
-# Start django test coverage ---------------------
-sudo docker-compose exec web coverage report -i
+- **Chynybai**
+    * GitHub: [TIP-ROK](https://github.com/TIP-ROK)
+    * Email: <chenye797@gmail.com>
 
-```
 
-## Indexes
-Now we have opportunity to get 2 kind of index(NDVI, NDMI). 
-You have to upload 4 satellite images in tiff format from Sentinel-2.
-Ther are B04, B08, B8A, B11.
+- **Daniel**
+    * GitHub: [Daniel](https://github.com/azamatdaniel0)
+    * Email: <azamatdaniel0@gmail.com>
+
+
+- **Almaz**
+    * GitHub: [Almaz](https://github.com/sharshenaliev)
+    * Email: <almaztestdjango@gmail.com>
+
+### Secondary Developers
+
+- **Aibek**
+    * GitHub: [Aibek](https://github.com/RikiTwiki)
+    * Email: <aibekrenadov@gmail.com>
+
+
+- **Daniil**
+    * GitHub: [Daniil](https://github.com/daniilpopoff)
+    * Email: <daniil.popoff01@gmail.com>
+
+
+- **Meerim**
+    * GitHub: [Meerim](https://github.com/meerimkanybekova)
+    * Email: <kanybekova_m@auca.kg>
+
+
+- **Feliks**
+    * GitHub: [Feliks](https://github.com/feliksKdm)
+    * Email: <altymysovfeliks@gmail.com>
+
+
+- **Nursultan**
+    * GitHub: [Nursultan](https://github.com/Nursmen)
+    * Email: <nnursultan07@mail.ru>
