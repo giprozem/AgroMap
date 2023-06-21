@@ -44,6 +44,7 @@ class Contour(BaseModel):
     elevation = models.CharField(max_length=25, blank=True, null=True, verbose_name=_('Высота'))
     ink = models.CharField(max_length=100, verbose_name=_("ИНК"), help_text=_('Идентификационный номер контура'),
                            null=True, blank=True)
+    eni = models.CharField(max_length=100, verbose_name="ЕНИ", null=True, blank=True)
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='contours', verbose_name=_('Фермер'),
                                blank=True, null=True)
     history = HistoricalRecords(verbose_name=_("История"))
