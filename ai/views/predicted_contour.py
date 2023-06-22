@@ -100,6 +100,10 @@ class Contour_AIViewSet(viewsets.ModelViewSet):
 class Contour_AIInScreen(APIView):
 
     @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('culture', openapi.IN_QUERY, description="Culture", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('year', openapi.IN_QUERY, description="Year", type=openapi.TYPE_INTEGER),
+        ],
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
@@ -119,7 +123,6 @@ class Contour_AIInScreen(APIView):
                     },
                     required=['lat', 'lng']
                 ),
-                'culture': openapi.Schema(type=openapi.TYPE_NUMBER),
             },
             required=['_southWest', '_northEast']
         ),
@@ -183,11 +186,11 @@ class Contour_AIInScreen(APIView):
             "_northEast": {
                 "lat": 42.71093250783867,
                 "lng": 78.4042846475467
-            },
-            "culture": 1
+            }
             }
         """
-
+        culture = request.GET.get("culture")
+        year = request.GET.get("year")
         if request.data:
             bboxs = Polygon.from_bbox((request.data['_southWest']['lng'], request.data['_southWest']['lat'],
                                        request.data['_northEast']['lng'], request.data['_northEast']['lat']))
@@ -200,9 +203,10 @@ class Contour_AIInScreen(APIView):
             WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry)
             and cntr.is_deleted=false and cntr.id > 11016
             """
-            culture = request.data.get("culture")
             if culture:
                 sql += f'and cntr.culture_id in ({culture})'
+            if year:
+                sql += f"and year='{year}'"
             with connection.cursor() as cursor:
                 cursor.execute(sql)
                 rows = cursor.fetchall()
