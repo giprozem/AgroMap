@@ -107,8 +107,12 @@ class PolygonsInBbox(APIView):
 
 
 class PolygonsInScreen(APIView):
-
     @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('land_type', openapi.IN_QUERY, description="Land type", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('culture', openapi.IN_QUERY, description="Culture", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('year', openapi.IN_QUERY, description="Year", type=openapi.TYPE_INTEGER),
+        ],
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
@@ -128,7 +132,6 @@ class PolygonsInScreen(APIView):
                     },
                     required=['lat', 'lng']
                 ),
-                'culture': openapi.Schema(type=openapi.TYPE_NUMBER),
             },
             required=['_southWest', '_northEast']
         ),
@@ -184,7 +187,7 @@ class PolygonsInScreen(APIView):
     def post(self, request, *args, **kwargs):
         """
         *Example*
-            {
+        {
             "_southWest": {
                 "lat": 42.70399473713915,
                 "lng": 78.38859908922761
@@ -192,11 +195,12 @@ class PolygonsInScreen(APIView):
             "_northEast": {
                 "lat": 42.71093250783867,
                 "lng": 78.4042846475467
-            },
-            "culture": 1
             }
+        }
         """
         land_type = request.GET.get('land_type')
+        culture = request.GET.get("culture")
+        year = request.GET.get("year")
         if request.data and land_type:
             bboxs = Polygon.from_bbox((request.data['_southWest']['lng'], request.data['_southWest']['lat'],
                                        request.data['_northEast']['lng'], request.data['_northEast']['lat']))
@@ -209,9 +213,10 @@ class PolygonsInScreen(APIView):
             WHERE ST_Intersects('{bboxs}'::geography::geometry, cntr.polygon::geometry)
             and cntr.is_deleted=False and cntr.type_id in ({land_type})
             """
-            culture = request.data.get("culture")
+            if year:
+                sql += f"and year='{year}'"
             if culture:
-                sql += f'and cntr.culture_id in ({culture})'
+                sql += f' and cntr.culture_id in ({culture})'
             with connection.cursor() as cursor:
                 cursor.execute(sql)
                 rows = cursor.fetchall()
@@ -229,4 +234,4 @@ class PolygonsInScreen(APIView):
                                  "geometry": eval(i[-1])})
                 return Response({"type": "FeatureCollection", "features": data})
         else:
-            return Response(data={"message": "parameter is required"}, status=400)
+            return Response(data={"message": "land_type parameter is required"}, status=400)
