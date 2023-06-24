@@ -102,7 +102,6 @@ class DistrictType(BaseModel):
 class PastureCulture(BaseModel):
     district_type = models.ForeignKey(DistrictType, on_delete=models.SET_NULL, related_name='pasture_culture',
                                       null=True, verbose_name=_('Тип района'))
-    culture_ID = models.CharField(max_length=20)
     name = models.CharField(max_length=255, verbose_name=_('Название'))
     coefficient_to_productivity = models.DecimalField(max_digits=4, decimal_places=2,
                                                       verbose_name=_('Коэффициент продуктивности'))
