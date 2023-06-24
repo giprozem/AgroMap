@@ -81,3 +81,7 @@ see [here](DEVELOPER.md).
 - **Nursultan**
     * GitHub: [Nursultan](https://github.com/Nursmen)
     * Email: <nnursultan07@mail.ru>
+
+- **Kydyrbek**
+    * GitHub: [Kydyrbek](https://github.com/Kydyrbek97)
+    * Email: <Kydyrbek.Mamatkulov@gmail.com>
