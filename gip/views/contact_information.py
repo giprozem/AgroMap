@@ -18,7 +18,10 @@ class ContactInformationViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = super().get_queryset()
         region = self.request.query_params.get('region')
         district = self.request.query_params.get('district')
+        department = self.request.query_params.get('department')
         if region and district:
             queryset = queryset.filter(district__region_id=region, district_id=district)
             return queryset
+        elif department:
+            queryset = queryset.filter(department_id=department)
         return queryset
