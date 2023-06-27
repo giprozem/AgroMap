@@ -1,4 +1,6 @@
 from django.urls import path, include
+
+from gip.views.contact_information import DepartmentViewSet, ContactInformationViewSet
 from gip.views.conton import ContonAPIView
 from gip.views.contour import FilterContourAPIView, ContourStatisticsAPIView, StatisticsContourProductivityAPIView, \
     MapContourProductivityAPIView, CoordinatesPolygonAPIView, ContourSearchAPIView, AuthDetailContourViewSet, \
@@ -15,6 +17,8 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register('contour', AuthDetailContourViewSet)
 router.register('culture', CultureViewSet)
+router.register('department', DepartmentViewSet)
+router.register('contact-information', ContactInformationViewSet)
 
 urlpatterns = [
     path('soil-creating/', SoilAPIView.as_view()),
