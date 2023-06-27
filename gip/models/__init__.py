@@ -7,3 +7,4 @@ from gip.models.farmer import *
 from gip.models.region import *
 from gip.models.soil import *
 from gip.models.base import *
+from gip.models.contact_information import *

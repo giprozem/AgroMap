@@ -7,3 +7,4 @@ from gip.admin.farmer import *
 from gip.admin.region import *
 from gip.admin.soil import *
 from gip.admin.base import *
+from gip.admin.contact_information import *
