@@ -10,9 +10,9 @@ from django.utils.translation import gettext_lazy as _
 # This form is used to create a new user.
 class UserCreationForm(forms.ModelForm):
     # Password is a required field
-    password = forms.CharField(label=_('Password'), widget=forms.PasswordInput)
+    password = forms.CharField(label=_('Пароль'), widget=forms.PasswordInput)
     # Password confirmation is also a required field
-    confirm_password = forms.CharField(label=_('Confirm password'), widget=forms.PasswordInput)
+    confirm_password = forms.CharField(label=_('Подтвердите пароль'), widget=forms.PasswordInput)
 
     class Meta:
         # The model used for this form is MyUser.
@@ -25,7 +25,7 @@ class UserCreationForm(forms.ModelForm):
         password = self.cleaned_data.get("password1")
         confirm_password = self.cleaned_data.get("password2")
         if password and confirm_password and password != confirm_password:
-            raise forms.ValidationError(_("Passwords do not match"))
+            raise forms.ValidationError(_("Пароли не совпадают"))
         return confirm_password
 
     def save(self, commit=True):
@@ -39,8 +39,8 @@ class UserCreationForm(forms.ModelForm):
 
 # This form is used to update existing users.
 class UserChangeForm(forms.ModelForm):
-    password = ReadOnlyPasswordHashField(label=_("Password"),
-                                         help_text=_("Passwords can be changed <a href=\"../password/\">here</a>."))
+    password = ReadOnlyPasswordHashField(label=_("Пароль"),
+                                         help_text=_("Пароль может быть изменен <a href=\"../password/\">здесь</a>."))
 
     class Meta:
         model = MyUser
@@ -65,7 +65,7 @@ class MyUserAdmin(BaseUserAdmin):
 
     # Define the layout for the change user form.
     fieldsets = ((None, {'fields': ('username', 'password')}),
-                 (_('Permissions'), {'fields': ('is_staff', 'is_superuser', 'is_supervisor', 'is_active', 'is_farmer',
+                 (_('Разрешения'), {'fields': ('is_staff', 'is_superuser', 'is_supervisor', 'is_active', 'is_farmer',
                                                 'is_employee', 'groups')}))
     # Define the layout for the add user form.
     add_fieldsets = (

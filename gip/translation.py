@@ -1,12 +1,12 @@
 from modeltranslation.translator import register, TranslationOptions
 import simple_history
-from .models.conton import Conton
-from .models.contour import LandType
-from .models.culture import Culture
-from .models.district import District
-from .models.region import Region
-from .models.soil import SoilClass, SoilProductivity
-from gip.models.soil import SoilClassMap
+from gip.models.conton import Conton
+from gip.models.contour import LandType
+from gip.models.culture import Culture
+from gip.models.district import District
+from gip.models.region import Region
+from gip.models.soil import SoilClass, SoilProductivity, SoilClassMap
+from gip.models.contact_information import Department, ContactInformation
 
 
 @register(Conton)
@@ -65,3 +65,13 @@ simple_history.register(SoilProductivity, inherit=True)
 @register(SoilClassMap)
 class SoilClassMapTranslationOptions(TranslationOptions):
     pass
+
+
+@register(Department)
+class SoilProductivityTranslationOptions(TranslationOptions):
+    fields = ('name', )
+
+
+@register(ContactInformation)
+class SoilProductivityTranslationOptions(TranslationOptions):
+    fields = ('title', 'address')
