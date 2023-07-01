@@ -4,6 +4,7 @@ from gip.models import District
 
 
 class Department(models.Model):
+    unique_code = models.IntegerField(verbose_name='Уникальный код', unique=True, null=True)
     name = models.CharField(max_length=255, verbose_name=_('Название Департамента'))
 
     def __str__(self):
