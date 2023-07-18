@@ -2,6 +2,7 @@ from django.urls import path, include
 
 from hub.views.elevation_and_soil import ElevationSoilAPIView
 from hub.views.land_info import LandInfoSearch
+from hub.views.veterinary_service import AmountCattleAPIView
 from hub.views.zem_balance_api import AsrEniCodeAPIView
 from hub.views.authetificated import LoginHubView
 from rest_framework.routers import DefaultRouter
@@ -19,5 +20,6 @@ urlpatterns = [
     path('search_ink_hub/', LandInfoSearch.as_view()),
     path('login_hub/', LoginHubView.as_view()),
     path('elevation/', ElevationSoilAPIView.as_view()),
+    path('amount_cattle/', AmountCattleAPIView.as_view()),
     path('', include(router.urls)),
 ]
