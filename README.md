@@ -30,8 +30,6 @@ The web backend expects the following environment variables to be set:
 - `SECRET_KEY`
 - `SCI_HUB_USERNAME`
 - `SCI_HUB_PASSWORD`
-- `ALLOWED_HOSTS`
-
 
 
 ### Setup
