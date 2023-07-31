@@ -7,7 +7,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ai.culture_AI.predict_culture import predict_from_raster_bands
+from ai.culture_AI.predict_culture import test_model
 from ai.models.predicted_contour import Contour_AI
 from ai.serializers import Contour_AISerializer
 from indexes.index_funcs import cutting_tiff
@@ -54,7 +54,7 @@ class CulturePredict(APIView):
                 cutting_error.append(f'B11 layer cutting error {b11_error}')
 
             try:
-                result = predict_from_raster_bands(red_path=output_path_b04, nir_path=output_path_b8a, swir_path=output_path_b11)
+                result = test_model(red=output_path_b04, nir=output_path_b8a, swir=output_path_b11)
                 if result == 0:
                     contour.culture = 'Пшеница'
                     contour.save()
@@ -62,7 +62,7 @@ class CulturePredict(APIView):
                     contour.culture = 'Картофель'
                     contour.save()
                 elif result == 2:
-                    contour.culture = 'Овёс'
+                    contour.culture = 'Сахарная свекла'
                     contour.save()
                 elif result == 3:
                     contour.culture = 'Лук'
