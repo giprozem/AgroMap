@@ -11,7 +11,7 @@ class AmountCattleAPIView(APIView):
         conton_id = request.GET.get('conton')
         if district_id and conton_id:
             conton = Conton.objects.filter(district_id=district_id, id=conton_id)
-            code_soato = conton.values_list('code_soato')[0][0] if conton else None
+            code_soato = conton.values_list('code_soato_vet')[0][0] if conton else None
             if code_soato is not None:
                 response = requests.get(f'https://aitstest.gvfi.gov.kg/api/data/all?id={code_soato}').json()
                 return Response(response)
@@ -25,7 +25,8 @@ class AmountCattleAPIView(APIView):
                 })
         elif district_id:
             district = District.objects.filter(id=district_id)
-            code_soato = district.values_list('code_soato')[0][0] if district else None
+            code_soato = district.values_list('code_soato_vet')[0][0] if district else None
+            print(district.values_list('code_soato_vet'))
             if code_soato is not None:
                 response = requests.get(f'https://aitstest.gvfi.gov.kg/api/data/all?id={code_soato}').json()
                 return Response(response)
@@ -39,7 +40,7 @@ class AmountCattleAPIView(APIView):
                 })
         elif conton_id:
             conton = Conton.objects.filter(id=conton_id)
-            code_soato = conton.values_list('code_soato')[0][0] if conton else None
+            code_soato = conton.values_list('code_soato_vet')[0][0] if conton else None
             if code_soato is not None:
                 response = requests.get(f'https://aitstest.gvfi.gov.kg/api/data/all?id={code_soato}').json()
                 return Response(response)
