@@ -62,11 +62,12 @@ class MyUserAdmin(BaseUserAdmin):
     # Define which fields to display in the user list.
     list_display = ('id', 'username',)
     list_display_links = ('username',)
+    readonly_fields = ("last_login", "date_joined")
 
     # Define the layout for the change user form.
     fieldsets = ((None, {'fields': ('username', 'password')}),
                  (_('Разрешения'), {'fields': ('is_staff', 'is_superuser', 'is_supervisor', 'is_active', 'is_farmer',
-                                                'is_employee', 'groups')}))
+                                                'is_employee', 'groups', 'last_login', 'date_joined')}))
     # Define the layout for the add user form.
     add_fieldsets = (
         (None, {'fields': ('username', 'password', 'confirm_password', 'is_staff', 'is_superuser', 'is_supervisor',
