@@ -8,11 +8,11 @@ from account.serializers.authetificated import LoginSerializer, ProfileSerialize
     NotificationsSerializer
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
-from account.models.account import Profile
+from account.models.account import Profile, Notifications, MyUser
 from rest_framework.generics import GenericAPIView
 from rest_framework.generics import ListAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-from account.models.account import Notifications
+from datetime import datetime
 
 
 class LoginAgromapView(APIView):
@@ -47,6 +47,7 @@ class LoginAgromapView(APIView):
             raise exceptions.AuthenticationFailed(_('“Логин или пароль введен неверно. Попробуйте снова.”'))
 
         token, created = Token.objects.get_or_create(user=user)
+        MyUser.objects.filter(username=user).update(last_login=datetime.now())
         return Response({
             'token': token.key,
             'user_id': user.pk,
