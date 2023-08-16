@@ -35,6 +35,7 @@ class TestGip(APITestCase):
                 "id": district.id,
                 "created_at": district.created_at.strftime(f'%Y-%m-%dT{hour}:%M:%S.%f+06:00'),
                 "updated_at": district.updated_at.strftime(f'%Y-%m-%dT{hour}:%M:%S.%f+06:00'),
+                "code_soato_vet": district.code_soato_vet,
                 "code_soato": district.code_soato,
                 "name_ru": district.name,
                 "name_ky": None,
@@ -53,6 +54,7 @@ class TestGip(APITestCase):
             {
                 "id": conton.id,
                 "region": conton.district.region.id,
+                "code_soato_vet": conton.code_soato_vet,
                 "code_soato": conton.code_soato,
                 "district": conton.district.id,
                 "name_ru": conton.name,
@@ -174,6 +176,7 @@ class TestGis(APITestCase):
             "area_ha": contour.area_ha,
             "is_deleted": False,
             "elevation": str(contour.elevation),
+            "eni": None,
             "is_rounded": False,
             "conton": {
                 "id": contour.conton.id,

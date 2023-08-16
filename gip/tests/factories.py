@@ -27,6 +27,7 @@ class DistrictFactory(DjangoModelFactory):
         model = District
 
     code_soato = Faker().pystr(max_chars=30)
+    code_soato_vet = Faker().pystr(max_chars=30)
     region = SubFactory(RegionFactory)
     name = Faker().name()
 
@@ -36,6 +37,7 @@ class ContonFactory(DjangoModelFactory):
         model = Conton
 
     code_soato = Faker().pystr(max_chars=30)
+    code_soato_vet = Faker().pystr(max_chars=30)
     district = SubFactory(DistrictFactory)
     name = Faker().name()
 
