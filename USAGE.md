@@ -47,3 +47,18 @@ Fill in `Your Value` with the appropriate values you want to use for each variab
 1. To enter the application, open a web browser and navigate to `http://localhost:8111`.
 
 2. Here, you will find your application interface and you can begin to work.
+
+
+## Launch unit tests:
+
+1. Run command:
+
+    ```
+    docker compose exec web coverage run manage.py test
+    ```
+
+2. Tests' report:
+
+    ```
+    docker compose exec web coverage report -i
+    ```

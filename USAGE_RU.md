@@ -50,3 +50,16 @@ SCI_HUB_PASSWORD_V2=Ваше значение
 2. Здесь вы найдете интерфейс вашего приложения и сможете начать работу.
 
 
+## Запуск unit тестов
+
+1. Запустить команду:
+
+    ```
+    docker compose exec web coverage run manage.py test
+    ```
+
+2. Отчет о тестах:
+
+    ```
+    docker compose exec web coverage report -i
+    ```
