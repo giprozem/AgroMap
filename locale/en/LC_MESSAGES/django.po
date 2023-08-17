@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-29 21:04+0600\n"
+"POT-Creation-Date: 2023-08-17 13:37+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgstr "Password mismatch"
 msgid "Пароль может быть изменен <a href=\"../password/\">здесь</a>."
 msgstr "Password can be changed <a href=\"../password/\">here</a>."
 
-#: account/admin/account.py:68
+#: account/admin/account.py:69
 msgid "Разрешения"
 msgstr "Permissions"
 
@@ -189,8 +189,8 @@ msgstr "Image"
 msgid "Изображения"
 msgstr "Images"
 
-#: ai/models/predicted_contour.py:22 gip/models/conton.py:11
-#: gip/models/conton.py:18 gip/models/contour.py:26
+#: ai/models/predicted_contour.py:22 gip/models/conton.py:12
+#: gip/models/conton.py:19 gip/models/contour.py:26
 msgid "Округ"
 msgstr "Canton"
 
@@ -199,8 +199,8 @@ msgstr "Canton"
 msgid "Тип земли"
 msgstr "Land type"
 
-#: ai/models/predicted_contour.py:31 gip/models/conton.py:12
-#: gip/models/contour.py:29 gip/models/contour.py:65 gip/models/district.py:12
+#: ai/models/predicted_contour.py:31 gip/models/conton.py:13
+#: gip/models/contour.py:29 gip/models/contour.py:65 gip/models/district.py:13
 #: gip/models/region.py:13 gip/models/soil.py:24 hub/models/land_info.py:11
 #: indexes/models/actual_veg_index.py:78
 #: indexes/models/actual_veg_index_logs.py:6
@@ -248,7 +248,8 @@ msgid "Процент"
 msgstr "Percent"
 
 #: ai/models/predicted_contour.py:50 culture_model/models/pasture_culture.py:86
-#: gip/models/conton.py:10 gip/models/district.py:11 gip/models/district.py:18
+#: culture_model/models/pasture_culture.py:109 gip/models/conton.py:11
+#: gip/models/district.py:12 gip/models/district.py:19
 msgid "Район"
 msgstr "District"
 
@@ -292,7 +293,7 @@ msgstr "Kyrgyz"
 msgid "Английский"
 msgstr "English"
 
-#: config/settings.py:175 config/urls.py:40 hub/apps.py:8
+#: config/settings.py:176 config/urls.py:40 hub/apps.py:8
 msgid "Эталонная база данных Гипрозем"
 msgstr "Giprozem reference database"
 
@@ -316,7 +317,7 @@ msgstr "Decade"
 msgid "Декады"
 msgstr "Decades"
 
-#: culture_model/models/index_plan.py:12 gip/models/district.py:10
+#: culture_model/models/index_plan.py:12 gip/models/district.py:11
 #: gip/models/region.py:9 gip/models/region.py:19
 msgid "Область"
 msgstr "Region"
@@ -406,7 +407,11 @@ msgstr "Productivity factor"
 msgid "Содержание корма"
 msgstr "Feed content"
 
-#: culture_model/models/pasture_culture.py:123
+#: culture_model/models/pasture_culture.py:110
+msgid "Вегетационный период"
+msgstr "Vegetative period"
+
+#: culture_model/models/pasture_culture.py:123 gip/models/contour.py:42
 msgid "Культура пастбища"
 msgstr "Pasture culture"
 
@@ -434,62 +439,70 @@ msgstr "AgroMap"
 msgid "Дата обновления"
 msgstr "Update date"
 
-#: gip/models/contact_information.py:7
+#: gip/models/contact_information.py:8
 msgid "Название Департамента"
 msgstr "Department name"
 
-#: gip/models/contact_information.py:13 gip/models/contact_information.py:19
+#: gip/models/contact_information.py:14 gip/models/contact_information.py:20
 msgid "Департамент"
 msgstr "Department"
 
-#: gip/models/contact_information.py:14
+#: gip/models/contact_information.py:15
 msgid "Департаменты"
 msgstr "Departments"
 
-#: gip/models/contact_information.py:20
+#: gip/models/contact_information.py:21
 msgid "Наименование госсортстанций и госсортучастков"
 msgstr "Name of state sorting stations and state sorting sections"
 
-#: gip/models/contact_information.py:21
+#: gip/models/contact_information.py:22
 msgid "ФИО руководителя"
 msgstr "Supervisor name"
 
-#: gip/models/contact_information.py:23
+#: gip/models/contact_information.py:24
 msgid "Место расположения"
 msgstr "Location"
 
-#: gip/models/contact_information.py:24
+#: gip/models/contact_information.py:25
 msgid "Адрес"
 msgstr "Address"
 
-#: gip/models/contact_information.py:25
+#: gip/models/contact_information.py:26
 msgid "Телефон"
 msgstr "Phone number"
 
-#: gip/models/contact_information.py:26
+#: gip/models/contact_information.py:27
 msgid "Электронный адрес"
 msgstr "E-mail"
 
-#: gip/models/contact_information.py:27
+#: gip/models/contact_information.py:28
 msgid "Адрес на карте"
 msgstr "Map address"
 
-#: gip/models/contact_information.py:33 gip/models/contact_information.py:34
+#: gip/models/contact_information.py:34 gip/models/contact_information.py:35
 msgid "Контактные данные"
 msgstr "Contact details"
 
-#: gip/models/conton.py:9 gip/models/contour.py:25 gip/models/district.py:9
+#: gip/models/conton.py:9 gip/models/district.py:9
+msgid "Код СОАТО ВЕТ"
+msgstr "SOATO VET code"
+
+#: gip/models/conton.py:10 gip/models/contour.py:25 gip/models/district.py:10
 #: gip/models/region.py:8
 msgid "Код СОАТО"
 msgstr "SOATO code"
 
-#: gip/models/conton.py:19
+#: gip/models/conton.py:20
 msgid "Округи"
 msgstr "Cantons"
 
 #: gip/models/contour.py:18
 msgid "Типы земли"
 msgstr "Land types"
+
+#: gip/models/contour.py:33
+msgid "Прогнозируемая продуктивность"
+msgstr "Predictive productivity"
 
 #: gip/models/contour.py:45
 msgid "ИНК"
@@ -498,6 +511,10 @@ msgstr "INC"
 #: gip/models/contour.py:45
 msgid "Идентификационный номер контура"
 msgstr "Identification number of contour"
+
+#: gip/models/contour.py:47
+msgid "ЕНИ"
+msgstr "ENI"
 
 #: gip/models/contour.py:50 hub/models/land_info.py:9
 #: indexes/models/actual_veg_index.py:27 indexes/models/actual_veg_index.py:80
@@ -534,7 +551,7 @@ msgstr "Measured in centners"
 msgid "Сезон"
 msgstr "Season"
 
-#: gip/models/district.py:19
+#: gip/models/district.py:20
 msgid "Районы"
 msgstr "Districts"
 

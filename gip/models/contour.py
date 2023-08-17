@@ -30,7 +30,7 @@ class Contour(BaseModel):
     year = models.CharField(max_length=20, verbose_name=_("Год"), null=True, blank=True)
     productivity = models.CharField(max_length=20, blank=True, null=True, verbose_name=_("Продуктивность"))
     predicted_productivity = models.CharField(max_length=20, blank=True, null=True,
-                                              verbose_name='')  # todo: Translate verbose_name
+                                              verbose_name=_('Прогнозируемая продуктивность'))
     area_ha = models.FloatField(blank=True, null=True, verbose_name=_("Площадь в гектарах"))
     is_deleted = models.BooleanField(default=False, verbose_name=_('Удаленный'))
     culture = models.ForeignKey(Culture, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Культура'))
@@ -38,13 +38,13 @@ class Contour(BaseModel):
         PastureCulture,
         blank=True,
         default=None,
-        help_text='Required if land type is pasture'
-
-    )  # todo: Translate verbose_name
+        help_text='Required if land type is pasture',
+        verbose_name=_('Культура пастбища')
+    )
     elevation = models.CharField(max_length=25, blank=True, null=True, verbose_name=_('Высота'))
     ink = models.CharField(max_length=100, verbose_name=_("ИНК"), help_text=_('Идентификационный номер контура'),
                            null=True, blank=True)
-    eni = models.CharField(max_length=100, verbose_name="ЕНИ", null=True, blank=True)
+    eni = models.CharField(max_length=100, verbose_name=_("ЕНИ"), null=True, blank=True)
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='contours', verbose_name=_('Фермер'),
                                blank=True, null=True)
     history = HistoricalRecords(verbose_name=_("История"))

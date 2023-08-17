@@ -106,8 +106,8 @@ class PastureCulture(BaseModel):
     coefficient_to_productivity = models.DecimalField(max_digits=4, decimal_places=2,
                                                       verbose_name=_('Коэффициент продуктивности'))
     content_of_feed = models.DecimalField(max_digits=4, decimal_places=2, verbose_name=_('Содержание корма'))
-    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
-    veg_period = models.ForeignKey(Phase, on_delete=models.SET_NULL, null=True)
+    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True, verbose_name=_('Район'))
+    veg_period = models.ForeignKey(Phase, on_delete=models.SET_NULL, null=True, verbose_name=_('Вегетационный период'))
 
     def __str__(self):
         return self.name
