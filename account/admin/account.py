@@ -60,7 +60,7 @@ class MyUserAdmin(BaseUserAdmin):
     add_form = UserCreationForm
 
     # Define which fields to display in the user list.
-    list_display = ('id', 'username',)
+    list_display = ('last_login', 'username',)
     list_display_links = ('username',)
     readonly_fields = ("last_login", "date_joined")
 

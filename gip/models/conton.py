@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Conton(BaseModel):
-    code_soato_vet = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name='Код СОАТО ВЕТ')
+    code_soato_vet = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name=_('Код СОАТО ВЕТ'))
     code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name=_("Код СОАТО"))
     district = models.ForeignKey(District, on_delete=models.CASCADE, related_name='contons', verbose_name=_("Район"))
     name = models.CharField(max_length=55, verbose_name=_("Округ"))
