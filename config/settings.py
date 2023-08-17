@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'account.authentication.AdminLastVisitMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
