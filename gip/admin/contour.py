@@ -37,8 +37,8 @@ class ActualVegIndexTabularInline(TabularInline):
 
 @admin.register(Contour)
 class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
-    readonly_fields = ('id', 'created_at', 'updated_at', 'elevation')
-    list_display = ('id', 'ink', 'code_soato', 'conton', 'farmer', 'elevation')
+    readonly_fields = ('id', 'created_at', 'updated_at', 'elevation', 'area_ha', 'soil_class')
+    list_display = ('id', 'ink', 'code_soato', 'conton', 'display_district_name', 'elevation')
     list_filter = ('conton', 'farmer', 'id', 'type', 'culture')
     ordering = ('conton', 'created_at')
     list_per_page = 20
@@ -47,6 +47,10 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     list_display_links = ('id', 'ink',)
     inlines = [ActualVegIndexTabularInline]
 
+    def display_district_name(self, obj):
+        return obj.conton.district
+
+    display_district_name.short_description = 'Район'
 
 @admin.register(LandType)
 class LandTypeAdmin(TranslationAdmin):
