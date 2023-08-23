@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'simple_history',
     'django_extensions',
     'schema_graph',
+    'auditlog.apps.AuditlogConfig',
     'gip',
     'indexes',
     'culture_model',
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'simple_history.middleware.HistoryRequestMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'account.authentication.AdminLastVisitMiddleware',
+    'account.authentication.MyAuditMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
