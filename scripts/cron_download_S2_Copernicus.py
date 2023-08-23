@@ -56,7 +56,9 @@ def run():
         else:
             # If no products found, create an entry in the database with a note
             SciHubImageDate.objects.create(area_interest_id=footprint.pk, no_image=True,
-                                           note=f'No products found between {first_day_of_previous_month.strftime("%Y.%m.%d")} and {current_date.strftime("%Y.%m.%d")}')
+                                           note=f'No products found between '
+                                                f'{first_day_of_previous_month.strftime("%Y.%m.%d")} and '
+                                                f'{current_date.strftime("%Y.%m.%d")}')
             continue
 
         # Extract the files after a delay
@@ -96,47 +98,47 @@ def run():
                             img_data_path = os.path.join(output, folder, 'GRANULE', file, 'IMG_DATA')
                             for filename in os.listdir(img_data_path):
                                 if re.search(".*B01.*.tif", filename):
-                                    sci_hub_image_date.B01.save(f'B01_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B01.save(f'B01_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B02.*.tif", filename):
                                     sci_hub_image_date.polygon = tiff_coords[0]
-                                    sci_hub_image_date.B02.save(f'B02_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B02.save(f'B02_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B03.*.tif", filename):
-                                    sci_hub_image_date.B03.save(f'B03_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B03.save(f'B03_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B04.*.tif", filename):
-                                    sci_hub_image_date.B04.save(f'B04_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B04.save(f'B04_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B05.*.tif", filename):
-                                    sci_hub_image_date.B05.save(f'B05_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B05.save(f'B05_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B06.*.tif", filename):
-                                    sci_hub_image_date.B06.save(f'B06_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B06.save(f'B06_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B07.*.tif", filename):
-                                    sci_hub_image_date.B07.save(f'B07_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B07.save(f'B07_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B08.*.tif", filename):
-                                    sci_hub_image_date.B08.save(f'B08_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B08.save(f'B08_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B8A.*.tif", filename):
-                                    sci_hub_image_date.B8A.save(f'B8A_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B8A.save(f'B8A_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B09.*.tif", filename):
-                                    sci_hub_image_date.B09.save(f'B09_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B09.save(f'B09_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B10.*.tif", filename):
-                                    sci_hub_image_date.B10.save(f'B10_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B10.save(f'B10_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B11.*.tif", filename):
-                                    sci_hub_image_date.B11.save(f'B11_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B11.save(f'B11_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*B12.*.tif", filename):
-                                    sci_hub_image_date.B12.save(f'B12_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.B12.save(f'B12_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 elif re.search(".*TCI.*.tif", filename):
-                                    sci_hub_image_date.TCI.save(f'TCI_area_interest_id-{footprint.pk}.tif',
+                                    sci_hub_image_date.TCI.save(f'TCI_area_interest_id-{img_date}-{footprint.pk}.tif',
                                                                 open(f"{img_data_path}/{filename}", 'rb'))
                                 sci_hub_image_date.save()
             # Clean up the output directory
