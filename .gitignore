@@ -151,22 +151,32 @@ dmypy.json
 
 .vscode/
 
-# End of https://www.toptal.com/developers/gitignore/api/django
+#dirs
 pgdata
 static
 test_data
-.env
-contour.json
-agromap.json
-*.json
 regions
-*.geojson
-tiff
-*.zip
-shp
 cron
-*.pkl
 shp_ai_contour
 cutted
+
+#files
+.env
+*.json
+*.geojson
+*.tiff
+*.tif
+*.pkl
+*.zip
+
+#shp format
 *.pt
-KG_ELEVATION
+*.cpg
+*.dbf
+*.prj
+*.qix
+*.sbn
+*.shp
+*.xml
+*.shx
+*.sbx
