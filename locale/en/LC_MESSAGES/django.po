@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-17 13:37+0600\n"
+"POT-Creation-Date: 2023-08-23 12:21+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,7 +46,7 @@ msgstr "Accounts"
 msgid "Администратор"
 msgstr "Admin"
 
-#: account/models/account.py:10 gip/models/contour.py:48
+#: account/models/account.py:10 gip/models/contour.py:49
 #: gip/models/farmer.py:10 gip/models/farmer.py:21
 msgid "Фермер"
 msgstr "Farmer"
@@ -60,7 +60,7 @@ msgid "Наблюдатель"
 msgstr "Supervisor"
 
 #: account/models/account.py:17 account/models/account.py:28
-#: account/models/account.py:44
+#: account/models/account.py:44 auditlog/mixins.py:30 auditlog/models.py:370
 msgid "Пользователь"
 msgstr "User"
 
@@ -200,7 +200,7 @@ msgid "Тип земли"
 msgstr "Land type"
 
 #: ai/models/predicted_contour.py:31 gip/models/conton.py:13
-#: gip/models/contour.py:29 gip/models/contour.py:65 gip/models/district.py:13
+#: gip/models/contour.py:29 gip/models/contour.py:66 gip/models/district.py:13
 #: gip/models/region.py:13 gip/models/soil.py:24 hub/models/land_info.py:11
 #: indexes/models/actual_veg_index.py:78
 #: indexes/models/actual_veg_index_logs.py:6
@@ -219,22 +219,22 @@ msgstr "Year"
 msgid "Продуктивность"
 msgstr "Productivity"
 
-#: ai/models/predicted_contour.py:34 gip/models/contour.py:34
+#: ai/models/predicted_contour.py:34 gip/models/contour.py:35
 msgid "Площадь в гектарах"
 msgstr "Area in hectares"
 
-#: ai/models/predicted_contour.py:35 gip/models/contour.py:35
+#: ai/models/predicted_contour.py:35 gip/models/contour.py:36
 msgid "Удаленный"
 msgstr "Deleted"
 
 #: ai/models/predicted_contour.py:36 culture_model/models/index_plan.py:11
-#: gip/models/contour.py:36 gip/models/crop_yield.py:12 gip/models/culture.py:8
+#: gip/models/contour.py:37 gip/models/crop_yield.py:12 gip/models/culture.py:8
 #: gip/models/culture.py:15 hub/models/land_info.py:15
 msgid "Культура"
 msgstr "Culture"
 
-#: ai/models/predicted_contour.py:37 gip/models/contour.py:44
-#: gip/models/contour.py:64 gip/models/contour.py:68
+#: ai/models/predicted_contour.py:37 gip/models/contour.py:45
+#: gip/models/contour.py:65 gip/models/contour.py:69
 msgid "Высота"
 msgstr "Elevation"
 
@@ -281,19 +281,139 @@ msgstr "Model for predicting productivity"
 msgid "Модели для прогноза продуктивности"
 msgstr "Models for predicting productivity"
 
-#: config/settings.py:118
+#: auditlog/admin.py:31 auditlog/mixins.py:59 auditlog/mixins.py:71
+msgid "Изменения"
+msgstr "Changes"
+
+#: auditlog/apps.py:7
+msgid "Отчет изменений пользователей"
+msgstr "User Change Report"
+
+#: auditlog/filters.py:7
+msgid "Таблицы"
+msgstr "Tables"
+
+#: auditlog/filters.py:27 auditlog/models.py:377
+msgid "ID корреляции"
+msgstr "Correlation ID"
+
+#: auditlog/mixins.py:22
+msgid "Click to filter by records with this correlation id"
+msgstr ""
+
+#: auditlog/mixins.py:24 auditlog/models.py:339
+msgid "Создано"
+msgstr "Created"
+
+#: auditlog/mixins.py:41
+msgid "Админ панель"
+msgstr "Admin menu"
+
+#: auditlog/mixins.py:43
+msgid "Ссылка на объект"
+msgstr "Object link"
+
+#: auditlog/mixins.py:91 gip/models/crop_yield.py:13
+msgid "Поле"
+msgstr "Field"
+
+#: auditlog/mixins.py:91
+msgid "Было"
+msgstr "Was"
+
+#: auditlog/mixins.py:91
+msgid "Стало"
+msgstr "Became"
+
+#: auditlog/models.py:340
+msgid "Обновлено"
+msgstr "Updated"
+
+#: auditlog/models.py:341
+msgid "Удалено"
+msgstr "Deleted"
+
+#: auditlog/models.py:342
+msgid "Доступно"
+msgstr "Access"
+
+#: auditlog/models.py:349
+msgid "Тип контента"
+msgstr "Content type"
+
+#: auditlog/models.py:352
+msgid "Идентификатор"
+msgstr "Identification number"
+
+#: auditlog/models.py:355
+msgid "Номер"
+msgstr "Number"
+
+#: auditlog/models.py:357
+msgid "Представление"
+msgstr "Representation"
+
+#: auditlog/models.py:360
+msgid "Действие"
+msgstr "Action"
+
+#: auditlog/models.py:362
+msgid "Текст изменения"
+msgstr "Changes text"
+
+#: auditlog/models.py:363
+msgid "Текст сообщения"
+msgstr "Message text"
+
+#: auditlog/models.py:380
+msgid "Дистанционный адрес"
+msgstr "Remote address"
+
+#: auditlog/models.py:385
+msgid "Время"
+msgstr "Time"
+
+#: auditlog/models.py:388
+msgid "Дополнительная информация"
+msgstr "Additional information"
+
+#: auditlog/models.py:396
+msgid "Журнал изменения"
+msgstr "Log report"
+
+#: auditlog/models.py:397
+msgid "Журнал изменений"
+msgstr "Logs report"
+
+#: auditlog/models.py:401
+msgid "Создано {repr:s}"
+msgstr "Created {repr:s}"
+
+#: auditlog/models.py:403
+msgid "Обновлено {repr:s}"
+msgstr "Updated {repr:s}"
+
+#: auditlog/models.py:405
+msgid "Удалено {repr:s}"
+msgstr "Deleted {repr:s}"
+
+#: auditlog/models.py:407
+msgid "Логи {repr:s}"
+msgstr "Logs {repr:s}"
+
+#: config/settings.py:121
 msgid "Русский"
 msgstr "Russian"
 
-#: config/settings.py:119
+#: config/settings.py:122
 msgid "Кыргызский"
 msgstr "Kyrgyz"
 
-#: config/settings.py:120
+#: config/settings.py:123
 msgid "Английский"
 msgstr "English"
 
-#: config/settings.py:176 config/urls.py:40 hub/apps.py:8
+#: config/settings.py:179 config/urls.py:40 hub/apps.py:8
 msgid "Эталонная база данных Гипрозем"
 msgstr "Giprozem reference database"
 
@@ -411,7 +531,7 @@ msgstr "Feed content"
 msgid "Вегетационный период"
 msgstr "Vegetative period"
 
-#: culture_model/models/pasture_culture.py:123 gip/models/contour.py:42
+#: culture_model/models/pasture_culture.py:123 gip/models/contour.py:43
 msgid "Культура пастбища"
 msgstr "Pasture culture"
 
@@ -500,48 +620,44 @@ msgstr "Cantons"
 msgid "Типы земли"
 msgstr "Land types"
 
-#: gip/models/contour.py:33
+#: gip/models/contour.py:34
 msgid "Прогнозируемая продуктивность"
 msgstr "Predictive productivity"
 
-#: gip/models/contour.py:45
+#: gip/models/contour.py:46
 msgid "ИНК"
 msgstr "INC"
 
-#: gip/models/contour.py:45
+#: gip/models/contour.py:46
 msgid "Идентификационный номер контура"
 msgstr "Identification number of contour"
 
-#: gip/models/contour.py:47
+#: gip/models/contour.py:48
 msgid "ЕНИ"
 msgstr "ENI"
 
-#: gip/models/contour.py:50 hub/models/land_info.py:9
+#: gip/models/contour.py:51 hub/models/land_info.py:9
 #: indexes/models/actual_veg_index.py:27 indexes/models/actual_veg_index.py:80
 #: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:98
 msgid "История"
 msgstr "History"
 
-#: gip/models/contour.py:51
+#: gip/models/contour.py:52
 msgid "Юридически подтвержденный"
 msgstr "Legally confirmed"
 
-#: gip/models/contour.py:59 indexes/models/actual_veg_index.py:23
+#: gip/models/contour.py:60 indexes/models/actual_veg_index.py:23
 #: indexes/models/pasture.py:20
 msgid "Контуры поля"
 msgstr "Field's contour"
 
-#: gip/models/contour.py:60
+#: gip/models/contour.py:61
 msgid "Контуры полей"
 msgstr "Fields' contour"
 
-#: gip/models/contour.py:69
+#: gip/models/contour.py:70
 msgid "Высоты"
 msgstr "Elevations"
-
-#: gip/models/crop_yield.py:13
-msgid "Поле"
-msgstr "Field"
 
 #: gip/models/crop_yield.py:14
 msgid "Измеряется в центнерах"
