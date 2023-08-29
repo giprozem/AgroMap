@@ -1,77 +1,114 @@
-# import random
-#
-# from django.contrib.gis.geos import GEOSGeometry
-# from rest_framework.test import APITestCase
-# from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
-# from django.contrib.auth import get_user_model
-# from django.test import override_settings
-#
-# from hub.models import LandInfo, PropertyTypeList, DocumentTypeList, CategoryTypeList, LandTypeList
-#
-# User = get_user_model()
-#
-# TEST_DIR = 'test_data'
-#
-#
-# class CultureTests(APITestCase):
-#     def setUp(self):
-#         contour = {
-#             "type": "Polygon",
-#             "coordinates": [
-#                 [
-#                     [
-#                         74.398127,
-#                         42.855267
-#                     ],
-#                     [
-#                         74.398127,
-#                         42.864264
-#                     ],
-#                     [
-#                         74.414692,
-#                         42.864264
-#                     ],
-#                     [
-#                         74.414692,
-#                         42.855267
-#                     ],
-#                     [
-#                         74.398127,
-#                         42.855267
-#                     ]
-#                 ]
-#             ]
-#         }
-#         property_type = PropertyTypeList.objects.create(type_name='Частный')
-#         document_type = DocumentTypeList.objects.create(type_name='Правоустанавливающие документы')
-#         category_type = CategoryTypeList.objects.create(type_name='С/х земля')
-#         land_type = LandTypeList.objects.create(type_name='Пастбища')
-#         land_info = LandInfo.objects.create(ink=f"417-02-123-456-78-{random.randint(1200,9999)}", eni=f"417-02-123-456-78-{random.randint(1, 100)}",
-#                      inn_pin=f"20220515{random.randint(1, 100)}", bonitet=random.randint(1, 100), culture='Картофель', crop_yield=10.2,
-#                      property_type=property_type, document_type=document_type, document_link='', category_type=category_type, land_type=land_type, square=200,
-#                      contour=GEOSGeometry(contour))
-#
-#         self.land_info = land_info
-#
-#     def test_get_land_info_success_200(self):
-#         li = self.land_info
-#         expected_data = [
-#             {
-#                 "id": li.id,
-#                 "ink": li.ink,
-#                 "eni": li.eni,
-#                 "inn_pin": li.inn_pin,
-#                 "bonitet": li.bonitet,
-#                 "crop_yield": li.crop_yield,
-#                 "property_type": li.property_type,
-#                 "document_type": li.document_type,
-#                 "document_link": li.document_link,
-#                 "category_type": li.category_type,
-#                 "square": li.square
-#             },
-#         ]
-#         response = self.client.get(f"/zem_balance/{self.id}/")
-#
-#         self.assertEqual(response.status_code, HTTP_200_OK)
-#         self.assertEqual(response.data, expected_data, 'Dannye ne sovpadaut')
-#
+import json
+
+from rest_framework.test import APITestCase
+from django.contrib.auth import get_user_model
+
+from elevation.data import elevation
+from hub.models.land_info import LandInfo
+
+from gip.models.conton import Conton
+from gip.models.district import District
+from gip.models.region import Region
+
+
+User = get_user_model()
+
+TEST_DIR = "test_data"
+
+
+class CultureTests(APITestCase):
+    _URL_ = "/hub/elevation/"
+    reponse_data = None
+    geometry_map = {"latitude": [38, 44], "longitude": [69, 81]}
+    latitude = geometry_map.get("latitude")[1]
+    longitude = geometry_map.get("longitude")[1]
+
+    def setUp(self) -> None:
+        elevation_data = elevation(
+            latitude=float(self.latitude), longitude=float(self.longitude)
+        )
+        self.reponse_data = {"elevation": elevation_data.tolist()}
+
+    def test_status_code_elevation_soil_view(self):
+        response = self.client.get(self._URL_, self.geometry_map)
+        self.assertEqual(response.status_code, 200)
+
+    def test_reponse_content_elevation_soil_view(self):
+        response = self.client.get(self._URL_, self.geometry_map)
+        response_data = json.loads(response.content)
+        self.assertEqual(
+            self.reponse_data.get("elevation"), response_data.get("elevation")
+        )
+
+
+class LandInfoSearchTestCase(APITestCase):
+    _URL_ = "/hub/search_ink_hub/"
+
+    def setUp(self) -> None:
+        land_info = LandInfo(ink_code="test_inc_code")
+        land_info.save()
+        self.land_info = land_info
+
+    def test_search_if_queryisnone(self):
+        response = self.client.get(self._URL_)
+        self.assertEqual(response.data, [])
+
+    def test_search_if_query(self):
+        response = self.client.get(self._URL_, {"search": "test"})
+        self.assertEqual(len(response.data.get("list_ink_code")), 1)
+
+
+class AmountCattleApiTestCase(APITestCase):
+    _URL_ = "/hub/amount_cattle/"
+
+    def setUp(self) -> None:
+        region = Region(
+            code_soato=11111,
+            name="test_region_name",
+            population="1",
+            area="2",
+            density="2",
+        )
+        region.save()
+        district = District(
+            code_soato_vet=41711,
+            code_soato=11111,
+            name="test_district_name",
+            region=region,
+        )
+        district.save()
+        self.canton = Conton(
+            code_soato_vet=41711,
+            code_soato=11111,
+            district=district,
+            name="test_conton_name",
+        )
+        self.canton.save()
+        self.valid_data = {
+            "total": "0",
+            "active": "0",
+            "notActive": "0",
+            "totalObjects": "0",
+            "totalSubjects": "0",
+        }
+
+    def test_if_queryisnone(self):
+        response = self.client.get(self._URL_)
+        self.assertEqual(response.status_code, 400)
+
+    def test_if_query_district(self):
+        response = self.client.get(self._URL_, {"district": self.canton.district_id})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, self.valid_data)
+
+    def test_if_query_conton(self):
+        response = self.client.get(self._URL_, {"conton": self.canton.id})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, self.valid_data)
+
+    def test_if_query_all(self):
+        response = self.client.get(
+            self._URL_, {"conton": self.canton.id, "district": self.canton.district_id}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, self.valid_data)
