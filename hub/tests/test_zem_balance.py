@@ -48,8 +48,3 @@ class ZemBalanceViewSetTestCase(APITestCase):
     def test_status_code_200(self):
         response = self.client.get(self._URL_)
         self.assertEqual(response.status_code, 200)
-
-    # def test_create_method(self):
-    #     data = self._method_create()
-    #     response = self.client.post(self._URL_, data, format="json")
-    #     self.assertEqual(response.status_code, 201)
