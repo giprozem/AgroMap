@@ -172,6 +172,7 @@ class TestGis(APITestCase):
                 ('coordinates', [[list(i) for i in contour.polygon.coords[0]]]),
             )),
             "productivity": None,
+            "vegetation_type": None,
             "predicted_productivity": None,
             "area_ha": contour.area_ha,
             "is_deleted": False,
