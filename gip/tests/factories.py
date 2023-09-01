@@ -9,6 +9,7 @@ from gip.models.soil import SoilClass
 from gip.models.culture import Culture
 from gip.models.contour import Contour
 from gip.tests.polygon import get_polygon
+from gip.models.contact_information import Department, ContactInformation
 
 
 class RegionFactory(DjangoModelFactory):
@@ -20,6 +21,10 @@ class RegionFactory(DjangoModelFactory):
     population = Faker().pyint()
     area = Faker().pyint()
     density = Faker().pyfloat()
+
+
+class RegionFactoryWithPolygon(RegionFactory):
+    polygon = get_polygon()
 
 
 class DistrictFactory(DjangoModelFactory):
@@ -75,3 +80,24 @@ class ContourFactory(DjangoModelFactory):
     conton = SubFactory(ContonFactory)
     type = SubFactory(LandTypeFactory)
     polygon = get_polygon()
+
+
+class DepartmentFactory(DjangoModelFactory):
+    class Meta:
+        model = Department
+        
+    unique_code = Faker().pyint()
+    name = Faker().pystr(max_chars=30)
+
+
+class ContactInformationFactory(DjangoModelFactory):
+    class Meta:
+        model = ContactInformation
+    
+    department = SubFactory(DepartmentFactory)
+    title = Faker().pystr(max_chars=30)
+    fullname = Faker().pystr(max_chars=30)
+    district = SubFactory(DistrictFactory)
+    address = Faker().pystr(max_chars=30)
+    phone = Faker().pyint()
+    mail = Faker().pystr(max_chars=30)
