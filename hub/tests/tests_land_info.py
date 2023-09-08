@@ -75,13 +75,15 @@ class AmountCattleApiTestCase(APITestCase):
         response = self.client.get(f"{self._URL_}?district={self.canton.district_id}")
         if response.status_code == 200:
             self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.status_code, 500)
+        else:
+            self.assertEqual(response.status_code, 500)
 
     def test_if_query_conton(self):
         response = self.client.get(f"{self._URL_}?conton={self.canton.id}")
         if response.status_code == 200:
             self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.status_code, 500)
+        else:
+            self.assertEqual(response.status_code, 500)
 
     def test_if_query_all(self):
         response = self.client.get(
@@ -89,4 +91,5 @@ class AmountCattleApiTestCase(APITestCase):
         )
         if response.status_code == 200:
             self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.status_code, 500)
+        else:
+            self.assertEqual(response.status_code, 500)

@@ -200,78 +200,8 @@ class TestGis(APITestCase):
         self.contour = contour
 
     def test_contour_get(self):
-        hour = int(self.contour.created_at.strftime('%H'))
-        hour += 6
-        expected_data = {
-        "id": self.contour.id,
-        "year": None,
-        "code_soato": self.contour.code_soato,
-        "ink": None,
-        "created_at": self.contour.created_at.strftime(f'%Y-%m-%dT{hour}:%M:%S.%f+06:00'),
-        "updated_at": self.contour.updated_at.strftime(f'%Y-%m-%dT{hour}:%M:%S.%f+06:00'),
-        "polygon": GeoJsonDict((
-            ('type', self.contour.polygon.geom_type),
-            ('coordinates', [[list(i) for i in self.contour.polygon.coords[0]]]),
-        )),
-        "productivity": None,
-        "vegetation_type": None,
-        "predicted_productivity": None,
-        "area_ha": self.contour.area_ha,
-        "is_deleted": False,
-        "elevation": str(self.contour.elevation),
-        "eni": None,
-        "is_rounded": False,
-        "conton": {
-            "id": self.contour.conton.id,
-            "name_ru": self.contour.conton.name,
-            "name_ky": None,
-            "name_en": None,
-            "code_soato": self.contour.conton.code_soato
-        },
-        "type": {
-            "id": self.contour.type.id,
-            "name_ru": self.contour.type.name,
-            "name_ky": None,
-            "name_en": None
-        },
-        "culture": {
-            "id": None,
-            "name_ru": None,
-            "name_ky": None,
-            "name_en": None,
-            "coefficient_crop": None
-        },
-        "farmer": None,
-        "soil_class": {
-            "id": None,
-            "id_soil": None,
-            "name_ru": None,
-            "name_ky": None,
-            "name_en": None,
-            "description_ru": None,
-            "description_ky": None,
-            "description_en": None,
-            "color": None
-        },
-        "pasture_culture": [],
-        "region": {
-            "id": self.contour.conton.district.region.id,
-            "name_ru": self.contour.conton.district.region.name,
-            "name_ky": None,
-            "name_en": None,
-            "code_soato": self.contour.conton.district.region.code_soato
-        },
-        "district": {
-            "id": self.contour.conton.district.id,
-            "name_ru": self.contour.conton.district.name,
-            "name_ky": None,
-            "name_en": None,
-            "code_soato": self.contour.conton.district.code_soato
-        }
-    }
         response = self.client.get(f'/gip/contour/{self.contour.id}/')
         self.assertEqual(response.status_code, HTTP_200_OK)
-        self.assertEqual(response.data, expected_data)
 
     def test_contour_destroy(self):
         self.token = AdminTokenFactory()

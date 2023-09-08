@@ -3,21 +3,22 @@ from faker import Faker
 
 
 def get_polygon():
-    long = Faker().pyfloat(right_digits=6, positive=True, min_value=70, max_value=80)
-    lat = Faker().pyfloat(right_digits=6, positive=True, min_value=39, max_value=43)
+    fake = Faker()
+    long = fake.pyfloat(right_digits=6, positive=True, min_value=69, max_value=81 - 1e-6)  # Максимум вычитаем небольшое значение, чтобы исключить 81
+    lat = fake.pyfloat(right_digits=6, positive=True, min_value=38, max_value=44)
     polygon = [
         [long, lat],
         [
-            Faker().pyfloat(right_digits=6, positive=True, min_value=70, max_value=80),
-            Faker().pyfloat(right_digits=6, positive=True, min_value=39, max_value=43),
+            fake.pyfloat(right_digits=6, positive=True, min_value=69, max_value=81 - 1e-6),
+            fake.pyfloat(right_digits=6, positive=True, min_value=38, max_value=44),
         ],
         [
-            Faker().pyfloat(right_digits=6, positive=True, min_value=70, max_value=80),
-            Faker().pyfloat(right_digits=6, positive=True, min_value=39, max_value=43),
+            fake.pyfloat(right_digits=6, positive=True, min_value=69, max_value=81 - 1e-6),
+            fake.pyfloat(right_digits=6, positive=True, min_value=38, max_value=44),
         ],
         [
-            Faker().pyfloat(right_digits=6, positive=True, min_value=70, max_value=80),
-            Faker().pyfloat(right_digits=6, positive=True, min_value=39, max_value=43),
+            fake.pyfloat(right_digits=6, positive=True, min_value=69, max_value=81 - 1e-6),
+            fake.pyfloat(right_digits=6, positive=True, min_value=38, max_value=44),
         ],
         [long, lat],
     ]

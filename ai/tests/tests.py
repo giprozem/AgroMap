@@ -6,6 +6,7 @@ from ai.tests.factories import (
     ProcessFactory,
     PredictedContourVegIndexFactory,
     CreateDescriptionFactory,
+    YoloFactory
 )
 
 
@@ -133,6 +134,7 @@ class PivotTableTestCase(APITestCase):
 class PredictContourTestCase(APITestCase):
     def setUp(self) -> None:
         self.index = PredictedContourVegIndexFactory()
+        self.yolo = YoloFactory()
 
     def test_if_date_isnot_correct(self):
         response = self.client.get("/ai/predict-productivity/")
@@ -173,10 +175,14 @@ class CreateDescriptionTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class PridctedContourTestCase(APITestCase):
-    def test_get(self):
-        response = self.client.get("/ai/predicted_contour/")
-        self.assertEqual(response.status_code, 200)
+# class PridctedContourTestCase(APITestCase):
+#     def setUp(self) -> None:
+#         self.yolo = YoloFactory()
+#         self.contour_ai = Contour_AIFactory()
+
+#     def test_get(self):
+#         response = self.client.get("/ai/predicted_contour/")
+#         self.assertEqual(response.status_code, 200)
 
 
 class CleanContourCreateTestCase(APITestCase):

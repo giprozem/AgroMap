@@ -31,15 +31,9 @@ class Contour_AIFactory(DjangoModelFactory):
         model = Contour_AI
 
 
-class ContourWithCultureFactory(ContourFactory):
-    culture = SubFactory(CultureFactory)
-    year = "2022"
-    ink = "test"
-
-
 class PolygonsInScreenTestCase(APITestCase):
     def setUp(self) -> None:
-        contour = ContourWithCultureFactory()
+        contour = ContourFactory()
         self.contour = contour
 
     def test_polygons_get_ifparamsisnone(self):
@@ -69,7 +63,7 @@ class PolygonsInScreenTestCase(APITestCase):
 class FilterContourApiTestCase(APITestCase):
     def setUp(self) -> None:
         self.client = APIClient(raise_request_exception=False)
-        contour = ContourWithCultureFactory()
+        contour = ContourFactory()
         self.contour = contour
 
     def test_contour_search_if_params(self):
@@ -122,7 +116,7 @@ class CoordinatesPolygonTestCase(APITestCase):
 
 class ContourProductivityTestCase(APITestCase):
     def setUp(self) -> None:
-        contour = ContourWithCultureFactory()
+        contour = ContourFactory()
         self.region = contour.conton.district.region_id
         self.district = contour.conton.district_id
         self.conton = contour.conton_id
@@ -180,7 +174,18 @@ class CultureStatisticsTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class ContourStatisticsTestCase(ContourProductivityTestCase):
+class ContourStatisticsTestCase(APITestCase):
+    def setUp(self) -> None:
+        contour = ContourFactory()
+        self.region = contour.conton.district.region_id
+        self.district = contour.conton.district_id
+        self.conton = contour.conton_id
+        self.year = contour.year
+        self.ink = contour.year
+        self.land_type = contour.type_id
+        self.culture = contour.culture_id
+        self.client = APIClient(raise_request_exception=False)
+
     def test_contourstatistic_ifqueryisnone(self):
         response = self.client.get("/gip/contour-statistics/")
         self.assertEqual(response.status_code, 400)
@@ -192,7 +197,16 @@ class ContourStatisticsTestCase(ContourProductivityTestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class FilterContourTestCase(CultureStatisticsTestCase):
+class FilterContourTestCase(APITestCase):
+    def setUp(self) -> None:
+        ai = Contour_AIFactory()
+        self.ai = ai
+        self.land_type = self.ai.type_id
+        self.culture = self.ai.culture_id
+        self.region = self.ai.conton.district.region_id
+        self.conton = self.ai.conton_id
+        self.district = self.ai.conton.district_id
+
     def test_filter_contour_ifqueryisnone(self):
         response = self.client.get("/gip/filter_contour/")
         self.assertEqual(response.status_code, 400)
@@ -216,7 +230,7 @@ class PolygonsInBboxTestCase(APITestCase):
     url = "polygons-in-bbox/"
 
     def setUp(self) -> None:
-        contour = ContourWithCultureFactory()
+        contour = ContonFactory()
         self.contour = contour
         self.min_long = Faker().pyfloat(
             right_digits=4, positive=True, min_value=71, max_value=74
@@ -246,7 +260,18 @@ class PolygonsInBboxTestCase(APITestCase):
     #     self.assertEqual(response.status_code, 200)
 
 
-class CulturePercentTestCase(ContourProductivityTestCase):
+class CulturePercentTestCase(APITestCase):
+    def setUp(self) -> None:
+        contour = ContourFactory()
+        self.region = contour.conton.district.region_id
+        self.district = contour.conton.district_id
+        self.conton = contour.conton_id
+        self.year = contour.year
+        self.ink = contour.year
+        self.land_type = contour.type_id
+        self.culture = contour.culture_id
+        self.client = APIClient(raise_request_exception=False)
+
     def test_culture_stats_ifparamsisnone(self):
         response = self.client.get("/gip/culture-percent/")
         self.assertEqual(response.status_code, 400)
@@ -262,7 +287,18 @@ class CulturePercentTestCase(ContourProductivityTestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class GraphicTablesTestCase(ContourProductivityTestCase):
+class GraphicTablesTestCase(APITestCase):
+    def setUp(self) -> None:
+        contour = ContourFactory()
+        self.region = contour.conton.district.region_id
+        self.district = contour.conton.district_id
+        self.conton = contour.conton_id
+        self.year = contour.year
+        self.ink = contour.year
+        self.land_type = contour.type_id
+        self.culture = contour.culture_id
+        self.client = APIClient(raise_request_exception=False)
+
     def test_graphic_if_queryisnone(self):
         response = self.client.get("/gip/graphic-tables/")
         self.assertEqual(response.status_code, 400)

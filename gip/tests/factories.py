@@ -76,10 +76,13 @@ class ContourFactory(DjangoModelFactory):
     class Meta:
         model = Contour
 
+    ink = Faker().pystr(max_chars=20)
+    culture = SubFactory(CultureFactory)
     code_soato = Faker().pystr(max_chars=30)
     conton = SubFactory(ContonFactory)
     type = SubFactory(LandTypeFactory)
     polygon = get_polygon()
+    year = 2022
 
 
 class DepartmentFactory(DjangoModelFactory):

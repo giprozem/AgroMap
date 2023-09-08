@@ -1,4 +1,4 @@
-from factory.django import DjangoModelFactory
+from factory.django import DjangoModelFactory, FileField
 from faker import Faker
 from factory import SubFactory
 
@@ -6,6 +6,8 @@ from ai.models.create_dataset import Process, CreateDescription
 from indexes.models.actual_veg_index import PredictedContourVegIndex
 from culture_model.models import VegetationIndex
 from gip.tests.test_additional_views import Contour_AIFactory
+from ai.models import Yolo
+
 
 
 class ProcessFactory(DjangoModelFactory):
@@ -32,6 +34,13 @@ class PredictedContourVegIndexFactory(DjangoModelFactory):
     contour = SubFactory(Contour_AIFactory)
     date = "2023-05-05"
     index = SubFactory(VegetationIndexFactory)
+
+
+class YoloFactory(DjangoModelFactory):
+    class Meta:
+        model = Yolo
+    
+    ai = FileField(filename='test_file.zip')
 
 
 class CreateDescriptionFactory(DjangoModelFactory):
