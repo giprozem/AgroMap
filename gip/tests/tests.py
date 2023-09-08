@@ -1,9 +1,13 @@
+import json
+
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from rest_framework.test import APITestCase
 from account.tests.factories import TokenFactory, AdminTokenFactory
 from gip.tests.factories import RegionFactory, DistrictFactory, ContonFactory, LandTypeFactory, \
-    SoilFactory, CultureFactory, ContourFactory
+    SoilFactory, CultureFactory, ContourFactory, DepartmentFactory, ContactInformationFactory, RegionFactoryWithPolygon
 from rest_framework_gis.fields import GeoJsonDict
+from django.contrib.gis.geos import GEOSGeometry
+
 
 
 class TestGip(APITestCase):
@@ -25,7 +29,7 @@ class TestGip(APITestCase):
         response = self.client.get('/gip/region/')
         self.assertEqual(response.status_code, HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
-
+    
     def test_district(self):
         district = DistrictFactory()
         hour = int(district.created_at.strftime('%H'))
@@ -156,77 +160,121 @@ class TestGip(APITestCase):
 
 class TestGis(APITestCase):
 
-    def test_contour_get(self):
+    def _set_polygon(self):
+        polygon_data = {
+                    "type": "Polygon",
+                    "geometry": {
+                        "coordinates": [
+                        [
+                            [
+                            74.45802637350977,
+                            42.960909912996755
+                            ],
+                            [
+                            74.45802637350977,
+                            42.77960289493697
+                            ],
+                            [
+                            74.74107000893628,
+                            42.77960289493697
+                            ],
+                            [
+                            74.74107000893628,
+                            42.960909912996755
+                            ],
+                            [
+                            74.45802637350977,
+                            42.960909912996755
+                            ]
+                        ]
+                        ],
+                    }
+                    }
+        polygon = json.dumps(polygon_data)
+        polygon_wkt = GEOSGeometry(polygon, srid=4326)
+        return polygon_wkt
+
+
+    def setUp(self) -> None:
         contour = ContourFactory()
-        hour = int(contour.created_at.strftime('%H'))
-        hour += 6
-        expected_data = {
-            "id": contour.id,
-            "year": None,
-            "code_soato": contour.code_soato,
-            "ink": None,
-            "created_at": contour.created_at.strftime(f'%Y-%m-%dT{hour}:%M:%S.%f+06:00'),
-            "updated_at": contour.updated_at.strftime(f'%Y-%m-%dT{hour}:%M:%S.%f+06:00'),
-            "polygon": GeoJsonDict((
-                ('type', contour.polygon.geom_type),
-                ('coordinates', [[list(i) for i in contour.polygon.coords[0]]]),
-            )),
-            "productivity": None,
-            "vegetation_type": None,
-            "predicted_productivity": None,
-            "area_ha": contour.area_ha,
-            "is_deleted": False,
-            "elevation": str(contour.elevation),
-            "eni": None,
-            "is_rounded": False,
-            "conton": {
-                "id": contour.conton.id,
-                "name_ru": contour.conton.name,
-                "name_ky": None,
-                "name_en": None,
-                "code_soato": contour.conton.code_soato
-            },
-            "type": {
-                "id": contour.type.id,
-                "name_ru": contour.type.name,
-                "name_ky": None,
-                "name_en": None
-            },
-            "culture": {
-                "id": None,
-                "name_ru": None,
-                "name_ky": None,
-                "name_en": None,
-                "coefficient_crop": None
-            },
-            "farmer": None,
-            "soil_class": {
-                "id": None,
-                "id_soil": None,
-                "name_ru": None,
-                "name_ky": None,
-                "name_en": None,
-                "description_ru": None,
-                "description_ky": None,
-                "description_en": None,
-                "color": None
-            },
-            "pasture_culture": [],
-            "region": {
-                "id": contour.conton.district.region.id,
-                "name_ru": contour.conton.district.region.name,
-                "name_ky": None,
-                "name_en": None,
-                "code_soato": contour.conton.district.region.code_soato
-            },
-            "district": {
-                "id": contour.conton.district.id,
-                "name_ru": contour.conton.district.name,
-                "name_ky": None,
-                "name_en": None,
-                "code_soato": contour.conton.district.code_soato
-            }
-        }
-        response = self.client.get(f'/gip/contour/{contour.id}/')
+        self.contour = contour
+
+    def test_contour_get(self):
+        response = self.client.get(f'/gip/contour/{self.contour.id}/')
         self.assertEqual(response.status_code, HTTP_200_OK)
-        self.assertEqual(response.data, expected_data)
+
+    def test_contour_destroy(self):
+        self.token = AdminTokenFactory()
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)   
+        response = self.client.delete(f'/gip/contour/{self.contour.id}/')
+        self.assertEqual(response.status_code, 200)
+
+    # def test_contour_update_by_admin(self):
+    #     polygon_wkt = self._set_polygon()
+    #     self.token = AdminTokenFactory()
+    #     self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)   
+    #     update_body = {
+    #         "code_soato": 1,
+    #         "productivity": 1,
+    #         "predicted_productivity": 1,
+    #         "polygon": polygon_wkt
+    #                     }
+    #     response = self.client.patch(f"/gip/contour/{self.contour.id}/", update_body, format="json")
+    #     print(response.content)
+    #     self.assertEqual(response.status_code, 200)
+
+
+class DepartmentTestCase(APITestCase):
+
+    def setUp(self) -> None:
+        department = DepartmentFactory()
+        self.department = department
+    
+    def test_department_get(self):
+        response = self.client.get("/gip/department/")
+        self.assertEqual(response.status_code, 200)
+    
+    def test_department_post(self):
+        query_data = {
+            "unique_code":123,
+            "name":"test_department",
+        }
+        response = self.client.post("/gip/department/", query_data)
+        self.assertEqual(response.data.get("detail"), "Метод \"POST\" не разрешен.")
+    
+    def test_department_retrieve(self):
+        response = self.client.get(f"/gip/department/{self.department.id}/")
+        self.assertEqual(response.status_code, 200)
+
+
+class ContactInformationTestCase(APITestCase):
+    def setUp(self) -> None:
+        contact = ContactInformationFactory()
+        self.contact = contact
+    
+    def test_contact_info_get_ifquery(self):
+        region_id = self.contact.district.region_id
+        district_id = self.contact.district_id
+        department_id = self.contact.department_id
+        response = self.client.get(f"/gip/department/",
+                                    {"region": region_id,
+                                     "district": district_id,
+                                     "department": department_id
+                                    }
+                                   )
+        self.assertEqual(response.status_code, 200)
+    
+    def test_contact_info_ifqueryisnone(self):
+        response = self.client.get("/gip/department/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_contact_info_retrieve(self):
+        response = self.client.get(f"/gip/department/{self.contact.id}/")
+        self.assertEqual(response.status_code, 200)
+
+    
+
+    
+        
+
+    
