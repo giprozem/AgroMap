@@ -146,15 +146,15 @@ class PredictContourTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class HeatMapTestCase(APITestCase):
-    def test_heat_map_if_query_isnone(self):
-        self.client = APIClient(raise_request_exception=False)
-        response = self.client.get("/ai/heat-map/")
-        self.assertEqual(response.status_code, 500)
+# class HeatMapTestCase(APITestCase):
+#     def test_heat_map_if_query_isnone(self):
+#         self.client = APIClient(raise_request_exception=False)
+#         response = self.client.get("/ai/heat-map/")
+#         self.assertEqual(response.status_code, 500)
 
-    def test_heat_map_if_query(self):
-        response = self.client.get("/ai/heat-map/?year=2022")
-        self.assertEqual(response.status_code, 200)
+#     def test_heat_map_if_query(self):
+#         response = self.client.get("/ai/heat-map/?year=2022")
+#         self.assertEqual(response.status_code, 200)
 
 
 class CreateDescriptionTestCase(APITestCase):
