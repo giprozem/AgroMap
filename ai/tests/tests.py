@@ -1,4 +1,7 @@
+import factory
+
 from rest_framework.test import APITestCase, APIClient
+from django.db.models.signals import post_save, pre_save
 
 from gip.tests.test_additional_views import Contour_AIFactory
 from account.tests.factories import AdminTokenFactory, TokenFactory
@@ -6,11 +9,14 @@ from ai.tests.factories import (
     ProcessFactory,
     PredictedContourVegIndexFactory,
     CreateDescriptionFactory,
-    YoloFactory
 )
+
+from account.tests.factories import AdminTokenFactory
+from ai.tests.factories import ProcessFactory
 
 
 class AiSearchTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         process = ProcessFactory(id=1)
         self.process = process
@@ -30,6 +36,7 @@ class AiSearchTestCase(APITestCase):
 
 
 class Contour_AIInScreenTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         self.contour_ai = Contour_AIFactory()
         self.year = self.contour_ai.year
@@ -64,7 +71,14 @@ class Contour_AIInScreenTestCase(APITestCase):
         self.assertEqual(response.status_code, 400)
 
 
-class CreateDatasetTestCase(AiSearchTestCase):
+class CreateDatasetTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
+    def setUp(self) -> None:
+        process = ProcessFactory(id=1)
+        self.process = process
+        self.token = AdminTokenFactory()
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
+
     def test_create_dataset_ifproccess(self):
         self.process.is_running = True
         response = self.client.get("/ai/create-dataset/")
@@ -81,6 +95,7 @@ class CreateDatasetTestCase(AiSearchTestCase):
 class ContourAiTestCase(APITestCase):
     _URL_ = "/ai/contour/"
 
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         self.contour = Contour_AIFactory()
         self.token = AdminTokenFactory()
@@ -116,6 +131,7 @@ class ContourAiTestCase(APITestCase):
 
 
 class PivotTableTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         self.ai_contour = Contour_AIFactory()
         self.culture_id = self.ai_contour.culture_id
@@ -132,9 +148,9 @@ class PivotTableTestCase(APITestCase):
 
 
 class PredictContourTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         self.index = PredictedContourVegIndexFactory()
-        self.yolo = YoloFactory()
 
     def test_if_date_isnot_correct(self):
         response = self.client.get("/ai/predict-productivity/")
@@ -146,18 +162,8 @@ class PredictContourTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
 
 
-# class HeatMapTestCase(APITestCase):
-#     def test_heat_map_if_query_isnone(self):
-#         self.client = APIClient(raise_request_exception=False)
-#         response = self.client.get("/ai/heat-map/")
-#         self.assertEqual(response.status_code, 500)
-
-#     def test_heat_map_if_query(self):
-#         response = self.client.get("/ai/heat-map/?year=2022")
-#         self.assertEqual(response.status_code, 200)
-
-
 class CreateDescriptionTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         self.create_description_model = CreateDescriptionFactory()
 
@@ -173,16 +179,6 @@ class CreateDescriptionTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
         response = self.client.get("/ai/instruction/")
         self.assertEqual(response.status_code, 200)
-
-
-# class PridctedContourTestCase(APITestCase):
-#     def setUp(self) -> None:
-#         self.yolo = YoloFactory()
-#         self.contour_ai = Contour_AIFactory()
-
-#     def test_get(self):
-#         response = self.client.get("/ai/predicted_contour/")
-#         self.assertEqual(response.status_code, 200)
 
 
 class CleanContourCreateTestCase(APITestCase):

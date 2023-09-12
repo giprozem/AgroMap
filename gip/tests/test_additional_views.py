@@ -1,8 +1,9 @@
 from rest_framework.test import APITestCase, APIClient
+from django.db.models.signals import post_save, pre_save
 
+import factory
 from factory import SubFactory
 from factory.django import DjangoModelFactory
-
 from faker import Faker
 
 from ai.models import Contour_AI
@@ -13,10 +14,6 @@ from gip.tests.factories import (
     ContourFactory,
     get_polygon,
 )
-
-
-class ConotonWithPolygonFactory(ContourFactory):
-    polygon = get_polygon()
 
 
 class Contour_AIFactory(DjangoModelFactory):
@@ -32,6 +29,7 @@ class Contour_AIFactory(DjangoModelFactory):
 
 
 class PolygonsInScreenTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         contour = ContourFactory()
         self.contour = contour
@@ -61,6 +59,7 @@ class PolygonsInScreenTestCase(APITestCase):
 
 
 class FilterContourApiTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         self.client = APIClient(raise_request_exception=False)
         contour = ContourFactory()
@@ -82,6 +81,7 @@ class FilterContourApiTestCase(APITestCase):
 
 
 class CoordinatesPolygonTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         contour = ContourFactory()
         self.region = contour.conton.district.region_id
@@ -115,6 +115,7 @@ class CoordinatesPolygonTestCase(APITestCase):
 
 
 class ContourProductivityTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         contour = ContourFactory()
         self.region = contour.conton.district.region_id
@@ -148,6 +149,7 @@ class ContourProductivityTestCase(APITestCase):
 
 
 class CultureStatisticsTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         ai = Contour_AIFactory()
         self.ai = ai
@@ -175,6 +177,7 @@ class CultureStatisticsTestCase(APITestCase):
 
 
 class ContourStatisticsTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         contour = ContourFactory()
         self.region = contour.conton.district.region_id
@@ -198,6 +201,7 @@ class ContourStatisticsTestCase(APITestCase):
 
 
 class FilterContourTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         ai = Contour_AIFactory()
         self.ai = ai
@@ -229,6 +233,7 @@ class FilterContourTestCase(APITestCase):
 class PolygonsInBboxTestCase(APITestCase):
     url = "polygons-in-bbox/"
 
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         contour = ContonFactory()
         self.contour = contour
@@ -250,17 +255,9 @@ class PolygonsInBboxTestCase(APITestCase):
         response = self.client.get("/gip/polygons-in-bbox/")
         self.assertEqual(response.status_code, 400)
 
-    # def test_polygoninbox_ifparams(self):
-    #     bbox_coords = [
-    #         self.min_long, self.min_lat,
-    #         self.max_long, self.max_lat
-    #     ]
-
-    #     response = self.client.get("/gip/polygons-in-bbox/", {'bbox': ','.join(map(str, bbox_coords))})
-    #     self.assertEqual(response.status_code, 200)
-
 
 class CulturePercentTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         contour = ContourFactory()
         self.region = contour.conton.district.region_id
@@ -288,6 +285,7 @@ class CulturePercentTestCase(APITestCase):
 
 
 class GraphicTablesTestCase(APITestCase):
+    @factory.django.mute_signals(pre_save, post_save)
     def setUp(self) -> None:
         contour = ContourFactory()
         self.region = contour.conton.district.region_id
@@ -309,7 +307,9 @@ class GraphicTablesTestCase(APITestCase):
 
 
 class OccurrenceCheckTestCase(APITestCase):
-    contour = ConotonWithPolygonFactory()
+    @factory.django.mute_signals(pre_save, post_save)
+    def setUp(self) -> None:
+        self.contour = ContourFactory()
 
     def test_occurence_ifparamsisnone(self):
         response = self.client.get("/gip/occurrence-check/")
@@ -318,9 +318,3 @@ class OccurrenceCheckTestCase(APITestCase):
     def test_occurence_ifparams_point(self):
         response = self.client.get(f"/gip/occurrence-check/?point=37.1234,55.6789")
         self.assertEqual(response.status_code, 200)
-
-    # def test_occurence_ifparams_polygon(self):
-    #     polygon = self.contour.polygon
-    #     valid_polygon = str(polygon).replace("SRID=4326;", "")
-    #     response = self.client.get(f"/gip/occurrence-check/?polygon={valid_polygon}")
-    #     self.assertEqual(response.status_code, 200)

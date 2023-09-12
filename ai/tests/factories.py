@@ -1,13 +1,24 @@
-from factory.django import DjangoModelFactory, FileField
+from factory.django import DjangoModelFactory
 from faker import Faker
 from factory import SubFactory
 
 from ai.models.create_dataset import Process, CreateDescription
+from ai.models.predicted_contour import Contour_AI
+from gip.tests.factories import ContonFactory, LandTypeFactory, CultureFactory, get_polygon
 from indexes.models.actual_veg_index import PredictedContourVegIndex
 from culture_model.models import VegetationIndex
-from gip.tests.test_additional_views import Contour_AIFactory
-from ai.models import Yolo
 
+
+class Contour_AIFactory(DjangoModelFactory):
+    conton = SubFactory(ContonFactory)
+    polygon = get_polygon()
+    year = 2022
+    productivity = 1
+    type = SubFactory(LandTypeFactory)
+    culture = SubFactory(CultureFactory)
+
+    class Meta:
+        model = Contour_AI
 
 
 class ProcessFactory(DjangoModelFactory):
@@ -34,13 +45,6 @@ class PredictedContourVegIndexFactory(DjangoModelFactory):
     contour = SubFactory(Contour_AIFactory)
     date = "2023-05-05"
     index = SubFactory(VegetationIndexFactory)
-
-
-class YoloFactory(DjangoModelFactory):
-    class Meta:
-        model = Yolo
-    
-    ai = FileField(filename='test_file.zip')
 
 
 class CreateDescriptionFactory(DjangoModelFactory):

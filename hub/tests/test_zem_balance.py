@@ -1,9 +1,6 @@
-import json
-
 from rest_framework.test import APITestCase
 
 from hub.models.land_info import LandInfo
-
 from account.models.account import MyUser
 
 
