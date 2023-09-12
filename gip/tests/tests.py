@@ -4,9 +4,11 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CON
 from rest_framework.test import APITestCase
 from account.tests.factories import TokenFactory, AdminTokenFactory
 from gip.tests.factories import RegionFactory, DistrictFactory, ContonFactory, LandTypeFactory, \
-    SoilFactory, CultureFactory, ContourFactory, DepartmentFactory, ContactInformationFactory, RegionFactoryWithPolygon
+    SoilFactory, CultureFactory, ContourFactory, ContactInformationFactory, DepartmentFactory 
 from rest_framework_gis.fields import GeoJsonDict
 from django.contrib.gis.geos import GEOSGeometry
+
+
 
 
 
@@ -209,20 +211,6 @@ class TestGis(APITestCase):
         response = self.client.delete(f'/gip/contour/{self.contour.id}/')
         self.assertEqual(response.status_code, 200)
 
-    # def test_contour_update_by_admin(self):
-    #     polygon_wkt = self._set_polygon()
-    #     self.token = AdminTokenFactory()
-    #     self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)   
-    #     update_body = {
-    #         "code_soato": 1,
-    #         "productivity": 1,
-    #         "predicted_productivity": 1,
-    #         "polygon": polygon_wkt
-    #                     }
-    #     response = self.client.patch(f"/gip/contour/{self.contour.id}/", update_body, format="json")
-    #     print(response.content)
-    #     self.assertEqual(response.status_code, 200)
-
 
 class DepartmentTestCase(APITestCase):
 
@@ -271,10 +259,3 @@ class ContactInformationTestCase(APITestCase):
     def test_contact_info_retrieve(self):
         response = self.client.get(f"/gip/department/{self.contact.id}/")
         self.assertEqual(response.status_code, 200)
-
-    
-
-    
-        
-
-    

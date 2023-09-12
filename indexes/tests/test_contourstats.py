@@ -11,15 +11,11 @@ from culture_model.models.vegetation_index import VegetationIndex
 from gip.tests.factories import ContourFactory
 
 
-class UpdatedContourFactory(ContourFactory):
-    productivity = 1
-
-
 class ContourStatisticTestCase(APITestCase):
     _URL_ = "/veg/contour-veg-index-statistics/"
 
     def setUp(self) -> None:
-        contour = UpdatedContourFactory()
+        contour = ContourFactory()
         self.contour = contour
     
     def test_if_dataisnone(self):

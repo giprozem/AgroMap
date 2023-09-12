@@ -1,6 +1,7 @@
 from factory.django import DjangoModelFactory
 from factory import SubFactory
 from faker import Faker
+
 from gip.models.region import Region
 from gip.models.district import District
 from gip.models.conton import Conton
@@ -21,10 +22,6 @@ class RegionFactory(DjangoModelFactory):
     population = Faker().pyint()
     area = Faker().pyint()
     density = Faker().pyfloat()
-
-
-class RegionFactoryWithPolygon(RegionFactory):
-    polygon = get_polygon()
 
 
 class DistrictFactory(DjangoModelFactory):
@@ -88,7 +85,7 @@ class ContourFactory(DjangoModelFactory):
 class DepartmentFactory(DjangoModelFactory):
     class Meta:
         model = Department
-        
+
     unique_code = Faker().pyint()
     name = Faker().pystr(max_chars=30)
 
@@ -96,7 +93,7 @@ class DepartmentFactory(DjangoModelFactory):
 class ContactInformationFactory(DjangoModelFactory):
     class Meta:
         model = ContactInformation
-    
+
     department = SubFactory(DepartmentFactory)
     title = Faker().pystr(max_chars=30)
     fullname = Faker().pystr(max_chars=30)
