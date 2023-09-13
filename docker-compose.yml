@@ -28,8 +28,3 @@ services:
 
 volumes:
   media:
-
-networks:
-  default:
-    external:
-      name: external-example
