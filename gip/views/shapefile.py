@@ -28,5 +28,5 @@ class ExportShapefileApiView(APIView):
         export_service = ExportAndZipService(model=Contour)
         file_content = export_service.execute(pk=contour_id)
         response = HttpResponse(file_content, content_type='application/zip')
-        response['Content-Disposition'] = 'attachment; filename=hui.zip'
+        response['Content-Disposition'] = 'attachment; filename=agro-map.zip'
         return response
