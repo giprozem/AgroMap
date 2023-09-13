@@ -12,6 +12,7 @@ from gip.views.soil import SoilAPIView, SoilClassAPIView
 from gip.views.statistics import GraphicTablesAPIView, CulturePercentAPIView
 from gip.views.culture import CultureViewSet
 from gip.views.landtype import LandTypeAPIView
+from gip.views.shapefile import UploadShapefileApiView, ExportShapefileApiView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -40,4 +41,6 @@ urlpatterns = [
     path('land-type/', LandTypeAPIView.as_view()),
     path('', include(router.urls)),
     path('soil-class/', SoilClassAPIView.as_view()),
+    path("shapefile/upload/", UploadShapefileApiView.as_view(), name="shapefile-upload"),
+    path("shapefile/export/", ExportShapefileApiView.as_view(), name="shapefile-export")
 ]
