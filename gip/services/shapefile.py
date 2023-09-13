@@ -10,8 +10,6 @@ import geopandas as gpd
 
 import rarfile
 
-import pprint
-
 
 from django.contrib.gis.geos import GEOSGeometry
 from django.core.serializers import serialize
