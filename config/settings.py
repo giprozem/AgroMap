@@ -12,9 +12,19 @@ DEBUG = True
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
-CSRF_TRUSTED_ORIGINS = ['https://adminagro.24mycrm.com', 'https://10.118.50.31']
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS').split(',')
 
 INSTALLED_APPS = [
+    'gip',
+    'indexes',
+    'culture_model',
+    'hub',
+    'account',
+    'ai',
+    'auditlog.apps.AuditlogConfig',
+]
+
+INSTALLED_LIB = [
     'jazzmin',
     'modeltranslation',
     'django.contrib.admin',
@@ -34,14 +44,10 @@ INSTALLED_APPS = [
     'simple_history',
     'django_extensions',
     'schema_graph',
-    'auditlog.apps.AuditlogConfig',
-    'gip',
-    'indexes',
-    'culture_model',
-    'hub',
-    'account',
-    'ai',
 ]
+
+# Merging for Django
+INSTALLED_APPS = INSTALLED_LIB + INSTALLED_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -161,7 +167,7 @@ LEAFLET_CONFIG = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        #'rest_framework.authentication.TokenAuthentication', Authentication class was changed because of adding function of user tracking
+        # 'rest_framework.authentication.TokenAuthentication', Authentication class was changed because of adding function of user tracking
         'account.authentication.MyTokenAuthentication',
     ],
     'DEFAULT_FILTER_BACKENDS': [
@@ -239,3 +245,6 @@ JAZZMIN_UI_TWEAKS = {
     },
     "actions_sticky_top": False
 }
+
+# Apache Kafka conf
+KAFKA_HOST_PORT = config('KAFKA_HOST_PORT')

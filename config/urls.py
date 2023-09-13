@@ -10,7 +10,7 @@ from config import settings
 
 schema_view = get_schema_view(
     openapi.Info(
-        title='API Agromap and Hub',
+        title='API Agromap',
         default_version='v1',
     ),
     public=True,
