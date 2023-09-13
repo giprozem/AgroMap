@@ -16,6 +16,10 @@ RUN export CPLUS_INCLUDE_PATH=/usr/include/gdal
 RUN export C_INCLUDE_PATH=/usr/include/gdal
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
+#Скачиваем rar tools
+
+RUN apt install -y unrar-free
+
 # Копируем все файлы приложения в рабочую директорию в контейнере
 WORKDIR /usr/src/app
 COPY requirements.txt ./
