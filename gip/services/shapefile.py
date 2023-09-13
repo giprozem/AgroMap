@@ -118,24 +118,36 @@ class UploadAndExtractService:
         temp_path = self._save_zip()
         try:
             extract_path = self._unzip_file(temp_path)
-            layers_path = os.path.join(extract_path, "layer")
+            path = os.path.join(extract_path)
             shapefile_found = False
 
-            for file_name in os.listdir(layers_path):
-                file_path = os.path.join(layers_path, file_name)
-                if os.path.isfile(file_path):
-                    if file_path.lower().endswith((".shp", ".shx", ".dbf", ".prj")):
-                        shapefile_found = True
-                        with transaction.atomic():
-                            self._process_shapefile(file_path)
-                            self._cleanup(temp_path, extract_path)
-                            break
+            # Check if there is a 'layers' directory
+            layers_path = os.path.join(path, "layers")
+            if os.path.isdir(layers_path):
+                for file_name in os.listdir(layers_path):
+                    file_path = os.path.join(layers_path, file_name)
+                    if os.path.isfile(file_path):
+                        if file_path.lower().endswith((".shp", ".shx", ".dbf", ".prj")):
+                            shapefile_found = True
+                            with transaction.atomic():
+                                self._process_shapefile(file_path)
+                                self._cleanup(temp_path, extract_path)
+                                break
+
+            else:
+                for file_name in os.listdir(path):
+                    file_path = os.path.join(path, file_name)
+                    if os.path.isfile(file_path):
+                        if file_path.lower().endswith((".shp", ".shx", ".dbf", ".prj")):
+                            shapefile_found = True
+                            with transaction.atomic():
+                                self._process_shapefile(file_path)
+                                self._cleanup(temp_path, extract_path)
+                                break
 
             if not shapefile_found:
                 self._cleanup(temp_path, extract_path)
-                raise Exception(
-                    "No shapefile found in the 'layers' directory of the archive."
-                )
+                raise Exception("No shapefile found in the archive.")
 
         except Exception as e:
             self._cleanup(temp_path, extract_path)
