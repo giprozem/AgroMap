@@ -13,16 +13,19 @@ class UploadShapefileApiView(APIView):
         file = self.request.FILES.get("file")
         if file is None:
             return Response(data={"message": "file is required"})
-        else:
-            if file.name.endswith(".zip") or file.name.endswith(".rar"):
+        
+        if file.name.endswith(".zip") or file.name.endswith(".rar"):
                 upload_service = UploadAndExtractService(zip_file=file, model=Contour)
                 upload_service.execute()
-                return Response("Shapefile upload successfully")
+                return Response("Shapefile upload successfully", status=200)
+        else:
+            return Response(data={"message": "Unreadable file content, file must be rar or zip"}, status=400)
 
 
 class ExportShapefileApiView(APIView):
     def get(self, request, *args, **kwargs):
         contour_id = self.request.query_params.get("contour_id")
+        
         if contour_id is None:
             return Response(data={"contour_id is required query param"})
         export_service = ExportAndZipService(model=Contour)

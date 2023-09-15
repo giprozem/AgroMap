@@ -1,28 +1,34 @@
+from typing import Any
+from pathlib import Path
+
+import json
 import os
 import zipfile
 import shutil
 import tempfile
-from typing import Any
-
-from osgeo import ogr
-
-import geopandas as gpd
-
 import rarfile
 
+from osgeo import ogr
+import geopandas as gpd
+
+from rest_framework.exceptions import NotAcceptable
 
 from django.contrib.gis.geos import GEOSGeometry
 from django.core.serializers import serialize
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 
-from rest_framework.exceptions import NotAcceptable
+from gip.exceptions.shapefile_exceptions import (
+    ServerAlertException,
+    ShapeFileNotFoundException,
+)
 
 
 class UploadAndExtractService:
     """Utility for uploading and processing data from a zip archive containing shapefiles."""
 
     TEMP_FOLDER = "/tmp/shapefile_temp"
+    SHAPEFILE_FORMAT = (".shp", ".shx", ".dbf", ".prj")
 
     def __init__(self, zip_file, model):
         self.zip_file = zip_file
@@ -118,38 +124,21 @@ class UploadAndExtractService:
             extract_path = self._unzip_file(temp_path)
             path = os.path.join(extract_path)
             shapefile_found = False
+            for root, dirs, files in os.walk(path):
+                for file_name in files:
+                    file_path = os.path.join(root, file_name)
+                    if file_path.lower().endswith(self.SHAPEFILE_FORMAT):
+                        with transaction.atomic():
+                            self._process_shapefile(file_path)
+                            self._cleanup(temp_path, extract_path)
+                            break
 
-            # Check if there is a 'layers' directory
-            layers_path = os.path.join(path, "layers")
-            if os.path.isdir(layers_path):
-                for file_name in os.listdir(layers_path):
-                    file_path = os.path.join(layers_path, file_name)
-                    if os.path.isfile(file_path):
-                        if file_path.lower().endswith((".shp", ".shx", ".dbf", ".prj")):
-                            shapefile_found = True
-                            with transaction.atomic():
-                                self._process_shapefile(file_path)
-                                self._cleanup(temp_path, extract_path)
-                                break
-
-            else:
-                for file_name in os.listdir(path):
-                    file_path = os.path.join(path, file_name)
-                    if os.path.isfile(file_path):
-                        if file_path.lower().endswith((".shp", ".shx", ".dbf", ".prj")):
-                            shapefile_found = True
-                            with transaction.atomic():
-                                self._process_shapefile(file_path)
-                                self._cleanup(temp_path, extract_path)
-                                break
-
-            if not shapefile_found:
-                self._cleanup(temp_path, extract_path)
-                raise Exception("No shapefile found in the archive.")
+                    if not shapefile_found:
+                        self._cleanup(temp_path, extract_path)
+                        raise ShapeFileNotFoundException()
 
         except Exception as e:
-            self._cleanup(temp_path, extract_path)
-            raise NotAcceptable(e)
+            raise ServerAlertException(detail=e, code=500, exception_message=e)
 
 
 class ExportAndZipService:
@@ -169,7 +158,14 @@ class ExportAndZipService:
         """Create a geojson representation of the data."""
 
         geojson = serialize("geojson", [qs])
-        return geojson
+        """Convert str to dict"""
+        geojson_to_dict = json.loads(geojson)
+        """Get properties and update then"""
+        geojson_props = geojson_to_dict.get("features")[0].get("properties")
+        geojson_props.update({"conton_name": qs.conton.name, "type_name": qs.type.name})
+        """Convert dict to str"""
+        geojson_dict_to_str = json.dumps(geojson_to_dict)
+        return geojson_dict_to_str
 
     def create_zip_file(self, geojson: str) -> bytes:
         """Create a zip archive containing data in shapefile and geojson formats."""
@@ -192,6 +188,10 @@ class ExportAndZipService:
 
     def execute(self, pk: int) -> bytes:
         """Main method to execute export and packaging."""
-        qs = self.get_qeuryset(pk=pk)
-        geojson = self.create_geojson(qs=qs)
-        return self.create_zip_file(geojson=geojson)
+        try:
+            qs = self.get_qeuryset(pk=pk)
+            geojson = self.create_geojson(qs=qs)
+            return self.create_zip_file(geojson=geojson)
+
+        except:
+            pass  # TODO update exception
