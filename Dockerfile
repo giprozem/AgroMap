@@ -8,17 +8,20 @@ ENV PYTHONUNBUFFERED 1
 RUN pip install --upgrade pip
 
 # Ставим зависимости GDAL
-RUN apt-get update &&\
-    apt-get install -y binutils libproj-dev gdal-bin python3-gdal
-RUN apt-get install --yes libgdal-dev
-RUN apt-get install --yes gettext
-RUN export CPLUS_INCLUDE_PATH=/usr/include/gdal
-RUN export C_INCLUDE_PATH=/usr/include/gdal
-RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
-
-#Скачиваем rar tools
-
-RUN apt install -y unrar-free
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+        binutils \
+        libproj-dev \
+        gdal-bin \
+        python3-gdal \
+        libgdal-dev \
+        gettext \
+        ffmpeg \
+        libsm6 \
+        libxext6 \
+        unrar-free && \
+    rm -rf /var/lib/apt/lists/*
 
 # Копируем все файлы приложения в рабочую директорию в контейнере
 WORKDIR /usr/src/app
