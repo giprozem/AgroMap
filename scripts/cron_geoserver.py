@@ -9,23 +9,28 @@ from rest_framework.response import Response
 import geopandas as gpd
 from decouple import config
 
+
 def run():
     # Creating an output directory
-    output = 'shp_contour_productivity/'
+    output = 'shp_contours/'
     os.makedirs(output, exist_ok=True)
-
     # Establishing a connection to the database
     with connection.cursor() as cursor:
-        # Executing a SQL query to select required data from various tables of the database
-        # ... (SQL query continues as in your function)
-        # Fetching all rows
+        cursor.execute(f"""SELECT CASE WHEN (cntr.productivity)::float >= 1.6 THEN 1 ELSE 0 END AS "Type productivity",
+        cntr.id AS contour_year_id, rgn.id as rgn, dst.id as dst, cntn.id as cntn, coalesce(cl.id, NULL) AS cl_id,
+        cntr.type_id AS land_type_id, cntr.year, cntr.area_ha, cntr.productivity, St_AsGeoJSON(cntr.polygon) as polygon
+        FROM gip_contour AS cntr
+        JOIN gip_landtype AS land ON land.id=cntr.type_id
+        JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+        JOIN gip_district AS dst ON dst.id=cntn.district_id
+        JOIN gip_region AS rgn ON rgn.id=dst.region_id
+        LEFT JOIN gip_cropyield as cy ON cy.contour_id = cntr.id
+        LEFT JOIN gip_culture as cl ON cy.culture_id = cl.id
+        WHERE cntr.is_deleted=False
+        GROUP BY "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id, cl.id;""")
         rows = cursor.fetchall()
-
-        # Creating a list to hold the data
         data = []
-        # Looping over each row in the fetched data
         for i in rows:
-            # Appending each row's data as a GeoJSON Feature
             data.append({"type": "Feature", "properties": {'id': i[1], 'rgn': i[2], 'dst': i[3], 'cntn': i[4],
                                                            'clt': i[5], 'ltype': i[6], 'year': i[7], 'area': i[8],
                                                            'prdvty': i[0]},
@@ -35,12 +40,12 @@ def run():
         geojson_data = {"type": "FeatureCollection", "features": data}
 
         # Saving the GeoJSON data into a file
-        with open('agromap_store.geojson', 'w') as f:
+        with open('contours_in_geoserver.geojson', 'w') as f:
             json.dump(geojson_data, f)
 
         # Converting the GeoJSON file into a Shapefile using GeoPandas
-        gdf = gpd.read_file('agromap_store.geojson')
-        gdf.to_file(f'{output}/agromap_store.shp')
+        gdf = gpd.read_file('contours_in_geoserver.geojson')
+        gdf.to_file(f'{output}/contours_in_geoserver.shp')
 
         # Delay to allow the system to process the file
         time.sleep(5)
@@ -53,10 +58,10 @@ def run():
 
         # Defining the workspace and store names
         workspace = 'agromap'
-        storename = 'agromap_store'
+        storename = 'contours_main'
 
         # Defining the path to the folder containing the files
-        shapefile_path = 'shp'
+        shapefile_path = output
 
         # Creating workspace if it does not exist
         workspace_url = f'{geoserver_url}/workspaces/{workspace}.json'
@@ -81,7 +86,7 @@ def run():
                               'type': 'Shapefile',
                               'enabled': True,
                               'connectionParameters': {
-                                  'url': f'file:data/agromap/{shapefile_path}',
+                                  'url': f'file:data_dir/workspaces/agromap/{shapefile_path}',
                                   'create spatial index': True
                               }
                           }})
@@ -110,8 +115,5 @@ def run():
                           'srs': 'EPSG:4326',
                           'type': 'ESRI Shapefile'
                       }})
-
-        # Removing the output directory after use
-        shutil.rmtree(output)
 
     return Response('OK')
