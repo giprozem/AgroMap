@@ -26,7 +26,6 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
     contours = contour_obj.objects.filter(polygon__coveredby=satellite_image.polygon)
     try:
         for contour in contours:
-            print(f'contour == {contour.id}')
             polygon = GEOSGeometry(contour.polygon).geojson
             file_name = f'temporary_file_{contour.id}-satellite_image-{satellite_image.id}'
             output_path_tcl = f"./media/TCL_{file_name}.tiff"
@@ -41,7 +40,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                 cutting_tiff(
                     outputpath=output_path_tcl,
                     inputpath=f".{satellite_image.TCI.url.replace('mediafiles', 'media')}",
-                    polygon=polygon
+                    polygon=polygon, x_res=10, y_res=10
                 )
                 try:
                     image = cv2.imread(output_path_tcl, cv2.IMREAD_GRAYSCALE)
@@ -56,14 +55,13 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             process_error=f'In satellite image {percent}% snow or clouds. Or {tci_error}'
                             # TODO Required translate
                         )
-                        print(f'can note create index {contour.id}')
                     else:
                         cutting_error = []
                         try:
                             cutting_tiff(
                                 outputpath=output_path_b02,
                                 inputpath=f".{satellite_image.B02.url.replace('mediafiles', 'media')}",
-                                polygon=polygon
+                                polygon=polygon, x_res=10, y_res=10
                             )
                         except Exception as b02_error:
                             cutting_error.append(f'B02 layer cutting error {b02_error}, ')  # TODO Required translate
@@ -71,7 +69,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             cutting_tiff(
                                 outputpath=output_path_b03,
                                 inputpath=f".{satellite_image.B03.url.replace('mediafiles', 'media')}",
-                                polygon=polygon
+                                polygon=polygon, x_res=10, y_res=10
                             )
                         except Exception as b03_error:
                             cutting_error.append(
@@ -80,7 +78,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             cutting_tiff(
                                 outputpath=output_path_b04,
                                 inputpath=f".{satellite_image.B04.url.replace('mediafiles', 'media')}",
-                                polygon=polygon
+                                polygon=polygon, x_res=10, y_res=10
                             )
                         except Exception as b04_error:
                             cutting_error.append(f'B04 layer cutting error {b04_error}, ')  # TODO Required translate
@@ -88,11 +86,11 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             cutting_tiff(
                                 outputpath=output_path_b08,
                                 inputpath=f".{satellite_image.B8A.url.replace('mediafiles', 'media')}",
-                                polygon=polygon
+                                polygon=polygon, x_res=10, y_res=10
                             )
+
                         except Exception as b08_error:
                             cutting_error.append(f'B08 layer cutting error {b08_error}, ')
-
                         for veg_index in VegetationIndex.objects.all():
                             if veg_index_obj.objects.filter(
                                     index=veg_index,
@@ -102,7 +100,6 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                                 pass
                             else:
                                 try:
-                                    print(f'try index {veg_index.id} {contour.id}')
                                     if veg_index.name == 'NDVI':
                                         average_value = average_ndvi(red_file=output_path_b04, nir_file=output_path_b08)
 
