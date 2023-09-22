@@ -34,14 +34,6 @@ class AdminImageWidget(AdminFileWidget):
         return mark_safe(u''.join(output))
 
 
-# class SnapshotAdmin(admin.TabularInline):
-#     model = Snapshot
-#     fields = ('description', 'image', 'created_at')
-#     max_num = 500
-#     min_num = 1
-#     extra = 0
-
-
 @admin.register(SciHubAreaInterest)
 class SciHubAreaInterestAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     inlines = [SciHubImageDateInline]
@@ -51,6 +43,8 @@ class SciHubAreaInterestAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 class SciHubImageDateAdmin(LeafletGeoAdmin, SimpleHistoryAdmin, admin.ModelAdmin):
     list_display = ('id', 'date', 'area_interest', 'created_at', 'note', 'no_image')
     list_display_links = ('id', 'date', 'area_interest')
+    search_fields = ('name_product', )
+    list_filter = ('area_interest', 'date')
     readonly_fields = ('get_html_photo',)
 
     def get_html_photo(self, obj):
