@@ -4,8 +4,8 @@ from gip.models import BaseModel
 
 
 class ProductivityML(BaseModel):
-    ml_model = models.FileField(upload_to='productivity/', verbose_name=_('Модель'))
+    ml_model = models.FileField(upload_to='productivity/', verbose_name=_('Model'))
 
     class Meta:
-        verbose_name = _("Модель для прогноза продуктивности")
-        verbose_name_plural = _("Модели для прогноза продуктивности")
+        verbose_name = _("Productivity Prediction Model")
+        verbose_name_plural = _("Productivity Prediction Models")

@@ -9,7 +9,6 @@ from django.utils.translation import gettext_lazy as _
 from gip.models import Contour, LandType, Elevation
 from indexes.models import ActualVegIndex
 
-
 class ActualVegIndexTabularInline(TabularInline):
     model = ActualVegIndex
     readonly_fields = ('id', 'get_html_photo', 'index_image', 'average_value', 'get_description',)
@@ -20,7 +19,7 @@ class ActualVegIndexTabularInline(TabularInline):
     def get_description(self, obj):
         return obj.meaning_of_average_value.description
 
-    get_description.short_description = _("Значение индекса")
+    get_description.short_description = _("Index Value")
 
     def get_html_photo(self, obj):
         if obj.index_image:
@@ -32,8 +31,7 @@ class ActualVegIndexTabularInline(TabularInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    get_html_photo.short_description = _("Визуализация NDVI")
-
+    get_html_photo.short_description = _("NDVI Visualization")
 
 @admin.register(Contour)
 class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
@@ -50,12 +48,11 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     def display_district_name(self, obj):
         return obj.conton.district
 
-    display_district_name.short_description = 'Район'
+    display_district_name.short_description = 'District'
 
 @admin.register(LandType)
 class LandTypeAdmin(TranslationAdmin):
     list_display = ('id', 'name')
-
 
 @admin.register(Elevation)
 class ElevationAdmin(admin.ModelAdmin):

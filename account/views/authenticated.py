@@ -44,7 +44,7 @@ class LoginAgromapView(APIView):
         user = authenticate(username=serializer.validated_data['username'], password=serializer.validated_data['password'])
 
         if not user:
-            raise exceptions.AuthenticationFailed(_('“Логин или пароль введен неверно. Попробуйте снова.”'))
+            raise exceptions.AuthenticationFailed(_('“The login or password was entered incorrectly. Try again.”'))
 
         token, created = Token.objects.get_or_create(user=user)
         MyUser.objects.filter(username=user).update(last_login=timezone.now())

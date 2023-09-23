@@ -5,12 +5,13 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Culture(BaseModel):
-    name = models.CharField(max_length=55, verbose_name=_("Культура"))
-    coefficient_crop = models.FloatField(verbose_name=_("Коэффициент продуктивности"))
+    name = models.CharField(max_length=55, verbose_name=_("Culture"))
+    coefficient_crop = models.FloatField(verbose_name=_("Crop Productivity Coefficient"))
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = _("Культура")
-        verbose_name_plural = _("Культуры")
+        verbose_name = _("Culture")
+        verbose_name_plural = _("Cultures")
+

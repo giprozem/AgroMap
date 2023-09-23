@@ -6,8 +6,8 @@ from culture_model.models.phase import Phase
 
 
 class Classes(BaseModel):
-    name = models.CharField(max_length=20, verbose_name=_('Название'))
-    description = models.TextField(verbose_name=_('Описание'))
+    name = models.CharField(max_length=20, verbose_name=_('Name'))
+    description = models.TextField(verbose_name=_('Description'))
 
     def __str__(self):
         return self.name
@@ -17,15 +17,15 @@ class Classes(BaseModel):
             'name',
             'description'
         )
-        verbose_name = _('Класс')
-        verbose_name_plural = _('Классы')
+        verbose_name = _('Class')
+        verbose_name_plural = _('Classes')
 
 
 class Subclass(BaseModel):
     classes = models.ForeignKey(Classes, on_delete=models.SET_NULL, null=True, related_name='subclasses',
-                                verbose_name=_('Класс'))
-    name = models.CharField(max_length=20, verbose_name=_('Название'))
-    description = models.TextField(verbose_name=_('Описание'))
+                                verbose_name=_('Class'))
+    name = models.CharField(max_length=20, verbose_name=_('Name'))
+    description = models.TextField(verbose_name=_('Description'))
 
     def __str__(self):
         return self.name
@@ -36,15 +36,15 @@ class Subclass(BaseModel):
             'description',
             'classes',
         )
-        verbose_name = _('Подкласс')
-        verbose_name_plural = _('Подклассы')
+        verbose_name = _('Subclass')
+        verbose_name_plural = _('Subclasses')
 
 
 class GroupType(BaseModel):
     subclass = models.ForeignKey(Subclass, on_delete=models.SET_NULL, null=True, related_name='group_type',
-                                 verbose_name=_('Подкласс'))
-    name = models.CharField(max_length=20, verbose_name=_('Название'))
-    description = models.TextField(verbose_name=_('Описание'))
+                                 verbose_name=_('Subclass'))
+    name = models.CharField(max_length=20, verbose_name=_('Name'))
+    description = models.TextField(verbose_name=_('Description'))
 
     def __str__(self):
         return self.name
@@ -55,15 +55,15 @@ class GroupType(BaseModel):
             'description',
             'subclass',
         )
-        verbose_name = _('Тип группы')
-        verbose_name_plural = _('Типы группы')
+        verbose_name = _('Group Type')
+        verbose_name_plural = _('Group Types')
 
 
 class RepublicanType(BaseModel):
     type_group = models.ForeignKey(GroupType, on_delete=models.SET_NULL, null=True, related_name='republican_type',
-                                   verbose_name=_('Тип группы'))
-    name = models.CharField(max_length=20, verbose_name=_('Название'))
-    description = models.TextField(verbose_name=_('Описание'))
+                                   verbose_name=_('Group Type'))
+    name = models.CharField(max_length=20, verbose_name=_('Name'))
+    description = models.TextField(verbose_name=_('Description'))
 
     def __str__(self):
         return self.name
@@ -74,16 +74,16 @@ class RepublicanType(BaseModel):
             'description',
             'type_group',
         )
-        verbose_name = _('Тип растительности')
-        verbose_name_plural = _('Типы растительностей')
+        verbose_name = _('Vegetation Type')
+        verbose_name_plural = _('Vegetation Types')
 
 
 class DistrictType(BaseModel):
     type_group = models.ForeignKey(RepublicanType, on_delete=models.SET_NULL, null=True, related_name='district_type',
-                                   verbose_name=_('Тип растительности'))
-    name = models.CharField(max_length=20, verbose_name=_('Название'))
-    description = models.TextField(verbose_name=_('Описание'))
-    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True, verbose_name=_('Район'))
+                                   verbose_name=_('Vegetation Type'))
+    name = models.CharField(max_length=20, verbose_name=_('Name'))
+    description = models.TextField(verbose_name=_('Description'))
+    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True, verbose_name=_('District'))
 
     def __str__(self):
         return self.name
@@ -95,19 +95,19 @@ class DistrictType(BaseModel):
             'description',
             'district'
         )
-        verbose_name = _('Тип района')
-        verbose_name_plural = _('Типы районов')
+        verbose_name = _('District Type')
+        verbose_name_plural = _('District Types')
 
 
 class PastureCulture(BaseModel):
     district_type = models.ForeignKey(DistrictType, on_delete=models.SET_NULL, related_name='pasture_culture',
-                                      null=True, verbose_name=_('Тип района'))
-    name = models.CharField(max_length=255, verbose_name=_('Название'))
+                                      null=True, verbose_name=_('District Type'))
+    name = models.CharField(max_length=255, verbose_name=_('Name'))
     coefficient_to_productivity = models.DecimalField(max_digits=4, decimal_places=2,
-                                                      verbose_name=_('Коэффициент продуктивности'))
-    content_of_feed = models.DecimalField(max_digits=4, decimal_places=2, verbose_name=_('Содержание корма'))
-    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True, verbose_name=_('Район'))
-    veg_period = models.ForeignKey(Phase, on_delete=models.SET_NULL, null=True, verbose_name=_('Вегетационный период'))
+                                                      verbose_name=_('Productivity Coefficient'))
+    content_of_feed = models.DecimalField(max_digits=4, decimal_places=2, verbose_name=_('Feed Content'))
+    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True, verbose_name=_('District'))
+    veg_period = models.ForeignKey(Phase, on_delete=models.SET_NULL, null=True, verbose_name=_('Vegetation Period'))
 
     def __str__(self):
         return self.name
@@ -120,5 +120,6 @@ class PastureCulture(BaseModel):
             'content_of_feed',
             'district'
         )
-        verbose_name = _('Культура пастбища')
-        verbose_name_plural = _('Культуры пастбищ')
+        verbose_name = _('Pasture Culture')
+        verbose_name_plural = _('Pasture Cultures')
+

@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 class AuditlogConfig(AppConfig):
     name = "auditlog"
-    verbose_name = _("Отчет изменений пользователей")
+    verbose_name = _("User Changes Report")
     default_auto_field = "django.db.models.AutoField"
 
     def ready(self):

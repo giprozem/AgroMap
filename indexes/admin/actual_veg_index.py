@@ -8,7 +8,6 @@ from indexes.admin.forms import IndexMeaningForm
 from indexes.models import ActualVegIndex, IndexMeaning
 from indexes.models.actual_veg_index_logs import IndexCreatingReport
 
-
 @admin.register(ActualVegIndex)
 class IndexFactAdmin(SimpleHistoryAdmin):
     list_display = ('id', 'average_value', 'get_description', 'index', 'contour', 'date', 'get_html_photo')
@@ -22,7 +21,7 @@ class IndexFactAdmin(SimpleHistoryAdmin):
         if obj.index_image:
             return mark_safe(f"<img src='{obj.index_image.url}' width=100>")
 
-    get_html_photo.short_description = _('Визуализация NDVI')
+    get_html_photo.short_description = _('NDVI Visualization')
 
     def get_contour_id(self, obj):
         return obj.contour.id
@@ -30,8 +29,7 @@ class IndexFactAdmin(SimpleHistoryAdmin):
     def get_description(self, obj):
         return obj.meaning_of_average_value.description if obj.meaning_of_average_value else None
 
-    get_description.short_description = _('Значение индекса')
-
+    get_description.short_description = _('Index Value')
 
 @admin.register(IndexMeaning)
 class IndexMeaningAdmin(TranslationAdmin):
@@ -39,7 +37,6 @@ class IndexMeaningAdmin(TranslationAdmin):
     list_filter = ('index',)
     list_display = ('id', 'index', 'min_index_value', 'max_index_value',)
     list_display_links = ('id', 'index')
-
 
 @admin.register(IndexCreatingReport)
 class IndexCreatingReportAdmin(admin.ModelAdmin):

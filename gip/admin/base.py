@@ -1,8 +1,6 @@
 from django.contrib.gis import admin
 import json
 from django.contrib.admin.models import LogEntry
-from django.utils.translation import gettext_lazy as _
-
 
 @admin.register(LogEntry)
 class LogEntryAdmin(admin.ModelAdmin):
