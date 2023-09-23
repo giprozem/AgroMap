@@ -321,13 +321,13 @@ class LogEntry(models.Model):
 
     class Action:
         """
-        The actions that Auditlog distinguishes: creating, updating and deleting objects. Viewing objects
+        The actions that Auditlog distinguishes: creating, updating, and deleting objects. Viewing objects
         is not logged. The values of the actions are numeric, a higher integer value means a more intrusive
         action. This may be useful in some cases when comparing actions because the ``__lt``, ``__lte``,
         ``__gt``, ``__gte`` lookup filters can be used in queries.
 
         The valid actions are :py:attr:`Action.CREATE`, :py:attr:`Action.UPDATE`,
-        :py:attr:`Action.DELETE` and :py:attr:`Action.ACCESS`.
+        :py:attr:`Action.DELETE`, and :py:attr:`Action.ACCESS`.
         """
 
         CREATE = 0
@@ -336,56 +336,56 @@ class LogEntry(models.Model):
         ACCESS = 3
 
         choices = (
-            (CREATE, _("Создано")),
-            (UPDATE, _("Обновлено")),
-            (DELETE, _("Удалено")),
-            (ACCESS, _("Доступно")),
+            (CREATE, _("Created")),
+            (UPDATE, _("Updated")),
+            (DELETE, _("Deleted")),
+            (ACCESS, _("Accessed")),
         )
 
     content_type = models.ForeignKey(
         to="contenttypes.ContentType",
         on_delete=models.CASCADE,
         related_name="+",
-        verbose_name=_("Тип контента"),
+        verbose_name=_("Content Type"),
     )
     object_pk = models.CharField(
-        db_index=True, max_length=255, verbose_name=_("Идентификатор")
+        db_index=True, max_length=255, verbose_name=_("Identifier")
     )
     object_id = models.BigIntegerField(
-        blank=True, db_index=True, null=True, verbose_name=_("Номер")
+        blank=True, db_index=True, null=True, verbose_name=_("Number")
     )
-    object_repr = models.TextField(verbose_name=_("Представление"))
+    object_repr = models.TextField(verbose_name=_("Representation"))
     serialized_data = models.JSONField(null=True)
     action = models.PositiveSmallIntegerField(
-        choices=Action.choices, verbose_name=_("Действие"), db_index=True
+        choices=Action.choices, verbose_name=_("Action"), db_index=True
     )
-    changes_text = models.TextField(blank=True, verbose_name=_("Текст изменения"))
-    changes = models.JSONField(null=True, verbose_name=_("Текст сообщения"))
+    changes_text = models.TextField(blank=True, verbose_name=_("Change Text"))
+    changes = models.JSONField(null=True, verbose_name=_("Message Text"))
     actor = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name="+",
-        verbose_name=_("Пользователь"),
+        verbose_name=_("User"),
     )
     cid = models.CharField(
         max_length=255,
         db_index=True,
         blank=True,
         null=True,
-        verbose_name=_("ID корреляции"),
+        verbose_name=_("Correlation ID"),
     )
     remote_addr = models.GenericIPAddressField(
-        blank=True, null=True, verbose_name=_("Дистанционный адрес")
+        blank=True, null=True, verbose_name=_("Remote Address")
     )
     timestamp = models.DateTimeField(
         default=django_timezone.now,
         db_index=True,
-        verbose_name=_("Время"),
+        verbose_name=_("Time"),
     )
     additional_data = models.JSONField(
-        blank=True, null=True, verbose_name=_("Дополнительная информация")
+        blank=True, null=True, verbose_name=_("Additional Data")
     )
 
     objects = LogEntryManager()
@@ -393,20 +393,21 @@ class LogEntry(models.Model):
     class Meta:
         get_latest_by = "timestamp"
         ordering = ["-timestamp"]
-        verbose_name = _("Журнал изменения")
-        verbose_name_plural = _("Журнал изменений")
+        verbose_name = _("Change Log")
+        verbose_name_plural = _("Change Logs")
 
     def __str__(self):
         if self.action == self.Action.CREATE:
-            fstring = _("Создано {repr:s}")
+            fstring = _("Created {repr:s}")
         elif self.action == self.Action.UPDATE:
-            fstring = _("Обновлено {repr:s}")
+            fstring = _("Updated {repr:s}")
         elif self.action == self.Action.DELETE:
-            fstring = _("Удалено {repr:s}")
+            fstring = _("Deleted {repr:s}")
         else:
-            fstring = _("Логи {repr:s}")
+            fstring = _("Logs {repr:s}")
 
         return fstring.format(repr=self.object_repr)
+
 
     @property
     def changes_dict(self):

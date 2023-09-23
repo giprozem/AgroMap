@@ -4,11 +4,11 @@ from hub.models import BaseModel
 
 
 class DocumentTypeList(BaseModel):
-    type_name = models.CharField(max_length=50, verbose_name=_('Название'))
+    type_name = models.CharField(max_length=50, verbose_name=_('Document Name'))
 
     def __str__(self):
         return self.type_name
 
     class Meta:
-        verbose_name = _('Правоустанавливающие документы')
-        verbose_name_plural = _("Правоустанавливающие документы")
+        verbose_name = _('Legal Documents')
+        verbose_name_plural = _("Legal Documents")

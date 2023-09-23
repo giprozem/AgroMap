@@ -9,16 +9,17 @@ from django.utils.translation import gettext_lazy as _
 
 class CropYield(BaseModel):
     culture = models.ForeignKey(Culture, on_delete=models.CASCADE, related_name='crop_yields',
-                                verbose_name=_("Культура"))
-    contour = models.ForeignKey(Contour, on_delete=models.CASCADE, related_name='crop_yields', verbose_name=_("Поле"))
-    weight = models.FloatField(help_text=_("Измеряется в центнерах"), verbose_name=_("Продуктивность"))
-    year = models.IntegerField(verbose_name=_("Год"))
-    season = models.IntegerField(blank=True, null=True, verbose_name=_("Сезон"))
+                                verbose_name=_("Culture"))
+    contour = models.ForeignKey(Contour, on_delete=models.CASCADE, related_name='crop_yields', verbose_name=_("Field"))
+    weight = models.FloatField(help_text=_("Measured in centners"), verbose_name=_("Productivity"))
+    year = models.IntegerField(verbose_name=_("Year"))
+    season = models.IntegerField(blank=True, null=True, verbose_name=_("Season"))
     history = HistoricalRecords()
 
     def __str__(self):
         return self.culture.name
 
     class Meta:
-        verbose_name = _("Продуктивность")
-        verbose_name_plural = _("Продуктивность")
+        verbose_name = _("Crop Yield")
+        verbose_name_plural = _("Crop Yields")
+

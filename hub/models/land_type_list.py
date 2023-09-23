@@ -4,11 +4,11 @@ from hub.models import BaseModel
 
 
 class LandTypeList(BaseModel):
-    type_name = models.CharField(max_length=50, verbose_name=_('Название'))
+    type_name = models.CharField(max_length=50, verbose_name=_('Name'))
 
     def __str__(self):
         return self.type_name
 
     class Meta:
-        verbose_name = _('Данные по типам угодьев')
-        verbose_name_plural = _("Данные по типам угодьев")
+        verbose_name = _('Land Types Data')
+        verbose_name_plural = _("Land Types Data")

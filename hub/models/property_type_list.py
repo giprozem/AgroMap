@@ -4,11 +4,11 @@ from hub.models import BaseModel
 
 
 class PropertyTypeList(BaseModel):
-    type_name = models.CharField(max_length=50, verbose_name=_('Название'))
+    type_name = models.CharField(max_length=50, verbose_name=_('Name'))
 
     def __str__(self):
         return self.type_name
 
     class Meta:
-        verbose_name = _('Данные о собственности')
-        verbose_name_plural = _("Данные о собственности")
+        verbose_name = _('Property Type Data')
+        verbose_name_plural = _("Property Type Data")

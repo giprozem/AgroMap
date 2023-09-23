@@ -16,18 +16,17 @@ from auditlog.signals import accessed
 
 MAX = 75
 
-
 class LogEntryAdminMixin:
     request: HttpRequest
     CID_TITLE = _("Click to filter by records with this correlation id")
 
-    @admin.display(description=_("Создано"))
+    @admin.display(description=_("Created"))
     def created(self, obj):
         if is_aware(obj.timestamp):
             return localtime(obj.timestamp)
         return obj.timestamp
 
-    @admin.display(description=_("Пользователь"))
+    @admin.display(description=_("User"))
     def user_url(self, obj):
         if obj.actor:
             app_label, model = settings.AUTH_USER_MODEL.split(".")
@@ -38,9 +37,9 @@ class LogEntryAdminMixin:
                 return "%s" % (obj.actor)
             return format_html('<a href="{}">{}</a>', link, obj.actor)
 
-        return _("Админ панель")
+        return _("Admin Panel")
 
-    @admin.display(description=_("Ссылка на объект"))
+    @admin.display(description=_("Resource URL"))
     def resource_url(self, obj):
         app_label, model = obj.content_type.app_label, obj.content_type.model
         viewname = f"admin:{app_label}_{model}_change"
@@ -56,7 +55,7 @@ class LogEntryAdminMixin:
                 '<a href="{}">{} - {}</a>', link, obj.content_type.name, name
             )
 
-    @admin.display(description=_("Изменения"))
+    @admin.display(description=_("Changes"))
     def msg_short(self, obj):
         if obj.action in [LogEntry.Action.DELETE, LogEntry.Action.ACCESS]:
             return ""  # delete
@@ -68,7 +67,7 @@ class LogEntryAdminMixin:
             fields = fields[:i] + " .."
         return "%d change%s: %s" % (len(changes), s, fields)
 
-    @admin.display(description=_("Изменения"))
+    @admin.display(description=_("Changes"))
     def msg(self, obj):
         changes = obj.changes_dict
 
@@ -88,7 +87,7 @@ class LogEntryAdminMixin:
 
         if atom_changes:
             msg.append('<table class="table table-bordered">')
-            msg.append(self._format_header("#", _("Поле"), _("Было"), _("Стало")))
+            msg.append(self._format_header("#", _("Field"), _("Was"), _("Became")))
             for i, (field, change) in enumerate(sorted(atom_changes.items()), 1):
                 value = [i, self.field_verbose_name(obj, field)] + (
                     ["***", "***"] if field == "password" else change
@@ -162,7 +161,6 @@ class LogEntryAdminMixin:
         delimiter = "&" if "?" in full_path else "?"
 
         return f"{full_path}{delimiter}{key}={value}"
-
 
 class LogAccessMixin:
     def render_to_response(self, context, **response_kwargs):

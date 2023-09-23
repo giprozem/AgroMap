@@ -129,7 +129,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             )
                         else:
                             raise ObjectDoesNotExist(
-                                _('Ошибка создания индекса растительности, проверьте имена индексов'))
+                                _('Error creating vegetation index, check index names'))
                         meaning_of_average_value = IndexMeaning.objects.filter(
                             index=veg_index
                         ).filter(
