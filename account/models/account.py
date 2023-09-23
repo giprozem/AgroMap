@@ -5,6 +5,13 @@ from django.utils.translation import gettext_lazy as _
 
 # The MyUser model extends the built-in User model.
 class MyUser(AbstractUser):
+
+    """
+    This custom user model is designed to handle user authentication and management in a Django project.
+    It extends the built-in AbstractUser class to add additional fields that indicate the type of user,
+    such as administrators, farmers, workers, and observers.
+    """
+
     # is_staff, is_farmer, is_employee, and is_supervisor are Boolean fields that indicate the type of user.
     is_staff = models.BooleanField(default=False, verbose_name=_('Administrator'))
     is_farmer = models.BooleanField(default=False, verbose_name=_('Farmer'))
@@ -24,6 +31,13 @@ class MyUser(AbstractUser):
 
 # The Profile model is linked to the MyUser model with a one-to-one relationship.
 class Profile(models.Model):
+
+    """
+    The Profile model is designed to store additional information about users of the application. 
+    It is linked to the MyUser model using a one-to-one relationship, 
+    allowing each user to have a corresponding profile with details such as full name and phone number.
+    """
+
     my_user = models.OneToOneField(MyUser, on_delete=models.CASCADE, primary_key=True, related_name='profiles',
                                    verbose_name=_('User'))
     full_name = models.CharField(max_length=55, verbose_name=_('Full name'))
@@ -40,6 +54,12 @@ class Profile(models.Model):
 
 # The Notifications model stores notifications for users.
 class Notifications(models.Model):
+
+    """
+    The Notifications model is designed to store notifications for users. 
+    It allows you to associate notifications with specific users and track whether a notification has been read or not.
+    """
+    
     user = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='notification',
                              verbose_name=_('User'))
     date = models.DateTimeField(auto_now=True, verbose_name=_('Created date'))

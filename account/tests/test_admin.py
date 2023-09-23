@@ -1,30 +1,7 @@
-from datetime import date
-
-from django import forms
-from django.contrib.admin.models import ADDITION, CHANGE, DELETION, LogEntry
-from django.contrib.admin.options import (
-    HORIZONTAL,
-    VERTICAL,
-    ModelAdmin,
-    TabularInline,
-    get_content_type_for_model,
-)
-from django.contrib.admin.sites import AdminSite
-from django.contrib.admin.widgets import (
-    AdminDateWidget,
-    AdminRadioSelect,
-    AutocompleteSelect,
-    AutocompleteSelectMultiple,
-)
-from django.contrib.auth.models import User
-from django.db import models
-from django.forms.widgets import Select
-from django.test import RequestFactory, SimpleTestCase, TestCase
-
+from django.test import TestCase
 from account.tests.factories import MyUserFactory
 from account.models import MyUser
-from account.admin import *
-
+from account.admin import ModelAdmin  # Import the ModelAdmin class from the account.admin module
 
 class ModelAdminTests(TestCase):
 
@@ -33,10 +10,10 @@ class ModelAdminTests(TestCase):
         self.site = AdminSite()
 
     def test_modeladmin_str(self):
-        ma = ModelAdmin(MyUser, self.site)
-        self.assertEqual(str(ma), 'account.ModelAdmin')
+        ma = ModelAdmin(MyUser, self.site)  # Create a ModelAdmin instance for the MyUser model
+        self.assertEqual(str(ma), 'account.ModelAdmin')  # Check that the string representation of the ModelAdmin is as expected
 
     def test_default_attributes(self):
-        ma = ModelAdmin(MyUser, self.site)
-        self.assertEqual(ma.actions, ())
-        self.assertEqual(ma.inlines, ())
+        ma = ModelAdmin(MyUser, self.site)  # Create a ModelAdmin instance for the MyUser model
+        self.assertEqual(ma.actions, ())  # Check that the actions attribute is an empty tuple
+        self.assertEqual(ma.inlines, ())  # Check that the inlines attribute is an empty tuple
