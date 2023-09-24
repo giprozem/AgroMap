@@ -31,10 +31,10 @@ account
 Django's **Admin** 🛠 is a robust and customizable tool that provides an interface for managing your app's content. The "Account" application uses the "admin" folder to oversee user data.
 
 - 📄 [/account/admin/account.py](/account/admin/account.py)
-  - `UserCreationForm` & `UserChangeForm`: 🖊 Forms for managing users.
-  - `MyUserAdmin`: ⚙️ Admin settings for the MyUser model.
-  - `ProfileAdmin`: 🧑🔧 Admin settings for the user profiles.
-  - `NotificationsAdmin`: 🛎️ Admin settings for user notifications.
+  - `UserCreationForm` & `UserChangeForm`: Forms for managing users.
+  - `MyUserAdmin`:  Admin settings for the MyUser model.
+  - `ProfileAdmin`: Admin settings for the user profiles.
+  - `NotificationsAdmin`: Admin settings for user notifications.
 
 ---
 
