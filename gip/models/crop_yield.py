@@ -8,6 +8,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class CropYield(BaseModel):
+
+    """
+    The CropYield model is designed to store data related to crop yields. 
+    It includes fields for the culture (crop type), contour (field), yield weight, year, and season.
+    """
+
     culture = models.ForeignKey(Culture, on_delete=models.CASCADE, related_name='crop_yields',
                                 verbose_name=_("Culture"))
     contour = models.ForeignKey(Contour, on_delete=models.CASCADE, related_name='crop_yields', verbose_name=_("Field"))

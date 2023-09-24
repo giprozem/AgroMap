@@ -5,6 +5,13 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Region(BaseModel):
+
+    """
+    The Region model is designed to store data related to administrative regions. 
+    It includes fields for the region's SOATO code, name, population, area, population density, 
+    and a geographic polygon representing the region's contour.
+    """
+
     code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name=_('SOATO Code'))
     name = models.CharField(max_length=55, verbose_name=_('Region'))
     population = models.IntegerField(verbose_name=_('Population'))

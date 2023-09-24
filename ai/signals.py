@@ -12,6 +12,14 @@ from ai.utils.predicted_contour import predicted_contour
 
 @receiver(post_save, sender=Contour_AI)
 def update(sender, instance, created, **kwargs):
+    """
+    The post_save signal for the Cut_RGB_TIF model in this case does the following:
+    When saving (or creating) a Cut_RGB_TIF instance, the signal checks the value of the type_of_process field of that instance.
+    If the value of type_of_process is 1, then this means that the "predicted_contour" process was selected. In this case, 
+    the signal calls the predicted_contour() function, which probably performs contour detection of objects in images.
+    If the value of type_of_process is 2, then this means that the "create_dataset" process was selected. In this case, 
+    the signal calls the create_dataset() function, which probably creates the dataset.
+    """
     if created:
         geom = Contour_AI.objects.annotate(area_=Area("polygon")).get(id=instance.id)
         with connection.cursor() as cursor:

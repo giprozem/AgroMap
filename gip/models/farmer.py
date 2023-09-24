@@ -7,6 +7,13 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Farmer(BaseModel):
+
+    """
+    The Farmer model is designed to store data related to individuals who work as farmers. 
+    It includes fields for the farmer's user profile, Taxpayer Identification Number (TIN) or Personal Identification Number (INN), 
+    and phone number.    
+    """
+    
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE, related_name='farmers', verbose_name=_("Farmer"))
     pin_inn = models.CharField(max_length=14, verbose_name=_("TIN or INN"),
                                help_text=_("Taxpayer Identification Number or Personal Identification Number"))

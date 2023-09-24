@@ -6,6 +6,13 @@ from culture_model.models.phase import Phase
 
 
 class Classes(BaseModel):
+
+    """
+    The Classes model serves the purpose of defining and representing classes, 
+    where each class is characterized by a unique combination of a name and a description. 
+    It allows you to organize and manage different classes within your application.
+    """
+
     name = models.CharField(max_length=20, verbose_name=_('Name'))
     description = models.TextField(verbose_name=_('Description'))
 
@@ -22,6 +29,12 @@ class Classes(BaseModel):
 
 
 class Subclass(BaseModel):
+
+    """
+    The Subclass model serves the purpose of defining and representing subclasses associated with a parent class (Classes). 
+    Each subclass has its own unique name, description, and is related to a parent class.
+    """
+
     classes = models.ForeignKey(Classes, on_delete=models.SET_NULL, null=True, related_name='subclasses',
                                 verbose_name=_('Class'))
     name = models.CharField(max_length=20, verbose_name=_('Name'))
@@ -41,6 +54,12 @@ class Subclass(BaseModel):
 
 
 class GroupType(BaseModel):
+
+    """
+    The GroupType model serves the purpose of defining and representing group types associated with subclasses. 
+    Each group type has its own unique name, description, and is related to a specific subclass.
+    """
+
     subclass = models.ForeignKey(Subclass, on_delete=models.SET_NULL, null=True, related_name='group_type',
                                  verbose_name=_('Subclass'))
     name = models.CharField(max_length=20, verbose_name=_('Name'))
@@ -60,6 +79,12 @@ class GroupType(BaseModel):
 
 
 class RepublicanType(BaseModel):
+    
+    """
+    The RepublicanType model serves the purpose of defining and representing vegetation types within a Republican context. 
+    Each vegetation type has its own unique name, description, and is related to a specific group type.
+    """
+
     type_group = models.ForeignKey(GroupType, on_delete=models.SET_NULL, null=True, related_name='republican_type',
                                    verbose_name=_('Group Type'))
     name = models.CharField(max_length=20, verbose_name=_('Name'))
@@ -79,6 +104,12 @@ class RepublicanType(BaseModel):
 
 
 class DistrictType(BaseModel):
+    
+    """
+    The DistrictType model serves the purpose of defining and representing district-specific vegetation types. 
+    Each district type is characterized by a unique combination of a vegetation type, name, description, and a specific district.
+    """
+
     type_group = models.ForeignKey(RepublicanType, on_delete=models.SET_NULL, null=True, related_name='district_type',
                                    verbose_name=_('Vegetation Type'))
     name = models.CharField(max_length=20, verbose_name=_('Name'))
@@ -100,6 +131,12 @@ class DistrictType(BaseModel):
 
 
 class PastureCulture(BaseModel):
+    
+    """
+    The PastureCulture model serves the purpose of defining and representing information about pasture cultures, 
+    particularly their attributes and characteristics, within specific districts and district types.
+    """
+    
     district_type = models.ForeignKey(DistrictType, on_delete=models.SET_NULL, related_name='pasture_culture',
                                       null=True, verbose_name=_('District Type'))
     name = models.CharField(max_length=255, verbose_name=_('Name'))
