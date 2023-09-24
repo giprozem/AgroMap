@@ -1,16 +1,35 @@
 # Importing necessary libraries
 import json
 import os
-import shutil
 import time
 import requests
 from django.db import connection
+from rest_framework import status
 from rest_framework.response import Response
 import geopandas as gpd
 from decouple import config
 
 
 def run():
+    """
+    1 - Extract Data from a Database:
+    It connects to a database and executes a SQL query to fetch data related to various geographical contours
+    and their attributes.
+    The returned data is structured into GeoJSON format.
+
+    2 - Save Data to Files:
+    The script then saves the data in GeoJSON format to a file (contours_ai_in_geoserver.geojson).
+    Using the geopandas library, this GeoJSON file is then converted into a shapefile (contours_ai_in_geoserver.shp)
+    and saved in a specific directory (shp_contours_ai/).
+
+    3 - Integration with GeoServer:
+    After a brief delay, the script establishes a connection with GeoServer using its REST API.
+    GeoServer is a server that allows for sharing, processing, and editing geospatial data.
+    It then checks if specific workspaces and data stores exist on the GeoServer. If not, they are created.
+    The script then uploads the shapefile from the shp_contours_ai/ directory to the GeoServer data store.
+    Finally, a new layer named 'polygons' is published on the GeoServer using the uploaded shapefile.
+    """
+
     # Creating an output directory
     output = 'shp_contours/'
     os.makedirs(output, exist_ok=True)
@@ -116,4 +135,4 @@ def run():
                           'type': 'ESRI Shapefile'
                       }})
 
-    return Response('OK')
+    return Response({"message": "Successfully processed and uploaded data to GeoServer."}, status=status.HTTP_200_OK)

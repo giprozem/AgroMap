@@ -159,6 +159,7 @@ regions
 cron
 shp_ai_contour
 cutted
+output*
 
 #files
 .env
