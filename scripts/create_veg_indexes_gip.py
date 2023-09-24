@@ -9,6 +9,12 @@ from indexes.utils import veg_index_creating
 
 
 def run():
+    """
+    The script aims to process satellite images, stored in a model SciHubImageDate, in parallel.
+    It uses a utility function veg_index_creating to create a vegetation index for each satellite image.
+    This utility function is expected to interact with multiple models,
+    including Contour, IndexCreatingReport, and ActualVegIndex.
+    """
     satellite_images = SciHubImageDate.objects.all()
 
     veg_index_creating_preset = partial(

@@ -1,3 +1,8 @@
+"""
+This module provides functionality to create vegetation indices for satellite images.
+These indices help in understanding the health and density of vegetation in a particular region.
+"""
+
 import os
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
@@ -18,32 +23,38 @@ from indexes.index_funcs.vari_funcs import average_vari, vari_calculator
 from indexes.models import IndexMeaning
 from indexes.models import PredictedContourVegIndex, ContourAIIndexCreatingReport
 from indexes.models.satelliteimage import SciHubImageDate
-# from indexes.utils import veg_index_creating
 
-
-# def run():
-#     satellite_images = SciHubImageDate.objects.all()
-#
-#     veg_index_creating_preset = partial(
-#         veg_index_creating,
-#         contour_obj=Contour_AI,
-#         creating_report_obj=ContourAIIndexCreatingReport,
-#         veg_index_obj=PredictedContourVegIndex
-#     )
-#     with ThreadPoolExecutor(max_workers=30) as executor:
-#         executor.map(veg_index_creating_preset, satellite_images)
 
 def remove_file(file_path):
+    """
+        Remove a file from the filesystem if it exists.
+
+        Parameters:
+    -    - file_path (str): The path of the file to be deleted.
+    """
     if os.path.isfile(file_path):
         os.remove(file_path)
 
 
 def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_index_obj):
+    """
+        Create vegetation indices for a given satellite image and store them in the database.
+        It also generates reports of successful and unsuccessful index creations.
+
+        Parameters:
+        - satellite_image (Model instance): The satellite image to be processed.
+        - contour_obj (Django Model): The model representing the contours of interest.
+        - creating_report_obj (Django Model): The model used for storing processing reports.
+        - veg_index_obj (Django Model): The model representing vegetation index values.
+    """
+    # Fetch contours that are covered by the given satellite image.
     contours = contour_obj.objects.filter(polygon__coveredby=satellite_image.polygon)
     try:
         for contour in contours:
-            print(f'contour == {contour.id}')
+            # Extracting the geojson representation of the contour's polygon.
             polygon = GEOSGeometry(contour.polygon).geojson
+
+            # Generating file names for different spectral bands of the satellite image.
             file_name = f'temporary_file_{contour.id}-satellite_image-{satellite_image.id}'
             output_path_tcl = f"./media/TCL_{file_name}.tiff"
             output_path_b02 = f"./media/B02_{file_name}.tiff"
@@ -51,7 +62,11 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
             output_path_b04 = f"./media/B04_{file_name}.tiff"
             output_path_b08 = f"./media/B08_{file_name}.tiff"
             gdal.UseExceptions()
+
+            # List to capture errors during cutting operations.
             cutting_error = []
+
+            # Attempt to cut each spectral band based on the contour's polygon.
             try:
                 cutting_tiff(
                     outputpath=output_path_b02,
@@ -158,6 +173,8 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             is_processed=False,
                             process_error=f'{e}, {cutting_error}'
                         )
+
+            # Removing all the temporary files created during the process.
             remove_file(output_path_b02)
             remove_file(output_path_b03)
             remove_file(output_path_b04)
@@ -168,13 +185,21 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
 
 
 def run():
+    """
+        Process all satellite images in the database to create vegetation indices using a thread pool.
+    """
+
+    # Fetch all satellite images.
     satellite_images = SciHubImageDate.objects.all()
 
+    # Partially initialize the veg_index_creating function with common arguments.
     veg_index_creating_preset = partial(
         veg_index_creating,
         contour_obj=Contour_AI,
         creating_report_obj=ContourAIIndexCreatingReport,
         veg_index_obj=PredictedContourVegIndex
     )
+
+    # Use ThreadPoolExecutor to process images concurrently.
     with ThreadPoolExecutor(max_workers=30) as executor:
         executor.map(veg_index_creating_preset, satellite_images)
