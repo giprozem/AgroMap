@@ -58,7 +58,7 @@ Serializers 🔄 in Django convert data for web APIs.
 The "tests" folder 🧪 ensures the app's code reliability.
 
 - 📄 Files:
-  - [factories.py](/account/tests/factories.py) 
+  - [factories.py](/account/tests/factories.py)
   - [test_admin.py](/account/tests/test_admin.py)
   - [tests.py](/account/tests/tests.py)
 
@@ -89,7 +89,7 @@ It's where the app's configurations 🛠️ are stored.
 
 ## 📄 **authentication.py**
 
-Focused on authentication and user activity 🕵️‍♂️.
+[Focused on authentication and user activity 🕵️‍♂️.](/account/authentication.py)
 
 - 📄 [/account/authentication.py](/account/authentication.py)
   - `MyTokenAuthentication`: 🔑 Custom token authentication.
@@ -98,3 +98,13 @@ Focused on authentication and user activity 🕵️‍♂️.
   - `MyAuditMiddleware`: 📝 Extended audit logging.
 
 ---
+
+## 📄 **translation.py**
+
+[Translate models 🌐.](/account/translation.py)
+
+---
+
+## 📄 **urls.py**
+
+[It's where the url's configurations 🛠️ are stored.](/account/urls.py)
