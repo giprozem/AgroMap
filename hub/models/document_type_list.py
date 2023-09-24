@@ -4,7 +4,6 @@ from hub.models import BaseModel
 
 
 class DocumentTypeList(BaseModel):
-
     """
     The DocumentTypeList model is designed to store a list of legal document types. 
     It includes a field for the document name (type_name) and 

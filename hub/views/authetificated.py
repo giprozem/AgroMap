@@ -13,6 +13,7 @@ from rest_framework import exceptions
 from account.serializers.authetificated import LoginSerializer
 from rest_framework.authtoken.models import Token
 
+
 class LoginHubView(APIView):
     """
     View to handle user login and return an authentication token.
@@ -34,12 +35,12 @@ class LoginHubView(APIView):
         """
         # Serialize and validate the request data using the LoginSerializer.
         serializer = LoginSerializer(data=request.data)
-        
+
         # Ensure data is valid, if not, a validation exception will be raised.
         serializer.is_valid(raise_exception=True)
 
         # Use Django's `authenticate` method to verify the user's credentials.
-        user = authenticate(username=serializer.validated_data['username'], 
+        user = authenticate(username=serializer.validated_data['username'],
                             password=serializer.validated_data['password'])
 
         # If the credentials are invalid (i.e., `user` is None), raise an authentication exception.

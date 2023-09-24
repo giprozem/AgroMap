@@ -1,3 +1,28 @@
+"""
+zem_balance_api.py:
+This module handles operations related to land balance.
+
+Classes:
+- `ZemBalanceViewSet`: Provides CRUD operations and additional functionalities for `LandInfo` objects related to land balance.
+    Attributes:
+        - `queryset`: Retrieves all the `LandInfo` objects.
+        - `serializer_class`: Serializer used to handle `LandInfo` instances.
+        - `permission_classes`: Specifies that users must be authenticated to access this view.
+        - `lookup_field`: The field used to look up a `LandInfo` object.
+
+    Methods:
+        - `create`: Overridden to process POST requests. Validates if the given land area overlaps with existing ones
+          and checks if the `ink_code` is unique.
+        - `update`: Overridden to process PUT requests. Updates the given land info object.
+
+- `AsrEniCodeAPIView`: Fetches land details from an external service based on the provided ENI code.
+    Methods:
+        - `get`: Processes GET requests. It retrieves the details of a land area based on its ENI code.
+
+Note:
+For each class or method, the attributes or fields are briefly described with the `#` sign.
+"""
+
 import requests
 from decouple import config
 from django.contrib.gis.geos import GEOSGeometry
@@ -69,8 +94,8 @@ class AsrEniCodeAPIView(APIView):
         operation_summary='do not required for front'
     )
     def get(self, request, *args, **kwargs):
-        ASR_URL = config("ASR_URL")
-        eni_code = request.GET.get('eni_code')
+        ASR_URL = config("ASR_URL")  # External service URL from config
+        eni_code = request.GET.get('eni_code')  # Retrieve ENI code from request
         get_asr = requests.get(f"{ASR_URL}={eni_code}")
         if eni_code and get_asr.text not in 'NULL':
             get_asr_json = get_asr.json()

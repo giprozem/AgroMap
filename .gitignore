@@ -169,6 +169,7 @@ output*
 *.tif
 *.pkl
 *.zip
+hub/views/handbook_asr.py
 
 #shp format
 *.pt

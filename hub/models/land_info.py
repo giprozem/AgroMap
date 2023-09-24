@@ -6,13 +6,12 @@ from hub.models.base import BaseModel
 
 
 class LandInfo(BaseModel):
-
     """
     The LandInfo model is designed to store information about land parcels. 
     It includes a wide range of fields to capture various attributes related to land ownership, use, and 
     characteristics. It inherits timestamp fields (created_at and updated_at) from the BaseModel abstract model.
     """
-    
+
     history = HistoricalRecords(verbose_name=_("History"), inherit=True)
     ink_code = models.CharField(max_length=100, verbose_name=_('INK Code'))
     main_map = models.GeometryField(verbose_name=_('Contour'), blank=True, null=True)
@@ -113,4 +112,3 @@ class LandInfo(BaseModel):
 
     def __str__(self):
         return self.ink_code
-

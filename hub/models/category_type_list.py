@@ -4,7 +4,6 @@ from hub.models import BaseModel
 
 
 class CategoryTypeList(BaseModel):
-
     """
     The CategoryTypeList model is designed to store a list of land categories or types. 
     It includes a field for the category name (type_name) and 
