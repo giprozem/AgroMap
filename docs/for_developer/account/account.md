@@ -3,11 +3,23 @@
 ```
 account
 ├── 📁 admin/
+    ├── 📄 account.py
+
 ├── 📁 migrations/
 ├── 📁 models/
+    ├── 📄 account.py
+
 ├── 📁 serializers/
+    ├── 📄 authentication.py
+
 ├── 📁 tests/
+    ├── 📄 factories.py
+    ├── 📄 test_admin.py
+    ├── 📄 tests.py
+
 ├── 📁 views/
+    ├── 📄 authentication.py
+
 ├── 📄 apps.py
 ├── 📄 authentication.py
 ├── 📄 translation.py
@@ -35,9 +47,9 @@ Migrations 🔄 in Django keep track of model changes and help in smoothly trans
 Models 📋 in Django define the structure of a database table.
 
 - 📄 [/account/models/account.py](/account/models/account.py)
-  - `MyUser`: 🧑 Custom user model.
-  - `Profile`: 📜 Extended user details.
-  - `Notifications`: 🔔 User notifications model.
+  - `MyUser`: Custom user model.
+  - `Profile`: Extended user details.
+  - `Notifications`: User notifications model.
 
 ---
 
@@ -46,16 +58,16 @@ Models 📋 in Django define the structure of a database table.
 Serializers 🔄 in Django convert data for web APIs.
 
 - 📄 [/account/serializers/authenticated.py](/account/serializers/authenticated.py)
-  - `LoginSerializer`: 🔑 For user login.
-  - `ProfileSerializer`: 📜 For user profiles.
-  - `ChangePasswordSerializer`: 🔒 For changing passwords.
-  - `NotificationsSerializer`: 🔔 For user notifications.
+  - `LoginSerializer`: For user login.
+  - `ProfileSerializer`: For user profiles.
+  - `ChangePasswordSerializer`: For changing passwords.
+  - `NotificationsSerializer`: For user notifications.
 
 ---
 
 ## 📁 **Tests folder**
 
-The "tests" folder 🧪 ensures the app's code reliability.
+The "tests" folder ensures the app's code reliability.
 
 - 📄 Files:
   - [factories.py](/account/tests/factories.py)
@@ -69,13 +81,13 @@ The "tests" folder 🧪 ensures the app's code reliability.
 Views 👀 in Django control how data is displayed and processed.
 
 - 📄 [/account/views/authenticated.py](/account/views/authenticated.py)
-  - `LoginAgromapView`: 📌 User login endpoint.
-  - `UpdateProfileAPIView`: 📝 Update user profile endpoint.
-  - `ChangePasswordAPIView`: 🔒 Change password endpoint.
-  - `GetProfileAPIView`: 🧑 Fetch user profile endpoint.
-  - `NotificationsAPIView`: 🔔 Get notifications endpoint.
-  - `ReadNotificationAPIView`: ✅ Mark notification as read endpoint.
-  - `LogoutAgromapView`: 🚪 User logout endpoint.
+  - `LoginAgromapView`: User login endpoint.
+  - `UpdateProfileAPIView`: Update user profile endpoint.
+  - `ChangePasswordAPIView`:  Change password endpoint.
+  - `GetProfileAPIView`:  Fetch user profile endpoint.
+  - `NotificationsAPIView`:  Get notifications endpoint.
+  - `ReadNotificationAPIView`:  Mark notification as read endpoint.
+  - `LogoutAgromapView`:  User logout endpoint.
 
 ---
 
@@ -89,13 +101,13 @@ It's where the app's configurations 🛠️ are stored.
 
 ## 📄 **authentication.py**
 
-[Focused on authentication and user activity 🕵️‍♂️.](/account/authentication.py)
+[Focused on authentication and user activity .](/account/authentication.py)
 
 - 📄 [/account/authentication.py](/account/authentication.py)
-  - `MyTokenAuthentication`: 🔑 Custom token authentication.
-  - `AdminLastVisitMiddleware`: ⌚ Tracks user's last activity.
-  - `set_cid`: 🔗 Set a correlation ID.
-  - `MyAuditMiddleware`: 📝 Extended audit logging.
+  - `MyTokenAuthentication`:  Custom token authentication.
+  - `AdminLastVisitMiddleware`:  Tracks user's last activity.
+  - `set_cid`:  Set a correlation ID.
+  - `MyAuditMiddleware`:  Extended audit logging.
 
 ---
 
