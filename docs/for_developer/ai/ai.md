@@ -45,7 +45,7 @@ ai
 ├── 📄 urls.py
 ```
 
-Django's **Admin** 🛠 is a robust and customizable tool that provides an interface for managing your app's content. The "Account" application uses the "admin" folder to oversee user data.
+Django's **Admin** 🛠 is a robust and customizable tool that provides an interface for managing your app's content. The "Ai" application uses the "admin" folder to oversee user data.
 
 ### 📄 [/ai/admin/create_dataset.py](/ai/admin/create_dataset.py)
 
