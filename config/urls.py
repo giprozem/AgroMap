@@ -8,6 +8,7 @@ from drf_yasg.views import get_schema_view
 from schema_graph.views import Schema
 from config import settings
 
+# Create an OpenAPI schema view
 schema_view = get_schema_view(
     openapi.Info(
         title='API Agromap',
@@ -16,6 +17,7 @@ schema_view = get_schema_view(
     public=True,
 )
 
+# Define the URL patterns for the application
 urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
     path('hub/', include("hub.urls")),
@@ -28,13 +30,16 @@ urlpatterns = [
     path('account/', include('account.urls')),
 ]
 
+# Add i18n_patterns for internationalization
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
 )
 
+# Serve media and static files during development (DEBUG=True)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
+# Customize the admin site header and index title
 admin.site.site_header = 'AgroMap'
-admin.site.index_title = _("Эталонная база данных Гипрозем")
+admin.site.index_title = _("Giprozem reference database")

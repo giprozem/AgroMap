@@ -53,7 +53,6 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             is_processed=False,
                             satellite_image=satellite_image,
                             process_error=f'In satellite image {percent}% snow or clouds. Or {tci_error}'
-                            # TODO Required translate
                         )
                     else:
                         cutting_error = []
@@ -64,7 +63,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                                 polygon=polygon, x_res=10, y_res=10
                             )
                         except Exception as b02_error:
-                            cutting_error.append(f'B02 layer cutting error {b02_error}, ')  # TODO Required translate
+                            cutting_error.append(f'B02 layer cutting error {b02_error}, ')
                         try:
                             cutting_tiff(
                                 outputpath=output_path_b03,
@@ -73,7 +72,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             )
                         except Exception as b03_error:
                             cutting_error.append(
-                                f'B03 layer cutting error cutting error {b03_error}, ')  # TODO Required translate
+                                f'B03 layer cutting error cutting error {b03_error}, ')
                         try:
                             cutting_tiff(
                                 outputpath=output_path_b04,
@@ -81,7 +80,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                                 polygon=polygon, x_res=10, y_res=10
                             )
                         except Exception as b04_error:
-                            cutting_error.append(f'B04 layer cutting error {b04_error}, ')  # TODO Required translate
+                            cutting_error.append(f'B04 layer cutting error {b04_error}, ')
                         try:
                             cutting_tiff(
                                 outputpath=output_path_b08,
@@ -163,7 +162,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                                         contour_id=contour.id,
                                         is_processed=True,
                                         satellite_image=satellite_image,
-                                        process_error='No error'  # TODO Required translate
+                                        process_error='No error'
                                     )
                                 except Exception as e:
                                     plt.close()
@@ -180,7 +179,6 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                         is_processed=False,
                         satellite_image=satellite_image,
                         process_error=f'In satellite image {percent}% snow or clouds. Or {e}'
-                        # TODO Required translate
                     )
             except gdal.UseExceptions() as tci_err:
                 tci_error.append(tci_err)
@@ -195,5 +193,5 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
             veg_index_id=None,
             satellite_image_id=satellite_image.id,
             is_processed=False,
-            process_error=f'Have no contours in this satellite image. Error is - {e}'  # TODO Required translate
+            process_error=f'Have no contours in this satellite image. Error is - {e}'
         )

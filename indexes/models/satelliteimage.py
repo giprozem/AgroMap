@@ -4,6 +4,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class SatelliteImageSource(models.Model):
+
+    """
+    The SatelliteImageSource model is designed to store information about various sources of satellite images. 
+    It allows you to define and manage different sources by providing a name and a description for each source.
+    """
+
     name = models.CharField(max_length=255, verbose_name=_('Name'))
     description = models.TextField(verbose_name=_('Description'))
 
@@ -16,6 +22,12 @@ class SatelliteImageSource(models.Model):
 
 
 class SatelliteImageBand(models.Model):
+
+    """
+    The SatelliteImageBand model is designed to store information about various bands present in satellite images. 
+    It allows you to define and manage different bands by providing a name and a description for each band.
+    """
+
     band_name = models.CharField(max_length=255, verbose_name=_('Satellite Image Band Name'), unique=True)
     band_description = models.TextField(verbose_name=_('Satellite Image Band Description'))
 
@@ -28,6 +40,13 @@ class SatelliteImageBand(models.Model):
 
 
 class SatelliteImageLayer(models.Model):
+
+    """
+    The SatelliteImageLayer model is designed to manage and associate satellite image layers with their sources and bands. 
+    It provides fields to link to image files, 
+    specify the source of the image, and indicate the band to which the image belongs.
+    """
+
     image = models.FileField(upload_to='satellite_image', verbose_name=_('Image'))
     source = models.ForeignKey(
         'indexes.SatelliteImageSource',
@@ -48,6 +67,13 @@ class SatelliteImageLayer(models.Model):
 
 
 class SciHubAreaInterest(models.Model):
+
+    """
+    The SciHubAreaInterest model is designed to store geographic polygons representing areas of interest on the Earth's 
+    surface for the acquisition of satellite images. 
+    It provides a field to store these polygons.
+    """
+
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Area of Satellite Image Interest"))
 
     class Meta:
@@ -56,6 +82,13 @@ class SciHubAreaInterest(models.Model):
 
 
 class SciHubImageDate(models.Model):
+
+    """
+    The SciHubImageDate model is designed to store information about Sentinel-2 satellite images, 
+    including their metadata and file attachments. It provides fields to store image-related data, 
+    such as image date, associated area of interest, image files for different bands, and other relevant details.
+    """
+    
     name_product = models.CharField(max_length=255, blank=True, null=True)
     area_interest = models.ForeignKey(SciHubAreaInterest, on_delete=models.SET_NULL, related_name='image_date',
                                       verbose_name=_("Area of Interest"), blank=True, null=True)

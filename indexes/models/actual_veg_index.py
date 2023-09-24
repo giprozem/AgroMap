@@ -6,6 +6,13 @@ from indexes.models.satelliteimage import SciHubImageDate
 
 
 class ActualVegIndex(models.Model):
+
+    """
+    The ActualVegIndex model is designed to store information about actual vegetation index data, including the index image, 
+    average index value, meaning of the average index value, associated vegetation index, field contours, 
+    analysis date, and historical records.
+    """
+
     index_image = models.FileField(upload_to='index_image', verbose_name=_("Index Image"), blank=True)
     average_value = models.DecimalField(
         max_digits=5,
@@ -44,6 +51,13 @@ class ActualVegIndex(models.Model):
 
 
 class IndexMeaning(models.Model):
+    
+    """
+    The IndexMeaning model is designed to define the meaning and allowable range of values for vegetation indexes. 
+    It allows you to associate a vegetation index with its minimum and maximum values, 
+    along with a description to explain the index's significance.
+    """
+
     index = models.ForeignKey('culture_model.VegetationIndex', on_delete=models.CASCADE, verbose_name=_('Index'))
     min_index_value = models.DecimalField(max_digits=4, decimal_places=3, validators=[MinValueValidator(-1)],
                                           verbose_name=_('Minimum Value'))
@@ -60,6 +74,13 @@ class IndexMeaning(models.Model):
 
 
 class PredictedContourVegIndex(models.Model):
+
+    """
+    The PredictedContourVegIndex model is designed to store predicted vegetation index values associated with specific contours. 
+    It allows you to link an index image, the average index value, the meaning of the index value, 
+    and additional information like the index type, contour, analysis date, and historical records.
+    """
+    
     index_image = models.FileField(upload_to='index_image', blank=True, verbose_name=_('Image'))
     average_value = models.DecimalField(
         max_digits=5,

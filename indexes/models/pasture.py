@@ -5,6 +5,12 @@ from indexes.models import ActualVegIndex
 
 
 class ProductivityClass(models.Model):
+
+    """
+    The ProductivityClass model is designed to represent categories or classes related to productivity. 
+    It provides a way to define different productivity classes, each with a name and an optional description.
+    """
+
     name = models.CharField(max_length=255, verbose_name=_('Name'))
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
 
@@ -17,6 +23,13 @@ class ProductivityClass(models.Model):
 
 
 class ContourAverageIndex(models.Model):
+
+    """
+    The ContourAverageIndex model is designed to calculate and store the average index values for specific contours. 
+    It provides fields to link to a contour, store the calculated average value, associate a productivity class, 
+    specify the start and end date of the calculation period, and keep a historical record of changes.
+    """
+    
     contour = models.ForeignKey('gip.Contour', on_delete=models.CASCADE, verbose_name=_('Field Contours'))
     value = models.DecimalField(
         max_digits=5,

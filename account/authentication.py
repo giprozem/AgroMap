@@ -10,9 +10,7 @@ from django.conf import settings
 from django.http import HttpRequest
 from django.utils import timezone
 
-
 class MyTokenAuthentication(TokenAuthentication):
-
     def authenticate_credentials(self, key):
         try:
             token = Token.objects.get(key=key)
@@ -22,20 +20,20 @@ class MyTokenAuthentication(TokenAuthentication):
         if not token.user.is_active:
             raise AuthenticationFailed('User not active or deleted.')
 
+        # Update the last login timestamp for the user associated with the token.
         MyUser.objects.filter(username=token.user).update(last_login=timezone.now())
         return (token.user, token)
-
 
 class AdminLastVisitMiddleware(object):
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
+        # If the user is authenticated, update their last login timestamp.
         if request.user.is_authenticated:
             MyUser.objects.filter(pk=request.user.pk).update(last_login=timezone.now())
         response = self.get_response(request)
         return response
-
 
 def set_cid(request: Optional[HttpRequest] = None) -> None:
     correlation_id = ContextVar("auditlog_correlation_id", default=None)
@@ -43,12 +41,12 @@ def set_cid(request: Optional[HttpRequest] = None) -> None:
     header = ''
 
     if header and request:
+        # Check if the header is present in the request and retrieve the correlation ID.
         if header in request.headers:
             cid = request.headers.get(header)
         elif header in request.META:
             cid = request.META.get(header)
     correlation_id.set(cid)
-
 
 class MyAuditMiddleware(AuditlogMiddleware):
     @staticmethod
@@ -65,6 +63,9 @@ class MyAuditMiddleware(AuditlogMiddleware):
         remote_addr = self._get_remote_addr(request)
         user = self._get_actor(request)
 
+        # Set the correlation ID based on the request.
         set_cid(request)
+
+        # Set the actor and remote address for audit logging.
         with set_actor(actor=user, remote_addr=remote_addr):
             return self.get_response(request)

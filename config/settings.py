@@ -1,19 +1,27 @@
+# settings.py - Django Application Configuration
+
 import os
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
 from decouple import config
 
+# Base directory of the Django project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Secret key for the Django application
 SECRET_KEY = config('SECRET_KEY').split(',')
 
+# Debug mode (set to True for development, should be False in production)
 DEBUG = True
 
+# Allowed hosts for the application
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
+# Trusted origins for CSRF protection
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS').split(',')
 
+# Installed Django applications
 INSTALLED_APPS = [
     'gip',
     'indexes',
@@ -24,6 +32,7 @@ INSTALLED_APPS = [
     'auditlog.apps.AuditlogConfig',
 ]
 
+# Additional installed libraries
 INSTALLED_LIB = [
     'jazzmin',
     'modeltranslation',
@@ -46,9 +55,10 @@ INSTALLED_LIB = [
     'schema_graph',
 ]
 
-# Merging for Django
+# Merge installed libraries with Django applications
 INSTALLED_APPS = INSTALLED_LIB + INSTALLED_APPS
 
+# Middleware settings
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,8 +74,10 @@ MIDDLEWARE = [
     'account.authentication.MyAuditMiddleware',
 ]
 
+# Root URL configuration
 ROOT_URLCONF = 'config.urls'
 
+# Template settings
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -82,8 +94,10 @@ TEMPLATES = [
     },
 ]
 
+# WSGI application entry point
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# Database configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -95,6 +109,7 @@ DATABASES = {
     }
 }
 
+# Password validation settings
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -110,18 +125,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Language and timezone settings
 LANGUAGE_CODE = 'en'
-
 TIME_ZONE = 'Asia/Bishkek'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
+# Locale paths for translations
 LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
 
+# Available languages
 gettext = lambda s: s
 LANGUAGES = (
     ('en', gettext('English')),
@@ -129,45 +143,43 @@ LANGUAGES = (
     ('ky', gettext('Kyrgyz')),
 )
 
+# Default language for model translations
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 
+# Custom user model
 AUTH_USER_MODEL = 'account.MyUser'
 
+# Static and media files settings
 STATIC_URL = '/staticfiles/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/mediafiles/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Default auto field for models
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
 
-# TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
+# Leaflet map configuration
 LEAFLET_CONFIG = {
     "DEFAULT_CENTER": (42.87, 74.59),
-
     "DEFAULT_ZOOM": 10,
-
     "MAX_ZOOM": 20,
-
     "MIN_ZOOM": 3,
-
     "SCALE": 'both',
-
     'TILES': [('Google', 'http://{s}.google.com/vt/lyrs=s,m,p&x={x}&y={y}&z={z}',
                {'maxZoom': 20, 'subdomains': ['mt0', 'mt1', 'mt2', 'mt3']}),
               ('OSM', 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                {'attribution': '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}),
               ]
-
 }
 
+# REST framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.TokenAuthentication', Authentication class was changed because of adding function of user tracking
         'account.authentication.MyTokenAuthentication',
     ],
     'DEFAULT_FILTER_BACKENDS': [
@@ -175,6 +187,7 @@ REST_FRAMEWORK = {
     ],
 }
 
+# Jazzmin settings
 JAZZMIN_SETTINGS = {
     "site_title": "AgroMap",
     "site_header": "AgroMap",
@@ -187,32 +200,11 @@ JAZZMIN_SETTINGS = {
     ],
     "language_chooser": True,
     "order_with_respect_to": [
-        "account",
-        "auth",
-        "gip",
-        "gip.Contour",
-        "gip.LandType",
-        "gip.Region",
-        "gip.Conton",
-        "gip.District",
-        "gip.SoilClass",
-        "gip.SoilClassMap",
-        "gip.SoilProductivity",
-        "gip.SoilFertility",
-        "indexes",
-        "indexes.ActualVegIndex",
-        "indexes.IndexCreatingReport",
-        "indexes.IndexMeaning",
-        "indexes.SciHubImageDate",
-        "indexes.SciHubAreaInterest",
-
-        "ai",
-        "culture_model",
-
-        "hub"
+        # Specify the order of your application models here
     ],
 }
 
+# Jazzmin UI tweaks
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,
     "footer_small_text": False,
@@ -246,5 +238,5 @@ JAZZMIN_UI_TWEAKS = {
     "actions_sticky_top": False
 }
 
-# Apache Kafka conf
+# Apache Kafka configuration
 KAFKA_HOST_PORT = config('KAFKA_HOST_PORT')
