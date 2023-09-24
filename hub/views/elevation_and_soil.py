@@ -5,6 +5,7 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+
 # ElevationSoilAPIView class definition. This APIView handles GET requests.
 class ElevationSoilAPIView(APIView):
 
@@ -22,7 +23,7 @@ class ElevationSoilAPIView(APIView):
         # Extract 'latitude' and 'longitude' parameters from the GET request
         latitude = request.GET.get('latitude')
         longitude = request.GET.get('longitude')
-        
+
         try:
             # Check if both latitude and longitude are provided
             if latitude and longitude:
