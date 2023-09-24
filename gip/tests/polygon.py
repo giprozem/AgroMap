@@ -1,8 +1,14 @@
+# Import necessary modules
 from django.contrib.gis.geos import GEOSGeometry
-from faker import Faker
 
-
+# Define a function for creating a GEOSGeometry representing a polygon
 def get_polygon():
+
+    """
+    Generate mock polygon without Faker, using static data
+    """
+
+    # Define a dictionary representing a polygon's coordinates
     polygon_dict = {
         "geometry": {
             "coordinates": [
@@ -17,8 +23,12 @@ def get_polygon():
             "type": "Polygon",
         },
     }
+
+    # Create a GeoJSON representation of the polygon
     geojson = {
         "type": "Polygon",
         "coordinates": polygon_dict["geometry"].get("coordinates"),
     }
+
+    # Create a GEOSGeometry object from the GeoJSON representation
     return GEOSGeometry(f"{geojson}")

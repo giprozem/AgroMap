@@ -4,6 +4,12 @@ from gip.models import District
 
 
 class Department(models.Model):
+
+    """
+    The Department model is designed to store information about departments or organizational units within an organization. 
+    It includes fields for a unique code (unique_code) and the name of the department (name).
+    """
+
     unique_code = models.IntegerField(verbose_name='Unique Code', unique=True, null=True)
     name = models.CharField(max_length=255, verbose_name=_('Department Name'))
 

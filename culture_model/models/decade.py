@@ -3,6 +3,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Decade(models.Model):
+    
+    """
+    The Decade model serves the purpose of defining and representing a specific decade or a range of years. 
+    It allows you to specify a start date and an end date to delineate the time span of a decade.
+    """
+
     start_date = models.DateField(verbose_name=_('From'))
     end_date = models.DateField(verbose_name=_('To'))
 

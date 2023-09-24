@@ -11,6 +11,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class LandType(models.Model):
+
+    """
+    The LandType model is designed to store information about different types or categories of land. 
+    It includes a single field for the land type name (name).
+    """
+
     name = models.CharField(max_length=125, verbose_name=_("Land Type Name"))
 
     class Meta:
@@ -22,6 +28,12 @@ class LandType(models.Model):
 
 
 class Contour(BaseModel):
+
+    """
+    The Contour model is designed to store information about field contours or land parcels. 
+    It includes various fields for attributes such as SOATO codes, district associations, land types, and more.
+    """
+
     code_soato = models.CharField(max_length=30, null=True, blank=True, verbose_name=_("SOATO Code"))
     conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='contours', verbose_name=_("District"))
     type = models.ForeignKey(LandType, on_delete=models.SET_NULL, null=True, verbose_name=_("Land Type"),
@@ -62,6 +74,12 @@ class Contour(BaseModel):
 
 
 class Elevation(models.Model):
+
+    """
+    The Elevation model is designed to store elevation information associated with contours or land parcels. 
+    It includes fields for elevation values and geographic points.
+    """
+
     elevation = models.CharField(max_length=25, blank=True, null=True, verbose_name=_('Elevation'))
     point = models.PointField(verbose_name=_("Contour"), blank=True, null=True)
 

@@ -4,6 +4,11 @@ from gip.models import BaseModel
 
 
 class ProductivityML(BaseModel):
+    
+    """
+    The ProductivityML model is designed to store a machine learning model file used for productivity prediction.
+    """
+
     ml_model = models.FileField(upload_to='productivity/', verbose_name=_('Model'))
 
     class Meta:

@@ -10,6 +10,11 @@ from gip.models.district import District
 
 
 class Images_AI(models.Model):
+
+    """
+    The Images_AI model is designed to store image files used for AI-related processes in your Django application.
+    """
+
     image = models.ImageField(upload_to='images_ai', blank=True, verbose_name=_('Image'))
 
     class Meta:
@@ -18,6 +23,12 @@ class Images_AI(models.Model):
 
 
 class Contour_AI(models.Model):
+
+    """
+    The Contour_AI model is designed to store AI-detected contours of land features, 
+    including various attributes associated with these contours.
+    """
+
     conton = models.ForeignKey(Conton, on_delete=models.SET_NULL, related_name='contour_ai', null=True, blank=True,
                                verbose_name=_("Region"))
     type = models.ForeignKey(
@@ -56,6 +67,11 @@ class Contour_AI(models.Model):
 
 
 class Yolo(SingletonModel):
+
+    """
+    The Yolo model is designed to store a YOLO contour detection model, including the model file itself.
+    """
+
     ai = models.FileField(upload_to='models_ai/', verbose_name=_('Model'))
 
     class Meta:

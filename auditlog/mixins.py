@@ -14,18 +14,22 @@ from auditlog.models import LogEntry
 from auditlog.registry import auditlog
 from auditlog.signals import accessed
 
+# Maximum number of characters for field names
 MAX = 75
 
+# Mixin for enhancing the admin view of log entries
 class LogEntryAdminMixin:
     request: HttpRequest
     CID_TITLE = _("Click to filter by records with this correlation id")
 
+    # Display the creation timestamp in the user's local time
     @admin.display(description=_("Created"))
     def created(self, obj):
         if is_aware(obj.timestamp):
             return localtime(obj.timestamp)
         return obj.timestamp
 
+    # Display a link to the user's admin change page or "Admin Panel" if no user is associated
     @admin.display(description=_("User"))
     def user_url(self, obj):
         if obj.actor:
@@ -36,9 +40,9 @@ class LogEntryAdminMixin:
             except NoReverseMatch:
                 return "%s" % (obj.actor)
             return format_html('<a href="{}">{}</a>', link, obj.actor)
-
         return _("Admin Panel")
 
+    # Display a link to the admin change page of the associated resource (object)
     @admin.display(description=_("Resource URL"))
     def resource_url(self, obj):
         app_label, model = obj.content_type.app_label, obj.content_type.model
@@ -51,10 +55,9 @@ class LogEntryAdminMixin:
         else:
             code = self.request.LANGUAGE_CODE
             name = getattr(obj.content_type.get_object_for_this_type(pk=obj.object_id), f'name_{code}', obj.object_repr)
-            return format_html(
-                '<a href="{}">{} - {}</a>', link, obj.content_type.name, name
-            )
+            return format_html('<a href="{}">{} - {}</a>', link, obj.content_type.name, name)
 
+    # Display a summary of changes made in the log entry
     @admin.display(description=_("Changes"))
     def msg_short(self, obj):
         if obj.action in [LogEntry.Action.DELETE, LogEntry.Action.ACCESS]:
@@ -67,6 +70,7 @@ class LogEntryAdminMixin:
             fields = fields[:i] + " .."
         return "%d change%s: %s" % (len(changes), s, fields)
 
+    # Display detailed changes made in the log entry
     @admin.display(description=_("Changes"))
     def msg(self, obj):
         changes = obj.changes_dict
@@ -74,6 +78,7 @@ class LogEntryAdminMixin:
         atom_changes = {}
         m2m_changes = {}
 
+        # Split changes into atomic changes and many-to-many relationship changes
         for field, change in changes.items():
             if isinstance(change, dict):
                 assert (
@@ -119,6 +124,7 @@ class LogEntryAdminMixin:
 
         return mark_safe("".join(msg))
 
+    # Display a link to filter records with the same correlation ID
     @admin.display(description="Correlation ID")
     def cid_url(self, obj):
         cid = obj.cid
@@ -128,16 +134,19 @@ class LogEntryAdminMixin:
                 '<a href="{}" title="{}">{}</a>', url, self.CID_TITLE, cid
             )
 
+    # Format an HTML table header row
     def _format_header(self, *labels):
         return format_html(
             "".join(["<tr>", "<th>{}</th>" * len(labels), "</tr>"]), *labels
         )
 
+    # Format an HTML table row
     def _format_line(self, *values):
         return format_html(
             "".join(["<tr>", "<td>{}</td>" * len(values), "</tr>"]), *values
         )
 
+    # Get the verbose name of a field in a model or mapping_fields dictionary
     def field_verbose_name(self, obj, field_name: str):
         model = obj.content_type.model_class()
         if model is None:
@@ -156,12 +165,14 @@ class LogEntryAdminMixin:
         except FieldDoesNotExist:
             return pretty_name(field_name)
 
+    # Add a query parameter to the current request's URL
     def _add_query_parameter(self, key: str, value: str):
         full_path = self.request.get_full_path()
         delimiter = "&" if "?" in full_path else "?"
 
         return f"{full_path}{delimiter}{key}={value}"
 
+# Mixin for tracking access to objects
 class LogAccessMixin:
     def render_to_response(self, context, **response_kwargs):
         obj = self.get_object()

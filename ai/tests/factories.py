@@ -8,7 +8,7 @@ from gip.tests.factories import ContonFactory, LandTypeFactory, CultureFactory, 
 from indexes.models.actual_veg_index import PredictedContourVegIndex
 from culture_model.models import VegetationIndex
 
-
+# Factory for creating Contour_AI instances
 class Contour_AIFactory(DjangoModelFactory):
     conton = SubFactory(ContonFactory)
     polygon = get_polygon()
@@ -20,7 +20,7 @@ class Contour_AIFactory(DjangoModelFactory):
     class Meta:
         model = Contour_AI
 
-
+# Factory for creating Process instances
 class ProcessFactory(DjangoModelFactory):
     class Meta:
         model = Process
@@ -28,7 +28,7 @@ class ProcessFactory(DjangoModelFactory):
     is_running = True
     type_of_process = Faker().pyint()
 
-
+# Factory for creating VegetationIndex instances
 class VegetationIndexFactory(DjangoModelFactory):
     class Meta:
         model = VegetationIndex
@@ -36,7 +36,7 @@ class VegetationIndexFactory(DjangoModelFactory):
     name = Faker().pystr(max_chars=30)
     description = Faker().pystr(max_chars=30)
 
-
+# Factory for creating PredictedContourVegIndex instances
 class PredictedContourVegIndexFactory(DjangoModelFactory):
     class Meta:
         model = PredictedContourVegIndex
@@ -46,7 +46,7 @@ class PredictedContourVegIndexFactory(DjangoModelFactory):
     date = "2023-05-05"
     index = SubFactory(VegetationIndexFactory)
 
-
+# Factory for creating CreateDescription instances
 class CreateDescriptionFactory(DjangoModelFactory):
     
     class Meta:

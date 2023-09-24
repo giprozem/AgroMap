@@ -7,6 +7,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class IndexPlan(models.Model):
+
+    """
+    The IndexPlan model serves the purpose of defining and representing planned index values for specific cultural phases, decades, and regions. 
+    It allows you to specify the index value for a particular combination of culture, region, vegetation index, decade, and phase.
+    """
+
     culture = models.ForeignKey(Culture, on_delete=models.CASCADE, related_name='index_plans',
                                 verbose_name=_('Culture'))
     region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name='index_plans', verbose_name=_('Region'))

@@ -6,10 +6,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from ai.models.create_dataset import Dataset, Process, CreateDescription
 from account.models.account import Notifications
-
 from ai.serializers import CreateDescriptionSerializer
 
-
+# API view for creating datasets
 class CreateAPIView(APIView):
     permission_classes = (IsAdminUser,)
 
@@ -41,7 +40,7 @@ class CreateAPIView(APIView):
             }
         return Response({"message": message})
 
-
+# API view for getting dataset creation instructions
 class CreateDescriptionAPIView(APIView):
     permission_classes = (IsAdminUser,)
 

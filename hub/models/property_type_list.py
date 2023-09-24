@@ -4,6 +4,13 @@ from hub.models import BaseModel
 
 
 class PropertyTypeList(BaseModel):
+
+    """
+    The PropertyTypeList model is designed to store a list of property types or categories. 
+    It includes a field for the property type name (type_name) and inherits timestamp fields (created_at and updated_at) 
+    from the BaseModel abstract model.
+    """
+
     type_name = models.CharField(max_length=50, verbose_name=_('Name'))
 
     def __str__(self):

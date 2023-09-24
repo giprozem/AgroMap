@@ -18,24 +18,30 @@ from ai.utils.predicted_contour import clean_contour_and_create_district, predic
 from account.models.account import Notifications
 
 
+# API view for starting the predicted contour process
 class PredictedContourAPIView(APIView):
     def get(self, request):
+        # Create a new thread to run the predicted contour process
         thread_object = Thread(target=predicted_contour)
         thread_object.start()
         return Response('OK')
 
 
+# API view for starting the clean contour and create district process
 class CleanContourCreateDistrictView(APIView):
     def get(self, request):
+        # Create a new thread to run the clean contour and create district process
         thread_object = Thread(target=clean_contour_and_create_district)
         thread_object.start()
         return Response('OK')
 
 
+# API view for searching contours, requires admin user permissions
 class SearchAPIView(APIView):
     permission_classes = (IsAdminUser,)
 
     def get(self, request):
+        # Get the process status from the database
         process = Process.objects.get(id=1)
         if process.is_running:
             message = {
@@ -64,10 +70,13 @@ class SearchAPIView(APIView):
         return Response({"message": message})
 
 
+# Viewset for Contour_AI model
 class Contour_AIViewSet(viewsets.ModelViewSet):
+    # Queryset for fetching Contour_AI objects that are not deleted and ordered by id
     queryset = Contour_AI.objects.all().order_by('id').filter(is_deleted=False)
     serializer_class = Contour_AISerializer
 
+    # Define permission classes based on the action
     def get_permissions(self):
         if self.action == 'update' or self.action == 'partial_update' or self.action == 'destroy':
             permission_classes = [IsAdminUser]
@@ -79,6 +88,7 @@ class Contour_AIViewSet(viewsets.ModelViewSet):
             permission_classes = [AllowAny]
         return [permission() for permission in permission_classes]
 
+    # Custom update method
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
@@ -90,6 +100,7 @@ class Contour_AIViewSet(viewsets.ModelViewSet):
             instance._prefetched_objects_cache = {}
         return Response(serializer.data)
 
+    # Custom destroy method to mark the contour as deleted
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_deleted = True

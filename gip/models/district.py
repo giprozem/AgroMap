@@ -6,6 +6,12 @@ from django.utils.translation import gettext_lazy as _
 
 
 class District(BaseModel):
+
+    """
+    The District model is designed to store data related to administrative districts within a region. 
+    It includes fields for the district's SOATO code, region it belongs to, name, and a geographic polygon representing its contour.
+    """
+
     code_soato_vet = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name=_('Veterinary SOATO Code'))
     code_soato = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name=_("SOATO Code"))
     region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name='districts', verbose_name=_("Region"))

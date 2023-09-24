@@ -1,6 +1,6 @@
+# Import necessary libraries and models
 from django.db import connection
 import os
-
 from django.contrib.gis.geos import GEOSGeometry
 from shapely import geometry as shp
 from ai.models import Yolo, Contour_AI
@@ -12,8 +12,13 @@ import pandas as pd
 import numpy as np
 import rasterio
 
-
+# Define a function to predict contours using YOLO
 def predicted_contour():
+    """
+    This function is designed to detect the outlines of objects in images using the YOLO (You Only Look Once) model.
+    She starts by retrieving the YOLO model from the database, 
+    then iterates through the images in the 'media/TCI/' directory.
+    """
     # Fetch the YOLO model from the database
     file_yolo = Yolo.objects.get(id=1)
     # Initialize the YOLO model
@@ -211,7 +216,7 @@ def predicted_contour():
             except Exception as e:
                 print(e)
 
-
+# Define a function to clean contours and create districts
 def clean_contour_and_create_district():
     model_contour = Contour_AI.objects.all().order_by('id')
     for i in model_contour:
