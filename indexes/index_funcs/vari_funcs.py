@@ -8,6 +8,9 @@ from django.core.files.base import ContentFile
 
 
 def get_region_of_interest(vari, multiplier=1 / 2):
+    """
+    This function calculates the mean value of the Visible Atmospherically Resistant Index (VARI) for the center of an image.
+    """
     # undo the background adjustment
     region = np.where(vari == -255, 0, vari)
 
@@ -21,6 +24,9 @@ def get_region_of_interest(vari, multiplier=1 / 2):
 
 
 def get_vari(red_file, green_file, blue_file):
+    """
+    This function calculates the VARI using Red, Green, and Blue bands.
+    """
     with rasterio.open(red_file) as band_red:
         red = band_red.read(1).astype('float64')
 
@@ -39,6 +45,9 @@ def get_vari(red_file, green_file, blue_file):
 
 
 def vari_calculator(B02, B03, B04, saving_file_name):
+    """
+    This function visualizes and calculates VARI for the given Red, Green, and Blue bands and returns an image.
+    """
     with rasterio.open(f'{B02}') as blue:
         band_blue = blue.read(1)
 
@@ -77,4 +86,7 @@ def vari_calculator(B02, B03, B04, saving_file_name):
 
 
 def average_vari(red_file, green_file, blue_file):
+    """
+    This function calculates the average VARI for given Red, Green, and Blue images.
+    """
     return get_region_of_interest(get_vari(red_file=red_file, green_file=green_file, blue_file=blue_file))

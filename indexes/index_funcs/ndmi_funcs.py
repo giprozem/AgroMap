@@ -8,6 +8,9 @@ from django.core.files.base import ContentFile
 
 
 def get_region_of_interest(ndmi, multiplier=1 / 2):
+    """
+    This function calculates the mean value of the Normalized Difference Moisture Index (NDMI) for the center of an image.
+    """
     # undo the background adjustment
     region = np.where(ndmi == -255, 0, ndmi)
 
@@ -21,6 +24,9 @@ def get_region_of_interest(ndmi, multiplier=1 / 2):
 
 
 def get_ndmi(swir_file, nir_file):
+    """
+    This function calculates the NDMI for given Short-Wave Infrared (SWIR) and Near Infrared (NIR) images.
+    """
     with rasterio.open(swir_file) as band_swir:
         swir = band_swir.read(1).astype('float64')
     with rasterio.open(nir_file) as band_nir:
@@ -34,6 +40,9 @@ def get_ndmi(swir_file, nir_file):
 
 
 def ndmi_calculator(B08, B11, saving_file_name):
+    """
+    This function visualizes and calculates NDMI for given SWIR and NIR bands, and returns an image.
+    """
     with rasterio.open(f'{B11}') as src:
         band_swir = src.read(1)
 
@@ -67,4 +76,7 @@ def ndmi_calculator(B08, B11, saving_file_name):
 
 
 def average_ndmi(swir_file, nir_file):
+    """
+    This function calculates the average NDMI for given SWIR and NIR images.
+    """
     return get_region_of_interest(get_ndmi(swir_file=swir_file, nir_file=nir_file))
