@@ -12,6 +12,12 @@ from indexes.utils import veg_index_creating
 
 @receiver(post_save, sender=SciHubImageDate)
 def creating_indexes_to_uploaded_image(sender, instance, created, **kwargs):
+    """
+    Signal handler that gets executed post the saving of a SciHubImageDate instance. If the instance was created,
+    it spawns a new thread to create vegetation indices based on the uploaded image.
+    """
+
     if created:
         thread_obj = Thread(target=veg_index_creating, args=(instance, Contour, IndexCreatingReport, ActualVegIndex))
         thread_obj.start()
+

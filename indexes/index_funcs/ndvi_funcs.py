@@ -8,6 +8,9 @@ from django.core.files.base import ContentFile
 
 
 def get_region_of_interest(ndvi, multiplier=1 / 2):
+    """
+    This function calculates the mean value of the Normalized Difference Vegetation Index (NDVI) for the center of an image.
+    """
     # undo the background adjustment
     region = np.where(ndvi == -255, 0, ndvi)
 
@@ -21,6 +24,9 @@ def get_region_of_interest(ndvi, multiplier=1 / 2):
 
 
 def get_ndvi(red_file, nir_file):
+    """
+    This function calculates the NDVI for given Red and Near Infrared (NIR) images.
+    """
     with rasterio.open(red_file) as band_red:
         red = band_red.read(1).astype('float64')
 
@@ -35,6 +41,9 @@ def get_ndvi(red_file, nir_file):
 
 
 def ndvi_calculator(B04, B08, saving_file_name):
+    """
+    This function visualizes and calculates NDVI for given Red and NIR bands, and returns an image.
+    """
     with rasterio.open(f'{B04}') as src:
         band_red = src.read(1)
 
@@ -68,4 +77,7 @@ def ndvi_calculator(B04, B08, saving_file_name):
 
 
 def average_ndvi(red_file, nir_file):
+    """
+    This function calculates the average NDVI for given Red and NIR images.
+    """
     return get_region_of_interest(get_ndvi(red_file=red_file, nir_file=nir_file))

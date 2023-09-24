@@ -1,5 +1,3 @@
-from threading import Thread
-
 import matplotlib.pyplot as plt
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -10,6 +8,10 @@ from drf_yasg.utils import swagger_auto_schema
 
 
 class CreatingAverage(APIView):
+    """
+    API endpoint that creates an average contour value between a given start and end range.
+    """
+
     @swagger_auto_schema(
         operation_summary='for now do not required for front'
     )
@@ -21,6 +23,7 @@ class CreatingAverage(APIView):
         - end
         """
 
+        # Start and end range values.
         start = self.request.query_params['start']
         end = self.request.query_params['end']
 

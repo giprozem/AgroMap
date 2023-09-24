@@ -8,6 +8,9 @@ from django.core.files.base import ContentFile
 
 
 def get_region_of_interest(ndre, multiplier=1 / 2):
+    """
+    This function calculates the mean value of the Normalized Difference Red Edge (NDRE) for the center of an image.
+    """
     # undo the background adjustment
     region = np.where(ndre == -255, 0, ndre)
 
@@ -21,6 +24,9 @@ def get_region_of_interest(ndre, multiplier=1 / 2):
 
 
 def get_ndre(red_file, nir_file):
+    """
+    This function calculates the NDRE for given Red and Near Infrared (NIR) images.
+    """
     with rasterio.open(red_file) as band_red:
         red = band_red.read(1).astype('float64')
 
@@ -35,6 +41,9 @@ def get_ndre(red_file, nir_file):
 
 
 def ndre_calculator(B07, B8A, saving_file_name):
+    """
+    This function visualizes and calculates NDRE for given Red and NIR bands, and returns an image.
+    """
     with rasterio.open(f'{B07}') as src:
         band_red = src.read(1)
 
@@ -68,4 +77,7 @@ def ndre_calculator(B07, B8A, saving_file_name):
 
 
 def average_ndre(red_file, nir_file):
+    """
+    This function calculates the average NDRE for given Red and NIR images.
+    """
     return get_region_of_interest(get_ndre(red_file=red_file, nir_file=nir_file))

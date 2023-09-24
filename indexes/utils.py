@@ -18,36 +18,66 @@ from indexes.models import IndexMeaning
 
 
 def remove_file(file_path):
+    """
+        Remove a file from the filesystem if it exists.
+
+        Parameters:
+    -    - file_path (str): The path of the file to be deleted.
+    """
     if os.path.isfile(file_path):
         os.remove(file_path)
 
 
 def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_index_obj):
+    """
+    This function is designed to process a given satellite image, extract various vegetation indices for specified contours,
+    and save the processed results along with any errors encountered during processing.
+
+    Parameters:
+    - satellite_image: A satellite image object that covers a certain geographical area and contains various spectral bands.
+    - contour_obj: Contour model that represents geographical boundaries.
+    - creating_report_obj: Model for logging the processing reports, including any errors.
+    - veg_index_obj: Vegetation index model used to store the computed vegetation index values.
+    """
+
+    # Fetch all the contours that are covered by the provided satellite image.
     contours = contour_obj.objects.filter(polygon__coveredby=satellite_image.polygon)
+
+    # Beginning of main processing. Exception handling is used extensively to log errors in the processing report.
     try:
         for contour in contours:
+            # Convert the contour's polygon into GeoJSON format.
             polygon = GEOSGeometry(contour.polygon).geojson
+            # Constructing the unique file name for each contour and satellite image pair.
             file_name = f'temporary_file_{contour.id}-satellite_image-{satellite_image.id}'
+            # Specifying the paths where the clipped satellite images for different bands will be saved.
             output_path_tcl = f"./media/TCL_{file_name}.tiff"
             output_path_b02 = f"./media/B02_{file_name}.tiff"
             output_path_b03 = f"./media/B03_{file_name}.tiff"
             output_path_b04 = f"./media/B04_{file_name}.tiff"
             output_path_b08 = f"./media/B08_{file_name}.tiff"
 
+            # GDAL is used for geospatial operations, and we set it to raise Python exceptions for any errors.
             gdal.UseExceptions()
             tci_error = []
+
+            # The following block tries to clip the satellite image's TCI band using the contour's polygon.
+            # Errors in this process are captured and logged.
             try:
                 cutting_tiff(
                     outputpath=output_path_tcl,
                     inputpath=f".{satellite_image.TCI.url.replace('mediafiles', 'media')}",
                     polygon=polygon, x_res=10, y_res=10
                 )
+                # The block below checks if more than 20% of the clipped TCI image is white (indicating clouds or snow).
+                # If so, the process is aborted and the issue is logged.
                 try:
                     image = cv2.imread(output_path_tcl, cv2.IMREAD_GRAYSCALE)
                     white = np.sum(image == 255)
                     size = image.shape[0] * image.shape[1]
                     percent = white / size * 100
                     if percent > 20:
+                        # (Code related to processing the image and checking for white pixels)
                         creating_report_obj.objects.create(
                             contour_id=contour.id,
                             is_processed=False,
@@ -55,6 +85,8 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             process_error=f'In satellite image {percent}% snow or clouds. Or {tci_error}'
                         )
                     else:
+                        # If the TCI image is valid, we proceed to clip the other spectral bands.
+                        # Errors during this process are captured and logged.
                         cutting_error = []
                         try:
                             cutting_tiff(
@@ -187,6 +219,9 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
             remove_file(output_path_b04)
             remove_file(output_path_b08)
             remove_file(output_path_tcl)
+
+    # If there are no contours within the satellite image's coverage, or any other unforeseen error occurs,
+    # it is captured and logged.
     except Exception as e:
         creating_report_obj.objects.create(
             contour_id=None,

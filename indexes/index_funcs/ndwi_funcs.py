@@ -8,6 +8,9 @@ from django.core.files.base import ContentFile
 
 
 def get_region_of_interest(ndwi, multiplier=1 / 2):
+    """
+    This function calculates the mean value of the Normalized Difference Water Index (NDWI) for the center of an image.
+    """
     # undo the background adjustment
     region = np.where(ndwi == -255, 0, ndwi)
 
@@ -21,6 +24,9 @@ def get_region_of_interest(ndwi, multiplier=1 / 2):
 
 
 def get_ndwi(green_file, nir_file):
+    """
+    This function calculates the NDWI using Green and Near Infrared (NIR) bands.
+    """
     with rasterio.open(green_file) as band_green:
         green = band_green.read(1).astype('float64')
 
@@ -35,6 +41,9 @@ def get_ndwi(green_file, nir_file):
 
 
 def ndwi_calculator(B03, B08, saving_file_name):
+    """
+    This function visualizes and calculates NDWI for the given Green and NIR bands and returns an image.
+    """
     with rasterio.open(f'{B03}') as src:
         band_green = src.read(1)
 
@@ -68,4 +77,7 @@ def ndwi_calculator(B03, B08, saving_file_name):
 
 
 def average_ndwi(green_file, nir_file):
+    """
+    This function calculates the average NDWI for given Green and NIR images.
+    """
     return get_region_of_interest(get_ndwi(green_file=green_file, nir_file=nir_file))

@@ -8,6 +8,9 @@ from django.core.files.base import ContentFile
 
 
 def get_region_of_interest(savi, multiplier=1 / 2):
+    """
+    This function calculates the mean value of the Soil Adjusted Vegetation Index (SAVI) for the center of an image.
+    """
     # undo the background adjustment
     region = np.where(savi == -255, 0, savi)
 
@@ -21,6 +24,9 @@ def get_region_of_interest(savi, multiplier=1 / 2):
 
 
 def get_savi(red_file, nir_file, L=0.5):
+    """
+    This function calculates the SAVI using Red and Near Infrared (NIR) bands with a given soil brightness correction factor, L.
+    """
     with rasterio.open(red_file) as band_red:
         red = band_red.read(1).astype('float64')
 
@@ -36,6 +42,9 @@ def get_savi(red_file, nir_file, L=0.5):
 
 
 def savi_calculator(B04, B08, saving_file_name, L=0):
+    """
+    This function visualizes and calculates SAVI for the given Red and NIR bands and returns an image.
+    """
     with rasterio.open(f'{B04}') as src:
         band_red = src.read(1)
 
@@ -69,4 +78,7 @@ def savi_calculator(B04, B08, saving_file_name, L=0):
 
 
 def average_savi(red_file, nir_file):
+    """
+    This function calculates the average SAVI for given Red and NIR images.
+    """
     return get_region_of_interest(get_savi(red_file=red_file, nir_file=nir_file))

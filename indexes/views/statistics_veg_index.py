@@ -1,4 +1,3 @@
-from drf_yasg import openapi
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -8,6 +7,9 @@ from drf_yasg.utils import swagger_auto_schema
 
 
 class ContourAPIView(APIView):
+    """
+    API endpoint that retrieves contour statistics based on start and end dates.
+    """
 
     @swagger_auto_schema(
         operation_summary='do not required for front'
@@ -32,6 +34,10 @@ class ContourAPIView(APIView):
 
 
 class ContourProductivityPredictAPIView(APIView):
+    """
+    API endpoint that retrieves the predicted productivity of a contour based on its ID.
+    """
+
     @swagger_auto_schema(
         operation_summary='do not required for front'
     )

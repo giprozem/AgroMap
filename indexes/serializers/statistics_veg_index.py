@@ -5,6 +5,9 @@ from indexes.models.actual_veg_index import ActualVegIndex
 
 
 class VegIndexSerializer(serializers.ModelSerializer):
+    """
+    A compact serializer for the ActualVegIndex model, specifically extracting the name of the index, its average value, and date.
+    """
     index = serializers.CharField(source='index.name')
 
     class Meta:
@@ -12,7 +15,18 @@ class VegIndexSerializer(serializers.ModelSerializer):
         fields = ('index', 'average_value', 'date',)
 
 
+"""
+A serializer for the Contour model that excludes various fields. Additionally, it provides a custom representation which
+incorporates data from associated VegIndex models.
+"""
+
+
 class ContourStatisticsSerializer(serializers.ModelSerializer):
+    """
+    A custom representation of the Contour instance which enhances the basic serialized data with additional vegetation index
+    information.
+    """
+
     class Meta:
         model = Contour
         exclude = (
