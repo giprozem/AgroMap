@@ -1,5 +1,7 @@
 # 📂 **Scripts Directory Structure**
 
+-----
+
 #### This directory structure contains scripts for various tasks related to satellite image processing, GeoServer integration, and image download and processing.
 
 ```
