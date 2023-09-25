@@ -26,9 +26,6 @@ This project is designed for the identification of contours, crops, and crop yie
 
 # Navigation
 
-1. [Introduction](/README.md)
-2. [Project Architecture](/docs/project_architecture.md)
-3. [Usage](/docs/USAGE.md)
-4. [For developers](/docs/for_developer/)
-5. [Admin panel](/docs/admin/)
-
+1. **[Introduction](/README.md/)**
+2. **[Project Architecture](/docs/project_architecture.md/)**
+3. **[Navigation for developers](/docs/navigation.md/)**

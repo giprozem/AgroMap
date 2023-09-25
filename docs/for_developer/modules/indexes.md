@@ -1,5 +1,6 @@
 # 📂 *Indexes App*
 
+-----
 ```
 📁 **indexes**
 ├── 📁 admin

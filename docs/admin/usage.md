@@ -13,19 +13,19 @@ Documentation for using the "AgroMap" administrative panel.
 
 To use the administrative panel, you need to log in.
 
-![alt-текст](/docs/en/images/admin/login.png)
+![alt-текст](../admin/images/admin/login.png)
 
 Enter the administrator's username and password. After that, you will be redirected to the main page.
 
 ## Main Page
 
-![alt-текст](/docs/en/images/admin/main-page.png)
+![alt-текст](../admin/images/admin/main-page.png)
 
 You can also change the language or log out by clicking on the corresponding tabs in the upper right corner.
 
 On the left side of the panel, there is navigation for objects and categories.
 
-![alt-текст](/docs/en/images/admin/verbose.png)
+![alt-текст](../admin/images/admin/verbose.png)
 
 ## Creating a Contour
 
@@ -37,7 +37,7 @@ Note: You need to maintain the hierarchy of objects, meaning you need to specify
 
 Select the "Field Contours" object on the left side and click "Add Field Contours." You will be taken to the contour creation page.
 
-![alt-текст](/docs/en/images/admin/contour-form.png)
+![alt-текст](../admin/images/admin/contour-form.png)
 
 Fill in the necessary data; required fields will be marked with a red asterisk *. The vegetation type will be automatically determined if the data about the type is available in the database.
 
@@ -73,7 +73,7 @@ Usually, there is no need to create a new soil type, but if necessary, follow th
 
 This object relates to soil types and is used to indicate contours of different soil types on the map.
 
-![alt-текст](/docs/en/images/admin/land-contour.png)
+![alt-текст](../admin/images/admin/land-contour.png)
 
 #### Creating Crops
 
@@ -105,13 +105,13 @@ Also, there is usually no need to create a new object, but if necessary, follow 
 
 Sentinel-2 satellite images are an important tool for various applications in agriculture. Sentinel-2 satellite images allow agronomists and farmers to monitor crop conditions, assess productivity, control diseases and pests, and optimize the use of resources such as water and fertilizers.
 
-![alt-текст](/docs/en/images/admin/sent-bar.png)
+![alt-текст](../admin/images/admin/sent-bar.png)
 
 ### Creating Satellite Image Objects
 
 To create a new object, go to the object list and click "Add..." Fill in the required fields in the form.
 
-![alt-текст](/docs/en/images/admin/sent-image.png)
+![alt-текст](../admin/images/admin/sent-image.png)
 
 "Layer or layers" refers to an image layer from a collection of images downloaded from https://dataspace.copernicus.eu/.
 
@@ -143,4 +143,4 @@ To create a new object, go to the list of objects and click "Add...". Fill in th
 
 Create objects located in the "AI" category. The name corresponds to the functionality.
 
-![alt-текст](/docs/en/images/admin/ai-bar.png)
+![alt-текст](../admin/images/admin/ai-bar.png)

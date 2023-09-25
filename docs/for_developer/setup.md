@@ -9,28 +9,28 @@ To work correctly, you need to configure the following environment variables in 
 Fill in `Your Value` with the appropriate values you want to use for each variable.
 
 ```shell
-    POSTGRES_DB=Your Value
-    POSTGRES_USER=Your Value
-    POSTGRES_PASSWORD=Your Value
-    POSTGRES_HOST=Your Value
-    POSTGRES_PORT=Your Value
-    ALLOWED_HOSTS=Your Value
-    SECRET_KEY=Your Value
-    SCI_HUB_USERNAME_V2=Your Value
-    SCI_HUB_PASSWORD_V2=Your Value
+   POSTGRES_DB=POSTGRES_DB
+   POSTGRES_USER=POSTGRES_USER
+   POSTGRES_PASSWORD=POSTGRES_PASSWORD
+   POSTGRES_HOST=POSTGRES_HOST
+   POSTGRES_PORT=POSTGRES_PORT
+   ALLOWED_HOSTS=ALLOWED_HOSTS
+   SECRET_KEY=SECRET_KEY
+   CSRF_TRUSTED_ORIGINS=CSRF_TRUSTED_ORIGINS
+   KAFKA_HOST_PORT=ip_address:port
 ```
 
 ## Starting the application
 
 1. First, you should clone the repository to your machine. If you haven't done this yet, execute the following command:
     ```
-    git clone https://gitlab.com/agromap_giprozem/backend.git
+    git clone https://github.com/giprozem/AgroMap.git
     ```
 
 2. Navigate into the project folder:
 
     ```
-    cd backend
+    cd AgroMap
     ```
 
 3. Run Docker Compose:
