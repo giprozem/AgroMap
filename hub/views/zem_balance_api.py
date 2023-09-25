@@ -35,7 +35,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from hub.models import LandInfo
 from hub.serializers.land_info import ZemBalanceSerializers
-from hub.views.handbook_asr import propform, proptype, propforuse, propfor, propstatus
+# from hub.views.handbook_asr import propform, proptype, propforuse, propfor, propstatus
 
 
 class ZemBalanceViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,

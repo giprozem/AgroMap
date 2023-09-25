@@ -8,7 +8,7 @@ from ai.views.predict_culture import PivotTableCulture
 from ai.views.create_dataset import CreateAPIView, CreateDescriptionAPIView
 from ai.views.predicted_contour import SearchAPIView, Contour_AIViewSet, Contour_AIInScreen, PredictedContourAPIView, \
     CleanContourCreateDistrictView
-from ai.views.productivity import PredictingProductivityAPIVie
+from ai.views.productivity import PredictingProductivityAPIView
 
 # Create a DefaultRouter for API endpoints
 router = DefaultRouter()
@@ -32,7 +32,7 @@ urlpatterns = [
     path('pivot_table_culture/', PivotTableCulture.as_view()),
 
     # Endpoint for predicting productivity
-    path('predict-productivity/', PredictingProductivityAPIVie.as_view()),
+    path('predict-productivity/', PredictingProductivityAPIView.as_view()),
 
     # Endpoint for displaying a heat map
     path('heat-map/', HeatMapAPIView.as_view()),
