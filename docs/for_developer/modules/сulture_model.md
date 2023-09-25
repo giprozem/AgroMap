@@ -1,5 +1,6 @@
 # 📂 **Culture Model App**
 
+-----
 ```
 📁 **culture_model**
 │

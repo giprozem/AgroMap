@@ -24,7 +24,7 @@ Fill in `Your Value` with the appropriate values you want to use for each variab
 
 1. First, you should clone the repository to your machine. If you haven't done this yet, execute the following command:
     ```
-    git clone https://gitlab.com/agromap_giprozem/backend.git
+    git clone https://github.com/giprozem/AgroMap.git
     ```
 
 2. Navigate into the project folder:

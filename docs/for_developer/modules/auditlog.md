@@ -1,5 +1,6 @@
-# 📂 **Account App**
+# 📂 **AI App**
 
+-----
 ```
 📁 **auditlog**
 │

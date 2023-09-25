@@ -162,8 +162,8 @@
 │   │   ├── 📄 region.py
 │   │   ├── 📄 shapefile.py
 │   │   ├── 📄 soil.py
-│   │   ├── 📄 statistics.py
-│   │   └── 📄 ...
+│   │   └── 📄 statistics.py
+│   │
 │   ├── 📄 apps.py
 │   ├── 📄 signals.py
 │   ├── 📄 translation.py
@@ -196,8 +196,8 @@
 │   │   ├── 📄 handbook_asr.py
 │   │   ├── 📄 land_info.py
 │   │   ├── 📄 veterinary_service.py
-│   │   ├── 📄 zem_balance_api.py
-│   │   └── 📄 ...
+│   │   └── 📄 zem_balance_api.py
+│   │    
 │   ├── 📄 apps.py
 │   └── 📄 urls.py
 │
@@ -209,8 +209,7 @@
 │   ├── 📄 cron_geoserver.py
 │   ├── 📄 heat_map_ndvi.py
 │   ├── 📄 kafka_consumer.py
-│   ├── 📄 productivity_contour.py
-│   └── 📄 ...
+│   └── 📄 productivity_contour.py
 │
 ├── 📄 docker-compose.yml
 ├── 📄 Dockerfile
