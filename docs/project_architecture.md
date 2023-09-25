@@ -1,3 +1,7 @@
+# 📂 **Project Architecture**
+
+-----
+
 ```
 📂 **AgroMap**
 │
@@ -219,3 +223,9 @@
 ├── 📄 .dockerignore
 └── 📄 requirements.txt
 ```
+
+### Navigation
+
+---
+1. **[Introduction](../README.md/)**
+2. **[Navigation for developers](../docs/navigation.md/)**
