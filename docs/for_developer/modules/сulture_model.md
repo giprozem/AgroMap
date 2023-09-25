@@ -1,33 +1,35 @@
 # 📂 **Culture Model App**
 
 ```
-culture_model/
-├── 📁 admin/
-    ├── 📄 common.py
-    ├── 📄 pasture_culture.py
-
-├── 📁 migrations/
-├── 📁 models/
-    ├── 📄 decade.py
-    ├── 📄 index_plan.py
-    ├── 📄 pasture_culture.py
-    ├── 📄 phase.py
-    ├── 📄 vegetation_index.py
-
-├── 📁 serializers/
-    ├── 📄 index.py
-
-├── 📁 tests/
-    ├── 📄 factories.py
-    ├── 📄 tests.py
-
-├── 📁 views/
-    ├── 📄 veg_indexes.py.py
-
+📁 **culture_model**
+│
+├── 📁 admin
+│   ├── 📄 common.py
+│   └── 📄 pasture_culture.py
+│
+├── 📁 migrations
+│
+├── 📁 models
+│   ├── 📄 decade.py
+│   ├── 📄 index_plan.py
+│   ├── 📄 pasture_culture.py
+│   ├── 📄 phase.py
+│   └── 📄 vegetation_index.py
+│
+├── 📁 serializers
+│   └── 📄 index.py
+│
+├── 📁 tests
+│   ├── 📄 factories.py
+│   └── 📄 tests.py
+│
+├── 📁 views
+│   └── 📄 veg_indexes.py
+│
 ├── 📄 apps.py
 ├── 📄 authentication.py
 ├── 📄 translation.py
-├── 📄 urls.py
+└── 📄 urls.py
 ```
 
 ## 📁 **Admin folder**

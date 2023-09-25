@@ -10,7 +10,6 @@ from account.models.account import MyUser
 
 
 class AuthenticatedViewTestCase(APITestCase):
-    
     # URL endpoint that will be tested
     _URL_ = "/hub/login_hub/"
 
@@ -41,7 +40,7 @@ class AuthenticatedViewTestCase(APITestCase):
     def test_authenticate_view_response_content(self):
         # Generate or fetch a token for the user
         token, created = Token.objects.get_or_create(user=self.user)
-        
+
         # Set the expected response content
         response_content = {
             "token": token.key,
@@ -50,10 +49,10 @@ class AuthenticatedViewTestCase(APITestCase):
             "is_superuser": self.user.is_superuser,
             "is_active": self.user.is_active,
         }
-        
+
         request_body = self._set_request_content()
         response = self.client.post(self._URL_, request_body)
-        
+
         # Assert that the expected response matches the actual response data
         self.assertEqual(response_content, response.data)
 

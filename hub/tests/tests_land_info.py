@@ -7,9 +7,6 @@ from django.contrib.auth import get_user_model
 # Import the required functions, models, and factories
 from elevation.data import elevation
 from hub.models.land_info import LandInfo
-from gip.models.conton import Conton
-from gip.models.district import District
-from gip.models.region import Region
 from gip.tests.factories import ContonFactory
 
 # Fetching the default user model
@@ -17,8 +14,8 @@ User = get_user_model()
 
 TEST_DIR = "test_data"
 
+
 class CultureTests(APITestCase):
-    
     _URL_ = "/hub/elevation/"  # URL endpoint for testing
     reponse_data = None
     # Dictionary holding latitude and longitude coordinates for testing
@@ -46,8 +43,8 @@ class CultureTests(APITestCase):
             self.reponse_data.get("elevation"), response_data.get("elevation")
         )
 
+
 class LandInfoSearchTestCase(APITestCase):
-    
     _URL_ = "/hub/search_ink_hub/"  # URL endpoint for testing
 
     def setUp(self) -> None:
@@ -66,8 +63,8 @@ class LandInfoSearchTestCase(APITestCase):
         response = self.client.get(self._URL_, {"search": "test"})
         self.assertEqual(len(response.data.get("list_ink_code")), 1)
 
+
 class AmountCattleApiTestCase(APITestCase):
-    
     _URL_ = "/hub/amount_cattle/"  # URL endpoint for testing
 
     def setUp(self) -> None:

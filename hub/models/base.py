@@ -3,7 +3,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 class BaseModel(models.Model):
-
     """
     The BaseModel abstract model is designed to provide common fields for tracking the creation and last update timestamps for records in models that inherit from it. 
     It serves as a foundation for other models, allowing them to inherit these timestamp fields without repeating the code.
@@ -14,4 +13,3 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
-

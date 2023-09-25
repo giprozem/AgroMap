@@ -4,7 +4,6 @@ from hub.models import BaseModel
 
 
 class LandTypeList(BaseModel):
-
     """
     The LandTypeList model is designed to store a list of land types or categories. 
     It includes a field for the land type name (type_name) and inherits timestamp fields (created_at and updated_at) 
