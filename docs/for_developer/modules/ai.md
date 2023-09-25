@@ -2,47 +2,50 @@
 ## 📁 **Admin folder**
 
 ```
-ai
-├── 📁 admin/
-    ├──📄 create_dataset.py
-    ├──📄 predicted_contour.py
-    ├──📄 productivity.py
-
-├── 📁 culture_Ai/
-    ├──📄 predicted_contour.py
-
-├── 📁 migrations/
-├── 📁 models/
-    ├──📄 create_dataset.py
-    ├──📄 predicted_contour.py
-    ├──📄 productivity.py
-├── 📁productivity_funcs
-    ├──📄 predicting.py
-
-├── 📁 serializers/
-    ├──📄 create_dataset.py
-    ├──📄 predicted_contour.py
-    ├──📄 productivity.py
-
-├── 📁 tests/
-    ├──📄 factories.py
-    ├──📄 tests.py
-
-├── 📁 utils/
-    ├──📄 create_dataset.py
-    ├──📄 predicted_contour.py
-
-├── 📁 views/
-    ├──📄 create_dataset.py
-    ├──📄 heat_map_ndvi.py
-    ├──📄 predict_culture.py
-    ├──📄 predicted_contour.py
-    ├──📄 productivity.py
-
+📁 **ai**
+│
+├── 📁 admin
+│   ├── 📄 create_dataset.py
+│   ├── 📄 predicted_contour.py
+│   └── 📄 productivity.py
+│
+├── 📁 culture_AI
+│   └── 📄 predicted_contour.py
+│
+├── 📁 migrations
+│
+├── 📁 models
+│   ├── 📄 create_dataset.py
+│   ├── 📄 predicted_contour.py
+│   └── 📄 productivity.py
+│
+├── 📁 productivity_funcs
+│   └── 📄 predicting.py
+│
+├── 📁 serializers
+│   ├── 📄 create_dataset.py
+│   ├── 📄 predicted_contour.py
+│   └── 📄 productivity.py
+│
+├── 📁 tests
+│   ├── 📄 factories.py
+│   └── 📄 tests.py
+│
+├── 📁 utils
+│   ├── 📄 create_dataset.py
+│   └── 📄 predicted_contour.py
+│
+├── 📁 views
+│   ├── 📄 create_dataset.py
+│   ├── 📄 heat_map_ndvi.py
+│   ├── 📄 predict_culture.py
+│   ├── 📄 predicted_contour.py
+│   └── 📄 productivity.py
+│
 ├── 📄 apps.py
 ├── 📄 authentication.py
 ├── 📄 translation.py
-├── 📄 urls.py
+└── 📄 urls.py
 ```
 
 Django's **Admin** 🛠 is a robust and customizable tool that provides an interface for managing your app's content. The "Ai" application uses the "admin" folder to oversee user data.

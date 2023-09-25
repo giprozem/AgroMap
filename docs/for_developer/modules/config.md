@@ -1,11 +1,13 @@
 # 📂 **Config**
 
 ```
-config/
+📁 **config**
+│
 ├── 📄 asgi.py
 ├── 📄 settings.py
 ├── 📄 urls.py
-├── 📄 wsgi.py
+└── 📄 wsgi.py
+
 ```
 
 These directories are important components of the Django application structure and help manage settings, database, and other aspects of your web project.

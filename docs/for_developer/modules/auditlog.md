@@ -1,11 +1,13 @@
 # 📂 **Account App**
 
 ```
-auditlog/
-├── 📁 management/
-    ├── 📁 commands/
-        ├── 📄 auditlogflush.py
-        ├── 📄 auditlogmigratejson.py
+📁 **auditlog**
+│
+├── 📁 management
+│   └── 📁 commands
+│       ├── 📄 auditlogflush.py
+│       └── 📄 auditlogmigratejson.py
+│
 ├── 📄 admin.py
 ├── 📄 apps.py
 ├── 📄 cid.py
@@ -18,8 +20,7 @@ auditlog/
 ├── 📄 models.py
 ├── 📄 receivers.py
 ├── 📄 registry.py
-├── 📄 signals.py
-
+└── 📄 signals.py
 ```
 
 ## 📁 **Management folder**

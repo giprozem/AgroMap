@@ -1,7 +1,7 @@
 # 📂 *Indexes App*
 
 ```
-📁 indexes
+📁 **indexes**
 ├── 📁 admin
 │   ├── 📄 actual_veg_index.py
 │   ├── 📄 forms.py
