@@ -2,7 +2,6 @@
 
 ---
 1. [Introduction](/README.md/)
-2. [Usage](/docs/for_developer/USAGE.md/)
-3. [For developers](/docs/for_developer/)
-4. [Modules](/docs/for_developer/modules/)
-5. [Admin panel](/docs/admin/usage.md/)
+2. [Development setup](../docs/for_developer/setup.md/)
+3. [Modules](../docs/for_developer/modules/)
+4. [User manual](/docs/admin/usage.md/)

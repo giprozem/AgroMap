@@ -9,15 +9,22 @@ To work correctly, you need to configure the following environment variables in 
 Fill in `Your Value` with the appropriate values you want to use for each variable.
 
 ```shell
-    POSTGRES_DB=Your Value
-    POSTGRES_USER=Your Value
-    POSTGRES_PASSWORD=Your Value
-    POSTGRES_HOST=Your Value
-    POSTGRES_PORT=Your Value
-    ALLOWED_HOSTS=Your Value
-    SECRET_KEY=Your Value
-    SCI_HUB_USERNAME_V2=Your Value
-    SCI_HUB_PASSWORD_V2=Your Value
+   POSTGRES_DB=POSTGRES_DB
+   POSTGRES_USER=POSTGRES_USER
+   POSTGRES_PASSWORD=POSTGRES_PASSWORD
+   POSTGRES_HOST=POSTGRES_HOST
+   POSTGRES_PORT=POSTGRES_PORT
+   ALLOWED_HOSTS=ALLOWED_HOSTS
+   SECRET_KEY=SECRET_KEY
+   SCI_HUB_USERNAME_V2=username_dataspace_copernicus
+   SCI_HUB_PASSWORD_V2=password_dataspace_copernicus
+   CSRF_TRUSTED_ORIGINS=CSRF_TRUSTED_ORIGINS
+   KAFKA_HOST_PORT=ip_address:port
+   USERNAME_GEOSERVER=USERNAME_GEOSERVER
+   PASSWORD_GEOSERVER=PASSWORD_GEOSERVER
+   URL_GEOSERVER=URL_GEOSERVER
+   KAFKA_HOST_PORT=ip_address:port
+   VET_SERVICE_URL=VET_SERVICE_URL
 ```
 
 ## Starting the application
