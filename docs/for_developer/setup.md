@@ -16,15 +16,8 @@ Fill in `Your Value` with the appropriate values you want to use for each variab
    POSTGRES_PORT=POSTGRES_PORT
    ALLOWED_HOSTS=ALLOWED_HOSTS
    SECRET_KEY=SECRET_KEY
-   SCI_HUB_USERNAME_V2=username_dataspace_copernicus
-   SCI_HUB_PASSWORD_V2=password_dataspace_copernicus
    CSRF_TRUSTED_ORIGINS=CSRF_TRUSTED_ORIGINS
    KAFKA_HOST_PORT=ip_address:port
-   USERNAME_GEOSERVER=USERNAME_GEOSERVER
-   PASSWORD_GEOSERVER=PASSWORD_GEOSERVER
-   URL_GEOSERVER=URL_GEOSERVER
-   KAFKA_HOST_PORT=ip_address:port
-   VET_SERVICE_URL=VET_SERVICE_URL
 ```
 
 ## Starting the application
@@ -37,7 +30,7 @@ Fill in `Your Value` with the appropriate values you want to use for each variab
 2. Navigate into the project folder:
 
     ```
-    cd backend
+    cd AgroMap
     ```
 
 3. Run Docker Compose:
