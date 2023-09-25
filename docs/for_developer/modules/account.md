@@ -1,29 +1,31 @@
 # 📂 **Account App**
 
 ```
-account
-├── 📁 admin/
-    ├── 📄 account.py
-
-├── 📁 migrations/
-├── 📁 models/
-    ├── 📄 account.py
-
-├── 📁 serializers/
-    ├── 📄 authentication.py
-
-├── 📁 tests/
-    ├── 📄 factories.py
-    ├── 📄 test_admin.py
-    ├── 📄 tests.py
-
-├── 📁 views/
-    ├── 📄 authentication.py
-
+📁 **account**
+│
+├── 📁 admin
+│   └── 📄 account.py
+│
+├── 📁 migrations
+│
+├── 📁 models
+│   └── 📄 account.py
+│
+├── 📁 serializers
+│   └── 📄 authentication.py
+│
+├── 📁 tests
+│   ├── 📄 factories.py
+│   ├── 📄 test_admin.py
+│   └── 📄 tests.py
+│
+├── 📁 views
+│   └── 📄 authentication.py
+│
 ├── 📄 apps.py
 ├── 📄 authentication.py
 ├── 📄 translation.py
-├── 📄 urls.py
+└── 📄 urls.py
 ```
 
 ## 📁 **Admin folder**
