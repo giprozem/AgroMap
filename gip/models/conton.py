@@ -22,5 +22,5 @@ class Conton(BaseModel):
         return self.name
 
     class Meta:
-        verbose_name = _("District")
-        verbose_name_plural = _("Districts")
+        verbose_name = _("Canton")
+        verbose_name_plural = _("Cantons")
