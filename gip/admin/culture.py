@@ -1,9 +1,10 @@
 # Import necessary modules
 from django.contrib.gis import admin
+from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
 from modeltranslation.admin import TranslationAdmin
 
-from gip.models import Culture
+from gip.models import Culture, CultureType
 
 # Register the Culture model with the admin panel
 @admin.register(Culture)
@@ -31,3 +32,8 @@ class CultureAdmin(SimpleHistoryAdmin, TranslationAdmin):
     
     # Make 'id' and 'name' fields clickable in the list view
     list_display_links = ('id', 'name',)
+
+
+@admin.register(CultureType)
+class CultureTypeAdmin(SimpleHistoryAdmin, TranslationAdmin):
+    pass

@@ -41,6 +41,7 @@ class Contour(BaseModel):
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Contour"), blank=True, null=True)
     year = models.CharField(max_length=20, verbose_name=_("Year"), null=True, blank=True)
     productivity = models.CharField(max_length=20, blank=True, null=True, default='1.0', verbose_name=_("Productivity"))
+    month_of_sowing = models.CharField(max_length=20, verbose_name=_("Month of sowing"), null=True, blank=True)
     vegetation_type = models.CharField(max_length=20, blank=True, null=True, verbose_name="Vegetation Type")
     predicted_productivity = models.CharField(max_length=20, blank=True, null=True, default='1.0',
                                               verbose_name=_('Predicted Productivity'))
