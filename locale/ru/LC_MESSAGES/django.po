@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-23 15:25+0600\n"
+"POT-Creation-Date: 2023-10-02 10:31+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
+
 #: account/admin/account.py:12 account/admin/account.py:40
 msgid "Password"
 msgstr "Пароль"
@@ -39,69 +40,69 @@ msgstr "Пароль можно изменить <a href=\"../password/\">зде
 msgid "Permissions"
 msgstr "Права доступа"
 
-#: account/apps.py:8
+#: account/apps.py:10
 msgid "Accounts"
 msgstr "Аккаунты"
 
-#: account/models/account.py:9
+#: account/models/account.py:16
 msgid "Administrator"
 msgstr "Администратор"
 
-#: account/models/account.py:10 gip/models/contour.py:49
-#: gip/models/farmer.py:10 gip/models/farmer.py:20
+#: account/models/account.py:17 gip/models/contour.py:63
+#: gip/models/farmer.py:17 gip/models/farmer.py:27
 msgid "Farmer"
 msgstr "Фермер"
 
-#: account/models/account.py:11
+#: account/models/account.py:18
 msgid "Worker"
 msgstr "Работник"
 
-#: account/models/account.py:12
+#: account/models/account.py:19
 msgid "Observer"
 msgstr "Наблюдатель"
 
-#: account/models/account.py:17 account.models/account.py:28
-#: account/models/account.py:44 auditlog/mixins.py:29 auditlog/models.py:370
+#: account/models/account.py:24 account/models/account.py:42
+#: account/models/account.py:64 auditlog/mixins.py:33 auditlog/models.py:370
 msgid "User"
 msgstr "Пользователь"
 
-#: account/models/account.py:18
+#: account/models/account.py:25
 msgid "Users"
 msgstr "Пользователи"
 
-#: account/models/account.py:29
+#: account/models/account.py:43
 msgid "Full name"
 msgstr "Полное имя"
 
-#: account/models/account.py:30
+#: account/models/account.py:44
 msgid "Phone number"
 msgstr "Номер телефона"
 
-#: account/models/account.py:33
+#: account/models/account.py:47
 msgid "Profile"
 msgstr "Профиль"
 
-#: account/models/account.py:34
+#: account/models/account.py:48
 msgid "Profiles"
 msgstr "Профили"
 
-#: account/models/account.py:45
+#: account/models/account.py:65
 msgid "Created date"
 msgstr "Дата создания"
 
-#: account/models/account.py:46
+#: account/models/account.py:66
 msgid "Notification text"
 msgstr "Текст уведомления"
 
-#: account/models/account.py:47
+#: account/models/account.py:67
 msgid "Read"
 msgstr "Прочитано"
 
-#: account/models/account.py:50
+#: account/models/account.py:70
 msgid "Notification"
 msgstr "Уведомление"
 
-#: account/models/account.py:51
+#: account/models/account.py:71
 msgid "Notifications"
 msgstr "Уведомления"
 
@@ -109,16 +110,15 @@ msgstr "Уведомления"
 msgid "“The login or password was entered incorrectly. Try again.”"
 msgstr "“Логин или пароль введены неверно. Попробуйте еще раз.”"
 
-
-#: ai/admin/predicted_contour.py:20 ai/admin/productivity.py:33
-#: culture_model/models/index_plan.py:17 gip/admin/contour.py:22
-#: indexes/admin/actual_veg_index.py:32 indexes/models/actual_veg_index.py:55
-#: indexes/models/actual_veg_index.py:74
+#: ai/admin/predicted_contour.py:22 ai/admin/productivity.py:38
+#: culture_model/models/index_plan.py:23 gip/admin/contour.py:25
+#: indexes/admin/actual_veg_index.py:39 indexes/models/actual_veg_index.py:69
+#: indexes/models/actual_veg_index.py:95
 msgid "Index Value"
 msgstr "Значение индекса"
 
-#: ai/admin/predicted_contour.py:32 ai/admin/productivity.py:25
-#: gip/admin/contour.py:34 indexes/admin/actual_veg_index.py:24
+#: ai/admin/predicted_contour.py:36 ai/admin/productivity.py:28
+#: gip/admin/contour.py:40 indexes/admin/actual_veg_index.py:33
 msgid "NDVI Visualization"
 msgstr "Визуализация NDVI"
 
@@ -126,211 +126,210 @@ msgstr "Визуализация NDVI"
 msgid "AI"
 msgstr "ИИ"
 
-#: ai/models/create_dataset.py:9 ai/models/create_dataset.py:12
+#: ai/models/create_dataset.py:15 ai/models/create_dataset.py:18
 msgid "Dataset"
 msgstr "Набор данных"
 
-#: ai/models/create_dataset.py:13
+#: ai/models/create_dataset.py:19
 msgid "Datasets"
 msgstr "Наборы данных"
 
-#: ai/models/create_dataset.py:17
+#: ai/models/create_dataset.py:29
 msgid "Performed"
 msgstr "Выполнено"
 
-#: ai/models/create_dataset.py:18 ai/models/create_dataset.py:27
-#: ai/models/create_dataset.py:36 ai/models/create_dataset.py:45
+#: ai/models/create_dataset.py:30 ai/models/create_dataset.py:45
+#: ai/models/create_dataset.py:60 ai/models/create_dataset.py:75
 msgid "Process number"
 msgstr "Номер процесса"
 
-#: ai/models/create_dataset.py:21
+#: ai/models/create_dataset.py:33
 msgid "Process"
 msgstr "Процесс"
 
-#: ai/models/create_dataset.py:22
+#: ai/models/create_dataset.py:34
 msgid "Processes"
 msgstr "Процессы"
 
-#: ai/models/create_dataset.py:26 ai/models/create_dataset.py:35
-#: ai/models/create_dataset.py:44 ai/models/create_dataset.py:53
+#: ai/models/create_dataset.py:44 ai/models/create_dataset.py:59
+#: ai/models/create_dataset.py:74 ai/models/create_dataset.py:89
 msgid "Completed"
 msgstr "Завершено"
 
-#: ai/models/create_dataset.py:30 ai/models/create_dataset.py:31
+#: ai/models/create_dataset.py:48 ai/models/create_dataset.py:49
 msgid "Image collection process"
 msgstr "Процесс сбора изображений"
 
-#: ai/models/create_dataset.py:39 ai/models/create_dataset.py:40
+#: ai/models/create_dataset.py:63 ai/models/create_dataset.py:64
 msgid "The process of creating color images"
 msgstr "Процесс создания цветных изображений"
 
-#: ai/models/create_dataset.py:48 ai/models/create_dataset.py:49
+#: ai/models/create_dataset.py:78 ai/models/create_dataset.py:79
 msgid "Process of cropping color images"
 msgstr "Процесс обрезки цветных изображений"
 
-#: ai/models/create_dataset.py:56 ai/models/create_dataset.py:57
+#: ai/models/create_dataset.py:92 ai/models/create_dataset.py:93
 msgid "Contour search process"
 msgstr "Процесс поиска контуров"
 
-#: ai/models/create_dataset.py:61 culture_model/models/pasture_culture.py:10
-#: culture_model/models/pasture_culture.py:28
-#: culture_model/models/pasture_culture.py:47
+#: ai/models/create_dataset.py:103 culture_model/models/pasture_culture.py:17
+#: culture_model/models/pasture_culture.py:41
 #: culture_model/models/pasture_culture.py:66
-#: culture_model/models/pasture_culture.py:85
-#: culture_model/models/vegetation_index.py:7 gip/models/soil.py:10
-#: hub/models/land_info.py:89 indexes/models/actual_veg_index.py:52
-#: indexes/models/pasture.py:9 indexes/models/satelliteimage.py:8
+#: culture_model/models/pasture_culture.py:91
+#: culture_model/models/pasture_culture.py:116
+#: culture_model/models/vegetation_index.py:14 gip/models/soil.py:16
+#: hub/models/land_info.py:95 indexes/models/actual_veg_index.py:66
+#: indexes/models/pasture.py:15 indexes/models/satelliteimage.py:14
 msgid "Description"
 msgstr "Описание"
 
-#: ai/models/create_dataset.py:64 ai/models/create_dataset.py:65
+#: ai/models/create_dataset.py:106 ai/models/create_dataset.py:107
 msgid "Instructions for creating a dataset"
 msgstr "Инструкции по созданию набора данных"
 
-#: ai/models/predicted_contour.py:13 ai/models/predicted_contour.py:16
-#: ai/models/predicted_contour.py:42 indexes/models/actual_veg_index.py:63
-#: indexes/models/satelliteimage.py:31
+#: ai/models/predicted_contour.py:18 ai/models/predicted_contour.py:21
+#: ai/models/predicted_contour.py:53 indexes/models/actual_veg_index.py:84
+#: indexes/models/satelliteimage.py:50
 msgid "Image"
 msgstr "Изображение"
 
-#: ai/models/predicted_contour.py:17
+#: ai/models/predicted_contour.py:22
 msgid "Images"
 msgstr "Изображения"
 
-#: ai/models/predicted_contour.py:22 culture_model/models/index_plan.py:12
-#: gip/models/district.py:11 gip/models/region.py:9 gip/models/region.py:19
+#: ai/models/predicted_contour.py:33 culture_model/models/index_plan.py:18
+#: gip/models/district.py:17 gip/models/region.py:16 gip/models/region.py:26
 msgid "Region"
 msgstr "Регион"
 
-#: ai/models/predicted_contour.py:27
+#: ai/models/predicted_contour.py:38
 msgid "Land type"
 msgstr "Тип земли"
 
-#: ai/models/predicted_contour.py:31 gip/models/conton.py:13
-#: gip/models/contour.py:29 gip/models/contour.py:66 gip/models/district.py:13
-#: gip/models/region.py:13 gip/models/soil.py:24 hub/models/land_info.py:11
-#: indexes/models/actual_veg_index.py:78
-#: indexes/models/actual_veg_index_logs.py:6
-#: indexes/models/actual_veg_index_logs.py:20
+#: ai/models/predicted_contour.py:42 gip/models/conton.py:19
+#: gip/models/contour.py:42 gip/models/contour.py:86 gip/models/district.py:19
+#: gip/models/region.py:20 gip/models/soil.py:37 hub/models/land_info.py:17
+#: indexes/models/actual_veg_index.py:99
+#: indexes/models/actual_veg_index_logs.py:13
+#: indexes/models/actual_veg_index_logs.py:35
 msgid "Contour"
 msgstr "Контур"
 
-#: ai/models/predicted_contour.py:32 gip/models/contour.py:30
-#: gip/models/crop_yield.py:15
+#: ai/models/predicted_contour.py:43 gip/models/contour.py:43
+#: gip/models/crop_yield.py:21
 msgid "Year"
 msgstr "Год"
 
-#: ai/models/predicted_contour.py:33 gip/models/contour.py:31
-#: gip/models/crop_yield.py:14
+#: ai/models/predicted_contour.py:44 gip/models/contour.py:44
+#: gip/models/crop_yield.py:20
 msgid "Productivity"
 msgstr "Урожайность"
 
-#: ai/models/predicted_contour.py:34
+#: ai/models/predicted_contour.py:45
 msgid "Area in hectares"
 msgstr "Площадь в гектарах"
 
-#: ai/models/predicted_contour.py:35 auditlog/models.py:341
-#: gip/models/contour.py:36
+#: ai/models/predicted_contour.py:46 auditlog/models.py:341
+#: gip/models/contour.py:50
 msgid "Deleted"
 msgstr "Удалено"
 
-#: ai/models/predicted_contour.py:36 culture_model/models/index_plan.py:11
-#: gip/models/contour.py:37 gip/models/crop_yield.py:12 gip/models/culture.py:8
-#: gip/models/culture.py:15
+#: ai/models/predicted_contour.py:47 culture_model/models/index_plan.py:17
+#: gip/models/contour.py:51 gip/models/crop_yield.py:18
+#: gip/models/culture.py:14 gip/models/culture.py:30
 msgid "Culture"
 msgstr "Культура"
 
-#: ai/models/predicted_contour.py:37 gip/models/contour.py:45
-#: gip/models/contour.py:65 gip/models/contour.py:69
+#: ai/models/predicted_contour.py:48 gip/models/contour.py:59
+#: gip/models/contour.py:85 gip/models/contour.py:89
 msgid "Elevation"
 msgstr "Высота"
 
-#: ai/models/predicted_contour.py:39 gip/models/soil.py:9 gip/models/soil.py:17
-#: gip/models/soil.py:23
+#: ai/models/predicted_contour.py:50 gip/models/soil.py:15
+#: gip/models/soil.py:23 gip/models/soil.py:36
 msgid "Soil Type"
 msgstr "Тип почвы"
 
-#: ai/models/predicted_contour.py:40
+#: ai/models/predicted_contour.py:51
 msgid "Percentage"
 msgstr "Процент"
 
-#: ai/models/predicted_contour.py:50 culture_model/models/pasture_culture.py:86
-#: culture_model/models/pasture_culture.py:109 gip/models/conton.py:11
-#: gip/models/conton.py:19 gip/models/contour.py:26 gip/models/district.py:12
-#: gip/models/district.py:19
+#: ai/models/predicted_contour.py:61
+#: culture_model/models/pasture_culture.py:117
+#: culture_model/models/pasture_culture.py:146 gip/models/conton.py:17
+#: gip/models/contour.py:39 gip/models/district.py:18 gip/models/district.py:25
 msgid "District"
 msgstr "Район"
 
-#: ai/models/predicted_contour.py:54
+#: ai/models/predicted_contour.py:65
 msgid "AI Detected Contour"
 msgstr "Обнаруженный контур ИИ"
 
-#: ai/models/predicted_contour.py:55
+#: ai/models/predicted_contour.py:66
 msgid "AI Detected Contours"
 msgstr "Обнаруженные контуры ИИ"
 
-#: ai/models/predicted_contour.py:59 ai/models/productivity.py:7
+#: ai/models/predicted_contour.py:75 ai/models/productivity.py:12
 msgid "Model"
 msgstr "Модель"
 
-#: ai/models/predicted_contour.py:62
+#: ai/models/predicted_contour.py:78
 msgid "Contour Detection Model"
 msgstr "Модель обнаружения контуров"
 
-#: ai/models/predicted_contour.py:63
+#: ai/models/predicted_contour.py:79
 msgid "Contour Detection Models"
 msgstr "Модели обнаружения контуров"
 
-#: ai/models/productivity.py:10
+#: ai/models/productivity.py:15
 msgid "Productivity Prediction Model"
 msgstr "Модель прогнозирования урожайности"
 
-#: ai/models/productivity.py:11
+#: ai/models/productivity.py:16
 msgid "Productivity Prediction Models"
 msgstr "Модели прогнозирования урожайности"
 
-
-#: auditlog/admin.py:31 auditlog/mixins.py:58 auditlog/mixins.py:70
+#: auditlog/admin.py:43 auditlog/mixins.py:61 auditlog/mixins.py:74
 msgid "Changes"
 msgstr "Изменения"
 
-#: auditlog/apps.py:7
+#: auditlog/apps.py:9
 msgid "User Changes Report"
 msgstr "Отчет об изменениях пользователя"
 
-#: auditlog/filters.py:6
+#: auditlog/filters.py:7
 msgid "Tables"
 msgstr "Таблицы"
 
-#: auditlog/filters.py:23 auditlog/models.py:377
+#: auditlog/filters.py:40 auditlog/models.py:377
 msgid "Correlation ID"
 msgstr "Идентификатор корреляции"
 
-#: auditlog/mixins.py:21
+#: auditlog/mixins.py:23
 msgid "Click to filter by records with this correlation id"
 msgstr "Нажмите, чтобы отфильтровать записи с этим идентификатором корреляции"
 
-#: auditlog/mixins.py:23 auditlog/models.py:339
+#: auditlog/mixins.py:26 auditlog/models.py:339
 msgid "Created"
 msgstr "Создано"
 
-#: auditlog/mixins.py:40
+#: auditlog/mixins.py:43
 msgid "Admin Panel"
 msgstr "Панель администратора"
 
-#: auditlog/mixins.py:42
+#: auditlog/mixins.py:46
 msgid "Resource URL"
 msgstr "URL ресурса"
 
-#: auditlog/mixins.py:90 gip/models/crop_yield.py:13
+#: auditlog/mixins.py:95 gip/models/crop_yield.py:19
 msgid "Field"
 msgstr "Поле"
 
-#: auditlog/mixins.py:90
+#: auditlog/mixins.py:95
 msgid "Was"
 msgstr "Было"
 
-#: auditlog/mixins.py:90
+#: auditlog/mixins.py:95
 msgid "Became"
 msgstr "Стало"
 
@@ -406,882 +405,908 @@ msgstr "Удалено {repr:s}"
 msgid "Logs {repr:s}"
 msgstr "Журналы {repr:s}"
 
-#: config/settings.py:127
+#: config/settings.py:141
 msgid "English"
 msgstr "Английский"
 
-#: config/settings.py:128
+#: config/settings.py:142
 msgid "Russian"
 msgstr "Русский"
 
-#: config/settings.py:129
+#: config/settings.py:143
 msgid "Kyrgyz"
 msgstr "Кыргызский"
 
-#: config/settings.py:185 hub/apps.py:8
+#: config/settings.py:198 config/urls.py:45 hub/apps.py:8
 msgid "Giprozem reference database"
 msgstr "Эталонная база данных Гипрозем"
 
-#: config/urls.py:40
-msgid "Эталонная база данных Гипрозем"
-msgstr "Эталонная база данных Гипрозем"
-
-#: culture_model/apps.py:8 gip/models/culture.py:16
+#: culture_model/apps.py:13 gip/models/culture.py:31
 msgid "Cultures"
 msgstr "Культуры"
 
-#: culture_model/models/decade.py:6
+#: culture_model/models/decade.py:12
 msgid "From"
 msgstr "От"
 
-#: culture_model/models/decade.py:7
+#: culture_model/models/decade.py:13
 msgid "To"
 msgstr "До"
 
-#: culture_model/models/decade.py:10 culture_model/models/index_plan.py:15
+#: culture_model/models/decade.py:16 culture_model/models/index_plan.py:21
 msgid "Decade"
 msgstr "Декада"
 
-#: culture_model/models/decade.py:11
+#: culture_model/models/decade.py:17
 msgid "Decades"
 msgstr "Декады"
 
-#: culture_model/models/index_plan.py:14 indexes/models/actual_veg_index.py:22
-#: indexes/models/actual_veg_index.py:47 indexes/models/actual_veg_index.py:76
+#: culture_model/models/index_plan.py:20 indexes/models/actual_veg_index.py:29
+#: indexes/models/actual_veg_index.py:61 indexes/models/actual_veg_index.py:97
 msgid "Index"
 msgstr "Индекс"
 
-#: culture_model/models/index_plan.py:16
+#: culture_model/models/index_plan.py:22
 msgid "Phase"
 msgstr "Фаза"
 
-#: culture_model/models/index_plan.py:20
+#: culture_model/models/index_plan.py:26
 msgid "Planned Index Value"
 msgstr "Запланированное значение индекса"
 
-#: culture_model/models/index_plan.py:21
+#: culture_model/models/index_plan.py:27
 msgid "Planned Index Values"
 msgstr "Запланированные значения индекса"
 
-#: culture_model/models/pasture_culture.py:9
-#: culture_model/models/pasture_culture.py:27
-#: culture_model/models/pasture_culture.py:46
+#: culture_model/models/pasture_culture.py:16
+#: culture_model/models/pasture_culture.py:40
 #: culture_model/models/pasture_culture.py:65
-#: culture_model/models/pasture_culture.py:84
-#: culture_model/models/pasture_culture.py:105
-#: culture_model/models/vegetation_index.py:6 hub/models/land_type_list.py:7
-#: hub/models/property_type_list.py:7 indexes/models/pasture.py:8
-#: indexes/models/satelliteimage.py:7
+#: culture_model/models/pasture_culture.py:90
+#: culture_model/models/pasture_culture.py:115
+#: culture_model/models/pasture_culture.py:142
+#: culture_model/models/vegetation_index.py:13 hub/models/land_type_list.py:13
+#: hub/models/property_type_list.py:13 indexes/models/pasture.py:14
+#: indexes/models/satelliteimage.py:13
 msgid "Name"
 msgstr "Название"
 
-#: culture_model/models/pasture_culture.py:20
-#: culture_model/models/pasture_culture.py:26
+#: culture_model/models/pasture_culture.py:27
+#: culture_model/models/pasture_culture.py:39
 msgid "Class"
 msgstr "Класс"
 
-#: culture_model/models/pasture_culture.py:21
+#: culture_model/models/pasture_culture.py:28
 msgid "Classes"
 msgstr "Классы"
 
-#: culture_model/models/pasture_culture.py:39
-#: culture_model/models/pasture_culture.py:45
+#: culture_model/models/pasture_culture.py:52
+#: culture_model/models/pasture_culture.py:64
 msgid "Subclass"
 msgstr "Подкласс"
 
-#: culture_model/models/pasture_culture.py:40
+#: culture_model/models/pasture_culture.py:53
 msgid "Subclasses"
 msgstr "Подклассы"
 
-#: culture_model/models/pasture_culture.py:58
-#: culture_model/models/pasture_culture.py:64
+#: culture_model/models/pasture_culture.py:77
+#: culture_model/models/pasture_culture.py:89
 msgid "Group Type"
 msgstr "Тип группы"
 
-#: culture_model/models/pasture_culture.py:59
+#: culture_model/models/pasture_culture.py:78
 msgid "Group Types"
 msgstr "Типы групп"
 
-#: culture_model/models/pasture_culture.py:77
-#: culture_model/models/pasture_culture.py:83
+#: culture_model/models/pasture_culture.py:102
+#: culture_model/models/pasture_culture.py:114
 msgid "Vegetation Type"
 msgstr "Тип растительности"
 
-#: culture_model/models/pasture_culture.py:78
+#: culture_model/models/pasture_culture.py:103
 msgid "Vegetation Types"
 msgstr "Типы растительности"
 
-#: culture_model/models/pasture_culture.py:98
-#: culture_model/models/pasture_culture.py:104
+#: culture_model/models/pasture_culture.py:129
+#: culture_model/models/pasture_culture.py:141
 msgid "District Type"
 msgstr "Тип района"
 
-#: culture_model/models/pasture_culture.py:99
+#: culture_model/models/pasture_culture.py:130
 msgid "District Types"
 msgstr "Типы районов"
 
-#: culture_model/models/pasture_culture.py:107
+#: culture_model/models/pasture_culture.py:144
 msgid "Productivity Coefficient"
 msgstr "Коэффициент продуктивности"
 
-#: culture_model/models/pasture_culture.py:108
+#: culture_model/models/pasture_culture.py:145
 msgid "Feed Content"
 msgstr "Содержание корма"
 
-#: culture_model/models/pasture_culture.py:110
+#: culture_model/models/pasture_culture.py:147
 msgid "Vegetation Period"
 msgstr "Период роста"
 
-#: culture_model/models/pasture_culture.py:123 gip/models/contour.py:43
+#: culture_model/models/pasture_culture.py:160 gip/models/contour.py:57
 msgid "Pasture Culture"
 msgstr "Культура пастбища"
 
-#: culture_model/models/pasture_culture.py:124
+#: culture_model/models/pasture_culture.py:161
 msgid "Pasture Cultures"
 msgstr "Культуры пастбища"
 
-#: culture_model/models/phase.py:6 culture_model/models/phase.py:9
+#: culture_model/models/phase.py:12 culture_model/models/phase.py:15
 msgid "Development Phase"
 msgstr "Фаза развития"
 
-#: culture_model/models/phase.py:10
+#: culture_model/models/phase.py:16
 msgid "Development Phases"
 msgstr "Фазы развития"
 
-#: culture_model/models/vegetation_index.py:10
-#: indexes/models/actual_veg_index_logs.py:8
-#: indexes/models/actual_veg_index_logs.py:22
+#: culture_model/models/vegetation_index.py:17
+#: indexes/models/actual_veg_index_logs.py:15
+#: indexes/models/actual_veg_index_logs.py:37
 msgid "Vegetation Index"
 msgstr "Индекс растительности"
 
-#: culture_model/models/vegetation_index.py:11
+#: culture_model/models/vegetation_index.py:18
 msgid "Vegetation Indices"
 msgstr "Индексы растительности"
 
-#: gip/apps.py:8
+#: gip/apps.py:7
 msgid "AgroMap"
 msgstr "AgroMap"
 
-#: gip/models/base.py:6
+#: gip/models/base.py:12
 msgid "Created Date"
 msgstr "Дата создания"
 
-#: gip/models/base.py:7
+#: gip/models/base.py:13
 msgid "Updated Date"
 msgstr "Дата обновления"
 
-#: gip/models/contact_information.py:8
+#: gip/models/contact_information.py:14
 msgid "Department Name"
 msgstr "Название отдела"
 
-#: gip/models/contact_information.py:14 gip.models/contact_information.py:20
+#: gip/models/contact_information.py:20 gip/models/contact_information.py:26
 msgid "Department"
 msgstr "Отдел"
 
-#: gip/models/contact_information.py:15
+#: gip/models/contact_information.py:21
 msgid "Departments"
 msgstr "Отделы"
 
-#: gip/models/contact_information.py:21
+#: gip/models/contact_information.py:27
 msgid "Name of State Seed Stations and State Seed Plots"
-msgstr "Название государственных станций семенного дела и государственных семенных участков"
+msgstr ""
+"Название государственных станций семенного дела и государственных семенных "
+"участков"
 
-#: gip/models/contact_information.py:22
+#: gip/models/contact_information.py:28
 msgid "Full Name of Manager"
 msgstr "Полное имя руководителя"
 
-#: gip/models/contact_information.py:24
+#: gip/models/contact_information.py:30
 msgid "Location"
 msgstr "Местоположение"
 
-#: gip/models/contact_information.py:25
+#: gip/models/contact_information.py:31
 msgid "Address"
 msgstr "Адрес"
 
-#: gip/models/contact_information.py:26
+#: gip/models/contact_information.py:32
 msgid "Phone"
 msgstr "Телефон"
 
-#: gip/models/contact_information.py:27
+#: gip/models/contact_information.py:33
 msgid "Email"
 msgstr "Электронная почта"
 
-#: gip/models/contact_information.py:28
+#: gip/models/contact_information.py:34
 msgid "Map Address"
 msgstr "Адрес на карте"
 
-#: gip/models/contact_information.py:34 gip/models/contact_information.py:35
+#: gip/models/contact_information.py:40 gip/models/contact_information.py:41
 msgid "Contact Information"
 msgstr "Контактная информация"
 
-#: gip/models/conton.py:9 gip/models/district.py:9
+#: gip/models/conton.py:15 gip/models/district.py:15
 msgid "Veterinary SOATO Code"
 msgstr "СОАТО-код ветеринарии"
 
-#: gip/models/conton.py:10 gip/models/contour.py:25 gip/models/district.py:10
-#: gip/models/region.py:8
+#: gip/models/conton.py:16 gip/models/contour.py:38 gip/models/district.py:16
+#: gip/models/region.py:15
 msgid "SOATO Code"
 msgstr "СОАТО-код"
 
-#: gip/models/conton.py:12
+#: gip/models/conton.py:18
 msgid "District Name"
 msgstr "Название района"
 
-#: gip/models/conton.py:20 gip/models/district.py:20
-msgid "Districts"
-msgstr "Районы"
+#: gip/models/conton.py:25
+msgid "Canton"
+msgstr "Айылный аймак"
 
-#: gip/models/contour.py:14
+#: gip/models/conton.py:26
+msgid "Cantons"
+msgstr "Айылные аймаки"
+
+#: gip/models/contour.py:20
 msgid "Land Type Name"
 msgstr "Название типа земли"
 
-#: gip/models/contour.py:17 gip/models/contour.py:27
+#: gip/models/contour.py:23 gip/models/contour.py:40
 msgid "Land Type"
 msgstr "Тип земли"
 
-#: gip/models/contour.py:18 hub/models/land_info.py:48
+#: gip/models/contour.py:24 hub/models/land_info.py:54
 msgid "Land Types"
 msgstr "Типы земли"
 
-#: gip/models/contour.py:34
+#: gip/models/contour.py:45
+msgid "Month of sowing"
+msgstr "Месяц посева"
+
+#: gip/models/contour.py:48
 msgid "Predicted Productivity"
 msgstr "Прогнозируемая урожайность"
 
-#: gip/models/contour.py:35
+#: gip/models/contour.py:49
 msgid "Area in Hectares"
 msgstr "Площадь в гектарах"
 
-#: gip/models/contour.py:46
+#: gip/models/contour.py:60
 msgid "INK"
 msgstr "ИНК"
 
-#: gip/models/contour.py:46
+#: gip/models/contour.py:60
 msgid "Identification Number of the Contour"
 msgstr "Идентификационный номер контура"
 
-#: gip/models/contour.py:48
+#: gip/models/contour.py:62
 msgid "ENI"
 msgstr "ЕНИ"
 
-#: gip/models/contour.py:51 hub/models/land_info.py:9
-#: indexes/models/actual_veg_index.py:27 indexes/models/actual_veg_index.py:80
-#: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:98
+#: gip/models/contour.py:65 hub/models/land_info.py:15
+#: indexes/models/actual_veg_index.py:34 indexes/models/actual_veg_index.py:101
+#: indexes/models/pasture.py:47 indexes/models/satelliteimage.py:131
 msgid "History"
 msgstr "История"
 
-#: gip/models/contour.py:52
+#: gip/models/contour.py:66
 msgid "Legally Confirmed"
 msgstr "Законно подтверждено"
 
-#: gip/models/contour.py:60
+#: gip/models/contour.py:74
 msgid "Field Contour"
 msgstr "Контур поля"
 
-#: gip/models/contour.py:61 indexes.models/actual_veg_index.py:23
-#: indexes/models/pasture.py:20
+#: gip/models/contour.py:75 indexes/models/actual_veg_index.py:30
+#: indexes/models/pasture.py:33
 msgid "Field Contours"
 msgstr "Контуры полей"
 
-#: gip/models/contour.py:70
+#: gip/models/contour.py:90
 msgid "Elevations"
 msgstr "Высоты"
 
-#: gip/models/crop_yield.py:14
+#: gip/models/crop_yield.py:20
 msgid "Measured in centners"
 msgstr "Измеряется в центнерах"
 
-#: gip/models/crop_yield.py:16
+#: gip/models/crop_yield.py:22
 msgid "Season"
 msgstr "Сезон"
 
-#: gip/models/crop_yield.py:23 hub/models/land_info.py:16
+#: gip/models/crop_yield.py:29 hub/models/land_info.py:22
 msgid "Crop Yield"
 msgstr "Урожайность"
 
-#: gip/models/crop_yield.py:24
+#: gip/models/crop_yield.py:30
 msgid "Crop Yields"
 msgstr "Урожаи"
 
-#: gip/models/culture.py:9
+#: gip/models/culture.py:16
 msgid "Crop Productivity Coefficient"
 msgstr "Коэффициент продуктивности сельскохозяйственных культур"
 
-#: gip/models/farmer.py:11
-msgid "TIN or INN"
-msgstr "ИНН или ИНН фермера"
-
-#: gip/models/farmer.py:12
-msgid "Taxpayer Identification Number or Personal Identification Number"
-msgstr "Идентификационный номер налогоплательщика или личный идентификационный номер"
-
-#: gip/models/farmer.py:13
-msgid "Phone Number"
-msgstr "Номер телефона"
-
-#: gip/models/farmer.py:21
-msgid "Farmers"
-msgstr "Фермеры"
-
-#: gip/models/region.py:10
-msgid "Population"
-msgstr "Население"
-
-#: gip/models/region.py:11
-msgid "Area"
-msgstr "Площадь"
-
-#: gip/models/region.py:12
-msgid "Density"
-msgstr "Плотность"
-
-#: gip/models/region.py:20
-msgid "Regions"
-msgstr "Регионы"
-
-#: gip/models/soil.py:11
-msgid "Color"
-msgstr "Цвет"
-
-#: gip/models/soil.py:18
-msgid "Soil Types"
-msgstr "Типы почв"
-
-#: gip/models/soil.py:27
-msgid "Soil Type Contour"
-msgstr "Контуры типов почв"
-
-#: gip/models/soil.py:28
-msgid "Soil Type Contours"
-msgstr "Контуры типов почв"
-
-#: gip/models/soil.py:32 gip/models/soil.py:35
-msgid "Soil Productivity"
-msgstr "Продуктивность почвы"
-
-#: gip/models/soil.py:36
-msgid "Soil Productivities"
-msgstr "Продуктивности почвы"
-
-#: hub/models/base.py:6
-msgid "Creation Date"
-msgstr "Дата создания"
-
-#: hub/models/base.py:7
-msgid "Update Date"
-msgstr "Дата обновления"
-
-#: hub/models/category_type_list.py:7
-msgid "Category Name"
-msgstr "Название категории"
-
-#: hub/models/category_type_list.py:13 hub/models/category_type_list.py:14
-#: hub/models/land_info.py:23
-msgid "Land Categories"
-msgstr "Категории земель"
-
-#: hub/models/document_type_list.py:7
-msgid "Document Name"
-msgstr "Название документа"
-
-#: hub/models/document_type_list.py:13 hub/models/document_type_list.py:14
-msgid "Legal Documents"
-msgstr "Юридические документы"
-
-#: hub/models/land_info.py:10
-msgid "INK Code"
-msgstr "ИНК-код"
-
-#: hub/models/land_info.py:12
-msgid "Tax ID"
-msgstr "Идентификационный номер налогоплательщика"
-
-#: hub/models/land_info.py:13
-msgid "Bonniness"
-msgstr "Плодородность"
-
-#: hub/models/land_info.py:14
-msgid "Crop Type"
-msgstr "Тип культуры"
-
-#: hub/models/land_info.py:18
-msgid "Property Type"
-msgstr "Тип собственности"
-
-#: hub/models/land_info.py:20
-msgid "Document Type"
-msgstr "Тип документа"
-
-#: hub/models/land_info.py:21
-msgid "Document Link"
-msgstr "Ссылка на документ"
-
-#: hub/models/land_info.py:25
-msgid "Land Type Information"
-msgstr "Информация о типе земли"
-
-#: hub/models/land_info.py:27
-msgid "Actual Area"
-msgstr "Фактическая площадь"
-
-#: hub/models/land_info.py:29
-msgid "Longitude"
-msgstr "Долгота"
-
-#: hub/models/land_info.py:30
-msgid "Latitude"
-msgstr "Широта"
-
-#: hub/models/land_info.py:31
-msgid "Land Number"
-msgstr "Номер участка"
-
-#: hub/models/land_info.py:33
-msgid "Administrative-Territorial Division"
-msgstr "Административно-территориальное деление"
-
-#: hub/models/land_info.py:35
-msgid "Number of Real Estate Units"
-msgstr "Количество объектов недвижимости"
-
-#: hub/models/land_info.py:36
-msgid "Circuit Number"
-msgstr "Номер кадастрового квартала"
-
-#: hub/models/land_info.py:37
-msgid "Document Entitlement"
-msgstr "Правоустанавливающий документ"
-
-#: hub/models/land_info.py:38
-msgid "Use Period (Years)"
-msgstr "Срок использования (годы)"
-
-#: hub/models/land_info.py:40
-msgid "Certifying Act (Attach File)"
-msgstr "Акт удостоверения (прикрепить файл)"
-
-#: hub/models/land_info.py:41
-msgid "Use End Date"
-msgstr "Дата окончания использования"
-
-#: hub/models/land_info.py:43
-msgid "Agricultural Land Purposes"
-msgstr "Цели использования сельскохозяйственных земель"
-
-#: hub/models/land_info.py:45
-msgid "State Fund of Agricultural Lands"
-msgstr "Государственный фонд сельскохозяйственных земель"
-
-#: hub/models/land_info.py:46
-msgid "Lands in Populated Areas"
-msgstr "Земли в населенных пунктах"
-
-#: hub/models/land_info.py:47
-msgid "Other Types of Lands"
-msgstr "Другие виды земель"
-
-#: hub/models/land_info.py:50
-msgid "Agricultural Land Type"
-msgstr "Тип сельскохозяйственных земель"
-
-#: hub/models/land_info.py:51
-msgid "Description of Restrictions"
-msgstr "Описание ограничений"
-
-#: hub/models/land_info.py:52
-msgid "Completion Date"
-msgstr "Дата завершения"
-
-#: hub/models/land_info.py:53
-msgid "Perennial Plants"
-msgstr "Многолетние растения"
-
-#: hub/models/land_info.py:54
-msgid "Forest Areas"
-msgstr "Лесные участки"
-
-#: hub/models/land_info.py:55
-msgid "Underwater"
-msgstr "Подводные"
-
-#: hub/models/land_info.py:56
-msgid "Other Lands"
-msgstr "Другие участки"
-
-#: hub/models/land_info.py:58
-msgid "Collective Gardens and Vegetable Plots"
-msgstr "Коллективные сады и огороды"
-
-#: hub/models/land_info.py:59
-msgid "Irrigated"
-msgstr "Ирригированные"
-
-#: hub/models/land_info.py:60
-msgid "Rainfed"
-msgstr "Под дождем"
-
-#: hub/models/land_info.py:62
-msgid "Improved (Radical Improvement)"
-msgstr "Улучшенные (радикальное улучшение)"
-
-#: hub/models/land_info.py:64
-msgid "Inaccessible Due to Difficulty of Access"
-msgstr "Недоступные из-за сложности доступа"
-
-#: hub/models/land_info.py:65
-msgid "Intensive Use"
-msgstr "Интенсивное использование"
-
-#: hub/models/land_info.py:66
-msgid "Pasture"
-msgstr "Пастбище"
-
-#: hub/models/land_info.py:68
-msgid "Non-Forest Fund Woody and Shrub Plantations"
-msgstr "Древесные и кустарниковые плантации вне лесного фонда"
-
-#: hub/models/land_info.py:69
-msgid "Property Form"
-msgstr "Форма собственности"
-
-#: hub/models/land_info.py:70
-msgid "Disturbed Lands"
-msgstr "Помехи на участках"
-
-#: hub/models/land_info.py:71
-msgid "Lot Number"
-msgstr "Номер участка"
-
-#: hub/models/land_info.py:73
-msgid "Elementary Section Number"
-msgstr "Номер элементарной секции"
-
-#: hub/models/land_info.py:75
-msgid "Description (if needed)"
-msgstr "Описание (по необходимости)"
-
-#: hub/models/land_info.py:76
-msgid "Long-Term Land Use"
-msgstr "Долгосрочное использование земель"
-
-#: hub/models/land_info.py:77
-msgid "Limitations"
-msgstr "Ограничения"
-
-#: hub/models/land_info.py:80
-msgid "Household Lands and Citizen Allotments"
-msgstr "Земельные участки домохозяйств и гражданские выделения"
-
-#: hub/models/land_info.py:81
-msgid "Number of Yards"
-msgstr "Количество дворов"
-
-#: hub/models/land_info.py:82
-msgid "Number of Families"
-msgstr "Количество семей"
-
-#: hub/models/land_info.py:83
-msgid "Total Land"
-msgstr "Общая площадь земли"
-
-#: hub/models/land_info.py:84
-msgid "Identification Number"
-msgstr "Идентификационный номер"
-
-#: hub/models/land_info.py:85
-msgid "Creator"
-msgstr "Создатель"
-
-#: hub/models/land_info.py:86
-msgid "Owner"
-msgstr "Владелец"
-
-#: hub/models/land_info.py:87
-msgid "Modified By"
-msgstr "Изменено"
-
-#: hub/models/land_info.py:88
+#: gip/models/culture.py:20 hub/models/land_info.py:94
 msgid "Type"
 msgstr "Тип"
 
+#: gip/models/culture.py:35 gip/models/culture.py:41
+#, fuzzy
+#| msgid "Culture"
+msgid "Culture type"
+msgstr "Культура"
+
+#: gip/models/culture.py:42
+#, fuzzy
+#| msgid "Cultures"
+msgid "Cultures types"
+msgstr "Тип Культуры"
+
+#: gip/models/district.py:26
+msgid "Districts"
+msgstr "Районы"
+
+#: gip/models/farmer.py:18
+msgid "TIN or INN"
+msgstr "ИНН или ИНН фермера"
+
+#: gip/models/farmer.py:19
+msgid "Taxpayer Identification Number or Personal Identification Number"
+msgstr ""
+"Идентификационный номер налогоплательщика или личный идентификационный номер"
+
+#: gip/models/farmer.py:20
+msgid "Phone Number"
+msgstr "Номер телефона"
+
+#: gip/models/farmer.py:28
+msgid "Farmers"
+msgstr "Фермеры"
+
+#: gip/models/region.py:17
+msgid "Population"
+msgstr "Население"
+
+#: gip/models/region.py:18
+msgid "Area"
+msgstr "Площадь"
+
+#: gip/models/region.py:19
+msgid "Density"
+msgstr "Плотность"
+
+#: gip/models/region.py:27
+msgid "Regions"
+msgstr "Регионы"
+
+#: gip/models/soil.py:17
+msgid "Color"
+msgstr "Цвет"
+
+#: gip/models/soil.py:24
+msgid "Soil Types"
+msgstr "Типы почв"
+
+#: gip/models/soil.py:40
+msgid "Soil Type Contour"
+msgstr "Контуры типов почв"
+
+#: gip/models/soil.py:41
+msgid "Soil Type Contours"
+msgstr "Контуры типов почв"
+
+#: gip/models/soil.py:45 gip/models/soil.py:48
+msgid "Soil Productivity"
+msgstr "Продуктивность почвы"
+
+#: gip/models/soil.py:49
+msgid "Soil Productivities"
+msgstr "Продуктивности почвы"
+
+#: hub/models/base.py:11
+msgid "Creation Date"
+msgstr "Дата создания"
+
+#: hub/models/base.py:12
+msgid "Update Date"
+msgstr "Дата обновления"
+
+#: hub/models/category_type_list.py:13
+msgid "Category Name"
+msgstr "Название категории"
+
+#: hub/models/category_type_list.py:19 hub/models/category_type_list.py:20
+#: hub/models/land_info.py:29
+msgid "Land Categories"
+msgstr "Категории земель"
+
+#: hub/models/document_type_list.py:13
+msgid "Document Name"
+msgstr "Название документа"
+
+#: hub/models/document_type_list.py:19 hub/models/document_type_list.py:20
+msgid "Legal Documents"
+msgstr "Юридические документы"
+
+#: hub/models/land_info.py:16
+msgid "INK Code"
+msgstr "ИНК-код"
+
+#: hub/models/land_info.py:18
+msgid "Tax ID"
+msgstr "Идентификационный номер налогоплательщика"
+
+#: hub/models/land_info.py:19
+msgid "Bonniness"
+msgstr "Плодородность"
+
+#: hub/models/land_info.py:20
+msgid "Crop Type"
+msgstr "Тип культуры"
+
+#: hub/models/land_info.py:24
+msgid "Property Type"
+msgstr "Тип собственности"
+
+#: hub/models/land_info.py:26
+msgid "Document Type"
+msgstr "Тип документа"
+
+#: hub/models/land_info.py:27
+msgid "Document Link"
+msgstr "Ссылка на документ"
+
+#: hub/models/land_info.py:31
+msgid "Land Type Information"
+msgstr "Информация о типе земли"
+
+#: hub/models/land_info.py:33
+msgid "Actual Area"
+msgstr "Фактическая площадь"
+
+#: hub/models/land_info.py:35
+msgid "Longitude"
+msgstr "Долгота"
+
+#: hub/models/land_info.py:36
+msgid "Latitude"
+msgstr "Широта"
+
+#: hub/models/land_info.py:37
+msgid "Land Number"
+msgstr "Номер участка"
+
+#: hub/models/land_info.py:39
+msgid "Administrative-Territorial Division"
+msgstr "Административно-территориальное деление"
+
+#: hub/models/land_info.py:41
+msgid "Number of Real Estate Units"
+msgstr "Количество объектов недвижимости"
+
+#: hub/models/land_info.py:42
+msgid "Circuit Number"
+msgstr "Номер кадастрового квартала"
+
+#: hub/models/land_info.py:43
+msgid "Document Entitlement"
+msgstr "Правоустанавливающий документ"
+
+#: hub/models/land_info.py:44
+msgid "Use Period (Years)"
+msgstr "Срок использования (годы)"
+
+#: hub/models/land_info.py:46
+msgid "Certifying Act (Attach File)"
+msgstr "Акт удостоверения (прикрепить файл)"
+
+#: hub/models/land_info.py:47
+msgid "Use End Date"
+msgstr "Дата окончания использования"
+
+#: hub/models/land_info.py:49
+msgid "Agricultural Land Purposes"
+msgstr "Цели использования сельскохозяйственных земель"
+
+#: hub/models/land_info.py:51
+msgid "State Fund of Agricultural Lands"
+msgstr "Государственный фонд сельскохозяйственных земель"
+
+#: hub/models/land_info.py:52
+msgid "Lands in Populated Areas"
+msgstr "Земли в населенных пунктах"
+
+#: hub/models/land_info.py:53
+msgid "Other Types of Lands"
+msgstr "Другие виды земель"
+
+#: hub/models/land_info.py:56
+msgid "Agricultural Land Type"
+msgstr "Тип сельскохозяйственных земель"
+
+#: hub/models/land_info.py:57
+msgid "Description of Restrictions"
+msgstr "Описание ограничений"
+
+#: hub/models/land_info.py:58
+msgid "Completion Date"
+msgstr "Дата завершения"
+
+#: hub/models/land_info.py:59
+msgid "Perennial Plants"
+msgstr "Многолетние растения"
+
+#: hub/models/land_info.py:60
+msgid "Forest Areas"
+msgstr "Лесные участки"
+
+#: hub/models/land_info.py:61
+msgid "Underwater"
+msgstr "Подводные"
+
+#: hub/models/land_info.py:62
+msgid "Other Lands"
+msgstr "Другие участки"
+
+#: hub/models/land_info.py:64
+msgid "Collective Gardens and Vegetable Plots"
+msgstr "Коллективные сады и огороды"
+
+#: hub/models/land_info.py:65
+msgid "Irrigated"
+msgstr "Ирригированные"
+
+#: hub/models/land_info.py:66
+msgid "Rainfed"
+msgstr "Под дождем"
+
+#: hub/models/land_info.py:68
+msgid "Improved (Radical Improvement)"
+msgstr "Улучшенные (радикальное улучшение)"
+
+#: hub/models/land_info.py:70
+msgid "Inaccessible Due to Difficulty of Access"
+msgstr "Недоступные из-за сложности доступа"
+
+#: hub/models/land_info.py:71
+msgid "Intensive Use"
+msgstr "Интенсивное использование"
+
+#: hub/models/land_info.py:72
+msgid "Pasture"
+msgstr "Пастбище"
+
+#: hub/models/land_info.py:74
+msgid "Non-Forest Fund Woody and Shrub Plantations"
+msgstr "Древесные и кустарниковые плантации вне лесного фонда"
+
+#: hub/models/land_info.py:75
+msgid "Property Form"
+msgstr "Форма собственности"
+
+#: hub/models/land_info.py:76
+msgid "Disturbed Lands"
+msgstr "Помехи на участках"
+
+#: hub/models/land_info.py:77
+msgid "Lot Number"
+msgstr "Номер участка"
+
+#: hub/models/land_info.py:79
+msgid "Elementary Section Number"
+msgstr "Номер элементарной секции"
+
+#: hub/models/land_info.py:81
+msgid "Description (if needed)"
+msgstr "Описание (по необходимости)"
+
+#: hub/models/land_info.py:82
+msgid "Long-Term Land Use"
+msgstr "Долгосрочное использование земель"
+
+#: hub/models/land_info.py:83
+msgid "Limitations"
+msgstr "Ограничения"
+
+#: hub/models/land_info.py:86
+msgid "Household Lands and Citizen Allotments"
+msgstr "Земельные участки домохозяйств и гражданские выделения"
+
+#: hub/models/land_info.py:87
+msgid "Number of Yards"
+msgstr "Количество дворов"
+
+#: hub/models/land_info.py:88
+msgid "Number of Families"
+msgstr "Количество семей"
+
+#: hub/models/land_info.py:89
+msgid "Total Land"
+msgstr "Общая площадь земли"
+
 #: hub/models/land_info.py:90
+msgid "Identification Number"
+msgstr "Идентификационный номер"
+
+#: hub/models/land_info.py:91
+msgid "Creator"
+msgstr "Создатель"
+
+#: hub/models/land_info.py:92
+msgid "Owner"
+msgstr "Владелец"
+
+#: hub/models/land_info.py:93
+msgid "Modified By"
+msgstr "Изменено"
+
+#: hub/models/land_info.py:96
 msgid "Land Categories (Land Balance)"
 msgstr "Категории земель (земельный баланс)"
 
-#: hub/models/land_info.py:91
+#: hub/models/land_info.py:97
 msgid "Status"
 msgstr "Статус"
 
-#: hub/models/land_info.py:93
+#: hub/models/land_info.py:99
 msgid "ENI Code"
 msgstr "Код ENI"
 
-#: hub/models/land_info.py:94
+#: hub/models/land_info.py:100
 msgid "Parcel Address (ASR)"
 msgstr "Адрес участка (ASR)"
 
-#: hub/models/land_info.py:96
+#: hub/models/land_info.py:102
 msgid "Special Purpose (ASR)"
 msgstr "Специальное назначение (ASR)"
 
-#: hub/models/land_info.py:98
+#: hub/models/land_info.py:104
 msgid "Actual Area (ASR)"
 msgstr "Фактическая площадь (ASR)"
 
-#: hub/models/land_info.py:99
+#: hub/models/land_info.py:105
 msgid "Use Form (ASR)"
 msgstr "Форма использования (ASR)"
 
-#: hub/models/land_info.py:100
+#: hub/models/land_info.py:106
 msgid "Legal Area (ASR)"
 msgstr "Юридическая площадь (ASR)"
 
-#: hub/models/land_info.py:101
+#: hub/models/land_info.py:107
 msgid "Owner Information (ASR)"
 msgstr "Информация о владельце (ASR)"
 
-#: hub/models/land_info.py:104 hub/models/land_info.py:105
+#: hub/models/land_info.py:110 hub/models/land_info.py:111
 msgid "Main Table"
 msgstr "Главная таблица"
 
-#: hub/models/land_type_list.py:13 hub/models/land_type_list.py:14
+#: hub/models/land_type_list.py:19 hub/models/land_type_list.py:20
 msgid "Land Types Data"
 msgstr "Данные о типах земель"
 
-#: hub/models/property_type_list.py:13 hub/models/property_type_list.py:14
+#: hub/models/property_type_list.py:19 hub/models/property_type_list.py:20
 msgid "Property Type Data"
 msgstr "Данные о типах собственности"
 
-#: indexes/apps.py:8
+#: indexes/apps.py:18
 msgid "Vegetation indices"
 msgstr "Индексы вегетации"
 
-#: indexes/models/actual_veg_index.py:9
+#: indexes/models/actual_veg_index.py:16
 msgid "Index Image"
 msgstr "Изображение индекса"
 
-#: indexes/models/actual_veg_index.py:13 indexes/models/actual_veg_index.py:68
-#: indexes/models/pasture.py:24
+#: indexes/models/actual_veg_index.py:20 indexes/models/actual_veg_index.py:89
+#: indexes/models/pasture.py:37
 msgid "Average Index Value"
 msgstr "Среднее значение индекса"
 
-#: indexes/models/actual_veg_index.py:19
+#: indexes/models/actual_veg_index.py:26
 msgid "Meaning of Average Index Value"
 msgstr "Значение среднего индекса"
 
-#: indexes/models/actual_veg_index.py:25 indexes/models/actual_veg_index.py:79
+#: indexes/models/actual_veg_index.py:32 indexes/models/actual_veg_index.py:100
 msgid "Analysis Date"
 msgstr "Дата анализа"
 
-#: indexes/models/actual_veg_index.py:26
+#: indexes/models/actual_veg_index.py:33
 msgid "Enter the date of the satellite image used to calculate the index"
 msgstr "Введите дату снимка спутника, используемого для расчета индекса"
 
-#: indexes/models/actual_veg_index.py:35
+#: indexes/models/actual_veg_index.py:42
 msgid "Actual Index"
 msgstr "Фактический индекс"
 
-#: indexes/models/actual_veg_index.py:36
+#: indexes/models/actual_veg_index.py:43
 msgid "Actual Indices"
 msgstr "Фактические индексы"
 
-#: indexes/models/actual_veg_index.py:49
+#: indexes/models/actual_veg_index.py:63
 msgid "Minimum Value"
 msgstr "Минимальное значение"
 
-#: indexes/models/actual_veg_index.py:51
+#: indexes/models/actual_veg_index.py:65
 msgid "Maximum Value"
 msgstr "Максимальное значение"
 
-#: indexes/models/actual_veg_index.py:56
+#: indexes/models/actual_veg_index.py:70
 msgid "Index Values"
 msgstr "Значения индекса"
 
-#: indexes/models/actual_veg_index.py:83
+#: indexes/models/actual_veg_index.py:104
 msgid "AI Index Value"
 msgstr "Значение индекса ИИ"
 
-#: indexes/models/actual_veg_index.py:84
+#: indexes/models/actual_veg_index.py:105
 msgid "AI Index Values"
 msgstr "Значения индекса ИИ"
 
-#: indexes/models/actual_veg_index_logs.py:10
-#: indexes.models/actual_veg_index_logs.py:24
+#: indexes/models/actual_veg_index_logs.py:17
+#: indexes/models/actual_veg_index_logs.py:39
 msgid "Satellite Image"
 msgstr "Спутниковое изображение"
 
-#: indexes/models/actual_veg_index_logs.py:11
+#: indexes/models/actual_veg_index_logs.py:18
 msgid "Being Processed"
 msgstr "Обрабатывается"
 
-#: indexes/models/actual_veg_index_logs.py:12
-#: indexes/models/actual_veg_index_logs.py:26
+#: indexes/models/actual_veg_index_logs.py:19
+#: indexes/models/actual_veg_index_logs.py:41
 msgid "Processing Errors"
 msgstr "Ошибки обработки"
 
-#: indexes/models/actual_veg_index_logs.py:15
+#: indexes/models/actual_veg_index_logs.py:22
 msgid "Index Report"
 msgstr "Отчет об индексе"
 
-#: indexes/models/actual_veg_index_logs.py:16
+#: indexes/models/actual_veg_index_logs.py:23
 msgid "Index Reports"
 msgstr "Отчеты об индексе"
 
-#: indexes/models/actual_veg_index_logs.py:25
+#: indexes/models/actual_veg_index_logs.py:40
 msgid "Process Initiated"
 msgstr "Процесс инициирован"
 
-#: indexes/models/actual_veg_index_logs.py:29
+#: indexes/models/actual_veg_index_logs.py:44
 msgid "Index Creation Report"
 msgstr "Отчет о создании индекса"
 
-#: indexes/models/actual_veg_index_logs.py:30
+#: indexes/models/actual_veg_index_logs.py:45
 msgid "Index Creation Reports"
 msgstr "Отчеты о создании индекса"
 
-#: indexes/models/pasture.py:15 indexes/models/pasture.py:30
+#: indexes/models/pasture.py:21 indexes/models/pasture.py:43
 msgid "Productivity Class"
 msgstr "Класс продуктивности"
 
-#: indexes/models/pasture.py:16
+#: indexes/models/pasture.py:22
 msgid "Productivity Classes"
 msgstr "Классы продуктивности"
 
-#: indexes/models/pasture.py:32
+#: indexes/models/pasture.py:45
 msgid "Start Date"
 msgstr "Дата начала"
 
-#: indexes/models/pasture.py:33
+#: indexes/models/pasture.py:46
 msgid "End Date"
 msgstr "Дата окончания"
 
-#: indexes/models/pasture.py:35
+#: indexes/models/pasture.py:48
 msgid "Number of Indices Used for Calculation"
 msgstr "Количество используемых индексов для расчета"
 
-#: indexes/models/pasture.py:41
+#: indexes/models/pasture.py:54
 msgid "Contour Average Index"
 msgstr "Средний индекс контура"
 
-#: indexes/models/pasture.py:42
+#: indexes/models/pasture.py:55
 msgid "Contour Average Indices"
 msgstr "Средние индексы контура"
 
-#: indexes/models/satelliteimage.py:14 indexes/models/satelliteimage.py:35
+#: indexes/models/satelliteimage.py:20 indexes/models/satelliteimage.py:54
 msgid "Satellite Image Source"
 msgstr "Источник спутникового изображения"
 
-#: indexes/models/satelliteimage.py:15
+#: indexes/models/satelliteimage.py:21
 msgid "Satellite Image Sources"
 msgstr "Источники спутниковых изображений"
 
-#: indexes/models/satelliteimage.py:19
+#: indexes/models/satelliteimage.py:31
 msgid "Satellite Image Band Name"
 msgstr "Название полосы спутникового изображения"
 
-#: indexes/models/satelliteimage.py:20
+#: indexes/models/satelliteimage.py:32
 msgid "Satellite Image Band Description"
 msgstr "Описание полосы спутникового изображения"
 
-#: indexes/models/satelliteimage.py:23 indexes/models/satelliteimage.py:41
+#: indexes/models/satelliteimage.py:35 indexes/models/satelliteimage.py:60
 msgid "Satellite Image Band"
 msgstr "Полоса спутникового изображения"
 
-#: indexes/models/satelliteimage.py:24
+#: indexes/models/satelliteimage.py:36
 msgid "Satellite Image Bands"
 msgstr "Полосы спутниковых изображений"
 
-#: indexes/models/satelliteimage.py:46
+#: indexes/models/satelliteimage.py:65
 msgid "Satellite Image Layer"
 msgstr "Слой спутникового изображения"
 
-#: indexes/models/satelliteimage.py:47
+#: indexes/models/satelliteimage.py:66
 msgid "Satellite Image Layers"
 msgstr "Слои спутниковых изображений"
 
-#: indexes/models/satelliteimage.py:51
+#: indexes/models/satelliteimage.py:77
 msgid "Area of Satellite Image Interest"
 msgstr "Область интереса спутникового изображения"
 
-#: indexes/models/satelliteimage.py:54
+#: indexes/models/satelliteimage.py:80
 msgid "Satellite Image Area of Interest"
 msgstr "Область интереса спутникового изображения"
 
-#: indexes/models/satelliteimage.py:55
+#: indexes/models/satelliteimage.py:81
 msgid "Satellite Image Areas of Interest"
 msgstr "Области интересов спутниковых изображений"
 
-#: indexes/models/satelliteimage.py:61
+#: indexes/models/satelliteimage.py:94
 msgid "Area of Interest"
 msgstr "Область интереса"
 
-#: indexes/models/satelliteimage.py:64
+#: indexes/models/satelliteimage.py:97
 msgid "Image Date"
 msgstr "Дата изображения"
 
-#: indexes/models/satelliteimage.py:65
+#: indexes/models/satelliteimage.py:98
 msgid "Layer B01"
 msgstr "Слой B01"
 
-#: indexes/models/satelliteimage.py:67
+#: indexes/models/satelliteimage.py:100
 msgid "Layer B02"
 msgstr "Слой B02"
 
-#: indexes/models/satelliteimage.py:69
+#: indexes/models/satelliteimage.py:102
 msgid "Layer B03"
 msgstr "Слой B03"
 
-#: indexes/models/satelliteimage.py:71
+#: indexes/models/satelliteimage.py:104
 msgid "Layer B04"
 msgstr "Слой B04"
 
-#: indexes/models/satelliteimage.py:73
+#: indexes/models/satelliteimage.py:106
 msgid "Layer B05"
 msgstr "Слой B05"
 
-#: indexes/models/satelliteimage.py:75
+#: indexes/models/satelliteimage.py:108
 msgid "Layer B06"
 msgstr "Слой B06"
 
-#: indexes/models/satelliteimage.py:77
+#: indexes/models/satelliteimage.py:110
 msgid "Layer B07"
 msgstr "Слой B07"
 
-#: indexes/models/satelliteimage.py:79
+#: indexes/models/satelliteimage.py:112
 msgid "Layer B08"
 msgstr "Слой B08"
 
-#: indexes/models/satelliteimage.py:81
+#: indexes/models/satelliteimage.py:114
 msgid "Layer B8A"
 msgstr "Слой B8A"
 
-#: indexes/models/satelliteimage.py:83
+#: indexes/models/satelliteimage.py:116
 msgid "Layer B09"
 msgstr "Слой B09"
 
-#: indexes/models/satelliteimage.py:86
+#: indexes/models/satelliteimage.py:119
 msgid "Layer B10"
 msgstr "Слой B10"
 
-#: indexes/models/satelliteimage.py:89
+#: indexes/models/satelliteimage.py:122
 msgid "Layer B11"
 msgstr "Слой B11"
 
-#: indexes/models/satelliteimage.py:91
+#: indexes/models/satelliteimage.py:124
 msgid "Layer B12"
 msgstr "Слой B12"
 
-#: indexes/models/satelliteimage.py:96
+#: indexes/models/satelliteimage.py:129
 msgid "Image Coordinates"
 msgstr "Координаты изображения"
 
-#: indexes/models/satelliteimage.py:101
+#: indexes/models/satelliteimage.py:134
 msgid "Sentinel-2 Satellite Image"
 msgstr "Спутниковое изображение Sentinel-2"
 
-#: indexes/models/satelliteimage.py:102
+#: indexes/models/satelliteimage.py:135
 msgid "Sentinel-2 Satellite Images"
 msgstr "Спутниковые изображения Sentinel-2"
 
-#: indexes/utils.py:143 scripts/create_veg_indexes_ai.py:132
+#: indexes/utils.py:174 scripts/create_veg_indexes_ai.py:147
 msgid "Error creating vegetation index, check index names"
 msgstr "Ошибка создания индекса растительности, проверьте названия индексов"
+
+#~ msgid "Эталонная база данных Гипрозем"
+#~ msgstr "Эталонная база данных Гипрозем"
