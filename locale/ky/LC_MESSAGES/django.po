@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-23 15:25+0600\n"
+"POT-Creation-Date: 2023-10-02 10:29+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,75 +32,76 @@ msgstr "Сыр сөздөрдү ырасташтырылган жок"
 
 #: account/admin/account.py:41
 msgid "The password can be changed <a href=\"../password/\">here</a>."
-msgstr "Сыр сөздү бул <a href=\"../password/\">жерден</a> өзгөртүү жеткиле берсеңиз."
+msgstr ""
+"Сыр сөздү бул <a href=\"../password/\">жерден</a> өзгөртүү жеткиле берсеңиз."
 
 #: account/admin/account.py:66
 msgid "Permissions"
 msgstr "Изилдөөлөр"
 
-#: account/apps.py:8
+#: account/apps.py:10
 msgid "Accounts"
 msgstr "Аккаунттар"
 
-#: account/models/account.py:9
+#: account/models/account.py:16
 msgid "Administrator"
 msgstr "Администратор"
 
-#: account/models/account.py:10 gip/models/contour.py:49
-#: gip/models/farmer.py:10 gip/models/farmer.py:20
+#: account/models/account.py:17 gip/models/contour.py:63
+#: gip/models/farmer.py:17 gip/models/farmer.py:27
 msgid "Farmer"
 msgstr "Көчкүч"
 
-#: account/models/account.py:11
+#: account/models/account.py:18
 msgid "Worker"
 msgstr "Ишчи"
 
-#: account/models/account.py:12
+#: account/models/account.py:19
 msgid "Observer"
 msgstr "Көзгөртуүчү"
 
-#: account/models/account.py:17 account/models/account.py:28
-#: account/models/account.py:44 auditlog/mixins.py:29 auditlog/models.py:370
+#: account/models/account.py:24 account/models/account.py:42
+#: account/models/account.py:64 auditlog/mixins.py:33 auditlog/models.py:370
 msgid "User"
 msgstr "Колдонуучу"
 
-#: account/models/account.py:18
+#: account/models/account.py:25
 msgid "Users"
 msgstr "Колдонуучулар"
 
-#: account/models/account.py:29
+#: account/models/account.py:43
 msgid "Full name"
 msgstr "Толук аты"
 
-#: account/models/account.py:30
+#: account/models/account.py:44
 msgid "Phone number"
 msgstr "Телефон номери"
 
-#: account/models/account.py:33
+#: account/models/account.py:47
 msgid "Profile"
 msgstr "Профиль"
 
-#: account/models/account.py:34
+#: account/models/account.py:48
 msgid "Profiles"
 msgstr "Профилдер"
 
-#: account/models/account.py:45
+#: account/models/account.py:65
 msgid "Created date"
 msgstr "Түзүлгөн убакты"
 
-#: account/models/account.py:46
+#: account/models/account.py:66
 msgid "Notification text"
 msgstr "Билдирүү тектиси"
 
-#: account/models/account.py:47
+#: account/models/account.py:67
 msgid "Read"
 msgstr "Окулган"
 
-#: account/models/account.py:50
+#: account/models/account.py:70
 msgid "Notification"
 msgstr "Билдирүү"
 
-#: account/models/account.py:51
+#: account/models/account.py:71
 msgid "Notifications"
 msgstr "Билдирүүлөр"
 
@@ -108,15 +109,15 @@ msgstr "Билдирүүлөр"
 msgid "“The login or password was entered incorrectly. Try again.”"
 msgstr "«Кирүү же сыр сөздү туура киргизбедиз. Бир ырагынан карап көрүңүз.»"
 
-#: ai/admin/predicted_contour.py:20 ai/admin/productivity.py:33
-#: culture_model/models/index_plan.py:17 gip/admin/contour.py:22
-#: indexes/admin/actual_veg_index.py:32 indexes/models/actual_veg_index.py:55
-#: indexes/models/actual_veg_index.py:74
+#: ai/admin/predicted_contour.py:22 ai/admin/productivity.py:38
+#: culture_model/models/index_plan.py:23 gip/admin/contour.py:25
+#: indexes/admin/actual_veg_index.py:39 indexes/models/actual_veg_index.py:69
+#: indexes/models/actual_veg_index.py:95
 msgid "Index Value"
 msgstr "Индекс мааниси"
 
-#: ai/admin/predicted_contour.py:32 ai/admin/productivity.py:25
-#: gip/admin/contour.py:34 indexes/admin/actual_veg_index.py:24
+#: ai/admin/predicted_contour.py:36 ai/admin/productivity.py:28
+#: gip/admin/contour.py:40 indexes/admin/actual_veg_index.py:33
 msgid "NDVI Visualization"
 msgstr "NDVI Визуализация"
 
@@ -124,210 +125,210 @@ msgstr "NDVI Визуализация"
 msgid "AI"
 msgstr "ИИ"
 
-#: ai/models/create_dataset.py:9 ai/models/create_dataset.py:12
+#: ai/models/create_dataset.py:15 ai/models/create_dataset.py:18
 msgid "Dataset"
 msgstr "Датасет"
 
-#: ai/models/create_dataset.py:13
+#: ai/models/create_dataset.py:19
 msgid "Datasets"
 msgstr "Датасеттер"
 
-#: ai/models/create_dataset.py:17
+#: ai/models/create_dataset.py:29
 msgid "Performed"
 msgstr "Орындалган"
 
-#: ai/models/create_dataset.py:18 ai/models/create_dataset.py:27
-#: ai/models/create_dataset.py:36 ai/models/create_dataset.py:45
+#: ai/models/create_dataset.py:30 ai/models/create_dataset.py:45
+#: ai/models/create_dataset.py:60 ai/models/create_dataset.py:75
 msgid "Process number"
 msgstr "Процесс номору"
 
-#: ai/models/create_dataset.py:21
+#: ai/models/create_dataset.py:33
 msgid "Process"
 msgstr "Процесс"
 
-#: ai/models/create_dataset.py:22
+#: ai/models/create_dataset.py:34
 msgid "Processes"
 msgstr "Процесстер"
 
-#: ai/models/create_dataset.py:26 ai/models/create_dataset.py:35
-#: ai/models/create_dataset.py:44 ai/models/create_dataset.py:53
+#: ai/models/create_dataset.py:44 ai/models/create_dataset.py:59
+#: ai/models/create_dataset.py:74 ai/models/create_dataset.py:89
 msgid "Completed"
 msgstr "Аяктаган"
 
-#: ai/models/create_dataset.py:30 ai/models/create_dataset.py:31
+#: ai/models/create_dataset.py:48 ai/models/create_dataset.py:49
 msgid "Image collection process"
 msgstr "Сүрөттөрдү топтоо процесси"
 
-#: ai/models/create_dataset.py:39 ai/models/create_dataset.py:40
+#: ai/models/create_dataset.py:63 ai/models/create_dataset.py:64
 msgid "The process of creating color images"
 msgstr "Түс түсүмдүк сүрөттөрдү түзүү процесси"
 
-#: ai/models/create_dataset.py:48 ai/models/create_dataset.py:49
+#: ai/models/create_dataset.py:78 ai/models/create_dataset.py:79
 msgid "Process of cropping color images"
 msgstr "Түс түсүмдүк сүрөттөрдү үзгөртүү процесси"
 
-#: ai/models/create_dataset.py:56 ai/models/create_dataset.py:57
+#: ai/models/create_dataset.py:92 ai/models/create_dataset.py:93
 msgid "Contour search process"
 msgstr "Контурдун издөө процесси"
 
-#: ai/models/create_dataset.py:61 culture_model/models/pasture_culture.py:10
-#: culture_model/models/pasture_culture.py:28
-#: culture_model/models/pasture_culture.py:47
+#: ai/models/create_dataset.py:103 culture_model/models/pasture_culture.py:17
+#: culture_model/models/pasture_culture.py:41
 #: culture_model/models/pasture_culture.py:66
-#: culture_model/models/pasture_culture.py:85
-#: culture_model/models/vegetation_index.py:7 gip/models/soil.py:10
-#: hub/models/land_info.py:89 indexes/models/actual_veg_index.py:52
-#: indexes/models/pasture.py:9 indexes/models/satelliteimage.py:8
+#: culture_model/models/pasture_culture.py:91
+#: culture_model/models/pasture_culture.py:116
+#: culture_model/models/vegetation_index.py:14 gip/models/soil.py:16
+#: hub/models/land_info.py:95 indexes/models/actual_veg_index.py:66
+#: indexes/models/pasture.py:15 indexes/models/satelliteimage.py:14
 msgid "Description"
 msgstr "Сүрөттүк"
 
-#: ai/models/create_dataset.py:64 ai/models/create_dataset.py:65
+#: ai/models/create_dataset.py:106 ai/models/create_dataset.py:107
 msgid "Instructions for creating a dataset"
 msgstr "Датасеттү жасоо үчүн инструкция"
 
-#: ai/models/predicted_contour.py:13 ai/models/predicted_contour.py:16
-#: ai/models/predicted_contour.py:42 indexes/models/actual_veg_index.py:63
-#: indexes/models/satelliteimage.py:31
+#: ai/models/predicted_contour.py:18 ai/models/predicted_contour.py:21
+#: ai/models/predicted_contour.py:53 indexes/models/actual_veg_index.py:84
+#: indexes/models/satelliteimage.py:50
 msgid "Image"
 msgstr "Сүрөт"
 
-#: ai/models/predicted_contour.py:17
+#: ai/models/predicted_contour.py:22
 msgid "Images"
 msgstr "Сүрөттөр"
 
-#: ai/models/predicted_contour.py:22 culture_model/models/index_plan.py:12
-#: gip/models/district.py:11 gip/models/region.py:9 gip/models/region.py:19
+#: ai/models/predicted_contour.py:33 culture_model/models/index_plan.py:18
+#: gip/models/district.py:17 gip/models/region.py:16 gip/models/region.py:26
 msgid "Region"
 msgstr "Бөлүм"
 
-#: ai/models/predicted_contour.py:27
+#: ai/models/predicted_contour.py:38
 msgid "Land type"
 msgstr "Далдык түрү"
 
-#: ai/models/predicted_contour.py:31 gip/models/conton.py:13
-#: gip/models/contour.py:29 gip/models/contour.py:66 gip/models/district.py:13
-#: gip/models/region.py:13 gip/models/soil.py:24 hub/models/land_info.py:11
-#: indexes/models/actual_veg_index.py:78
-#: indexes/models/actual_veg_index_logs.py:6
-#: indexes/models/actual_veg_index_logs.py:20
+#: ai/models/predicted_contour.py:42 gip/models/conton.py:19
+#: gip/models/contour.py:42 gip/models/contour.py:86 gip/models/district.py:19
+#: gip/models/region.py:20 gip/models/soil.py:37 hub/models/land_info.py:17
+#: indexes/models/actual_veg_index.py:99
+#: indexes/models/actual_veg_index_logs.py:13
+#: indexes/models/actual_veg_index_logs.py:35
 msgid "Contour"
 msgstr "Контур"
 
-#: ai/models/predicted_contour.py:32 gip/models/contour.py:30
-#: gip/models/crop_yield.py:15
+#: ai/models/predicted_contour.py:43 gip/models/contour.py:43
+#: gip/models/crop_yield.py:21
 msgid "Year"
 msgstr "Жыл"
 
-#: ai/models/predicted_contour.py:33 gip/models/contour.py:31
-#: gip/models/crop_yield.py:14
+#: ai/models/predicted_contour.py:44 gip/models/contour.py:44
+#: gip/models/crop_yield.py:20
 msgid "Productivity"
 msgstr "Эффективдиктик"
 
-#: ai/models/predicted_contour.py:34
+#: ai/models/predicted_contour.py:45
 msgid "Area in hectares"
 msgstr "Гектардын жанааралуу аласы"
 
-#: ai/models/predicted_contour.py:35 auditlog/models.py:341
-#: gip/models/contour.py:36
+#: ai/models/predicted_contour.py:46 auditlog/models.py:341
+#: gip/models/contour.py:50
 msgid "Deleted"
 msgstr "Өчүрүлдү"
 
-#: ai/models/predicted_contour.py:36 culture_model/models/index_plan.py:11
-#: gip/models/contour.py:37 gip/models/crop_yield.py:12 gip/models/culture.py:8
-#: gip/models/culture.py:15
+#: ai/models/predicted_contour.py:47 culture_model/models/index_plan.py:17
+#: gip/models/contour.py:51 gip/models/crop_yield.py:18
+#: gip/models/culture.py:14 gip/models/culture.py:30
 msgid "Culture"
 msgstr "Культура"
 
-#: ai/models/predicted_contour.py:37 gip/models/contour.py:45
-#: gip.models/contour.py:65 gip/models/contour.py:69
+#: ai/models/predicted_contour.py:48 gip/models/contour.py:59
+#: gip/models/contour.py:85 gip/models/contour.py:89
 msgid "Elevation"
 msgstr "Иртималдар"
 
-#: ai/models/predicted_contour.py:39 gip/models/soil.py:9 gip/models/soil.py:17
-#: gip/models/soil.py:23
+#: ai/models/predicted_contour.py:50 gip/models/soil.py:15
+#: gip/models/soil.py:23 gip/models/soil.py:36
 msgid "Soil Type"
 msgstr "Тоон түрү"
 
-#: ai/models/predicted_contour.py:40
+#: ai/models/predicted_contour.py:51
 msgid "Percentage"
 msgstr "Процент"
 
-#: ai/models/predicted_contour.py:50 culture_model/models/pasture_culture.py:86
-#: culture_model/models/pasture_culture.py:109 gip/models/conton.py:11
-#: gip/models/conton.py:19 gip/models/contour.py:26 gip/models/district.py:12
-#: gip/models/district.py:19
+#: ai/models/predicted_contour.py:61
+#: culture_model/models/pasture_culture.py:117
+#: culture_model/models/pasture_culture.py:146 gip/models/conton.py:17
+#: gip/models/contour.py:39 gip/models/district.py:18 gip/models/district.py:25
 msgid "District"
 msgstr "Район"
 
-#: ai/models/predicted_contour.py:54
+#: ai/models/predicted_contour.py:65
 msgid "AI Detected Contour"
 msgstr "ИИ көрсөткөн контур"
 
-#: ai/models/predicted_contour.py:55
+#: ai/models/predicted_contour.py:66
 msgid "AI Detected Contours"
 msgstr "ИИ көрсөткөн контурлар"
 
-#: ai/models/predicted_contour.py:59 ai/models/productivity.py:7
+#: ai/models/predicted_contour.py:75 ai/models/productivity.py:12
 msgid "Model"
 msgstr "Модель"
 
-#: ai/models/predicted_contour.py:62
+#: ai/models/predicted_contour.py:78
 msgid "Contour Detection Model"
 msgstr "Контур канча табуу модели"
 
-#: ai/models/predicted_contour.py:63
+#: ai/models/predicted_contour.py:79
 msgid "Contour Detection Models"
 msgstr "Контур канча табуу моделдери"
 
-#: ai/models/productivity.py:10
+#: ai/models/productivity.py:15
 msgid "Productivity Prediction Model"
 msgstr "Эффективдиктикке алуу модели"
 
-#: ai/models/productivity.py:11
+#: ai/models/productivity.py:16
 msgid "Productivity Prediction Models"
 msgstr "Эффективдиктикке алуу моделдери"
 
-#: auditlog/admin.py:31 auditlog/mixins.py:58 auditlog/mixins.py:70
+#: auditlog/admin.py:43 auditlog/mixins.py:61 auditlog/mixins.py:74
 msgid "Changes"
 msgstr "Өзгөртүүлөр"
 
-#: auditlog/apps.py:7
+#: auditlog/apps.py:9
 msgid "User Changes Report"
 msgstr "Колдонуучунун өзгөртүүлөр тезиги"
 
-#: auditlog/filters.py:6
+#: auditlog/filters.py:7
 msgid "Tables"
 msgstr "Жадылар"
 
-#: auditlog/filters.py:23 auditlog/models.py:377
+#: auditlog/filters.py:40 auditlog/models.py:377
 msgid "Correlation ID"
 msgstr "Корреляциялык ID"
 
-#: auditlog/mixins.py:21
+#: auditlog/mixins.py:23
 msgid "Click to filter by records with this correlation id"
 msgstr "Бул корреляциялык ID менен жазмаларды сузга чыгаруу үчүн басыңыз"
 
-#: auditlog/mixins.py:23 auditlog/models.py:339
+#: auditlog/mixins.py:26 auditlog/models.py:339
 msgid "Created"
 msgstr "Түзүлдү"
 
-#: auditlog/mixins.py:40
+#: auditlog/mixins.py:43
 msgid "Admin Panel"
 msgstr "Администратордук башкаруу панели"
 
-#: auditlog/mixins.py:42
+#: auditlog/mixins.py:46
 msgid "Resource URL"
 msgstr "Ресурс URL"
 
-#: auditlog/mixins.py:90 gip/models/crop_yield.py:13
+#: auditlog/mixins.py:95 gip/models/crop_yield.py:19
 msgid "Field"
 msgstr "Далда"
 
-#: auditlog/mixins.py:90
+#: auditlog/mixins.py:95
 msgid "Was"
 msgstr "Болгон"
 
-#: auditlog/mixins.py:90
+#: auditlog/mixins.py:95
 msgid "Became"
 msgstr "Болгон"
 
@@ -403,882 +404,906 @@ msgstr "Өчүрүлдү {repr:s}"
 msgid "Logs {repr:s}"
 msgstr "Журналдар {repr:s}"
 
-#: config/settings.py:127
+#: config/settings.py:141
 msgid "English"
 msgstr "Англис тили"
 
-#: config/settings.py:128
+#: config/settings.py:142
 msgid "Russian"
 msgstr "Орус тили"
 
-#: config/settings.py:129
+#: config/settings.py:143
 msgid "Kyrgyz"
 msgstr "Кыргызча"
 
-#: config/settings.py:185 hub/apps.py:8
+#: config/settings.py:198 config/urls.py:45 hub/apps.py:8
 msgid "Giprozem reference database"
 msgstr "Гипрозем эталондук деректер базасы"
 
-#: config/urls.py:40
-msgid "Эталонная база данных Гипрозем"
-msgstr "Гипрозем эсталондук маалыматтар базасы"
-
-#: culture_model/apps.py:8 gip/models/culture.py:16
+#: culture_model/apps.py:13 gip/models/culture.py:31
 msgid "Cultures"
 msgstr "Культуралар"
 
-#: culture_model/models/decade.py:6
+#: culture_model/models/decade.py:12
 msgid "From"
 msgstr "Кайдан"
 
-#: culture_model/models/decade.py:7
+#: culture_model/models/decade.py:13
 msgid "To"
 msgstr "Чейин"
 
-#: culture_model/models/decade.py:10 culture_model/models/index_plan.py:15
+#: culture_model/models/decade.py:16 culture_model/models/index_plan.py:21
 msgid "Decade"
 msgstr "Онжылдык"
 
-#: culture_model/models/decade.py:11
+#: culture_model/models/decade.py:17
 msgid "Decades"
 msgstr "Онжылдыктар"
 
-#: culture_model/models/index_plan.py:14 indexes/models/actual_veg_index.py:22
-#: indexes/models/actual_veg_index.py:47 indexes/models/actual_veg_index.py:76
+#: culture_model/models/index_plan.py:20 indexes/models/actual_veg_index.py:29
+#: indexes/models/actual_veg_index.py:61 indexes/models/actual_veg_index.py:97
 msgid "Index"
 msgstr "Индекс"
 
-#: culture_model/models/index_plan.py:16
+#: culture_model/models/index_plan.py:22
 msgid "Phase"
 msgstr "Фаза"
 
-#: culture_model/models/index_plan.py:20
+#: culture_model/models/index_plan.py:26
 msgid "Planned Index Value"
 msgstr "Пландоо индекс утучу"
 
-#: culture_model/models/index_plan.py:21
+#: culture_model/models/index_plan.py:27
 msgid "Planned Index Values"
 msgstr "Пландоо индекс утучулары"
 
-#: culture_model/models/pasture_culture.py:9
-#: culture_model/models/pasture_culture.py:27
-#: culture_model/models/pasture_culture.py:46
+#: culture_model/models/pasture_culture.py:16
+#: culture_model/models/pasture_culture.py:40
 #: culture_model/models/pasture_culture.py:65
-#: culture_model/models/pasture_culture.py:84
-#: culture_model/models/pasture_culture.py:105
-#: culture_model/models/vegetation_index.py:6 hub/models/land_type_list.py:7
-#: hub/models/property_type_list.py:7 indexes/models/pasture.py:8
-#: indexes/models/satelliteimage.py:7
+#: culture_model/models/pasture_culture.py:90
+#: culture_model/models/pasture_culture.py:115
+#: culture_model/models/pasture_culture.py:142
+#: culture_model/models/vegetation_index.py:13 hub/models/land_type_list.py:13
+#: hub/models/property_type_list.py:13 indexes/models/pasture.py:14
+#: indexes/models/satelliteimage.py:13
 msgid "Name"
 msgstr "Аталышы"
 
-#: culture_model/models/pasture_culture.py:20
-#: culture_model/models/pasture_culture.py:26
+#: culture_model/models/pasture_culture.py:27
+#: culture_model/models/pasture_culture.py:39
 msgid "Class"
 msgstr "Сынып"
 
-#: culture_model/models/pasture_culture.py:21
+#: culture_model/models/pasture_culture.py:28
 msgid "Classes"
 msgstr "Сыныптар"
 
-#: culture_model/models/pasture_culture.py:39
-#: culture_model/models/pasture_culture.py:45
+#: culture_model/models/pasture_culture.py:52
+#: culture_model/models/pasture_culture.py:64
 msgid "Subclass"
 msgstr "Тармаклар"
 
-#: culture_model/models/pasture_culture.py:40
+#: culture_model/models/pasture_culture.py:53
 msgid "Subclasses"
 msgstr "Тармактар"
 
-#: culture_model/models/pasture_culture.py:58
-#: culture_model/models/pasture_culture.py:64
+#: culture_model/models/pasture_culture.py:77
+#: culture_model/models/pasture_culture.py:89
 msgid "Group Type"
 msgstr "Топтык түр"
 
-#: culture_model/models/pasture_culture.py:59
+#: culture_model/models/pasture_culture.py:78
 msgid "Group Types"
 msgstr "Топтык түрлөрү"
 
-#: culture_model/models/pasture_culture.py:77
-#: culture_model/models/pasture_culture.py:83
+#: culture_model/models/pasture_culture.py:102
+#: culture_model/models/pasture_culture.py:114
 msgid "Vegetation Type"
 msgstr "Жапалардын түрү"
 
-#: culture_model/models/pasture_culture.py:78
+#: culture_model/models/pasture_culture.py:103
 msgid "Vegetation Types"
 msgstr "Жапалардын түрлөрү"
 
-#: culture_model/models/pasture_culture.py:98
-#: culture_model/models/pasture_culture.py:104
+#: culture_model/models/pasture_culture.py:129
+#: culture_model/models/pasture_culture.py:141
 msgid "District Type"
 msgstr "Райондук түр"
 
-#: culture_model/models/pasture_culture.py:99
+#: culture_model/models/pasture_culture.py:130
 msgid "District Types"
 msgstr "Райондук түрлөрү"
 
-#: culture_model/models/pasture_culture.py:107
+#: culture_model/models/pasture_culture.py:144
 msgid "Productivity Coefficient"
 msgstr "Урускаркылык коэффициенти"
 
-#: culture_model/models/pasture_culture.py:108
+#: culture_model/models/pasture_culture.py:145
 msgid "Feed Content"
 msgstr "Кормун тармактары"
 
-#: culture_model/models/pasture_culture.py:110
+#: culture_model/models/pasture_culture.py:147
 msgid "Vegetation Period"
 msgstr "Жапа кезеккен убактысы"
 
-#: culture_model/models/pasture_culture.py:123 gip/models/contour.py:43
+#: culture_model/models/pasture_culture.py:160 gip/models/contour.py:57
 msgid "Pasture Culture"
 msgstr "Каржы түрүндүк культура"
 
-#: culture_model/models/pasture_culture.py:124
+#: culture_model/models/pasture_culture.py:161
 msgid "Pasture Cultures"
 msgstr "Каржы түрүндүк культуралары"
 
-#: culture_model/models/phase.py:6 culture_model/models/phase.py:9
+#: culture_model/models/phase.py:12 culture_model/models/phase.py:15
 msgid "Development Phase"
 msgstr "Жасандыру фазасы"
 
-#: culture_model/models/phase.py:10
+#: culture_model/models/phase.py:16
 msgid "Development Phases"
 msgstr "Жасандыру фазалары"
 
-#: culture_model/models/vegetation_index.py:10
-#: indexes/models/actual_veg_index_logs.py:8
-#: indexes/models/actual_veg_index_logs.py:22
+#: culture_model/models/vegetation_index.py:17
+#: indexes/models/actual_veg_index_logs.py:15
+#: indexes/models/actual_veg_index_logs.py:37
 msgid "Vegetation Index"
 msgstr "Жапа индекси"
 
-#: culture_model/models/vegetation_index.py:11
+#: culture_model/models/vegetation_index.py:18
 msgid "Vegetation Indices"
 msgstr "Жапа индекслери"
 
-#: gip/apps.py:8
+#: gip/apps.py:7
 msgid "AgroMap"
 msgstr "Агрокартограмма"
 
-#: gip/models/base.py:6
+#: gip/models/base.py:12
 msgid "Created Date"
 msgstr "Түзүлгөн күнү"
 
-#: gip/models/base.py:7
+#: gip/models/base.py:13
 msgid "Updated Date"
 msgstr "Жаңыртылган күнү"
 
-#: gip/models/contact_information.py:8
+#: gip/models/contact_information.py:14
 msgid "Department Name"
 msgstr "Департамент аты"
 
-#: gip/models/contact_information.py:14 gip.models/contact_information.py:20
+#: gip/models/contact_information.py:20 gip/models/contact_information.py:26
 msgid "Department"
 msgstr "Департамент"
 
-#: gip/models/contact_information.py:15
+#: gip/models/contact_information.py:21
 msgid "Departments"
 msgstr "Департаменттер"
 
-#: gip/models/contact_information.py:21
+#: gip/models/contact_information.py:27
 msgid "Name of State Seed Stations and State Seed Plots"
 msgstr "Жаратылуучу Дала өсөн орнотулган департаменттердин аты"
 
-#: gip/models/contact_information.py:22
+#: gip/models/contact_information.py:28
 msgid "Full Name of Manager"
 msgstr "Менеджердин атын толтуруңуз"
 
-#: gip/models/contact_information.py:24
+#: gip/models/contact_information.py:30
 msgid "Location"
 msgstr "Орнотуу жери"
 
-#: gip/models/contact_information.py:25
+#: gip/models/contact_information.py:31
 msgid "Address"
 msgstr "Дареги"
 
-#: gip/models/contact_information.py:26
+#: gip/models/contact_information.py:32
 msgid "Phone"
 msgstr "Телефон"
 
-#: gip/models/contact_information.py:27
+#: gip/models/contact_information.py:33
 msgid "Email"
 msgstr "Электрондук почта"
 
-#: gip/models/contact_information.py:28
+#: gip/models/contact_information.py:34
 msgid "Map Address"
 msgstr "Картадаража"
 
-#: gip/models/contact_information.py:34 gip/models/contact_information.py:35
+#: gip/models/contact_information.py:40 gip/models/contact_information.py:41
 msgid "Contact Information"
 msgstr "Контакттардын маалыматы"
 
-#: gip/models/conton.py:9 gip/models/district.py:9
+#: gip/models/conton.py:15 gip/models/district.py:15
 msgid "Veterinary SOATO Code"
 msgstr "Ветеринардык СОАТО коду"
 
-#: gip/models/conton.py:10 gip/models/contour.py:25 gip/models/district.py:10
-#: gip/models/region.py:8
+#: gip/models/conton.py:16 gip/models/contour.py:38 gip/models/district.py:16
+#: gip/models/region.py:15
 msgid "SOATO Code"
 msgstr "СОАТО коду"
 
-#: gip/models/conton.py:12
+#: gip/models/conton.py:18
 msgid "District Name"
 msgstr "Райондун аты"
 
-#: gip/models/conton.py:20 gip/models/district.py:20
-msgid "Districts"
-msgstr "Райондор"
+#: gip/models/conton.py:25
+msgid "Canton"
+msgstr "Айыл аймак"
 
-#: gip/models/contour.py:14
+#: gip/models/conton.py:26
+msgid "Cantons"
+msgstr "Айыл аймактар"
+
+#: gip/models/contour.py:20
 msgid "Land Type Name"
 msgstr "Тармактын түрүнүн аты"
 
-#: gip/models/contour.py:17 gip/models/contour.py:27
+#: gip/models/contour.py:23 gip/models/contour.py:40
 msgid "Land Type"
 msgstr "Тармактын түрү"
 
-#: gip/models/contour.py:18 hub/models/land_info.py:48
+#: gip/models/contour.py:24 hub/models/land_info.py:54
 msgid "Land Types"
 msgstr "Тармактын түрлөрү"
 
-#: gip/models/contour.py:34
+#: gip/models/contour.py:45
+msgid "Month of sowing"
+msgstr "Себүү айы"
+
+#: gip/models/contour.py:48
 msgid "Predicted Productivity"
 msgstr "Эмес жайылтыштыктын антолдонушу"
 
-#: gip/models/contour.py:35
+#: gip/models/contour.py:49
 msgid "Area in Hectares"
 msgstr "Гектарда каражат"
 
-#: gip/models/contour.py:46
+#: gip/models/contour.py:60
 msgid "INK"
 msgstr "ИНК"
 
-#: gip/models/contour.py:46
+#: gip/models/contour.py:60
 msgid "Identification Number of the Contour"
 msgstr "Контурдун аныктамалуу номери"
 
-#: gip/models/contour.py:48
+#: gip/models/contour.py:62
 msgid "ENI"
 msgstr "ЭНИ"
 
-#: gip/models/contour.py:51 hub/models/land_info.py:9
-#: indexes/models/actual_veg_index.py:27 indexes/models/actual_veg_index.py:80
-#: indexes/models/pasture.py:34 indexes/models/satelliteimage.py:98
+#: gip/models/contour.py:65 hub/models/land_info.py:15
+#: indexes/models/actual_veg_index.py:34 indexes/models/actual_veg_index.py:101
+#: indexes/models/pasture.py:47 indexes/models/satelliteimage.py:131
 msgid "History"
 msgstr "Тарых"
 
-#: gip/models/contour.py:52
+#: gip/models/contour.py:66
 msgid "Legally Confirmed"
 msgstr "Сыйкыркан жана тастыкталган"
 
-#: gip/models/contour.py:60
+#: gip/models/contour.py:74
 msgid "Field Contour"
 msgstr "Толоркун контуру"
 
-#: gip/models/contour.py:61 indexes.models/actual_veg_index.py:23
-#: indexes/models/pasture.py:20
+#: gip/models/contour.py:75 indexes/models/actual_veg_index.py:30
+#: indexes/models/pasture.py:33
 msgid "Field Contours"
 msgstr "Толоркун контурлору"
 
-#: gip/models/contour.py:70
+#: gip/models/contour.py:90
 msgid "Elevations"
 msgstr "Кышкылдар"
 
-#: gip/models/crop_yield.py:14
+#: gip/models/crop_yield.py:20
 msgid "Measured in centners"
 msgstr "Центнерлер менен изилдөө"
 
-#: gip/models/crop_yield.py:16
+#: gip/models/crop_yield.py:22
 msgid "Season"
 msgstr "Мезгил"
 
-#: gip/models/crop_yield.py:23 hub/models/land_info.py:16
+#: gip/models/crop_yield.py:29 hub/models/land_info.py:22
 msgid "Crop Yield"
 msgstr "Урожайдын түрү"
 
-#: gip/models/crop_yield.py:24
+#: gip/models/crop_yield.py:30
 msgid "Crop Yields"
 msgstr "Урожайдын түрлөрү"
 
-#: gip/models/culture.py:9
+#: gip/models/culture.py:16
 msgid "Crop Productivity Coefficient"
 msgstr "Урудайтын эффективдиктик коэффициенти"
 
-#: gip/models/farmer.py:11
-msgid "TIN or INN"
-msgstr "ТНН же ИНН"
-
-#: gip/models/farmer.py:12
-msgid "Taxpayer Identification Number or Personal Identification Number"
-msgstr "Салык байланыштык номери же Шаарлык байланыштык номери"
-
-#: gip/models/farmer.py:13
-msgid "Phone Number"
-msgstr "Телефон номери"
-
-#: gip/models/farmer.py:21
-msgid "Farmers"
-msgstr "Тарымчылар"
-
-#: gip/models/region.py:10
-msgid "Population"
-msgstr "Азаматтык"
-
-#: gip/models/region.py:11
-msgid "Area"
-msgstr "Алаа"
-
-#: gip/models/region.py:12
-msgid "Density"
-msgstr "Баскычтыктылык"
-
-#: gip/models/region.py:20
-msgid "Regions"
-msgstr "Аймактар"
-
-#: gip/models/soil.py:11
-msgid "Color"
-msgstr "Түс"
-
-#: gip/models/soil.py:18
-msgid "Soil Types"
-msgstr "Тамактын түрлөрү"
-
-#: gip/models/soil.py:27
-msgid "Soil Type Contour"
-msgstr "Тамактын түр контуру"
-
-#: gip/models/soil.py:28
-msgid "Soil Type Contours"
-msgstr "Тамактын түр контурлору"
-
-#: gip/models/soil.py:32 gip/models/soil.py:35
-msgid "Soil Productivity"
-msgstr "Тамактын эффективдиктиги"
-
-#: gip/models/soil.py:36
-msgid "Soil Productivities"
-msgstr "Тамактын эффективдиктиктери"
-
-#: hub/models/base.py:6
-msgid "Creation Date"
-msgstr "Түзүлгөн күнү"
-
-#: hub/models/base.py:7
-msgid "Update Date"
-msgstr "Жаңыртылган күнү"
-
-#: hub/models/category_type_list.py:7
-msgid "Category Name"
-msgstr "Категориянын аты"
-
-#: hub/models/category_type_list.py:13 hub/models/category_type_list.py:14
-#: hub/models/land_info.py:23
-msgid "Land Categories"
-msgstr "Учталган категориялар"
-
-#: hub/models/document_type_list.py:7
-msgid "Document Name"
-msgstr "Документтин аты"
-
-#: hub/models/document_type_list.py:13 hub/models/document_type_list.py:14
-msgid "Legal Documents"
-msgstr "Көзгөртүү документтер"
-
-#: hub/models/land_info.py:10
-msgid "INK Code"
-msgstr "ИНК коду"
-
-#: hub/models/land_info.py:12
-msgid "Tax ID"
-msgstr "Салык номери"
-
-#: hub/models/land_info.py:13
-msgid "Bonniness"
-msgstr "Тазалык"
-
-#: hub/models/land_info.py:14
-msgid "Crop Type"
-msgstr "Урудайтын түрү"
-
-#: hub/models/land_info.py:18
-msgid "Property Type"
-msgstr "Мүлк түрү"
-
-#: hub/models/land_info.py:20
-msgid "Document Type"
-msgstr "Документтин түрү"
-
-#: hub/models/land_info.py:21
-msgid "Document Link"
-msgstr "Документтик байланыш"
-
-#: hub/models/land_info.py:25
-msgid "Land Type Information"
-msgstr "Учталган учун типи тууралуу маалымат"
-
-#: hub/models/land_info.py:27
-msgid "Actual Area"
-msgstr "Ачык учур"
-
-#: hub/models/land_info.py:29
-msgid "Longitude"
-msgstr "Узундук"
-
-#: hub/models/land_info.py:30
-msgid "Latitude"
-msgstr "Чек"
-
-#: hub/models/land_info.py:31
-msgid "Land Number"
-msgstr "Учур номери"
-
-#: hub/models/land_info.py:33
-msgid "Administrative-Territorial Division"
-msgstr "Ишкерчи-табииялык бөлүм"
-
-#: hub/models/land_info.py:35
-msgid "Number of Real Estate Units"
-msgstr "Жеткенчилердин саны"
-
-#: hub/models/land_info.py:36
-msgid "Circuit Number"
-msgstr "Жыйынтык номери"
-
-#: hub/models/land_info.py:37
-msgid "Document Entitlement"
-msgstr "Документтик туура элешилгендиги"
-
-#: hub/models/land_info.py:38
-msgid "Use Period (Years)"
-msgstr "Эсептөө дөрөө (жылдар)"
-
-#: hub/models/land_info.py:40
-msgid "Certifying Act (Attach File)"
-msgstr "Бекитилген эмгектүү (файл косуу)"
-
-#: hub/models/land_info.py:41
-msgid "Use End Date"
-msgstr "Колдонуу аягы"
-
-#: hub/models/land_info.py:43
-msgid "Agricultural Land Purposes"
-msgstr "Тармактын маалыматтары"
-
-#: hub/models/land_info.py:45
-msgid "State Fund of Agricultural Lands"
-msgstr "Мамлекеттик жай тармақ фонду"
-
-#: hub/models/land_info.py:46
-msgid "Lands in Populated Areas"
-msgstr "Азаматтык жай аймактарда"
-
-#: hub/models/land_info.py:47
-msgid "Other Types of Lands"
-msgstr "Башка түрдүү учтар"
-
-#: hub/models/land_info.py:50
-msgid "Agricultural Land Type"
-msgstr "Тармактын түрү"
-
-#: hub/models/land_info.py:51
-msgid "Description of Restrictions"
-msgstr "Чексиздүүлүктөр түрүндөлүү"
-
-#: hub/models/land_info.py:52
-msgid "Completion Date"
-msgstr "Даяр болгон күнү"
-
-#: hub/models/land_info.py:53
-msgid "Perennial Plants"
-msgstr "Жылап өсүмдөр"
-
-#: hub/models/land_info.py:54
-msgid "Forest Areas"
-msgstr "Ормондук айылдар"
-
-#: hub/models/land_info.py:55
-msgid "Underwater"
-msgstr "Суунун астында"
-
-#: hub/models/land_info.py:56
-msgid "Other Lands"
-msgstr "Башка учтар"
-
-#: hub/models/land_info.py:58
-msgid "Collective Gardens and Vegetable Plots"
-msgstr "Кооперативтин жай мен кабачоктук бактылар"
-
-#: hub/models/land_info.py:59
-msgid "Irrigated"
-msgstr "Суумен ормолотулган"
-
-#: hub/models/land_info.py:60
-msgid "Rainfed"
-msgstr "Ысык майданда сууланган"
-
-#: hub/models/land_info.py:62
-msgid "Improved (Radical Improvement)"
-msgstr "Жогорулган (куралган жогорулган)"
-
-#: hub/models/land_info.py:64
-msgid "Inaccessible Due to Difficulty of Access"
-msgstr "Жетишкен киимин тым кыпталганы учун учулбул кылышкан"
-
-#: hub/models/land_info.py:65
-msgid "Intensive Use"
-msgstr "Кеткен колдонуу"
-
-#: hub/models/land_info.py:66
-msgid "Pasture"
-msgstr "Маалыматка"
-
-#: hub/models/land_info.py:68
-msgid "Non-Forest Fund Woody and Shrub Plantations"
-msgstr "Айыл фонду жогорку жана кичинекетпеги"
-
-#: hub/models/land_info.py:69
-msgid "Property Form"
-msgstr "Кызматтык форма"
-
-#: hub/models/land_info.py:70
-msgid "Disturbed Lands"
-msgstr "Жеткен колдонуу камсыз"
-
-#: hub/models/land_info.py:71
-msgid "Lot Number"
-msgstr "Учтун номери"
-
-#: hub/models/land_info.py:73
-msgid "Elementary Section Number"
-msgstr "Элементтердик бөлүм номери"
-
-#: hub/models/land_info.py:75
-msgid "Description (if needed)"
-msgstr "Сүрөттөмө (герек келип чыгарылса)"
-
-#: hub/models/land_info.py:76
-msgid "Long-Term Land Use"
-msgstr "Узак мерекен колдонуу"
-
-#: hub/models/land_info.py:77
-msgid "Limitations"
-msgstr "Чексиздүүлүктөр"
-
-#: hub/models/land_info.py:80
-msgid "Household Lands and Citizen Allotments"
-msgstr "Уй-үрөндөр менен акындарга алынган учтар"
-
-#: hub/models/land_info.py:81
-msgid "Number of Yards"
-msgstr "Арыздардын саны"
-
-#: hub/models/land_info.py:82
-msgid "Number of Families"
-msgstr "Уй менен туулардын саны"
-
-#: hub/models/land_info.py:83
-msgid "Total Land"
-msgstr "Жалпы учтар"
-
-#: hub/models/land_info.py:84
-msgid "Identification Number"
-msgstr "Тандалуу номери"
-
-#: hub/models/land_info.py:85
-msgid "Creator"
-msgstr "Жасоочу"
-
-#: hub/models/land_info.py:86
-msgid "Owner"
-msgstr "Ээгин"
-
-#: hub/models/land_info.py:87
-msgid "Modified By"
-msgstr "Ондоо жасалган"
-
-#: hub/models/land_info.py:88
+#: gip/models/culture.py:20 hub/models/land_info.py:94
 msgid "Type"
 msgstr "Түрү"
 
+#: gip/models/culture.py:35 gip/models/culture.py:41
+#, fuzzy
+#| msgid "Culture"
+msgid "Culture type"
+msgstr "Культуранын түрү"
+
+#: gip/models/culture.py:42
+#, fuzzy
+#| msgid "Cultures"
+msgid "Cultures types"
+msgstr "Культуралар түрлөрү"
+
+#: gip/models/district.py:26
+msgid "Districts"
+msgstr "Райондор"
+
+#: gip/models/farmer.py:18
+msgid "TIN or INN"
+msgstr "ТНН же ИНН"
+
+#: gip/models/farmer.py:19
+msgid "Taxpayer Identification Number or Personal Identification Number"
+msgstr "Салык байланыштык номери же Шаарлык байланыштык номери"
+
+#: gip/models/farmer.py:20
+msgid "Phone Number"
+msgstr "Телефон номери"
+
+#: gip/models/farmer.py:28
+msgid "Farmers"
+msgstr "Тарымчылар"
+
+#: gip/models/region.py:17
+msgid "Population"
+msgstr "Азаматтык"
+
+#: gip/models/region.py:18
+msgid "Area"
+msgstr "Алаа"
+
+#: gip/models/region.py:19
+msgid "Density"
+msgstr "Баскычтыктылык"
+
+#: gip/models/region.py:27
+msgid "Regions"
+msgstr "Аймактар"
+
+#: gip/models/soil.py:17
+msgid "Color"
+msgstr "Түс"
+
+#: gip/models/soil.py:24
+msgid "Soil Types"
+msgstr "Тамактын түрлөрү"
+
+#: gip/models/soil.py:40
+msgid "Soil Type Contour"
+msgstr "Тамактын түр контуру"
+
+#: gip/models/soil.py:41
+msgid "Soil Type Contours"
+msgstr "Тамактын түр контурлору"
+
+#: gip/models/soil.py:45 gip/models/soil.py:48
+msgid "Soil Productivity"
+msgstr "Тамактын эффективдиктиги"
+
+#: gip/models/soil.py:49
+msgid "Soil Productivities"
+msgstr "Тамактын эффективдиктиктери"
+
+#: hub/models/base.py:11
+msgid "Creation Date"
+msgstr "Түзүлгөн күнү"
+
+#: hub/models/base.py:12
+msgid "Update Date"
+msgstr "Жаңыртылган күнү"
+
+#: hub/models/category_type_list.py:13
+msgid "Category Name"
+msgstr "Категориянын аты"
+
+#: hub/models/category_type_list.py:19 hub/models/category_type_list.py:20
+#: hub/models/land_info.py:29
+msgid "Land Categories"
+msgstr "Учталган категориялар"
+
+#: hub/models/document_type_list.py:13
+msgid "Document Name"
+msgstr "Документтин аты"
+
+#: hub/models/document_type_list.py:19 hub/models/document_type_list.py:20
+msgid "Legal Documents"
+msgstr "Көзгөртүү документтер"
+
+#: hub/models/land_info.py:16
+msgid "INK Code"
+msgstr "ИНК коду"
+
+#: hub/models/land_info.py:18
+msgid "Tax ID"
+msgstr "Салык номери"
+
+#: hub/models/land_info.py:19
+msgid "Bonniness"
+msgstr "Тазалык"
+
+#: hub/models/land_info.py:20
+msgid "Crop Type"
+msgstr "Урудайтын түрү"
+
+#: hub/models/land_info.py:24
+msgid "Property Type"
+msgstr "Мүлк түрү"
+
+#: hub/models/land_info.py:26
+msgid "Document Type"
+msgstr "Документтин түрү"
+
+#: hub/models/land_info.py:27
+msgid "Document Link"
+msgstr "Документтик байланыш"
+
+#: hub/models/land_info.py:31
+msgid "Land Type Information"
+msgstr "Учталган учун типи тууралуу маалымат"
+
+#: hub/models/land_info.py:33
+msgid "Actual Area"
+msgstr "Ачык учур"
+
+#: hub/models/land_info.py:35
+msgid "Longitude"
+msgstr "Узундук"
+
+#: hub/models/land_info.py:36
+msgid "Latitude"
+msgstr "Кеңдик"
+
+#: hub/models/land_info.py:37
+msgid "Land Number"
+msgstr "Учур номери"
+
+#: hub/models/land_info.py:39
+msgid "Administrative-Territorial Division"
+msgstr "Ишкерчи-табииялык бөлүм"
+
+#: hub/models/land_info.py:41
+msgid "Number of Real Estate Units"
+msgstr "Жеткенчилердин саны"
+
+#: hub/models/land_info.py:42
+msgid "Circuit Number"
+msgstr "Жыйынтык номери"
+
+#: hub/models/land_info.py:43
+msgid "Document Entitlement"
+msgstr "Документтик туура элешилгендиги"
+
+#: hub/models/land_info.py:44
+msgid "Use Period (Years)"
+msgstr "Эсептөө дөрөө (жылдар)"
+
+#: hub/models/land_info.py:46
+msgid "Certifying Act (Attach File)"
+msgstr "Бекитилген эмгектүү (файл косуу)"
+
+#: hub/models/land_info.py:47
+msgid "Use End Date"
+msgstr "Колдонуу аягы"
+
+#: hub/models/land_info.py:49
+msgid "Agricultural Land Purposes"
+msgstr "Тармактын маалыматтары"
+
+#: hub/models/land_info.py:51
+msgid "State Fund of Agricultural Lands"
+msgstr "Мамлекеттик жай тармақ фонду"
+
+#: hub/models/land_info.py:52
+msgid "Lands in Populated Areas"
+msgstr "Азаматтык жай аймактарда"
+
+#: hub/models/land_info.py:53
+msgid "Other Types of Lands"
+msgstr "Башка түрдүү учтар"
+
+#: hub/models/land_info.py:56
+msgid "Agricultural Land Type"
+msgstr "Тармактын түрү"
+
+#: hub/models/land_info.py:57
+msgid "Description of Restrictions"
+msgstr "Чексиздүүлүктөр түрүндөлүү"
+
+#: hub/models/land_info.py:58
+msgid "Completion Date"
+msgstr "Даяр болгон күнү"
+
+#: hub/models/land_info.py:59
+msgid "Perennial Plants"
+msgstr "Жылап өсүмдөр"
+
+#: hub/models/land_info.py:60
+msgid "Forest Areas"
+msgstr "Ормондук айылдар"
+
+#: hub/models/land_info.py:61
+msgid "Underwater"
+msgstr "Суунун астында"
+
+#: hub/models/land_info.py:62
+msgid "Other Lands"
+msgstr "Башка учтар"
+
+#: hub/models/land_info.py:64
+msgid "Collective Gardens and Vegetable Plots"
+msgstr "Кооперативтин жай мен кабачоктук бактылар"
+
+#: hub/models/land_info.py:65
+msgid "Irrigated"
+msgstr "Суумен ормолотулган"
+
+#: hub/models/land_info.py:66
+msgid "Rainfed"
+msgstr "Ысык майданда сууланган"
+
+#: hub/models/land_info.py:68
+msgid "Improved (Radical Improvement)"
+msgstr "Жогорулган (куралган жогорулган)"
+
+#: hub/models/land_info.py:70
+msgid "Inaccessible Due to Difficulty of Access"
+msgstr "Жетишкен киимин тым кыпталганы учун учулбул кылышкан"
+
+#: hub/models/land_info.py:71
+msgid "Intensive Use"
+msgstr "Кеткен колдонуу"
+
+#: hub/models/land_info.py:72
+msgid "Pasture"
+msgstr "Маалыматка"
+
+#: hub/models/land_info.py:74
+msgid "Non-Forest Fund Woody and Shrub Plantations"
+msgstr "Айыл фонду жогорку жана кичинекетпеги"
+
+#: hub/models/land_info.py:75
+msgid "Property Form"
+msgstr "Кызматтык форма"
+
+#: hub/models/land_info.py:76
+msgid "Disturbed Lands"
+msgstr "Жеткен колдонуу камсыз"
+
+#: hub/models/land_info.py:77
+msgid "Lot Number"
+msgstr "Учтун номери"
+
+#: hub/models/land_info.py:79
+msgid "Elementary Section Number"
+msgstr "Элементтердик бөлүм номери"
+
+#: hub/models/land_info.py:81
+msgid "Description (if needed)"
+msgstr "Сүрөттөмө (герек келип чыгарылса)"
+
+#: hub/models/land_info.py:82
+msgid "Long-Term Land Use"
+msgstr "Узак мерекен колдонуу"
+
+#: hub/models/land_info.py:83
+msgid "Limitations"
+msgstr "Чексиздүүлүктөр"
+
+#: hub/models/land_info.py:86
+msgid "Household Lands and Citizen Allotments"
+msgstr "Уй-үрөндөр менен акындарга алынган учтар"
+
+#: hub/models/land_info.py:87
+msgid "Number of Yards"
+msgstr "Арыздардын саны"
+
+#: hub/models/land_info.py:88
+msgid "Number of Families"
+msgstr "Уй менен туулардын саны"
+
+#: hub/models/land_info.py:89
+msgid "Total Land"
+msgstr "Жалпы учтар"
+
 #: hub/models/land_info.py:90
+msgid "Identification Number"
+msgstr "Тандалуу номери"
+
+#: hub/models/land_info.py:91
+msgid "Creator"
+msgstr "Жасоочу"
+
+#: hub/models/land_info.py:92
+msgid "Owner"
+msgstr "Ээгин"
+
+#: hub/models/land_info.py:93
+msgid "Modified By"
+msgstr "Ондоо жасалган"
+
+#: hub/models/land_info.py:96
 msgid "Land Categories (Land Balance)"
 msgstr "Учтуу категориялар (учтуу теңдеу)"
 
-#: hub/models/land_info.py:91
+#: hub/models/land_info.py:97
 msgid "Status"
 msgstr "Статус"
 
-#: hub/models/land_info.py:93
+#: hub/models/land_info.py:99
 msgid "ENI Code"
 msgstr "ENI коду"
 
-#: hub/models/land_info.py:94
+#: hub/models/land_info.py:100
 msgid "Parcel Address (ASR)"
 msgstr "Учтуу мекен (ASR)"
 
-#: hub/models/land_info.py:96
+#: hub/models/land_info.py:102
 msgid "Special Purpose (ASR)"
 msgstr "Аткарылмалуу максат (ASR)"
 
-#: hub/models/land_info.py:98
+#: hub/models/land_info.py:104
 msgid "Actual Area (ASR)"
 msgstr "Жалпы жер аймагы (ASR)"
 
-#: hub/models/land_info.py:99
+#: hub/models/land_info.py:105
 msgid "Use Form (ASR)"
 msgstr "Колдонуу формасы (ASR)"
 
-#: hub/models/land_info.py:100
+#: hub/models/land_info.py:106
 msgid "Legal Area (ASR)"
 msgstr "Жазалык аймак (ASR)"
 
-#: hub/models/land_info.py:101
+#: hub/models/land_info.py:107
 msgid "Owner Information (ASR)"
 msgstr "Ээгин жеңише (ASR)"
 
-#: hub/models/land_info.py:104 hub/models/land_info.py:105
+#: hub/models/land_info.py:110 hub/models/land_info.py:111
 msgid "Main Table"
 msgstr "Негизги таблица"
 
-#: hub/models/land_type_list.py:13 hub/models/land_type_list.py:14
+#: hub/models/land_type_list.py:19 hub/models/land_type_list.py:20
 msgid "Land Types Data"
 msgstr "Учтуу түрдөрдүн маалыматы"
 
-#: hub/models/property_type_list.py:13 hub/models/property_type_list.py:14
+#: hub/models/property_type_list.py:19 hub/models/property_type_list.py:20
 msgid "Property Type Data"
 msgstr "Өз акырын маалыматы"
 
-#: indexes/apps.py:8
+#: indexes/apps.py:18
 msgid "Vegetation indices"
 msgstr "Тамактуу индекстер"
 
-#: indexes/models/actual_veg_index.py:9
+#: indexes/models/actual_veg_index.py:16
 msgid "Index Image"
 msgstr "Индекс сүрөтү"
 
-#: indexes/models/actual_veg_index.py:13 indexes/models/actual_veg_index.py:68
-#: indexes/models/pasture.py:24
+#: indexes/models/actual_veg_index.py:20 indexes/models/actual_veg_index.py:89
+#: indexes/models/pasture.py:37
 msgid "Average Index Value"
 msgstr "Орто индексдик учур"
 
-#: indexes/models/actual_veg_index.py:19
+#: indexes/models/actual_veg_index.py:26
 msgid "Meaning of Average Index Value"
 msgstr "Орто индексдик учурдун мааниси"
 
-#: indexes/models/actual_veg_index.py:25 indexes/models/actual_veg_index.py:79
+#: indexes/models/actual_veg_index.py:32 indexes/models/actual_veg_index.py:100
 msgid "Analysis Date"
 msgstr "Тааныш датасы"
 
-#: indexes/models/actual_veg_index.py:26
+#: indexes/models/actual_veg_index.py:33
 msgid "Enter the date of the satellite image used to calculate the index"
-msgstr "Индексди эсептөө үчүн колдонулган спутник сүрөттүн убактысын киргизиңиз"
-  
-#: indexes/models/actual_veg_index.py:35
+msgstr ""
+"Индексди эсептөө үчүн колдонулган спутник сүрөттүн убактысын киргизиңиз"
+
+#: indexes/models/actual_veg_index.py:42
 msgid "Actual Index"
 msgstr "Жарыяланган индекс"
 
-#: indexes/models/actual_veg_index.py:36
+#: indexes/models/actual_veg_index.py:43
 msgid "Actual Indices"
 msgstr "Жарыяланган индекстер"
 
-#: indexes/models/actual_veg_index.py:49
+#: indexes/models/actual_veg_index.py:63
 msgid "Minimum Value"
 msgstr "Минималдуу мааниси"
 
-#: indexes/models/actual_veg_index.py:51
+#: indexes/models/actual_veg_index.py:65
 msgid "Maximum Value"
 msgstr "Максималдуу мааниси"
 
-#: indexes/models/actual_veg_index.py:56
+#: indexes/models/actual_veg_index.py:70
 msgid "Index Values"
 msgstr "Индекс мааниси"
 
-#: indexes/models/actual_veg_index.py:83
+#: indexes/models/actual_veg_index.py:104
 msgid "AI Index Value"
 msgstr "AI индексдик учур"
 
-#: indexes/models/actual_veg_index.py:84
+#: indexes/models/actual_veg_index.py:105
 msgid "AI Index Values"
 msgstr "AI индексдик учурдар"
 
-#: indexes/models/actual_veg_index_logs.py:10
-#: indexes/models/actual_veg_index_logs.py:24
+#: indexes/models/actual_veg_index_logs.py:17
+#: indexes/models/actual_veg_index_logs.py:39
 msgid "Satellite Image"
 msgstr "Спутник сүрөтү"
 
-#: indexes/models/actual_veg_index_logs.py:11
+#: indexes/models/actual_veg_index_logs.py:18
 msgid "Being Processed"
 msgstr "Иштешет"
 
-#: indexes/models/actual_veg_index_logs.py:12
-#: indexes.models/actual_veg_index_logs.py:26
+#: indexes/models/actual_veg_index_logs.py:19
+#: indexes/models/actual_veg_index_logs.py:41
 msgid "Processing Errors"
 msgstr "Иштеп чыгаруу катарлары"
 
-#: indexes/models/actual_veg_index_logs.py:15
+#: indexes/models/actual_veg_index_logs.py:22
 msgid "Index Report"
 msgstr "Индексчилердики эмдик"
 
-#: indexes/models/actual_veg_index_logs.py:16
+#: indexes/models/actual_veg_index_logs.py:23
 msgid "Index Reports"
 msgstr "Индексчилердики эмдиктер"
 
-#: indexes/models/actual_veg_index_logs.py:25
+#: indexes/models/actual_veg_index_logs.py:40
 msgid "Process Initiated"
 msgstr "Процесс башталды"
 
-#: indexes/models/actual_veg_index_logs.py:29
+#: indexes/models/actual_veg_index_logs.py:44
 msgid "Index Creation Report"
 msgstr "Индекстерди жасоо эмди"
 
-#: indexes/models/actual_veg_index_logs.py:30
+#: indexes/models/actual_veg_index_logs.py:45
 msgid "Index Creation Reports"
 msgstr "Индекстерди жасоо эмди"
 
-#: indexes/models/pasture.py:15 indexes/models/pasture.py:30
+#: indexes/models/pasture.py:21 indexes/models/pasture.py:43
 msgid "Productivity Class"
 msgstr "Продуктивдуктук класстар"
 
-#: indexes/models/pasture.py:16
+#: indexes/models/pasture.py:22
 msgid "Productivity Classes"
 msgstr "Продуктивдуктук класстар"
 
-#: indexes/models/pasture.py:32
+#: indexes/models/pasture.py:45
 msgid "Start Date"
 msgstr "Баштоо күнү"
 
-#: indexes/models/pasture.py:33
+#: indexes/models/pasture.py:46
 msgid "End Date"
 msgstr "Аяктоо күнү"
 
-#: indexes/models/pasture.py:35
+#: indexes/models/pasture.py:48
 msgid "Number of Indices Used for Calculation"
 msgstr "Индекстерди эсептөө үчүн колдонулган саны"
 
-#: indexes/models/pasture.py:41
+#: indexes/models/pasture.py:54
 msgid "Contour Average Index"
 msgstr "Контурун орто индекси"
 
-#: indexes/models/pasture.py:42
+#: indexes/models/pasture.py:55
 msgid "Contour Average Indices"
 msgstr "Контурун орто индекстери"
 
-#: indexes/models/satelliteimage.py:14 indexes/models/satelliteimage.py:35
+#: indexes/models/satelliteimage.py:20 indexes/models/satelliteimage.py:54
 msgid "Satellite Image Source"
 msgstr "Спутник сүрөт каттоо"
 
-#: indexes/models/satelliteimage.py:15
+#: indexes/models/satelliteimage.py:21
 msgid "Satellite Image Sources"
 msgstr "Спутник сүрөт каттоолору"
 
-#: indexes/models/satelliteimage.py:19
+#: indexes/models/satelliteimage.py:31
 msgid "Satellite Image Band Name"
 msgstr "Спутник сүрөт тасмасынын аты"
 
-#: indexes/models/satelliteimage.py:20
+#: indexes/models/satelliteimage.py:32
 msgid "Satellite Image Band Description"
 msgstr "Спутник сүрөт тасмасынын сүрөтү"
 
-#: indexes/models/satelliteimage.py:23 indexes/models/satelliteimage.py:41
+#: indexes/models/satelliteimage.py:35 indexes/models/satelliteimage.py:60
 msgid "Satellite Image Band"
 msgstr "Спутник сүрөт тасмасы"
 
-#: indexes/models/satelliteimage.py:24
+#: indexes/models/satelliteimage.py:36
 msgid "Satellite Image Bands"
 msgstr "Спутник сүрөт тасмалары"
 
-#: indexes/models/satelliteimage.py:46
+#: indexes/models/satelliteimage.py:65
 msgid "Satellite Image Layer"
 msgstr "Спутник сүрөт жаткан жери"
 
-#: indexes/models/satelliteimage.py:47
+#: indexes/models/satelliteimage.py:66
 msgid "Satellite Image Layers"
 msgstr "Спутник сүрөт жаткан жерлери"
 
-#: indexes/models/satelliteimage.py:51
+#: indexes/models/satelliteimage.py:77
 msgid "Area of Satellite Image Interest"
 msgstr "Спутник сүрөтчүн жеринин интереси"
 
-#: indexes/models/satelliteimage.py:54
+#: indexes/models/satelliteimage.py:80
 msgid "Satellite Image Area of Interest"
 msgstr "Спутник сүрөтчүн жеринин интереси"
 
-#: indexes/models/satelliteimage.py:55
+#: indexes/models/satelliteimage.py:81
 msgid "Satellite Image Areas of Interest"
 msgstr "Спутник сүрөтчүн жеринин интереси"
 
-#: indexes/models/satelliteimage.py:61
+#: indexes/models/satelliteimage.py:94
 msgid "Area of Interest"
 msgstr "Энергетикалык жери"
 
-#: indexes/models/satelliteimage.py:64
+#: indexes/models/satelliteimage.py:97
 msgid "Image Date"
 msgstr "Сүрөт күнү"
 
-#: indexes/models/satelliteimage.py:65
+#: indexes/models/satelliteimage.py:98
 msgid "Layer B01"
 msgstr "Тасма B01"
 
-#: indexes/models/satelliteimage.py:67
+#: indexes/models/satelliteimage.py:100
 msgid "Layer B02"
 msgstr "Тасма B02"
 
-#: indexes/models/satelliteimage.py:69
+#: indexes/models/satelliteimage.py:102
 msgid "Layer B03"
 msgstr "Тасма B03"
 
-#: indexes/models/satelliteimage.py:71
+#: indexes/models/satelliteimage.py:104
 msgid "Layer B04"
 msgstr "Тасма B04"
 
-#: indexes/models/satelliteimage.py:73
+#: indexes/models/satelliteimage.py:106
 msgid "Layer B05"
 msgstr "Тасма B05"
 
-#: indexes/models/satelliteimage.py:75
+#: indexes/models/satelliteimage.py:108
 msgid "Layer B06"
 msgstr "Тасма B06"
 
-#: indexes/models/satelliteimage.py:77
+#: indexes/models/satelliteimage.py:110
 msgid "Layer B07"
 msgstr "Тасма B07"
 
-#: indexes/models/satelliteimage.py:79
+#: indexes/models/satelliteimage.py:112
 msgid "Layer B08"
 msgstr "Тасма B08"
 
-#: indexes/models/satelliteimage.py:81
+#: indexes/models/satelliteimage.py:114
 msgid "Layer B8A"
 msgstr "Тасма B8A"
 
-#: indexes/models/satelliteimage.py:83
+#: indexes/models/satelliteimage.py:116
 msgid "Layer B09"
 msgstr "Тасма B09"
 
-#: indexes/models/satelliteimage.py:86
+#: indexes/models/satelliteimage.py:119
 msgid "Layer B10"
 msgstr "Тасма B10"
 
-#: indexes/models/satelliteimage.py:89
+#: indexes/models/satelliteimage.py:122
 msgid "Layer B11"
 msgstr "Тасма B11"
 
-#: indexes/models/satelliteimage.py:91
+#: indexes/models/satelliteimage.py:124
 msgid "Layer B12"
 msgstr "Тасма B12"
 
-#: indexes/models/satelliteimage.py:96
+#: indexes/models/satelliteimage.py:129
 msgid "Image Coordinates"
 msgstr "Сүрөт координаталары"
 
-#: indexes/models/satelliteimage.py:101
+#: indexes/models/satelliteimage.py:134
 msgid "Sentinel-2 Satellite Image"
 msgstr "Sentinel-2 спутник сүрөтү"
 
-#: indexes/models/satelliteimage.py:102
+#: indexes/models/satelliteimage.py:135
 msgid "Sentinel-2 Satellite Images"
 msgstr "Sentinel-2 спутник сүрөттөрү"
 
-#: indexes/utils.py:143 scripts/create_veg_indexes_ai.py:132
+#: indexes/utils.py:174 scripts/create_veg_indexes_ai.py:147
 msgid "Error creating vegetation index, check index names"
 msgstr "Тамак индексин жасоодо ката бар, индекстердин аталышын текшериңиз"
+
+#~ msgid "Эталонная база данных Гипрозем"
+#~ msgstr "Гипрозем эсталондук маалыматтар базасы"
