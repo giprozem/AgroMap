@@ -78,10 +78,7 @@ class UploadAndExtractService:
             if code_soato is None:
                 code_soato = attributes.get("code_soa")
 
-            canton_id = attributes.get("conton")
-
-            if canton_id is None:
-                raise NotAcceptable(detail="property canton id is required", code=400)
+            canton_id = attributes.get("conton") or None
 
             type_id = attributes.get("type")
             year = attributes.get("year")
@@ -98,7 +95,7 @@ class UploadAndExtractService:
             contour = self.model(
                 polygon=geometry,
                 code_soato=code_soato,
-                conton_id=canton_id,
+                conton_id=canton_id if canton_id else None,
                 type_id=type_id,
                 year=year,
                 ink=ink,

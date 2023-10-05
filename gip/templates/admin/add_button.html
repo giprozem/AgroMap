@@ -1,0 +1,79 @@
+{% extends 'admin/change_list.html' %}
+
+{% block extrahead %}
+<style>
+    .shapefile-container {
+        position: relative;
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+    }
+
+    #shapefile-upload-form {
+        display: none;
+        position: absolute;
+        margin-top: 10px;
+        background: #fff;
+        padding: 10px;
+        z-index: 50
+        ;
+    }
+
+    .btn-shapefile {
+        background-color: #007BFF;
+        border: none;
+        padding: 7px 12px;
+        color: white;
+        cursor: pointer;
+        font-size: .9375rem;
+        transition: background-color 0.3s;
+    }
+
+    .btn-shapefile:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-shapefile:active {
+        background-color: #004492;
+    }
+
+    #id_file {
+        padding: 10px 5px;
+    }
+</style>
+
+<script>
+    function toggleShapefileForm() {
+        var form = document.getElementById("shapefile-upload-form");
+        if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "flex";
+            form.style.flexDirection = "column";
+            form.style.gap = "20px";
+        } else {
+            form.style.display = "none";
+        }
+    }
+</script>
+{% endblock %}
+
+{% block object-tools %}
+
+<div class="shapefile-container">
+    <button class="btn-shapefile" onclick="toggleShapefileForm()">Загрузить shapefile</button>
+
+    <form id="shapefile-upload-form" action="{% url 'import_shapefile' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.file }}
+        {% if form.errors %}
+            <div class="errorlist">
+                {% for error in form.errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <input type="submit" class="btn-shapefile" value="Подтвердить загрузку" />
+    </form>
+</div>
+
+{{ block.super }}
+{% endblock %}

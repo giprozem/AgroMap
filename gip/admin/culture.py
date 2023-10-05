@@ -36,4 +36,11 @@ class CultureAdmin(SimpleHistoryAdmin, TranslationAdmin):
 
 @admin.register(CultureType)
 class CultureTypeAdmin(SimpleHistoryAdmin, TranslationAdmin):
-    pass
+    # Define fields to be displayed in the list view
+    list_display = ['id', 'name']
+
+    # Define read-only fields
+    readonly_fields = ('id', 'created_at', 'updated_at',)
+
+    # Add a date hierarchy based on the 'created_at' field
+    date_hierarchy = 'created_at'
