@@ -8,6 +8,7 @@ from modeltranslation.admin import TranslationAdmin
 from django.utils.translation import gettext_lazy as _
 
 from gip.models import Contour, LandType, Elevation
+from gip.forms import ShapeFileUploadForm
 from indexes.models import ActualVegIndex
 
 # Define an inline admin class for ActualVegIndex
@@ -42,6 +43,7 @@ class ActualVegIndexTabularInline(TabularInline):
 # Register the Contour model with the admin panel
 @admin.register(Contour)
 class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
+    change_list_template = "admin/add_button.html"
     readonly_fields = ('id', 'created_at', 'updated_at', 'elevation', 'area_ha', 'soil_class')
     list_display = ('id', 'ink', 'code_soato', 'conton', 'display_district_name', 'elevation')
     list_filter = ('conton', 'farmer', 'id', 'type', 'culture')
@@ -50,7 +52,14 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     search_fields = ('conton__name', 'farmer__pin_inn', 'ink', 'id', 'conton__district__name_ru')
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'ink',)
+    list_select_related = (
+        "conton",
+    )
     inlines = [ActualVegIndexTabularInline]
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['form'] = ShapeFileUploadForm()
+        return super(ContourAdmin, self).changelist_view(request, extra_context=extra_context)
 
     # Define a custom method to display the district name
     def display_district_name(self, obj):

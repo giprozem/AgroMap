@@ -1,12 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.parsers import FileUploadParser
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
 
-from django.http import FileResponse, HttpResponse
+
+from django.http import HttpResponse
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+from gip.forms import ShapeFileUploadForm
 from gip.models.contour import Contour
 from gip.services.shapefile import UploadAndExtractService, ExportAndZipService
 
@@ -23,7 +27,7 @@ class UploadShapefileApiView(APIView):
                     description="Zip/Rar file containing shapefiles.",
                 )
             },
-        )
+        ),
     )
     def post(self, request, *args, **kwargs):
         file = self.request.FILES.get("file")
@@ -49,8 +53,9 @@ class ExportShapefileApiView(APIView):
                 "contour_id",
                 openapi.IN_QUERY,
                 type=openapi.TYPE_INTEGER,
-                description="ID of the contour to export."
-            )]
+                description="ID of the contour to export.",
+            )
+        ],
     )
     def get(self, request, *args, **kwargs):
         contour_id = self.request.query_params.get("contour_id")
@@ -62,3 +67,17 @@ class ExportShapefileApiView(APIView):
         response = HttpResponse(file_content, content_type="application/zip")
         response["Content-Disposition"] = "attachment; filename=agro-map.zip"
         return response
+
+
+# HTML render views
+def import_shapefile(request):
+    if request.method == "POST":
+        form = ShapeFileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            messages.success(request, _("Shapefile loaded successfully."))
+            return redirect("admin:gip_contour_changelist")
+
+    else:
+        form = ShapeFileUploadForm()
+
+    return redirect("admin:gip_contour_changelist")

@@ -24,7 +24,8 @@ class LandType(models.Model):
         verbose_name_plural = _("Land Types")
 
     def __str__(self):
-        return self.name
+        return self.name_en
+    
 
 
 class Contour(BaseModel):
@@ -35,7 +36,7 @@ class Contour(BaseModel):
     """
 
     code_soato = models.CharField(max_length=30, null=True, blank=True, verbose_name=_("SOATO Code"))
-    conton = models.ForeignKey(Conton, on_delete=models.CASCADE, related_name='contours', verbose_name=_("District"))
+    conton = models.ForeignKey(Conton, on_delete=models.SET_NULL, related_name='contours', verbose_name=_("Conton"), blank=True, null=True)
     type = models.ForeignKey(LandType, on_delete=models.SET_NULL, null=True, verbose_name=_("Land Type"),
                              related_name='contours')
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Contour"), blank=True, null=True)
