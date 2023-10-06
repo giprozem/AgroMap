@@ -46,7 +46,6 @@ class ActualVegIndexTabularInline(TabularInline):
 # Register the Contour model with the admin panel
 @admin.register(Contour)
 class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
-    actions = ['export_shapefile']
     change_list_template = "admin/add_button.html"
     readonly_fields = ('id', 'created_at', 'updated_at', 'elevation', 'area_ha', 'soil_class')
     list_display = ('id', 'ink', 'code_soato', 'conton', 'display_district_name', 'elevation')
@@ -60,20 +59,6 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
         "conton",
     )
     inlines = [ActualVegIndexTabularInline]
-
-    def export_shapefile(self, request, queryset):
-        response = HttpResponse(content_type="application/zip")
-        response['Content-Disposition'] = 'attachment; filename="contours_shapefile.zip"'
-        
-        # Здесь вызываем вашу функцию create_shapefile для создания shapefile
-        #...
-        
-        # Записываем байты shapefile в HttpResponse
-        # response.write(shapefile_bytes)
-        
-        return response
-
-    export_shapefile.short_description = "Выгрузить в Shapefile"
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
