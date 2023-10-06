@@ -1,28 +1,34 @@
+import logging
+
+from typing import Union
+
 from django.db import connection
+from django.contrib.gis.geos import GEOSGeometry
+
 
 from gip.models.conton import Conton
 
-def detect_conton(polygon) -> int:
-    print(polygon)
+
+def detect_conton(polygon: "GEOSGeometry['POLYGON']") -> Union[int, None]:
     """
     find conton using sql queries
     """
     try:
         with connection.cursor() as cursor:
             cursor.execute(
-                f"""
-                SELECT scm.id, 
-                (ST_Area(ST_Intersection(scm.polygon::geometry, '{polygon}'::geometry)) / ST_Area(scm.polygon::geometry)) * 100 AS similarity_percentage
-                FROM gip_conton AS scm
-                ORDER BY similarity_percentage DESC
+                f"""SELECT subquery.name, subquery.id,
+                100.0 * ST_Area(ST_Intersection(subquery.polygon, input_polygon.geom)) / ST_Area(subquery.polygon) AS overlap_percentage
+                FROM (SELECT dst.name, dst.id, dst.polygon
+                      FROM gip_district as dst) AS subquery,
+                LATERAL (SELECT '{polygon}'::geometry AS geom) AS input_polygon
+                WHERE ST_Intersects(subquery.polygon, input_polygon.geom)
+                ORDER BY overlap_percentage DESC
                 LIMIT 1;
-
             """
             )
-            conton_id = cursor.fetchall()[0][1]
-            print(conton_id)
+            conton_id = cursor.fetchall()[0][1] or None
             return conton_id
 
-    except Exception as e:
-        print(f"Error in detect_conton: {e}")
+    except Exception:
+        logging.exception("An error occurred while detect conton")
         return None

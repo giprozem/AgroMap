@@ -2,6 +2,7 @@
 from django.contrib.admin.options import TabularInline
 from django.contrib.gis import admin
 from django.utils.safestring import mark_safe
+from django.http import HttpResponse
 from leaflet.admin import LeafletGeoAdmin
 from simple_history.admin import SimpleHistoryAdmin
 from modeltranslation.admin import TranslationAdmin
@@ -45,6 +46,7 @@ class ActualVegIndexTabularInline(TabularInline):
 # Register the Contour model with the admin panel
 @admin.register(Contour)
 class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
+    actions = ['export_shapefile']
     change_list_template = "admin/add_button.html"
     readonly_fields = ('id', 'created_at', 'updated_at', 'elevation', 'area_ha', 'soil_class')
     list_display = ('id', 'ink', 'code_soato', 'conton', 'display_district_name', 'elevation')
@@ -59,14 +61,33 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     )
     inlines = [ActualVegIndexTabularInline]
 
+    def export_shapefile(self, request, queryset):
+        response = HttpResponse(content_type="application/zip")
+        response['Content-Disposition'] = 'attachment; filename="contours_shapefile.zip"'
+        
+        # Здесь вызываем вашу функцию create_shapefile для создания shapefile
+        #...
+        
+        # Записываем байты shapefile в HttpResponse
+        # response.write(shapefile_bytes)
+        
+        return response
+
+    export_shapefile.short_description = "Выгрузить в Shapefile"
+
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         extra_context['form'] = ShapeFileUploadForm()
         return super(ContourAdmin, self).changelist_view(request, extra_context=extra_context)
+    
 
     # Define a custom method to display the district name
     def display_district_name(self, obj):
-        return obj.conton.district
+        if obj.conton:
+            return obj.conton.district
+        else:
+            undefind_name = _("Not set")
+            return undefind_name
 
     display_district_name.short_description = 'District'
 
