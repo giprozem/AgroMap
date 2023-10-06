@@ -9,7 +9,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from gip.models.conton import Conton
 
 
-def detect_conton(polygon: "GEOSGeometry['POLYGON']") -> Union[int, None]:
+def detect_conton(polygon):
     """
     find conton using sql queries
     """
@@ -26,7 +26,8 @@ def detect_conton(polygon: "GEOSGeometry['POLYGON']") -> Union[int, None]:
                 LIMIT 1;
             """
             )
-            conton_id = cursor.fetchall()[0][1] or None
+            dist_id = cursor.fetchall()[0][1]
+            conton_id = Conton.objects.filter(district_id=int(dist_id), name_ru='None').first().id
             return conton_id
 
     except Exception:
