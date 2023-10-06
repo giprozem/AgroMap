@@ -19,7 +19,7 @@ class Conton(BaseModel):
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Contour"), blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.district.name}'
 
     class Meta:
         verbose_name = _("Canton")

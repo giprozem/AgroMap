@@ -7,9 +7,10 @@ from simple_history.admin import SimpleHistoryAdmin
 from modeltranslation.admin import TranslationAdmin
 from django.utils.translation import gettext_lazy as _
 
-from gip.models import Contour, LandType, Elevation
+from gip.models import Contour, LandType
 from gip.forms import ShapeFileUploadForm
 from indexes.models import ActualVegIndex
+
 
 # Define an inline admin class for ActualVegIndex
 class ActualVegIndexTabularInline(TabularInline):
@@ -40,22 +41,24 @@ class ActualVegIndexTabularInline(TabularInline):
 
     get_html_photo.short_description = _("NDVI Visualization")
 
+
 # Register the Contour model with the admin panel
 @admin.register(Contour)
 class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     change_list_template = "admin/add_button.html"
     readonly_fields = ('id', 'created_at', 'updated_at', 'elevation', 'area_ha', 'soil_class')
     list_display = ('id', 'ink', 'code_soato', 'conton', 'display_district_name', 'elevation')
-    list_filter = ('conton', 'farmer', 'id', 'type', 'culture')
+    list_filter = ('conton', 'farmer', 'id', 'type', 'culture', 'year')
     ordering = ('conton', 'created_at')
     list_per_page = 20
-    search_fields = ('conton__name', 'farmer__pin_inn', 'ink', 'id', 'conton__district__name_ru')
+    search_fields = ('conton__name', 'farmer__pin_inn', 'ink', 'id', 'conton__district__name_ru', 'year')
     date_hierarchy = 'created_at'
     list_display_links = ('id', 'ink',)
     list_select_related = (
         "conton",
     )
     inlines = [ActualVegIndexTabularInline]
+
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         extra_context['form'] = ShapeFileUploadForm()
@@ -67,12 +70,8 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
 
     display_district_name.short_description = 'District'
 
+
 # Register the LandType model with the admin panel
 @admin.register(LandType)
 class LandTypeAdmin(TranslationAdmin):
     list_display = ('id', 'name')
-
-# Register the Elevation model with the admin panel
-@admin.register(Elevation)
-class ElevationAdmin(admin.ModelAdmin):
-    pass

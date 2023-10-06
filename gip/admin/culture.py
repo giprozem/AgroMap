@@ -10,7 +10,7 @@ from gip.models import Culture, CultureType
 @admin.register(Culture)
 class CultureAdmin(SimpleHistoryAdmin, TranslationAdmin):
     # Define fields to be displayed in the list view
-    list_display = ['id', 'name', 'coefficient_crop', ]
+    list_display = ['id', 'name', 'coefficient_crop', 'culture_type']
     
     # Define read-only fields
     readonly_fields = ('id', 'created_at', 'updated_at',)
