@@ -11,7 +11,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 class LandType(models.Model):
-
     """
     The LandType model is designed to store information about different types or categories of land. 
     It includes a single field for the land type name (name).
@@ -25,18 +24,17 @@ class LandType(models.Model):
 
     def __str__(self):
         return self.name_en
-    
 
 
 class Contour(BaseModel):
-
     """
     The Contour model is designed to store information about field contours or land parcels. 
     It includes various fields for attributes such as SOATO codes, district associations, land types, and more.
     """
 
     code_soato = models.CharField(max_length=30, null=True, blank=True, verbose_name=_("SOATO Code"))
-    conton = models.ForeignKey(Conton, on_delete=models.SET_NULL, related_name='contours', verbose_name=_("Conton"), blank=True, null=True)
+    conton = models.ForeignKey(Conton, on_delete=models.SET_NULL, related_name='contours', verbose_name=_("Conton"),
+                               blank=True, null=True)
     type = models.ForeignKey(LandType, on_delete=models.SET_NULL, null=True, verbose_name=_("Land Type"),
                              related_name='contours')
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Contour"), blank=True, null=True)
@@ -68,23 +66,8 @@ class Contour(BaseModel):
                                    verbose_name='Soil Type')
 
     def __str__(self):
-        return self.code_soato or self.ink if self.code_soato or self.ink else ''
+        return self.code_soato if self.code_soato else '' or self.ink if self.ink else '' or f"{self.pk}" if self.pk else ''
 
     class Meta:
         verbose_name = _("Field Contour")
         verbose_name_plural = _("Field Contours")
-
-
-class Elevation(models.Model):
-
-    """
-    The Elevation model is designed to store elevation information associated with contours or land parcels. 
-    It includes fields for elevation values and geographic points.
-    """
-
-    elevation = models.CharField(max_length=25, blank=True, null=True, verbose_name=_('Elevation'))
-    point = models.PointField(verbose_name=_("Contour"), blank=True, null=True)
-
-    class Meta:
-        verbose_name = _("Elevation")
-        verbose_name_plural = _("Elevations")
