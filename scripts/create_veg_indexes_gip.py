@@ -36,7 +36,7 @@ def run():
             # Define a partial function to handle creation of vegetation index for each satellite image
             veg_index_creating_preset = partial(
                 veg_index_creating,
-                contours_objs=contour.id,
+                contour_obj=contour.id,
                 creating_report_obj=IndexCreatingReport,
                 veg_index_obj=ActualVegIndex
             )
