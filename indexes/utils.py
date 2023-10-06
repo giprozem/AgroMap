@@ -1,6 +1,3 @@
-import os
-
-import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from django.contrib.gis.geos import GEOSGeometry
@@ -9,12 +6,16 @@ from django.utils.translation import gettext_lazy as _
 from osgeo import gdal
 
 from culture_model.models import VegetationIndex
+from gip.models import Contour
 from indexes.index_funcs import cutting_tiff
 from indexes.index_funcs.ndvi_funcs import average_ndvi, ndvi_calculator
 from indexes.index_funcs.ndwi_funcs import average_ndwi, ndwi_calculator
 from indexes.index_funcs.savi_funcs import average_savi, savi_calculator
 from indexes.index_funcs.vari_funcs import average_vari, vari_calculator
 from indexes.models import IndexMeaning
+
+import os
+import cv2
 
 
 def remove_file(file_path):
@@ -28,7 +29,7 @@ def remove_file(file_path):
         os.remove(file_path)
 
 
-def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_index_obj):
+def veg_index_creating(satellite_image, creating_report_obj, veg_index_obj, contour_obj):
     """
     This function is designed to process a given satellite image, extract various vegetation indices for specified contours,
     and save the processed results along with any errors encountered during processing.
@@ -39,10 +40,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
     - creating_report_obj: Model for logging the processing reports, including any errors.
     - veg_index_obj: Vegetation index model used to store the computed vegetation index values.
     """
-
-    # Fetch all the contours that are covered by the provided satellite image.
-    contours = contour_obj.objects.filter(polygon__coveredby=satellite_image.polygon)
-
+    contours = Contour.objects.filter(polygon__coveredby=satellite_image.polygon, id=contour_obj)
     # Beginning of main processing. Exception handling is used extensively to log errors in the processing report.
     try:
         for contour in contours:
@@ -67,7 +65,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                 cutting_tiff(
                     outputpath=output_path_tcl,
                     inputpath=f".{satellite_image.TCI.url.replace('mediafiles', 'media')}",
-                    polygon=polygon, x_res=10, y_res=10
+                    polygon=polygon
                 )
                 # The block below checks if more than 20% of the clipped TCI image is white (indicating clouds or snow).
                 # If so, the process is aborted and the issue is logged.
@@ -92,7 +90,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             cutting_tiff(
                                 outputpath=output_path_b02,
                                 inputpath=f".{satellite_image.B02.url.replace('mediafiles', 'media')}",
-                                polygon=polygon, x_res=10, y_res=10
+                                polygon=polygon
                             )
                         except Exception as b02_error:
                             cutting_error.append(f'B02 layer cutting error {b02_error}, ')
@@ -100,7 +98,7 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             cutting_tiff(
                                 outputpath=output_path_b03,
                                 inputpath=f".{satellite_image.B03.url.replace('mediafiles', 'media')}",
-                                polygon=polygon, x_res=10, y_res=10
+                                polygon=polygon
                             )
                         except Exception as b03_error:
                             cutting_error.append(
@@ -109,15 +107,15 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                             cutting_tiff(
                                 outputpath=output_path_b04,
                                 inputpath=f".{satellite_image.B04.url.replace('mediafiles', 'media')}",
-                                polygon=polygon, x_res=10, y_res=10
+                                polygon=polygon
                             )
                         except Exception as b04_error:
                             cutting_error.append(f'B04 layer cutting error {b04_error}, ')
                         try:
                             cutting_tiff(
                                 outputpath=output_path_b08,
-                                inputpath=f".{satellite_image.B8A.url.replace('mediafiles', 'media')}",
-                                polygon=polygon, x_res=10, y_res=10
+                                inputpath=f".{satellite_image.B08.url.replace('mediafiles', 'media')}",
+                                polygon=polygon
                             )
 
                         except Exception as b08_error:
@@ -190,12 +188,6 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
                                         satellite_image=satellite_image
                                     )
                                     actual.index_image.save(f'{file_name}.png', result_to_save)
-                                    creating_report_obj.objects.create(
-                                        contour_id=contour.id,
-                                        is_processed=True,
-                                        satellite_image=satellite_image,
-                                        process_error='No error'
-                                    )
                                 except Exception as e:
                                     plt.close()
                                     creating_report_obj.objects.create(
@@ -219,14 +211,10 @@ def veg_index_creating(satellite_image, contour_obj, creating_report_obj, veg_in
             remove_file(output_path_b04)
             remove_file(output_path_b08)
             remove_file(output_path_tcl)
-
-    # If there are no contours within the satellite image's coverage, or any other unforeseen error occurs,
-    # it is captured and logged.
     except Exception as e:
         creating_report_obj.objects.create(
             contour_id=None,
             veg_index_id=None,
             satellite_image_id=satellite_image.id,
             is_processed=False,
-            process_error=f'Have no contours in this satellite image. Error is - {e}'
-        )
+            process_error=f'There is no satellite image. Error is - {e}')

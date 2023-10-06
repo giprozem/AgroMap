@@ -43,37 +43,48 @@ def get_savi(red_file, nir_file, L=0.5):
 
 def savi_calculator(B04, B08, saving_file_name, L=0):
     """
-    This function visualizes and calculates SAVI for the given Red and NIR bands and returns an image.
+    This function visualizes and calculates SAVI for the provided Red and NIR bands, and returns an image.
     """
-    with rasterio.open(f'{B04}') as src:
+    # Open the Red band using rasterio and read the data
+    with rasterio.open(B04) as src:
         band_red = src.read(1)
 
-    with rasterio.open(f'{B08}') as f:
+    # Open the NIR band using rasterio and read the data
+    with rasterio.open(B08) as f:
         band_nir = f.read(1)
 
     # Allow division by zero
     numpy.seterr(divide='ignore', invalid='ignore')
 
-    # # Calculate savi
+    # Calculate SAVI
     savi = ((band_nir.astype(float) - band_red.astype(float)) / (band_nir + band_red + L)) * (1 + L)
 
+    # Find the minimum and maximum values of SAVI
     min_value = numpy.nanmin(savi)
     max_value = numpy.nanmax(savi)
-    mid = 0.1
 
-    fig = plt.figure(figsize=(75, 25))
-    ax = fig.add_subplot(111)
+    # Create a figure and axis to visualize the SAVI
+    fig, ax = plt.subplots(figsize=(75, 25))
 
+    # Define a colormap for visualization
     cmap = 'RdYlGn'
-    cax = ax.imshow(savi, cmap=cmap, clim=(min_value, max_value), vmin=min_value, vmax=max_value)
 
+    # Display the SAVI data
+    ax.imshow(savi, cmap=cmap, clim=(min_value, max_value), vmin=min_value, vmax=max_value)
+
+    # Turn off the axis
     ax.axis('off')
 
+    # Save the figure to a BytesIO object
     f = BytesIO()
+    fig.savefig(f, format="png", bbox_inches='tight', transparent=True, pad_inches=0)
 
-    plt.savefig(f, format='png', transparent=True, bbox_inches='tight')
+    # Close the figure to free memory
+    plt.close(fig)
+
+    # Convert the BytesIO object to a Django ContentFile
     content_file = ContentFile(f.getvalue())
-    plt.close()
+
     return content_file
 
 

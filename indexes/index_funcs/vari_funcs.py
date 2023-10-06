@@ -46,42 +46,50 @@ def get_vari(red_file, green_file, blue_file):
 
 def vari_calculator(B02, B03, B04, saving_file_name):
     """
-    This function visualizes and calculates VARI for the given Red, Green, and Blue bands and returns an image.
+    This function visualizes and calculates VARI for the provided Blue, Green, and Red bands, and returns an image.
     """
-    with rasterio.open(f'{B02}') as blue:
+    # Open the Blue, Green, and Red bands using rasterio and read the data
+    with rasterio.open(B02) as blue:
         band_blue = blue.read(1)
 
-    with rasterio.open(f'{B03}') as green:
+    with rasterio.open(B03) as green:
         band_green = green.read(1)
 
-    with rasterio.open(f'{B04}') as red:
+    with rasterio.open(B04) as red:
         band_red = red.read(1)
 
     # Allow division by zero
     numpy.seterr(divide='ignore', invalid='ignore')
 
-    # # Calculate vari
+    # Calculate VARI
     vari = ((band_green.astype(float) - band_red.astype(float)) / (band_green + band_red - band_blue))
 
+    # Find the minimum and maximum values of VARI
     min_value = numpy.nanmin(vari)
     max_value = numpy.nanmax(vari)
-    mid = 0.1
 
-    fig = plt.figure(figsize=(75, 25))
-    ax = fig.add_subplot(111)
+    # Create a figure and axis to visualize the VARI
+    fig, ax = plt.subplots(figsize=(75, 25))
 
+    # Define a colormap for visualization
     cmap = 'RdYlGn'
-    cax = ax.imshow(vari, cmap=cmap, clim=(min_value, max_value), vmin=min_value, vmax=max_value)
 
+    # Display the VARI data
+    ax.imshow(vari, cmap=cmap, clim=(min_value, max_value), vmin=min_value, vmax=max_value)
+
+    # Turn off the axis
     ax.axis('off')
 
+    # Save the figure to a BytesIO object
     f = BytesIO()
+    fig.savefig(f, format="png", bbox_inches='tight', transparent=True, pad_inches=0)
 
-    f = BytesIO()
+    # Close the figure to free memory
+    plt.close(fig)
 
-    plt.savefig(f, format='png', transparent=True, bbox_inches='tight')
+    # Convert the BytesIO object to a Django ContentFile
     content_file = ContentFile(f.getvalue())
-    plt.close()
+
     return content_file
 
 
