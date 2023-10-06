@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from gip.services.shapefile import UploadAndExtractService
 from gip.models import Contour
-import zipfile
+
 
 class ShapeFileUploadForm(forms.Form):
     file = forms.FileField()

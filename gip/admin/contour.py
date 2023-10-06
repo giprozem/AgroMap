@@ -2,6 +2,7 @@
 from django.contrib.admin.options import TabularInline
 from django.contrib.gis import admin
 from django.utils.safestring import mark_safe
+from django.http import HttpResponse
 from leaflet.admin import LeafletGeoAdmin
 from simple_history.admin import SimpleHistoryAdmin
 from modeltranslation.admin import TranslationAdmin
@@ -63,10 +64,15 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
         extra_context = extra_context or {}
         extra_context['form'] = ShapeFileUploadForm()
         return super(ContourAdmin, self).changelist_view(request, extra_context=extra_context)
+    
 
     # Define a custom method to display the district name
     def display_district_name(self, obj):
-        return obj.conton.district
+        if obj.conton:
+            return obj.conton.district
+        else:
+            undefind_name = _("Not set")
+            return undefind_name
 
     display_district_name.short_description = 'District'
 
