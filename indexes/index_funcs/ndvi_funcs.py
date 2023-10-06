@@ -1,9 +1,9 @@
 from io import BytesIO
 
-import matplotlib.pyplot as plt
 import numpy
 import numpy as np
 import rasterio
+import matplotlib.pyplot as plt
 from django.core.files.base import ContentFile
 
 
@@ -42,37 +42,54 @@ def get_ndvi(red_file, nir_file):
 
 def ndvi_calculator(B04, B08, saving_file_name):
     """
-    This function visualizes and calculates NDVI for given Red and NIR bands, and returns an image.
+    This function visualizes and calculates NDVI for the provided Red and NIR bands, and returns an image.
     """
-    with rasterio.open(f'{B04}') as src:
+    # Open the Red band using rasterio and read the data
+    with rasterio.open(B04) as src:
         band_red = src.read(1)
 
-    with rasterio.open(f'{B08}') as f:
+    # Open the NIR band using rasterio and read the data
+    with rasterio.open(B08) as f:
         band_nir = f.read(1)
 
-    # Allow division by zero
+    # Set numpy error handling
     numpy.seterr(divide='ignore', invalid='ignore')
 
-    # # Calculate NDVI
+    # Calculate NDVI
     ndvi = (band_nir.astype(float) - band_red.astype(float)) / (band_nir + band_red)
 
+    # Find the minimum and maximum values of NDVI
     min_value = numpy.nanmin(ndvi)
     max_value = numpy.nanmax(ndvi)
-    mid = 0.1
 
-    fig = plt.figure(figsize=(75, 25))
-    ax = fig.add_subplot(111)
+    # Create a figure and axis to visualize the NDVI
+    fig, ax = plt.subplots(figsize=(75, 25))
 
+    # Define a colormap for visualization
     cmap = plt.cm.YlGn
-    cax = ax.imshow(ndvi, cmap=cmap, clim=(min_value, max_value), vmin=min_value, vmax=max_value)
 
+    # Display the NDVI data
+    ax.imshow(ndvi, cmap=cmap, clim=(min_value, max_value), vmin=min_value, vmax=max_value)
+
+    # Turn off the axis
     ax.axis('off')
 
-    f = BytesIO()
+    # Adjust the figure to remove borders and whitespace
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0, hspace=0, wspace=0)
+    ax.margins(0, 0)
+    ax.xaxis.set_major_locator(plt.NullLocator())
+    ax.yaxis.set_major_locator(plt.NullLocator())
 
-    plt.savefig(f, format='png', transparent=True, bbox_inches='tight')
+    # Save the figure to a BytesIO object
+    f = BytesIO()
+    fig.savefig(f, format="png", bbox_inches='tight', transparent=True, pad_inches=0)
+
+    # Close the figure to free memory
+    plt.close(fig)
+
+    # Convert the BytesIO object to a Django ContentFile
     content_file = ContentFile(f.getvalue())
-    plt.close()
+
     return content_file
 
 
