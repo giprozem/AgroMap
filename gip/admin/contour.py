@@ -3,6 +3,10 @@ from django.contrib.admin.options import TabularInline
 from django.contrib.gis import admin
 from django.utils.safestring import mark_safe
 from django.http import HttpResponse
+from django.utils.html import format_html
+from django.utils.http import urlencode
+from django.urls import reverse
+
 from leaflet.admin import LeafletGeoAdmin
 from simple_history.admin import SimpleHistoryAdmin
 from modeltranslation.admin import TranslationAdmin
@@ -48,7 +52,7 @@ class ActualVegIndexTabularInline(TabularInline):
 class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
     change_list_template = "admin/add_button.html"
     readonly_fields = ('id', 'created_at', 'updated_at', 'elevation', 'area_ha', 'soil_class')
-    list_display = ('id', 'ink', 'code_soato', 'conton', 'display_district_name', 'elevation')
+    list_display = ('id', 'ink', 'code_soato', 'conton', 'display_district_name', 'elevation', "export_shapefile")
     list_filter = ('conton', 'farmer', 'id', 'type', 'culture', 'year')
     ordering = ('conton', 'created_at')
     list_per_page = 20
@@ -73,8 +77,15 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
         else:
             undefind_name = _("Not set")
             return undefind_name
-
+        
+    def export_shapefile(self, obj):
+        base_url = reverse("shapefile-export")
+        params = {'contour_id': obj.pk,}
+        url = f"{base_url}?{urlencode(params)}"
+        return format_html(f'<a class="button" href={url}>{_("Export")}</a> ')
+    
     display_district_name.short_description = 'District'
+    export_shapefile.short_description = _("Export shapefile")
 
 
 # Register the LandType model with the admin panel
