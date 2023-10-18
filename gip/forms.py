@@ -19,7 +19,6 @@ class ShapeFileUploadForm(forms.Form):
             service = UploadAndExtractService(zip_file=data, model=Contour)
             service.execute()
         except Exception as e:
-            logging.raiseExceptions(e)
             raise forms.ValidationError(_(str(e)))
 
         return data
