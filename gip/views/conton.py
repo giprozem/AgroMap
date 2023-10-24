@@ -5,73 +5,13 @@ from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from gip.models import Conton
 from gip.serializers.conton import ContonSerializer, ContonWithoutPolygonSerializer
+from gip.schemas.conton import get_conton_schema
+
 
 
 class ContonAPIView(APIView):
 
-    @swagger_auto_schema(
-        manual_parameters=[
-            openapi.Parameter(
-                'page_size',
-                in_=openapi.IN_QUERY,
-                type=openapi.TYPE_INTEGER,
-                description='Page_size is optional'
-            ),
-            openapi.Parameter(
-                'polygon',
-                in_=openapi.IN_QUERY,
-                type=openapi.TYPE_BOOLEAN,
-                description='If set, returns the serialized polygon for each district. '
-                            'If doesnot set, returns only the district data without polygons.'
-            ),
-            openapi.Parameter(
-                'district_id',
-                in_=openapi.IN_QUERY,
-                type=openapi.TYPE_INTEGER,
-                description='If `polygon` is set, this parameter can be used to filter districts by district ID.'
-            ),
-            openapi.Parameter(
-                'pagination',
-                in_=openapi.IN_QUERY,
-                type=openapi.TYPE_BOOLEAN,
-                description='If set, returns the serialized data with pagination. '
-                            'If doesnot set, returns only the district data without pagination.'
-            ),
-        ],
-        responses={
-            200: openapi.Response(
-                'OK',
-                schema=openapi.Schema(
-                    type=openapi.TYPE_ARRAY,
-                    items=openapi.Schema(
-                        type=openapi.TYPE_OBJECT,
-                        properties={
-                            'id': openapi.Schema(type=openapi.TYPE_INTEGER),
-                            'name': openapi.Schema(type=openapi.TYPE_STRING),
-                            'district_id': openapi.Schema(type=openapi.TYPE_INTEGER),
-                            'polygon': openapi.Schema(
-                                type=openapi.TYPE_OBJECT,
-                                properties={
-                                    'type': openapi.Schema(type=openapi.TYPE_STRING, example='Polygon'),
-                                    'coordinates': openapi.Schema(
-                                        type=openapi.TYPE_ARRAY,
-                                        items=openapi.Schema(
-                                            type=openapi.TYPE_ARRAY,
-                                            items=openapi.Schema(
-                                                type=openapi.TYPE_ARRAY,
-                                                items=openapi.Schema(type=openapi.TYPE_NUMBER)
-                                            )
-                                        )
-                                    )
-                                }
-                            )
-                        }
-                    )
-                )
-            ),
-            400: openapi.Response('Bad Request')
-        }
-    )
+    @get_conton_schema()
     def get(self, request, *args, **kwargs):
         polygon = request.query_params.get('polygon')
         district = request.query_params.get('district_id')

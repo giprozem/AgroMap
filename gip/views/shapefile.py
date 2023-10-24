@@ -13,22 +13,11 @@ from drf_yasg.utils import swagger_auto_schema
 from gip.forms import ShapeFileUploadForm
 from gip.models.contour import Contour
 from gip.services.shapefile import UploadAndExtractService, ExportAndZipService
+from gip.schemas.shapefile import get_shapefile_export_schema, get_shapefile_upload_schema
 
 
 class UploadShapefileApiView(APIView):
-    @swagger_auto_schema(
-        operation_description="Upload and extract shapefiles from a zip/rar file.",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            required=["file"],
-            properties={
-                "file": openapi.Schema(
-                    type=openapi.TYPE_FILE,
-                    description="Zip/Rar file containing shapefiles.",
-                )
-            },
-        ),
-    )
+    @get_shapefile_upload_schema()
     def post(self, request, *args, **kwargs):
         file = self.request.FILES.get("file")
         if file is None:
@@ -46,17 +35,7 @@ class UploadShapefileApiView(APIView):
 
 
 class ExportShapefileApiView(APIView):
-    @swagger_auto_schema(
-        operation_description="Export and zip shapefiles for a specified contour.",
-        manual_parameters=[
-            openapi.Parameter(
-                "contour_id",
-                openapi.IN_QUERY,
-                type=openapi.TYPE_INTEGER,
-                description="ID of the contour to export.",
-            )
-        ],
-    )
+    @get_shapefile_export_schema()
     def get(self, request, *args, **kwargs):
         contour_id = self.request.query_params.get("contour_id")
 
@@ -69,7 +48,6 @@ class ExportShapefileApiView(APIView):
         return response
 
 
-# HTML render views
 def import_shapefile(request):
     if request.method == "POST":
         form = ShapeFileUploadForm(request.POST, request.FILES)
