@@ -5,32 +5,26 @@ from rest_framework.response import Response
 import json
 
 from gip.serializers.soil import SoilClassSerializer
+from gip.schemas.soil import get_soil_class_schema, get_soil_schema
 
 
 class SoilAPIView(APIView):
-
-    @swagger_auto_schema(
-        operation_summary='do not required for front'
-    )
+    @get_soil_schema()
     def post(self, request, *args, **kwargs):
-        with open('exel.json') as f:
+        with open("exel.json") as f:
             result = json.load(f)
 
         for i, j in result.items():
             SoilClass.objects.create(id_soil=i, name=j, name_ky=j, name_en=j)
-        return Response('it is ok', status=200)
+        return Response("it is ok", status=200)
 
 
 class SoilClassAPIView(APIView):
-
-    @swagger_auto_schema(
-        operation_summary='Get all soil classes.',
-        responses={200: SoilClassSerializer(many=True)}
-    )
+    @get_soil_class_schema()
     def get(self, request, *args, **kwargs):
         """
-            Retrieve all soil classes.
+        Retrieve all soil classes.
         """
-        query = SoilClass.objects.all().order_by('id_soil')
+        query = SoilClass.objects.all().order_by("id_soil")
         serializer = SoilClassSerializer(query, many=True)
         return Response(serializer.data, status=200)
