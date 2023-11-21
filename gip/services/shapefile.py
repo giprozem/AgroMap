@@ -64,7 +64,11 @@ class UploadAndExtractService:
         """Process a shapefile."""
         driver = ogr.GetDriverByName("ESRI Shapefile")
         dataset = driver.Open(shapefile_path)
+        if dataset is None:
+            return
+
         layer = dataset.GetLayer()
+
         for feature in layer:
             geometry = GEOSGeometry(feature.GetGeometryRef().ExportToWkt())
             attributes = {
@@ -73,7 +77,6 @@ class UploadAndExtractService:
                 )
                 for field_index in range(feature.GetFieldCount())
             }
-            code_soato = None
             code_soato = attributes.get("code_soato")
             if code_soato is None:
                 code_soato = attributes.get("code_soa")
@@ -117,8 +120,8 @@ class UploadAndExtractService:
         """Main method to execute upload and processing."""
         self._create_temp_folder()
         temp_path = self._save_zip()
+        extract_path = self._unzip_file(temp_path)
         try:
-            extract_path = self._unzip_file(temp_path)
             path = os.path.join(extract_path)
             shapefile_found = False
             for root, dirs, files in os.walk(path):
@@ -127,15 +130,18 @@ class UploadAndExtractService:
                     if file_path.lower().endswith(self.SHAPEFILE_FORMAT):
                         with transaction.atomic():
                             self._process_shapefile(file_path)
-                            self._cleanup(temp_path, extract_path)
                             break
 
                     if not shapefile_found:
-                        self._cleanup(temp_path, extract_path)
                         raise ShapeFileNotFoundException()
 
         except Exception as e:
             raise ServerAlertException(detail=e, code=500, exception_message=e)
+
+        finally:
+            self._cleanup(temp_path, extract_path)
+
+
 
 
 class ExportAndZipService:
