@@ -64,6 +64,7 @@ class Contour(BaseModel):
     is_rounded = models.BooleanField(default=False, verbose_name=_('Legally Confirmed'))
     soil_class = models.ForeignKey(SoilClass, on_delete=models.SET_NULL, blank=True, null=True,
                                    verbose_name='Soil Type')
+    cadastre = models.BooleanField(default=False)
 
     def __str__(self):
         return self.code_soato if self.code_soato else '' or self.ink if self.ink else '' or f"{self.pk}" if self.pk else ''
