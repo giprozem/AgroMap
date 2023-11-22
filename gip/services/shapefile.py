@@ -122,24 +122,24 @@ class UploadAndExtractService:
         temp_path = self._save_zip()
         extract_path = self._unzip_file(temp_path)
         try:
-            path = os.path.join(extract_path)
             shapefile_found = False
-            for root, dirs, files in os.walk(path):
+            for root, dirs, files in os.walk(extract_path):
                 for file_name in files:
                     file_path = os.path.join(root, file_name)
                     if file_path.lower().endswith(self.SHAPEFILE_FORMAT):
                         with transaction.atomic():
                             self._process_shapefile(file_path)
-                            break
-
-                    if not shapefile_found:
-                        raise ShapeFileNotFoundException()
+                            shapefile_found = True  
+                            break 
+            if not shapefile_found:
+                raise ShapeFileNotFoundException()
 
         except Exception as e:
-            raise ServerAlertException(detail=e, code=500, exception_message=e)
+            raise ServerAlertException(detail=str(e), code=500, exception_message=str(e))
 
         finally:
             self._cleanup(temp_path, extract_path)
+
 
 
 
