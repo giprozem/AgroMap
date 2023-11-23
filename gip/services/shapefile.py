@@ -10,18 +10,20 @@ import rarfile
 
 from osgeo import ogr
 import geopandas as gpd
+from shapely.geos import TopologicalError
 
-from rest_framework.exceptions import NotAcceptable
 
 from django.contrib.gis.geos import GEOSGeometry
 from django.core.serializers import serialize
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+from django.db.models import QuerySet
 
 from gip.exceptions.shapefile_exceptions import (
     ServerAlertException,
     ShapeFileNotFoundException,
 )
+from gip.models import Contour
 
 
 class UploadAndExtractService:
@@ -70,46 +72,50 @@ class UploadAndExtractService:
         layer = dataset.GetLayer()
 
         for feature in layer:
-            geometry = GEOSGeometry(feature.GetGeometryRef().ExportToWkt())
-            attributes = {
-                feature.GetFieldDefnRef(field_index).GetName(): feature.GetField(
-                    field_index
+            try:
+                geometry = GEOSGeometry(feature.GetGeometryRef().ExportToWkt())
+                attributes = {
+                    feature.GetFieldDefnRef(field_index).GetName(): feature.GetField(
+                        field_index
+                    )
+                    for field_index in range(feature.GetFieldCount())
+                }
+                code_soato = attributes.get("code_soato")
+                if code_soato is None:
+                    code_soato = attributes.get("code_soa")
+
+                canton_id = attributes.get("conton") or None
+
+                type_id = attributes.get("type")
+                year = attributes.get("year")
+                productivity = attributes.get("producti")
+                predicted_productivity = attributes.get("predicte")
+                culture = attributes.get("culture")
+                ink = attributes.get("ink")
+                eni = attributes.get("eni")
+                farmer = attributes.get("farmer")
+                pasture_list: list = attributes.get("pasture") or []
+                if pasture_list is not None:
+                    pasture_culture = [i for i in pasture_list]
+
+                contour = self.model(
+                    polygon=geometry,
+                    code_soato=code_soato,
+                    conton_id=canton_id if canton_id else None,
+                    type_id=type_id,
+                    year=year,
+                    ink=ink,
+                    culture_id=culture,
+                    productivity=productivity,
+                    predicted_productivity=predicted_productivity,
+                    farmer=farmer,
+                    eni=eni,
                 )
-                for field_index in range(feature.GetFieldCount())
-            }
-            code_soato = attributes.get("code_soato")
-            if code_soato is None:
-                code_soato = attributes.get("code_soa")
+                contour.save()
+                contour.pasture_culture.add(*pasture_culture)
 
-            canton_id = attributes.get("conton") or None
-
-            type_id = attributes.get("type")
-            year = attributes.get("year")
-            productivity = attributes.get("producti")
-            predicted_productivity = attributes.get("predicte")
-            culture = attributes.get("culture")
-            ink = attributes.get("ink")
-            eni = attributes.get("eni")
-            farmer = attributes.get("farmer")
-            pasture_list: list = attributes.get("pasture") or []
-            if pasture_list is not None:
-                pasture_culture = [i for i in pasture_list]
-
-            contour = self.model(
-                polygon=geometry,
-                code_soato=code_soato,
-                conton_id=canton_id if canton_id else None,
-                type_id=type_id,
-                year=year,
-                ink=ink,
-                culture_id=culture,
-                productivity=productivity,
-                predicted_productivity=predicted_productivity,
-                farmer=farmer,
-                eni=eni,
-            )
-            contour.save()
-            contour.pasture_culture.add(*pasture_culture)
+            except TopologicalError as e:
+                print(e)
 
     def _cleanup(self, temp_path: str, extract_path: str) -> None:
         """Clean up temporary files and folders."""
@@ -122,24 +128,24 @@ class UploadAndExtractService:
         temp_path = self._save_zip()
         extract_path = self._unzip_file(temp_path)
         try:
-            path = os.path.join(extract_path)
             shapefile_found = False
-            for root, dirs, files in os.walk(path):
+            for root, dirs, files in os.walk(extract_path):
                 for file_name in files:
                     file_path = os.path.join(root, file_name)
                     if file_path.lower().endswith(self.SHAPEFILE_FORMAT):
                         with transaction.atomic():
                             self._process_shapefile(file_path)
-                            break
-
-                    if not shapefile_found:
-                        raise ShapeFileNotFoundException()
+                            shapefile_found = True  
+                            break 
+            if not shapefile_found:
+                raise ShapeFileNotFoundException()
 
         except Exception as e:
-            raise ServerAlertException(detail=e, code=500, exception_message=e)
+            raise ServerAlertException(detail=str(e), code=500, exception_message=str(e))
 
         finally:
             self._cleanup(temp_path, extract_path)
+
 
 
 
@@ -151,21 +157,31 @@ class ExportAndZipService:
     def __init__(self, model) -> None:
         self.model = model
 
+    def get_all_queryset(self) -> "QuerySet[Contour]":
+        contours_qs = self.model.objects.all()
+        return contours_qs
+
     def get_qeuryset(self, pk: int) -> Any:
         """Retrieve the queryset based on the provided key."""
 
         work_model = get_object_or_404(self.model, pk=pk)
         return work_model
 
-    def create_geojson(self, qs: Any) -> str:
+    def create_geojson(self, qs: "QuerySet[Contour]") -> str:
         """Create a geojson representation of the data."""
-
         geojson = serialize("geojson", [qs])
         """Convert str to dict"""
         geojson_to_dict = json.loads(geojson)
         """Get properties and update then"""
         geojson_props = geojson_to_dict.get("features")[0].get("properties")
         geojson_props.update({"conton_name": qs.conton.name, "type_name": qs.type.name})
+        """Convert dict to str"""
+        geojson_dict_to_str = json.dumps(geojson_to_dict)
+        return geojson_dict_to_str
+
+    def create_geojson_all_contour(self, qs: "QuerySet[Contour]") -> str:
+        geojson = serialize("geojson", qs)
+        geojson_to_dict = json.loads(geojson)
         """Convert dict to str"""
         geojson_dict_to_str = json.dumps(geojson_to_dict)
         return geojson_dict_to_str
@@ -189,12 +205,21 @@ class ExportAndZipService:
             with open(zip_file_path, "rb") as zip_file:
                 return zip_file.read()
 
-    def execute(self, pk: int) -> bytes:
+    def execute(self, pk: int=None) -> bytes:
         """Main method to execute export and packaging."""
-        try:
-            qs = self.get_qeuryset(pk=pk)
-            geojson = self.create_geojson(qs=qs)
-            return self.create_zip_file(geojson=geojson)
+        if pk:
+            try:
+                qs = self.get_qeuryset(pk=pk)
+                geojson = self.create_geojson(qs=qs)
+                return self.create_zip_file(geojson=geojson)
 
-        except:
-            pass  # TODO update exception
+            except:
+                pass  # TODO update exception
+        else:
+            try:
+                qs = self.get_all_queryset()
+                geojson = self.create_geojson_all_contour(qs=qs)
+                return self.create_zip_file(geojson=geojson)
+
+            except:
+                pass  # TODO still update exception

@@ -2,11 +2,11 @@
 
 {% block extrahead %}
 <style>
+    /* Existing styles for shapefile import */
     .shapefile-container {
         position: relative;
         margin-top: 20px;
         margin-bottom: 20px;
-
     }
 
     #shapefile-upload-form {
@@ -15,11 +15,10 @@
         margin-top: 10px;
         background: #fff;
         padding: 10px;
-        z-index: 50
-        ;
+        z-index: 50;
     }
 
-    .btn-shapefile {
+    .btn-shapefile, .btn-export {
         background-color: #007BFF;
         border: none;
         padding: 7px 12px;
@@ -29,16 +28,21 @@
         transition: background-color 0.3s;
     }
 
-    .btn-shapefile:hover {
+    .btn-shapefile:hover, .btn-export:hover {
         background-color: #0056b3;
     }
 
-    .btn-shapefile:active {
+    .btn-shapefile:active, .btn-export:active {
         background-color: #004492;
     }
 
     #id_file {
         padding: 10px 5px;
+    }
+
+    /* Optional: Add specific styles for the export button if needed */
+    .btn-export {
+        /* Custom styles for export button */
     }
 </style>
 
@@ -53,14 +57,22 @@
             form.style.display = "none";
         }
     }
+
+    function exportShapefile() {
+            window.location.href = "{% url 'export_shapefile' %}";
+        }
 </script>
 {% endblock %}
 
 {% block object-tools %}
-
 <div class="shapefile-container">
-    <button class="btn-shapefile" onclick="toggleShapefileForm()">Загрузить shapefile</button>
+    <!-- Button for uploading shapefiles -->
+    <button class="btn-shapefile" onclick="toggleShapefileForm()">Upload shapefile</button>
 
+    <!-- New button for exporting shapefiles -->
+    <button class="btn-export" onclick="exportShapefile()">Load all shapefiles</button>
+
+    <!-- Form for uploading shapefiles -->
     <form id="shapefile-upload-form" action="{% url 'import_shapefile' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.file }}
@@ -71,7 +83,7 @@
                 {% endfor %}
             </div>
         {% endif %}
-        <input type="submit" class="btn-shapefile" value="Подтвердить загрузку" />
+        <input type="submit" class="btn-shapefile" value="Confirm" />
     </form>
 </div>
 
