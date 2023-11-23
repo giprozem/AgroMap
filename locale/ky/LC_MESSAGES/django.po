@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-09 15:57+0600\n"
+"POT-Creation-Date: 2023-11-23 14:40+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,14 +110,14 @@ msgid "“The login or password was entered incorrectly. Try again.”"
 msgstr "«Кирүү же сыр сөздү туура киргизбедиз. Бир ырагынан карап көрүңүз.»"
 
 #: ai/admin/predicted_contour.py:22 ai/admin/productivity.py:38
-#: culture_model/models/index_plan.py:23 gip/admin/contour.py:32
+#: culture_model/models/index_plan.py:23 gip/admin/contour.py:45
 #: indexes/admin/actual_veg_index.py:39 indexes/models/actual_veg_index.py:69
 #: indexes/models/actual_veg_index.py:95
 msgid "Index Value"
 msgstr "Индекс мааниси"
 
 #: ai/admin/predicted_contour.py:36 ai/admin/productivity.py:28
-#: gip/admin/contour.py:47 indexes/admin/actual_veg_index.py:33
+#: gip/admin/contour.py:60 indexes/admin/actual_veg_index.py:33
 msgid "NDVI Visualization"
 msgstr "NDVI Визуализация"
 
@@ -254,8 +254,8 @@ msgstr "Процент"
 
 #: ai/models/predicted_contour.py:61
 #: culture_model/models/pasture_culture.py:117
-#: culture_model/models/pasture_culture.py:146 gip/models/conton.py:17
-#: gip/models/district.py:18 gip/models/district.py:25
+#: culture_model/models/pasture_culture.py:146 gip/admin/contour.py:126
+#: gip/models/conton.py:17 gip/models/district.py:18 gip/models/district.py:25
 msgid "District"
 msgstr "Район"
 
@@ -551,11 +551,11 @@ msgstr "Жапа индекси"
 msgid "Vegetation Indices"
 msgstr "Жапа индекслери"
 
-#: gip/admin/contour.py:78
+#: gip/admin/contour.py:115
 msgid "Not set"
 msgstr "Орнотулган эмес"
 
-#: gip/admin/contour.py:88
+#: gip/admin/contour.py:127
 msgid "Export shapefile"
 msgstr "Түшүрүү shapefile"
 
@@ -565,7 +565,7 @@ msgstr "Агрокартограмма"
 
 #: gip/forms.py:17
 msgid "The file must be a ZIP or RAR archive."
-msgstr ""
+msgstr "Файл ZIP же RAR архиви болушу керек"
 
 #: gip/models/base.py:12
 msgid "Created Date"
@@ -653,8 +653,6 @@ msgid "Land Types"
 msgstr "Тармактын түрлөрү"
 
 #: gip/models/contour.py:36
-#, fuzzy
-#| msgid "Canton"
 msgid "Conton"
 msgstr "Айыл аймак"
 
@@ -726,14 +724,10 @@ msgid "Type"
 msgstr "Түрү"
 
 #: gip/models/culture.py:37 gip/models/culture.py:41
-#, fuzzy
-#| msgid "Culture"
 msgid "Culture type"
 msgstr "Культуранын түрү"
 
 #: gip/models/culture.py:42
-#, fuzzy
-#| msgid "Cultures"
 msgid "Cultures types"
 msgstr "Культуралар түрлөрү"
 
@@ -797,9 +791,21 @@ msgstr "Тамактын эффективдиктиги"
 msgid "Soil Productivities"
 msgstr "Тамактын эффективдиктиктери"
 
-#: gip/views/shapefile.py:77
+#: gip/views/shapefile.py:55
 msgid "Shapefile loaded successfully."
-msgstr ""
+msgstr "Shapefile ийгиликтүү жүктөлдү."
+
+#: gip/views/shapefile.py:58
+msgid "Not valid shapefile"
+msgstr "Жараксыз shapefile"
+
+#: gip/views/shapefile.py:59
+msgid "Make sure the shapefile is formed correctly"
+msgstr "Shapefile туура түзүлгөнүн текшериңиз"
+
+#: gip/views/shapefile.py:70
+msgid "Please wait while the file downloads"
+msgstr "Файл жүктөлүп алынганча күтө туруңуз"
 
 #: hub/models/base.py:11
 msgid "Creation Date"

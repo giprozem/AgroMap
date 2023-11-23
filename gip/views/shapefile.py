@@ -7,13 +7,13 @@ from django.utils.translation import gettext_lazy as _
 
 from django.http import HttpResponse
 
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
-
-from gip.forms import ShapeFileUploadForm
+from gip.forms import ShapeFileUploadForm, ShapeFileExportAllData
 from gip.models.contour import Contour
 from gip.services.shapefile import UploadAndExtractService, ExportAndZipService
-from gip.schemas.shapefile import get_shapefile_export_schema, get_shapefile_upload_schema
+from gip.schemas.shapefile import (
+    get_shapefile_export_schema,
+    get_shapefile_upload_schema,
+)
 
 
 class UploadShapefileApiView(APIView):
@@ -54,8 +54,18 @@ def import_shapefile(request):
         if form.is_valid():
             messages.success(request, _("Shapefile loaded successfully."))
             return redirect("admin:gip_contour_changelist")
-
-    else:
-        form = ShapeFileUploadForm()
+        else:
+            messages.error(request, _("Not valid shapefile"))
+            messages.info(request, _("Make sure the shapefile is formed correctly"))
+            return redirect("admin:gip_contour_changelist")
 
     return redirect("admin:gip_contour_changelist")
+
+
+def export_all_data_shapefile(request):
+    service = ExportAndZipService(model=Contour)
+    file_content = service.execute()
+    response = HttpResponse(file_content, content_type="application/zip")
+    response["Content-Disposition"] = "attachment; filename=agro-map.zip"
+    messages.success(request, _("Please wait while the file downloads"))
+    return response

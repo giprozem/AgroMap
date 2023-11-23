@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-09 15:56+0600\n"
+"POT-Creation-Date: 2023-11-23 14:40+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,14 +111,14 @@ msgid "“The login or password was entered incorrectly. Try again.”"
 msgstr "“Логин или пароль введены неверно. Попробуйте еще раз.”"
 
 #: ai/admin/predicted_contour.py:22 ai/admin/productivity.py:38
-#: culture_model/models/index_plan.py:23 gip/admin/contour.py:32
+#: culture_model/models/index_plan.py:23 gip/admin/contour.py:45
 #: indexes/admin/actual_veg_index.py:39 indexes/models/actual_veg_index.py:69
 #: indexes/models/actual_veg_index.py:95
 msgid "Index Value"
 msgstr "Значение индекса"
 
 #: ai/admin/predicted_contour.py:36 ai/admin/productivity.py:28
-#: gip/admin/contour.py:47 indexes/admin/actual_veg_index.py:33
+#: gip/admin/contour.py:60 indexes/admin/actual_veg_index.py:33
 msgid "NDVI Visualization"
 msgstr "Визуализация NDVI"
 
@@ -255,8 +255,8 @@ msgstr "Процент"
 
 #: ai/models/predicted_contour.py:61
 #: culture_model/models/pasture_culture.py:117
-#: culture_model/models/pasture_culture.py:146 gip/models/conton.py:17
-#: gip/models/district.py:18 gip/models/district.py:25
+#: culture_model/models/pasture_culture.py:146 gip/admin/contour.py:126
+#: gip/models/conton.py:17 gip/models/district.py:18 gip/models/district.py:25
 msgid "District"
 msgstr "Район"
 
@@ -552,11 +552,11 @@ msgstr "Индекс растительности"
 msgid "Vegetation Indices"
 msgstr "Индексы растительности"
 
-#: gip/admin/contour.py:78
+#: gip/admin/contour.py:115
 msgid "Not set"
 msgstr "Отсувствует"
 
-#: gip/admin/contour.py:88
+#: gip/admin/contour.py:127
 msgid "Export shapefile"
 msgstr "Выгрузить shapefile"
 
@@ -566,7 +566,7 @@ msgstr "AgroMap"
 
 #: gip/forms.py:17
 msgid "The file must be a ZIP or RAR archive."
-msgstr ""
+msgstr "Файл должен быть архивом ZIP или RAR."
 
 #: gip/models/base.py:12
 msgid "Created Date"
@@ -656,8 +656,6 @@ msgid "Land Types"
 msgstr "Типы земли"
 
 #: gip/models/contour.py:36
-#, fuzzy
-#| msgid "Canton"
 msgid "Conton"
 msgstr "Айылный аймак"
 
@@ -729,14 +727,10 @@ msgid "Type"
 msgstr "Тип"
 
 #: gip/models/culture.py:37 gip/models/culture.py:41
-#, fuzzy
-#| msgid "Culture"
 msgid "Culture type"
 msgstr "Культура"
 
 #: gip/models/culture.py:42
-#, fuzzy
-#| msgid "Cultures"
 msgid "Cultures types"
 msgstr "Тип Культуры"
 
@@ -801,9 +795,21 @@ msgstr "Продуктивность почвы"
 msgid "Soil Productivities"
 msgstr "Продуктивности почвы"
 
-#: gip/views/shapefile.py:77
+#: gip/views/shapefile.py:55
 msgid "Shapefile loaded successfully."
-msgstr ""
+msgstr "Шейп-файл успешно загружен."
+
+#: gip/views/shapefile.py:58
+msgid "Not valid shapefile"
+msgstr "Неверный шейп-файл"
+
+#: gip/views/shapefile.py:59
+msgid "Make sure the shapefile is formed correctly"
+msgstr "Убедитесь, что шейп-файл сформирован правильно."
+
+#: gip/views/shapefile.py:70
+msgid "Please wait while the file downloads"
+msgstr "Пожалуйста, подождите, пока загрузится файл"
 
 #: hub/models/base.py:11
 msgid "Creation Date"
