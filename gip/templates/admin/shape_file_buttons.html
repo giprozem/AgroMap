@@ -67,10 +67,10 @@
 {% block object-tools %}
 <div class="shapefile-container">
     <!-- Button for uploading shapefiles -->
-    <button class="btn-shapefile" onclick="toggleShapefileForm()">Загрузить shapefile</button>
+    <button class="btn-shapefile" onclick="toggleShapefileForm()">Upload shapefile</button>
 
     <!-- New button for exporting shapefiles -->
-    <button class="btn-export" onclick="exportShapefile()">Экспорт shapefile</button>
+    <button class="btn-export" onclick="exportShapefile()">Load all shapefiles</button>
 
     <!-- Form for uploading shapefiles -->
     <form id="shapefile-upload-form" action="{% url 'import_shapefile' %}" method="POST" enctype="multipart/form-data">
@@ -83,7 +83,7 @@
                 {% endfor %}
             </div>
         {% endif %}
-        <input type="submit" class="btn-shapefile" value="Подтвердить загрузку" />
+        <input type="submit" class="btn-shapefile" value="Confirm" />
     </form>
 </div>
 
