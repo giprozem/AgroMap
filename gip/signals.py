@@ -53,7 +53,7 @@ def update(sender, instance, created, **kwargs):
 
             Contour.objects.filter(id=instance.id).update(**update_fields)  # Update the Contour object fields
 
-            data_contour(geom)
+        data_contour(geom)
     except Exception as e:
         print(e)  # Print any exceptions that occur during the update process
 

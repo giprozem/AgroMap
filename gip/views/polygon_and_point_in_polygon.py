@@ -132,7 +132,8 @@ class PolygonsInScreen(APIView):
                                        request.data['_northEast']['lng'], request.data['_northEast']['lat']))
             sql = f"""
             SELECT cntr.id, conton_id, farmer_id, ink, is_rounded, code_soato, is_deleted, area_ha,
-            elevation, productivity, type_id, year, clt.id, clt.name_ru, clt.name_ky, clt.name_en, 
+            elevation, productivity, type_id, year, clt.id, clt.name_ru, clt.name_ky, clt.name_en,
+            cntr.cadastre, 
             predicted_productivity, St_AsGeoJSON(cntr.polygon) AS polygon
             FROM gip_contour AS cntr
             left JOIN gip_culture AS clt ON clt.id=cntr.culture_id
@@ -152,8 +153,8 @@ class PolygonsInScreen(APIView):
                                  "properties": {'id': i[0], 'conton_id': i[1], 'farmer_id': i[2], 'ink': i[3],
                                                 'is_rounded': i[4], 'code_soato': i[5], 'is_deleted': i[6],
                                                 'area_ha': i[7], 'elevation': i[8], 'productivity': i[9],
-                                                'predicted_productivity': i[16],
                                                 'land_type': i[10], 'year': i[11],
+                                                'cadastre': i[16],
                                                 'culture': {'id': i[12], 'name_ru': i[13],
                                                             'name_ky': i[14], 'name_en': i[15]}
                                                 },

@@ -71,6 +71,8 @@ class ContourAdmin(LeafletGeoAdmin, SimpleHistoryAdmin):
         "elevation",
         "area_ha",
         "soil_class",
+        "predicted_culture",
+        "cadastre"
     )
     list_display = (
         "id",
