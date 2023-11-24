@@ -11,7 +11,7 @@ class SoilClass(BaseModel):
     It includes fields for a unique soil ID, soil type name, description, and color.
     """
     
-    id_soil = models.BigIntegerField(verbose_name='Soil ID')
+    id_soil = models.BigIntegerField(verbose_name=_('Soil ID'))
     name = models.CharField(max_length=255, verbose_name=_('Soil Type'))
     description = models.TextField(verbose_name=_('Description'), null=True, blank=True)
     color = models.CharField(max_length=20, null=True, verbose_name=_('Color'))

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-23 14:40+0600\n"
+"POT-Creation-Date: 2023-11-24 18:15+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,7 @@ msgstr "Аккаунты"
 msgid "Administrator"
 msgstr "Администратор"
 
-#: account/models/account.py:17 gip/models/contour.py:61
+#: account/models/account.py:17 gip/models/contour.py:64
 #: gip/models/farmer.py:17 gip/models/farmer.py:27
 msgid "Farmer"
 msgstr "Фермер"
@@ -190,6 +190,7 @@ msgstr "Инструкции по созданию набора данных"
 #: ai/models/predicted_contour.py:18 ai/models/predicted_contour.py:21
 #: ai/models/predicted_contour.py:53 indexes/models/actual_veg_index.py:84
 #: indexes/models/satelliteimage.py:50
+#: venv/lib/python3.10/site-packages/django/db/models/fields/files.py:392
 msgid "Image"
 msgstr "Изображение"
 
@@ -373,6 +374,7 @@ msgid "Remote Address"
 msgstr "Удаленный адрес"
 
 #: auditlog/models.py:385
+#: venv/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2417
 msgid "Time"
 msgstr "Время"
 
@@ -389,14 +391,17 @@ msgid "Change Logs"
 msgstr "Журналы изменений"
 
 #: auditlog/models.py:401
+#: venv/lib/python3.10/site-packages/auditlog/models.py:374
 msgid "Created {repr:s}"
 msgstr "Создано {repr:s}"
 
 #: auditlog/models.py:403
+#: venv/lib/python3.10/site-packages/auditlog/models.py:376
 msgid "Updated {repr:s}"
 msgstr "Обновлено {repr:s}"
 
 #: auditlog/models.py:405
+#: venv/lib/python3.10/site-packages/auditlog/models.py:378
 msgid "Deleted {repr:s}"
 msgstr "Удалено {repr:s}"
 
@@ -497,7 +502,7 @@ msgid "Group Types"
 msgstr "Типы групп"
 
 #: culture_model/models/pasture_culture.py:102
-#: culture_model/models/pasture_culture.py:114
+#: culture_model/models/pasture_culture.py:114 gip/models/contour.py:44
 msgid "Vegetation Type"
 msgstr "Тип растительности"
 
@@ -526,7 +531,7 @@ msgstr "Содержание корма"
 msgid "Vegetation Period"
 msgstr "Период роста"
 
-#: culture_model/models/pasture_culture.py:160 gip/models/contour.py:55
+#: culture_model/models/pasture_culture.py:160 gip/models/contour.py:58
 msgid "Pasture Culture"
 msgstr "Культура пастбища"
 
@@ -671,15 +676,20 @@ msgstr "Прогнозируемая урожайность"
 msgid "Area in Hectares"
 msgstr "Площадь в гектарах"
 
-#: gip/models/contour.py:58
+#: gip/models/contour.py:52
+
+msgid "Predicted Culture"
+msgstr "Предсказанная культура"
+
+#: gip/models/contour.py:61
 msgid "INK"
 msgstr "ИНК"
 
-#: gip/models/contour.py:58
+#: gip/models/contour.py:61
 msgid "Identification Number of the Contour"
 msgstr "Идентификационный номер контура"
 
-#: gip/models/contour.py:60
+#: gip/models/contour.py:63
 msgid "ENI"
 msgstr "ЕНИ"
 
