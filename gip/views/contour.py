@@ -307,7 +307,7 @@ class StatisticsContourProductivityAPIView(APIView):
                             'Productive': {'ha': sum([row[0] for row in rows]),
                                            'percent': round(sum([row[0] for row in rows]) / total * 100)},
                             "Unproductive": {
-                                "ha": round(sum([row[1] for row in rows]), 2),
+                                "ha": (sum([row[1] for row in rows])),
                                 "percent": round(sum([row[1] for row in rows]) / total * 100)
                             },
                             "Children": data
