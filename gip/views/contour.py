@@ -307,7 +307,7 @@ class StatisticsContourProductivityAPIView(APIView):
                             'Productive': {'ha': sum([row[0] for row in rows]),
                                            'percent': round(sum([row[0] for row in rows]) / total * 100)},
                             "Unproductive": {
-                                "ha": sum([row[1] for row in rows]),
+                                "ha": round(sum([row[1] for row in rows]), 2),
                                 "percent": round(sum([row[1] for row in rows]) / total * 100)
                             },
                             "Children": data
@@ -976,11 +976,11 @@ class CultureStatisticsAPIView(APIView):
                     for i in rows:
                         if len(i) > 5:
                             data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1], "culture_name_en": i[2],
-                                         'area_ha': i[3], 'productivity': i[4] * i[3],
+                                         'area_ha': round(i[3], 2), 'productivity': i[4] * i[3],
                                          "territory_ru": i[-3], "territory_ky": i[-2], "territory_en": i[-1]})
                         else:
                             data.append({'culture_name_ru': i[0], 'culture_name_ky': i[1], "culture_name_en": i[2],
-                                         'area_ha': i[3], 'productivity': i[4] * i[3],
+                                         'area_ha': round(i[3], 2), 'productivity': i[4] * i[3],
                                          "territory_ru": 'Кыргызстан', "territory_ky": 'Кыргызстан',
                                          "territory_en": 'Kyrgyzstan'})
                     return Response(data)
