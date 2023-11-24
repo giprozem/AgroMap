@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-24 18:15+0600\n"
+"POT-Creation-Date: 2023-11-24 18:47+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -677,7 +677,6 @@ msgid "Area in Hectares"
 msgstr "Площадь в гектарах"
 
 #: gip/models/contour.py:52
-
 msgid "Predicted Culture"
 msgstr "Предсказанная культура"
 
@@ -703,7 +702,11 @@ msgstr "История"
 msgid "Legally Confirmed"
 msgstr "Законно подтверждено"
 
-#: gip/models/contour.py:72
+#: gip/models/contour.py:70
+msgid "Cadastre"
+msgstr "Кадастр"
+
+#: gip/models/contour.py:76
 msgid "Field Contour"
 msgstr "Контур поля"
 
