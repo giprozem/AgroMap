@@ -41,7 +41,7 @@ class Contour(BaseModel):
     year = models.CharField(max_length=20, verbose_name=_("Year"), null=True, blank=True)
     productivity = models.CharField(max_length=20, blank=True, null=True, default='1.0', verbose_name=_("Productivity"))
     month_of_sowing = models.CharField(max_length=20, verbose_name=_("Month of sowing"), null=True, blank=True)
-    vegetation_type = models.CharField(max_length=20, blank=True, null=True, verbose_name="Vegetation Type")
+    vegetation_type = models.CharField(max_length=20, blank=True, null=True, verbose_name=_("Vegetation Type"))
     predicted_productivity = models.CharField(max_length=20, blank=True, null=True, default='1.0',
                                               verbose_name=_('Predicted Productivity'))
     area_ha = models.FloatField(blank=True, null=True, verbose_name=_("Area in Hectares"))
@@ -66,8 +66,8 @@ class Contour(BaseModel):
     history = HistoricalRecords(verbose_name=_("History"))
     is_rounded = models.BooleanField(default=False, verbose_name=_('Legally Confirmed'))
     soil_class = models.ForeignKey(SoilClass, on_delete=models.SET_NULL, blank=True, null=True,
-                                   verbose_name='Soil Type')
-    cadastre = models.BooleanField(default=False)
+                                   verbose_name=_('Soil Type'))
+    cadastre = models.BooleanField(default=False, verbose_name=(''))
 
     def __str__(self):
         return self.code_soato if self.code_soato else '' or self.ink if self.ink else '' or f"{self.pk}" if self.pk else ''
