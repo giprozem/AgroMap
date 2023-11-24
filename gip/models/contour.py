@@ -46,7 +46,10 @@ class Contour(BaseModel):
                                               verbose_name=_('Predicted Productivity'))
     area_ha = models.FloatField(blank=True, null=True, verbose_name=_("Area in Hectares"))
     is_deleted = models.BooleanField(default=False, verbose_name=_('Deleted'))
-    culture = models.ForeignKey(Culture, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Culture'))
+    culture = models.ForeignKey(Culture, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Culture'),
+                                related_name='contour_culture')
+    predicted_culture = models.ForeignKey(Culture, on_delete=models.SET_NULL, blank=True, null=True,
+                                          verbose_name=_('Predicted Culture'), related_name='contour_predicted_culture')
     pasture_culture = models.ManyToManyField(
         PastureCulture,
         blank=True,
