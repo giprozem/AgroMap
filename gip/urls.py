@@ -23,7 +23,7 @@ from gip.views.soil import SoilAPIView, SoilClassAPIView
 from gip.views.statistics import GraphicTablesAPIView, CulturePercentAPIView
 from gip.views.culture import CultureViewSet
 from gip.views.landtype import LandTypeAPIView
-from gip.views.shapefile import UploadShapefileApiView, ExportShapefileApiView, import_shapefile
+from gip.views.shapefile import UploadShapefileApiView, ExportShapefileApiView, import_shapefile, export_all_data_shapefile
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -83,4 +83,5 @@ urlpatterns = [
         "shapefile/export/", ExportShapefileApiView.as_view(), name="shapefile-export"
     ),
     path('admin/contour/import/', import_shapefile, name='import_shapefile'),
+    path('admin/contour/export/', export_all_data_shapefile, name='export_shapefile'),
 ]
