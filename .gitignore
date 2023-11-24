@@ -160,6 +160,7 @@ cron
 shp_ai_contour
 cutted
 output*
+models_predicted
 
 #files
 .env
