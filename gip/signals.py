@@ -23,9 +23,6 @@ def update(sender, instance, created, **kwargs):
     try:
         # Fetch the geometry of the Contour object and calculate its area
         geom = Contour.objects.annotate(area_=Area("polygon")).get(id=instance.id)
-        result_soil_class = calculate_soil_class(geom)  # Calculate soil class based on the geometry
-        elevation_result = calculate_elevation(geom)     # Calculate elevation based on the geometry
-        ha = round(geom.area_.sq_km * 100, 2)           # Calculate the area in hectares
 
         if created:
 
@@ -35,25 +32,26 @@ def update(sender, instance, created, **kwargs):
                 conton_id = detect_conton(geom.polygon)  # Detect a 'conton' ID based on polygon
                 instance.conton_id = conton_id  # Set the 'conton' ID in the Contour object
 
-            instance.soil_class_id = result_soil_class  # Set the soil class in the Contour object
-            instance.elevation = elevation_result      # Set the elevation in the Contour object
-            instance.area_ha = ha                     # Set the area in hectares in the Contour object
-            instance.save()                           # Save the Contour object to the database
+            instance.cadastre = True if instance.eni else False
+            instance.soil_class_id = calculate_soil_class(geom)  # Set the soil class in the Contour object
+            instance.elevation = calculate_elevation(geom)  # Set the elevation in the Contour object
+            instance.area_ha = round(geom.area_.sq_km * 100, 2)  # Set the area in hectares in the Contour object
+            instance.save()  # Save the Contour object to the database
 
         else:
             # If the Contour object is being updated (not created), perform these actions
             update_fields = {
-                'area_ha': ha,                # Update the area in hectares
-                'soil_class': result_soil_class,  # Update the soil class
-                'elevation': elevation_result,   # Update the elevation
+                'area_ha': round(geom.area_.sq_km * 100, 2),  # Update the area in hectares
+                'soil_class': calculate_soil_class(geom),  # Update the soil class
+                'elevation': calculate_elevation(geom),  # Update the elevation
             }
             if instance.conton is None:
                 conton_id = detect_conton(geom.polygon)  # Detect 'conton' ID if not already set
-                update_fields['conton_id'] = conton_id    # Update the 'conton' ID if detected
+                update_fields['conton_id'] = conton_id  # Update the 'conton' ID if detected
 
             Contour.objects.filter(id=instance.id).update(**update_fields)  # Update the Contour object fields
 
         data_contour(geom)
     except Exception as e:
-        print(e)  # Print any exceptions that occur during the update process
-
+        print(
+            f"Error in post_save signal for Contour: {e}")  # Print any exceptions that occur during the update process
