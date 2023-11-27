@@ -10,11 +10,13 @@ from gip.models.conton import Conton
 from gip.models.contour import Contour
 from gip.views.handbook_contour import contour_Kyrgyzstan
 
+
 # Define a serializer for the 'Conton' model
 class ContonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conton
         fields = ('polygon',)
+
 
 # Define a serializer for the 'Contour' model used for autocomplete
 class ContourAutocompleteSerializer(serializers.ModelSerializer):
@@ -22,11 +24,13 @@ class ContourAutocompleteSerializer(serializers.ModelSerializer):
         model = Contour
         fields = ('polygon',)
 
+
 # Define a serializer for calculating polygon contour
 class CalculatePolygonContourSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contour
         fields = '__all__'
+
 
 # Define a serializer for 'CropYield' model used inline in other serializers
 class CropYieldInlineSerializer(serializers.ModelSerializer):
@@ -39,11 +43,13 @@ class CropYieldInlineSerializer(serializers.ModelSerializer):
         representation['culture'] = instance.culture.name
         return representation
 
+
 # Define a serializer for the 'Contour' model
 class ContourSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contour
         fields = '__all__'
+
 
 # Serializer for updating authentication details of the 'Contour' model
 class UpdateAuthDetailContourSerializer(serializers.ModelSerializer):
@@ -57,7 +63,8 @@ class UpdateAuthDetailContourSerializer(serializers.ModelSerializer):
     ink = serializers.CharField(
         max_length=30, required=False,
         validators=[UniqueValidator(queryset=Contour.objects.all().filter(is_deleted=False),
-                                    message=("With this, the circuit identification number already exists in the database"))]
+                                    message=(
+                                        "With this, the circuit identification number already exists in the database"))]
     )
 
     class Meta:
@@ -73,35 +80,12 @@ class UpdateAuthDetailContourSerializer(serializers.ModelSerializer):
     # Check if a polygon is inside Kyrgyzstan
     def is_polygon_inside_Kyrgyzstan(self, request, *args, **kwargs):
         with connection.cursor() as cursor:
+            print(request)
             cursor.execute(f"""
                 SELECT ST_Contains('{contour_Kyrgyzstan}'::geography::geometry, '{request}'::geography::geometry);
             """)
             inside = cursor.fetchall()
         return inside[0][0]
-
-    # Get the district of a polygon
-    def get_district(self, attrs):
-        with connection.cursor() as cursor:
-            cursor.execute(f"""
-            SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
-            '{attrs['polygon']}'::geography::geometry);
-            """)
-            district = cursor.fetchall()
-        return district[0][0]
-
-    # Get the district from the database
-    def get_db_district(self, attrs):
-        db_district = [i.district.pk if i.district else None for i in Conton.objects.filter(id=attrs['conton'].pk)]
-        return db_district[0]
-
-    # Validate the district of a polygon
-    def validate_district(self, attrs):
-        district = self.get_district(attrs)
-        db_district = self.get_db_district(attrs)
-        if district != db_district:
-            raise APIException({
-                "district": [f"Your outline goes beyond <{attrs['conton']}>"]
-            })
 
     # Check if the year is valid
     def is_valid_year(self, attrs):
@@ -122,13 +106,12 @@ class UpdateAuthDetailContourSerializer(serializers.ModelSerializer):
         if not self.is_polygon_inside_Kyrgyzstan(attrs['polygon']):
             raise APIException({"polygon": ["Create a field inside Kyrgyzstan"]})
 
-        self.validate_district(attrs)
-
         self.is_valid_year(attrs)
 
         self.is_polygon_intersect(attrs)
 
         return attrs
+
 
 # Serializer for displaying authentication details of the 'Contour' model
 class AuthDetailContourSerializer(serializers.ModelSerializer):
@@ -142,7 +125,8 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
     ink = serializers.CharField(
         max_length=30, required=False,
         validators=[UniqueValidator(queryset=Contour.objects.all().filter(is_deleted=False),
-                                    message=("With this, the circuit identification number already exists in the database"))]
+                                    message=(
+                                        "With this, the circuit identification number already exists in the database"))]
     )
 
     class Meta:
@@ -207,30 +191,6 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
             inside = cursor.fetchall()
         return inside[0][0]
 
-    # Get the district of a polygon
-    def get_district(self, attrs):
-        with connection.cursor() as cursor:
-            cursor.execute(f"""
-            SELECT dst.id FROM gip_district AS dst WHERE ST_Contains(dst.polygon::geography::geometry,
-            '{attrs['polygon']}'::geography::geometry);
-            """)
-            district = cursor.fetchall()
-        return district[0][0]
-
-    # Get the district from the database
-    def get_db_district(self, attrs):
-        db_district = [i.district.pk if i.district else None for i in Conton.objects.filter(id=attrs['conton'].pk)]
-        return db_district[0]
-
-    # Validate the district of a polygon
-    def validate_district(self, attrs):
-        district = self.get_district(attrs)
-        db_district = self.get_db_district(attrs)
-        if district != db_district:
-            raise APIException({
-                "district": [f"Your outline goes beyond <{attrs['conton']}>"]
-            })
-
     # Check if the year is valid
     def is_valid_year(self, attrs):
         if int(attrs['year']) > datetime.date.today().year:
@@ -245,12 +205,7 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
         if intersect:
             raise APIException({"polygon": ["Fields intersect"]})
 
-    # Validate the serializer
-    def validate(self, attrs):
-        if not self.is_polygon_inside_Kyrgyzstan(attrs['polygon']):
-            raise APIException({"polygon": ["Create a field inside Kyrgyzstan"]})
-
-        self.validate_district(attrs)
+        # Validate the serializer
 
         self.is_valid_year(attrs)
 
