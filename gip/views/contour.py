@@ -1,8 +1,6 @@
 from django.db import connection
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework import filters, status, mixins
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
@@ -13,7 +11,8 @@ from rest_framework.viewsets import GenericViewSet
 from gip.models.contour import Contour
 from gip.pagination.contour_pagination import SearchContourPagination
 from gip.serializers.contour import ContourSerializer, AuthDetailContourSerializer, UpdateAuthDetailContourSerializer
-from gip.schemas.contour import get_filter_contour_shema, get_statistic_contour_peoductivity_schema, get_map_contour_productivitu_schema, get_culture_statistics_schema
+from gip.schemas.contour import get_filter_contour_shema, get_statistic_contour_peoductivity_schema, \
+    get_map_contour_productivitu_schema, get_culture_statistics_schema
 
 
 class AuthDetailContourViewSet(mixins.CreateModelMixin,

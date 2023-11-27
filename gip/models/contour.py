@@ -39,10 +39,10 @@ class Contour(BaseModel):
                              related_name='contours')
     polygon = models.GeometryField(geography='Kyrgyzstan', verbose_name=_("Contour"), blank=True, null=True)
     year = models.CharField(max_length=20, verbose_name=_("Year"), null=True, blank=True)
-    productivity = models.CharField(max_length=20, blank=True, null=True, default='1.0', verbose_name=_("Productivity"))
+    productivity = models.CharField(max_length=20, blank=True, null=True, default='0.0', verbose_name=_("Productivity"))
     month_of_sowing = models.CharField(max_length=20, verbose_name=_("Month of sowing"), null=True, blank=True)
     vegetation_type = models.CharField(max_length=20, blank=True, null=True, verbose_name=_("Vegetation Type"))
-    predicted_productivity = models.CharField(max_length=20, blank=True, null=True, default='1.0',
+    predicted_productivity = models.CharField(max_length=20, blank=True, null=True, default='0.0',
                                               verbose_name=_('Predicted Productivity'))
     area_ha = models.FloatField(blank=True, null=True, verbose_name=_("Area in Hectares"))
     is_deleted = models.BooleanField(default=False, verbose_name=_('Deleted'))
