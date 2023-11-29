@@ -35,26 +35,46 @@ def run():
     os.makedirs(output, exist_ok=True)
     # Establishing a connection to the database
     with connection.cursor() as cursor:
-        cursor.execute(f"""SELECT CASE WHEN (cntr.productivity)::float >= 1.6 THEN 1 ELSE 0 END AS "Type productivity",
-        cntr.id AS contour_year_id, rgn.id as rgn, dst.id as dst, cntn.id as cntn, coalesce(cl.name_en, NULL) AS cl_name_en,
-        cntr.type_id AS land_type_id, cntr.year, cntr.area_ha, cntr.productivity, cntr.cadastre, 
-        St_AsGeoJSON(cntr.polygon) as polygon
-        FROM gip_contour AS cntr
-        JOIN gip_landtype AS land ON land.id=cntr.type_id
-        JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-        JOIN gip_district AS dst ON dst.id=cntn.district_id
-        JOIN gip_region AS rgn ON rgn.id=dst.region_id
-        LEFT JOIN gip_cropyield as cy ON cy.contour_id = cntr.id
-        LEFT JOIN gip_culture as cl ON cy.culture_id = cl.id
-        WHERE cntr.is_deleted=False
-        GROUP BY "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id, cl.id;""")
+        cursor.execute(f"""
+        SELECT 
+            CASE 
+                WHEN (cntr.productivity)::float >= 1.6 THEN 1 
+                ELSE 0 
+            END AS "Type productivity",
+            cntr.id AS contour_year_id, 
+            rgn.id as rgn, 
+            dst.id as dst, 
+            cntn.id as cntn, 
+            coalesce(cl.name_ru, NULL) AS cl_name_ru,
+            pc.name AS predicted_culture_name, -- Добавлено имя предсказанной культуры
+            cntr.type_id AS land_type_id, 
+            cntr.year, 
+            cntr.area_ha, 
+            cntr.productivity, 
+            cntr.predicted_culture_id, 
+            cntr.cadastre,
+            St_AsGeoJSON(cntr.polygon) as polygon
+        FROM 
+            gip_contour AS cntr
+            JOIN gip_landtype AS land ON land.id=cntr.type_id
+            JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+            JOIN gip_district AS dst ON dst.id=cntn.district_id
+            JOIN gip_region AS rgn ON rgn.id=dst.region_id
+            LEFT JOIN gip_cropyield as cy ON cy.contour_id = cntr.id
+            LEFT JOIN gip_culture as cl ON cy.culture_id = cl.id
+            LEFT JOIN gip_culture as pc ON cntr.predicted_culture_id = pc.id
+        WHERE 
+            cntr.is_deleted=False
+        GROUP BY 
+            "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id, cl.id, pc.id;
+        """)
         rows = cursor.fetchall()
         data = []
         for i in rows:
             data.append({"type": "Feature", "properties": {'id': i[1], 'rgn': i[2], 'dst': i[3], 'cntn': i[4],
-                                                           'prd_clt': i[5], 'ltype': i[6], 'year': i[7], 'area': i[8],
-                                                           'cdstr': i[-2],
-                                                           'prdvty': i[0]},
+                                                           'clt_n': i[5], 'prd_clt_n': i[6], 'ltype': i[7],
+                                                           'year': i[8], 'area': i[9], 'prdvty': i[10],
+                                                           'prd_clt_id': i[11], 'cdstr': i[12]},
                          "geometry": eval(i[-1])})
 
         # Creating a GeoJSON FeatureCollection with the list of features
