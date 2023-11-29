@@ -29,6 +29,8 @@ def run():
     The script then uploads the shapefile from the shp_contours_ai/ directory to the GeoServer data store.
     Finally, a new layer named 'polygons' is published on the GeoServer using the uploaded shapefile.
     """
+    # Record the start time for measuring elapsed time
+    start_time = time.time()
 
     # Creating an output directory
     output = 'shp_contours/'
@@ -36,53 +38,51 @@ def run():
     # Establishing a connection to the database
     with connection.cursor() as cursor:
         cursor.execute(f"""
-        SELECT 
-            CASE 
-                WHEN (cntr.productivity)::float >= 1.6 THEN 1 
-                ELSE 0 
-            END AS "Type productivity",
-            cntr.id AS contour_year_id, 
-            rgn.id as rgn, 
-            dst.id as dst, 
-            cntn.id as cntn, 
-            coalesce(cl.name_ru, NULL) AS cl_name_ru,
-            pc.name AS predicted_culture_name, -- Добавлено имя предсказанной культуры
-            cntr.type_id AS land_type_id, 
-            cntr.year, 
-            cntr.area_ha, 
-            cntr.productivity, 
-            cntr.predicted_culture_id, 
-            cntr.cadastre,
-            St_AsGeoJSON(cntr.polygon) as polygon
-        FROM 
-            gip_contour AS cntr
-            JOIN gip_landtype AS land ON land.id=cntr.type_id
-            JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
-            JOIN gip_district AS dst ON dst.id=cntn.district_id
-            JOIN gip_region AS rgn ON rgn.id=dst.region_id
-            LEFT JOIN gip_cropyield as cy ON cy.contour_id = cntr.id
-            LEFT JOIN gip_culture as cl ON cy.culture_id = cl.id
-            LEFT JOIN gip_culture as pc ON cntr.predicted_culture_id = pc.id
-        WHERE 
-            cntr.is_deleted=False
-        GROUP BY 
-            "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id, cl.id, pc.id;
+                SELECT 
+                    CASE 
+                        WHEN (cntr.productivity)::float >= 1.6 THEN 1 
+                        ELSE 0 
+                    END AS "Type productivity",
+                    cntr.id AS contour_year_id, 
+                    rgn.id as rgn, 
+                    dst.id as dst, 
+                    cntn.id as cntn, 
+                    coalesce(pc.name_en, 'Unknown') AS predicted_culture_name,
+                    cntr.type_id AS land_type_id, 
+                    cntr.year, 
+                    cntr.area_ha, 
+                    cntr.productivity, 
+                    cntr.predicted_culture_id, 
+                    cntr.cadastre,
+                    St_AsGeoJSON(cntr.polygon) as polygon
+                FROM 
+                    gip_contour AS cntr
+                    JOIN gip_landtype AS land ON land.id=cntr.type_id
+                    JOIN gip_conton AS cntn ON cntn.id=cntr.conton_id
+                    JOIN gip_district AS dst ON dst.id=cntn.district_id
+                    JOIN gip_region AS rgn ON rgn.id=dst.region_id
+                    LEFT JOIN gip_cropyield as cy ON cy.contour_id = cntr.id
+                    LEFT JOIN gip_culture as pc ON cntr.predicted_culture_id = pc.id
+                WHERE 
+                    cntr.is_deleted=False
+                GROUP BY 
+                    "Type productivity", cntr.id, rgn.id, dst.id, cntn.id, land.id, pc.id;
         """)
         rows = cursor.fetchall()
         data = []
         for i in rows:
             data.append({"type": "Feature", "properties": {'id': i[1], 'rgn': i[2], 'dst': i[3], 'cntn': i[4],
-                                                           'clt_n': i[5], 'prd_clt_n': i[6], 'ltype': i[7],
-                                                           'year': i[8], 'area': i[9], 'prdvty': i[10],
-                                                           'prd_clt_id': i[11], 'cdstr': i[12]},
+                                                           'prd_clt_n': i[5], 'ltype': i[6],
+                                                           'year': i[7], 'area': i[8], 'prdvty': i[9],
+                                                           'prd_clt_id': i[10], 'cdstr': i[11]},
                          "geometry": eval(i[-1])})
 
         # Creating a GeoJSON FeatureCollection with the list of features
         geojson_data = {"type": "FeatureCollection", "features": data}
 
         # Saving the GeoJSON data into a file
-        with open('contours_in_geoserver.geojson', 'w') as f:
-            json.dump(geojson_data, f)
+        with open('contours_in_geoserver.geojson', 'w', encoding='utf-8') as f:
+            json.dump(geojson_data, f, ensure_ascii=False)
 
         # Converting the GeoJSON file into a Shapefile using GeoPandas
         gdf = gpd.read_file('contours_in_geoserver.geojson')
@@ -156,5 +156,11 @@ def run():
                           'srs': 'EPSG:4326',
                           'type': 'ESRI Shapefile'
                       }})
+        # Record the end time
+    end_time = time.time()
+
+    # Calculate the total elapsed time
+    elapsed_time = end_time - start_time
+    print(f"Processing completed in {elapsed_time:.2f} seconds")
 
     return Response({"message": "Successfully processed and uploaded data to GeoServer."}, status=status.HTTP_200_OK)
