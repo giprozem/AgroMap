@@ -7,7 +7,7 @@ from gip.utils.detect_conton import detect_conton
 from gip.utils.detect_elevation import calculate_elevation
 from gip.utils.detect_soilclass import calculate_soil_class
 from gip.utils.formation_veg_indexes import create_veg_indexes
-from gip.utils.predicted_cultures import data_contour
+from gip.utils.predicted_cultures import predicted_culture_in_contour
 
 
 def detect_conton_handler(is_none: bool, polygon) -> int:
@@ -51,7 +51,7 @@ def update(sender, instance, created, **kwargs):
 
             Contour.objects.filter(id=instance.id).update(**update_fields)  # Update the Contour object fields
 
-        data_contour(geom)
+        predicted_culture_in_contour(geom)
     except Exception as e:
         print(
             f"Error in post_save signal for Contour: {e}")  # Print any exceptions that occur during the update process
