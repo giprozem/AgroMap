@@ -1,10 +1,6 @@
-import pandas as pd
 from pycaret.classification import load_model
 
 from django.db import connection
-
-
-import json
 
 import pandas as pd
 
@@ -37,7 +33,7 @@ def process_contour_data(data):
     return culture_name
 
 
-def data_contour(contour):
+def predicted_culture_in_contour(contour):
     if contour.type.name_en in ['Cropland'] and contour.conton.district.region.id == 10:
         try:
             with connection.cursor() as cursor:
