@@ -180,6 +180,12 @@ class AuthDetailContourSerializer(serializers.ModelSerializer):
             'name_en': instance.culture.name_en if instance.culture else None,
             'coefficient_crop': instance.culture.coefficient_crop if instance.culture else None
         }
+        representation["predicted_culture"] = {
+            'id': instance.predicted_culture.pk if instance.predicted_culture else None,
+            'name_ru': instance.predicted_culture.name_ru if instance.predicted_culture else None,
+            'name_ky': instance.predicted_culture.name_ky if instance.predicted_culture else None,
+            'name_en': instance.predicted_culture.name_en if instance.predicted_culture else None
+        }
         return representation
 
     # Check if a polygon is inside Kyrgyzstan
